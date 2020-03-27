@@ -1,4 +1,4 @@
-package it.polimi.ingsw2019.group42.model;
+package it.polimi.ingsw2020.PSP042.model;
 
 public class GameBoard {
 
