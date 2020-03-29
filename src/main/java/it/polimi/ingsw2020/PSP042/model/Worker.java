@@ -4,6 +4,7 @@ package it.polimi.ingsw2020.PSP042.model;
  * @author Luca Giudici
  */
 public class Worker {
+
     private int currentX;
     private int currentY;
     private Player player;
@@ -79,6 +80,6 @@ public class Worker {
      * @param y block's position on y-axis
      */
     public void buildBlock(int x, int y) {
-        GameBoard.getInstance().board[x][y].setCellLevel();
+        GameBoard.getInstance().getCell(x,y).setCellLevel();
     }
 }

@@ -4,8 +4,8 @@ package it.polimi.ingsw2020.PSP042.model;
  * @author Daniele Giorgianni (Bob)
  */
 public class Cell {
-    boolean[] cellLevel;
-    Worker worker;
+    private boolean[] cellLevel;
+    private Worker worker;
 
     /**
      *Constructor to create a map's cell which has set level 0 (the ground) to true and no worker above it self
