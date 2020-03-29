@@ -30,25 +30,16 @@ public class Player {
         return id;
     }
 
-    /**
-     * used to get the unique nickname of a player
-     * @return nickname
-     */
+
     public String getNickname() {
         return nickname;
     }
 
-    /**
-     * used to get the object Worker 1
-     * @return worker1
-     */
+
     public Worker getWorker1() {
         return worker1;
     }
-    /**
-     * used to get the object Worker 2
-     * @return worker2
-     */
+
     public Worker getWorker2() {
         return worker2;
     }
@@ -66,12 +57,32 @@ public class Player {
      * @param x the position x of the cell in the matrix
      * @param y the position y of the cell in the matrix
      * @param w position is set for the worker w
+     *
      */
     public void setPosWorker(int x, int y, Worker w){
-        w.setX(x);
-        w.setY(y);
+        if(w.equals(worker1) || w.equals(worker2)) {
+            if(w.getAvailable()){
+
+                if(GameBoard.getInstance().board.moveAvailable(x,y,w))
+                    w.setPosition(x,y);
+                else
+                    throw new InvalidMoveException();
+            }
+            else
+                throw new UnavailableWorkerException();
+        }
+        else
+            throw new NotYourWorkerException();
     }
+
     public void build(int x, int y, int lev, Worker w){
-        w.buildBlock(int x,int y,int lev);
+
+        if(GameBoard.getInstance().board.buildAvailable(x,y,w))
+            w.buildBlock(int x,int y);
+        else
+            throw new InvalidBuildException();
+
     }
+
+
 }
