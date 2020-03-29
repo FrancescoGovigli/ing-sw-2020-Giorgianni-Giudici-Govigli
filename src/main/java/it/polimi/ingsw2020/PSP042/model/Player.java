@@ -2,13 +2,13 @@ package it.polimi.ingsw2020.PSP042.model;
 
 public class Player {
     private SimpleGod card;
-    private int id;
-    private String nickname;
-    private Worker worker1;
-    private Worker worker2;
+    int id;
+    String nickname;
+    Worker worker1;
+    Worker worker2;
 
     /**
-     *Constructor to initialize a player object and istantiating 2 workers used by the player
+     *Constructor to initialize a player object and istantiating 2 workers used by the player outside the Map cell(-1,-1)
      * @param nick nickname choosed from the player
      * @param id id automatically given to choose the order of gameplay during constructing
      * @param card choosed from the player
@@ -17,8 +17,8 @@ public class Player {
         this.nickname = nick;
         this.id = id;
         this.card = card;
-        worker1 = new Worker(this);
-        worker2 = new Worker(this);
+        worker1 = new Worker(-1,-1,this);
+        worker2 = new Worker(-1,-1,this);
 
     }
 
@@ -30,9 +30,11 @@ public class Player {
         return id;
     }
 
+
     public String getNickname() {
         return nickname;
     }
+
 
     public Worker getWorker1() {
         return worker1;
@@ -55,14 +57,32 @@ public class Player {
      * @param x the position x of the cell in the matrix
      * @param y the position y of the cell in the matrix
      * @param w position is set for the worker w
+     *
      */
-    public void setPosWorker(int x, int y, Worker w) {
-        GameBoard.getInstance().board[x][y].setWorker(w);
+    public void setPosWorker(int x, int y, Worker w){
+        if(w.equals(worker1) || w.equals(worker2)) {
+            if(w.getAvailable()){
+
+                if(GameBoard.getInstance().board.moveAvailable(x,y,w))
+                    w.setPosition(x,y);
+                else
+                    throw new InvalidMoveException();
+            }
+            else
+                throw new UnavailableWorkerException();
+        }
+        else
+            throw new NotYourWorkerException();
     }
 
     public void build(int x, int y, int lev, Worker w){
-        w.buildBlock(x, y, lev);
 
+        if(GameBoard.getInstance().board.buildAvailable(x,y,w))
+            w.buildBlock(int x,int y);
+        else
+            throw new InvalidBuildException();
 
     }
+
+
 }
