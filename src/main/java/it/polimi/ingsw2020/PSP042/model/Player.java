@@ -2,13 +2,13 @@ package it.polimi.ingsw2020.PSP042.model;
 
 public class Player {
     private SimpleGod card;
-    int id;
-    String nickname;
-    Worker worker1;
-    Worker worker2;
+    private int id;
+    private String nickname;
+    private Worker worker1;
+    private Worker worker2;
 
     /**
-     *Constructor to initialize a player object and istantiating 2 workers used by the player outside the Map cell(-1,-1)
+     *Constructor to initialize a player object and istantiating 2 workers used by the player
      * @param nick nickname choosed from the player
      * @param id id automatically given to choose the order of gameplay during constructing
      * @param card choosed from the player
@@ -17,8 +17,8 @@ public class Player {
         this.nickname = nick;
         this.id = id;
         this.card = card;
-        worker1 = new Worker(-1,-1,this);
-        worker2 = new Worker(-1,-1,this);
+        worker1 = new Worker(this);
+        worker2 = new Worker(this);
 
     }
 
@@ -30,25 +30,14 @@ public class Player {
         return id;
     }
 
-    /**
-     * used to get the unique nickname of a player
-     * @return nickname
-     */
     public String getNickname() {
         return nickname;
     }
 
-    /**
-     * used to get the object Worker 1
-     * @return worker1
-     */
     public Worker getWorker1() {
         return worker1;
     }
-    /**
-     * used to get the object Worker 2
-     * @return worker2
-     */
+
     public Worker getWorker2() {
         return worker2;
     }
@@ -67,11 +56,13 @@ public class Player {
      * @param y the position y of the cell in the matrix
      * @param w position is set for the worker w
      */
-    public void setPosWorker(int x, int y, Worker w){
-        w.setX(x);
-        w.setY(y);
+    public void setPosWorker(int x, int y, Worker w) {
+        GameBoard.getInstance().board[x][y].setWorker(w);
     }
+
     public void build(int x, int y, int lev, Worker w){
-        w.buildBlock(int x,int y,int lev);
+        w.buildBlock(x, y, lev);
+
+
     }
 }
