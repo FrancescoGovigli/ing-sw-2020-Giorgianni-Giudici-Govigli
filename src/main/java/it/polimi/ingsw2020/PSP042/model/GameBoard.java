@@ -39,6 +39,46 @@ public class GameBoard {
     }
 
     /**
+     * Auxiliary method to calculate the correct Row and Column index for adjacentCell... methods for Cell(x,y)
+     * @param x
+     * @param y
+     * @return an array which position are:
+     * a[0] is startRow, a[1] is stopRow, a[2] is startCol, a[3] is stopCol
+     */
+    private int[] setIndexRowCol(int x, int y) {
+        int[] a = {0,0,0,0};
+        switch (x) {    //setting conditions 1st for
+            case 0:     //first row
+                a[0] = x;
+                a[1] = x + 1;
+                break;
+            case 4:     //last row
+                a[0] = x - 1;
+                a[1] = x;
+                break;
+            default:
+                a[0] = x - 1;
+                a[1] = x + 1;
+                break;
+        }
+        switch (y) {    //setting conditions 2nd for
+            case 0:     //first column
+                a[2] = y;
+                a[3] = y + 1;
+                break;
+            case 4:     //last column
+                a[2] = y - 1;
+                a[3] = y;
+                break;
+            default:
+                a[2] = y - 1;
+                a[3] = y + 1;
+                break;
+        }
+        return a;
+    }
+
+    /**
      * Function to obtain the available cell around your position (x,y)
      * (it return an array which contains all the possible cell)
      * @param x
@@ -48,38 +88,9 @@ public class GameBoard {
     public Cell[] adjacentCellMoveAvailable(int x, int y) {
         Cell[] adjCell = {null, null, null, null, null, null, null, null};
         int index = 0;
-        int startRow, stopRow;
-        int startCol, stopCol;
-        switch (x) {    //setting conditions 1st for
-            case 0:     //first row
-                startRow = x;
-                stopRow = x + 1;
-                break;
-            case 4:     //last row
-                startRow = x - 1;
-                stopRow = x;
-                break;
-            default:
-                startRow = x - 1;
-                stopRow = x + 1;
-                break;
-        }
-        switch (y) {    //setting conditions 2nd for
-            case 0:     //first column
-                startCol = y;
-                stopCol = y + 1;
-                break;
-            case 4:     //last column
-                startCol = y - 1;
-                stopCol = y;
-                break;
-            default:
-                startCol = y - 1;
-                stopCol = y + 1;
-                break;
-        }
-        for (int i = startRow ; i <= stopRow; i++) {    //search around the cell(x,y)
-            for (int j = startCol; j <= stopCol; j++) {
+        int[] a = setIndexRowCol(x, y);
+        for (int i = a[0] ; i <= a[1]; i++) {    //search around the cell(x,y)
+            for (int j = a[2]; j <= a[3]; j++) {
                 //if there isn't a worker and level is not 4 and 1 level gap
                 if ((board[i][j].getWorker() == null) && (board[i][j].getLevel() != 4) &&
                         (1 <= (board[i][j].getLevel() - board[x][y].getLevel()))){
@@ -108,7 +119,7 @@ public class GameBoard {
     }
 
     /**
-     * Used to obtain a list of cell where the
+     * Used to obtain a list of cell where the worker can build
      * @param x
      * @param y
      * @return
@@ -116,38 +127,9 @@ public class GameBoard {
     public Cell[] adjacentCellBuildAvailable(int x, int y) {
         Cell[] adjCell = {null, null, null, null, null, null, null, null};
         int index = 0;
-        int startRow, stopRow;
-        int startCol, stopCol;
-        switch (x) {    //setting conditions 1st for
-            case 0:     //first row
-                startRow = x;
-                stopRow = x + 1;
-                break;
-            case 4:     //last row
-                startRow = x - 1;
-                stopRow = x;
-                break;
-            default:
-                startRow = x - 1;
-                stopRow = x + 1;
-                break;
-        }
-        switch (y) {    //setting conditions 2nd for
-            case 0:     //first column
-                startCol = y;
-                stopCol = y + 1;
-                break;
-            case 4:     //last column
-                startCol = y - 1;
-                stopCol = y;
-                break;
-            default:
-                startCol = y - 1;
-                stopCol = y + 1;
-                break;
-        }
-        for (int i = startRow; i <= stopRow; i++) {    //search around the cell(x,y)
-            for (int j = startCol; j <= stopCol; j++) {
+        int[] a = setIndexRowCol(x, y);
+        for (int i = a[0]; i <= a[1]; i++) {    //search around the cell(x,y)
+            for (int j = a[2]; j <= a[3]; j++) {
                 //if there isn't a worker and level is not 4
                 if ((board[i][j].getWorker() == null) && (board[i][j].getLevel() != 4)) {
                     adjCell[index] = board[i][j];
