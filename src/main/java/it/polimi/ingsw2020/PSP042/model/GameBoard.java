@@ -45,7 +45,7 @@ public class GameBoard {
      * @return an array which position are:
      * a[0] is startRow, a[1] is stopRow, a[2] is startCol, a[3] is stopCol
      */
-    private int[] setIndexRowCol(int x, int y) {
+    private int[] setIndexRowColumn(int x, int y) {
         int[] a = {0,0,0,0};
         switch (x) {    //setting conditions 1st for
             case 0:     //first row
@@ -88,7 +88,7 @@ public class GameBoard {
     public Cell[] adjacentCellMoveAvailable(int x, int y) {
         Cell[] adjCell = {null, null, null, null, null, null, null, null};
         int index = 0;
-        int[] a = setIndexRowCol(x, y);
+        int[] a = setIndexRowColumn(x, y);
         for (int i = a[0] ; i <= a[1]; i++) {    //search around the cell(x,y)
             for (int j = a[2]; j <= a[3]; j++) {
                 //if there isn't a worker and level is not 4 and 1 level gap
@@ -127,7 +127,7 @@ public class GameBoard {
     public Cell[] adjacentCellBuildAvailable(int x, int y) {
         Cell[] adjCell = {null, null, null, null, null, null, null, null};
         int index = 0;
-        int[] a = setIndexRowCol(x, y);
+        int[] a = setIndexRowColumn(x, y);
         for (int i = a[0]; i <= a[1]; i++) {    //search around the cell(x,y)
             for (int j = a[2]; j <= a[3]; j++) {
                 //if there isn't a worker and level is not 4
