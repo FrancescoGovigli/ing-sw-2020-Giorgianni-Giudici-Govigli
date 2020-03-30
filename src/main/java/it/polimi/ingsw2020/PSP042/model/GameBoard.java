@@ -2,18 +2,19 @@ package it.polimi.ingsw2020.PSP042.model;
 import java.util.ArrayList;
 
 public class GameBoard {
-    private Cell[][] board;
+    private Cell[][] board = new Cell[5][5];
     private ArrayList<Player> players;
     private int currentPlayer;
-    public static GameBoard instance = null;
+    private static GameBoard instance = null;
 
     /**
      * Constructor to initialize the board of dimension 5x5
      */
     private GameBoard() {
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++)
                 this.board[i][j] = new Cell();
+        }
         this.players = null;
         this.currentPlayer = 0;
     }
@@ -92,14 +93,20 @@ public class GameBoard {
         for (int i = a[0] ; i <= a[1]; i++) {    //search around the cell(x,y)
             for (int j = a[2]; j <= a[3]; j++) {
                 //if there isn't a worker and level is not 4 and 1 level gap
-                if ((board[i][j].getWorker() == null) && (board[i][j].getLevel() != 4) &&
-                        (1 <= (board[i][j].getLevel() - board[x][y].getLevel()))){
-                    adjCell[index] = board[i][j];
-                    index++;
+                if(x!=i || y!=j) {
+                    if ((board[i][j].getWorker() == null) && (board[i][j].getLevel() != 4) &&
+                            ( (board[i][j].getLevel() - board[x][y].getLevel())<=1 || (board[x] [y].getLevel()- board[i][j].getLevel()) <= 3)) {
+                        adjCell[index] = board[i][j];
+                        index++;
+                    }
                 }
             }
         }
-        return adjCell;
+        Cell[] result = new Cell[index];
+        for(int i=0; i<index;i++)
+            result[i]=adjCell[i];
+        return result;
+
     }
 
     /**
@@ -113,7 +120,7 @@ public class GameBoard {
         boolean condition = false;
         Cell[] c = adjacentCellMoveAvailable(w.getCurrentX(),w.getCurrentY());
         for(int i=0; i < c.length; i++)
-            if(c[i] == getCell(x,y))
+            if(c[i].equals(getCell(x,y)))
                 condition = true;
         return condition;
     }
@@ -137,7 +144,10 @@ public class GameBoard {
                 }
             }
         }
-        return adjCell;
+        Cell[] result = new Cell[index];
+        for(int i=0; i<index;i++)
+            result[i]=adjCell[i];
+        return result;
     }
 
     /**
@@ -151,7 +161,7 @@ public class GameBoard {
         boolean condition = false;
         Cell[] c = adjacentCellBuildAvailable(w.getCurrentX(), w.getCurrentY());
         for(int i = 0; i < c.length; i++)
-            if(c[i] == getCell(x,y))
+            if(c[i].equals(getCell(x,y)))
                 condition = true;
         return condition;
     }

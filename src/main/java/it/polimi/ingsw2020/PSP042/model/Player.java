@@ -1,7 +1,7 @@
 package it.polimi.ingsw2020.PSP042.model;
 
 public class Player {
-    private SimpleGod card;
+    //private SimpleGod card;
     private int id;
     private String nickname;
     private Worker worker1;
@@ -13,10 +13,10 @@ public class Player {
      * @param id id automatically given to choose the order of gameplay during constructing
      * @param card choosed from the player
      */
-    public Player(String nick, int id, SimpleGod card){
+    public Player(String nick, int id/*,SimpleGod card*/){
         this.nickname = nick;
         this.id = id;
-        this.card = card;
+        //this.card = card;
         this.worker1 = new Worker(-1,-1,this);
         this.worker2 = new Worker(-1,-1,this);
 
@@ -46,9 +46,9 @@ public class Player {
      * in every move of a player it's important to get the GodCard assigned to the player
      * @return card
      */
-    public SimpleGod getCard() {
+   /* public SimpleGod getCard() {
         return card;
-    }
+    }*/
 
     /**
      * sets during a move the new position of the worker
@@ -66,13 +66,13 @@ public class Player {
                 if(GameBoard.getInstance().moveAvailable(x, y, w))
                     w.setPosition(x, y);
                 else
-                    throw new InvalidMoveException();
+                    throw new InvalidMoveException("The cell selected isn't available for moving");
             }
             else
-                throw new UnavailableWorkerException();
+                throw new UnavailableWorkerException("Your worker is blocked");
         }
         else
-            throw new NotYourWorkerException();
+            throw new NotYourWorkerException("This worker is not yours");
     }
 
     /**
@@ -86,7 +86,7 @@ public class Player {
         if(GameBoard.getInstance().buildAvailable(x,y,w))
             w.buildBlock(x, y);
         else
-            throw new InvalidBuildException();
+            throw new InvalidBuildException("The cell choosen is incorrect");
     }
 
     /**
@@ -101,7 +101,7 @@ public class Player {
             if (GameBoard.getInstance().getCell(x, y).getWorker() == null)
                 w.setPosition(x, y);
             else
-                throw new OccupiedCellException();
+                throw new OccupiedCellException("Cell is already occupied");
         }
     }
 }
