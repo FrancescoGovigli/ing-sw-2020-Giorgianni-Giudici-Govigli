@@ -55,9 +55,11 @@ public class Player {
      * @param x the position x of the cell in the matrix
      * @param y the position y of the cell in the matrix
      * @param w position is set for the worker w
-     *
+     * @throws InvalidMoveException the move choosed isn't correct
+     * @throws UnavailableWorkerException the worker choosed isnt able to move
+     * @throws NotYourWorkerException the worker choosed isn't assigned to the player
      */
-    public void setPosWorker(int x, int y, Worker w){
+    public void setPosWorker(int x, int y, Worker w) throws InvalidMoveException,UnavailableWorkerException,NotYourWorkerException{
         if(w.equals(worker1) || w.equals(worker2)) {
             if(w.getAvailable()){
 
@@ -78,11 +80,28 @@ public class Player {
      * @param x the position x of the cell in the matrix
      * @param y the position y of the cell in the matrix
      * @param w position is set for the worker w
+     * @throws InvalidBuildException if the build method returns false
      */
-    public void build(int x, int y, Worker w){
+    public void build(int x, int y, Worker w) throws InvalidBuildException{
         if(GameBoard.getInstance().buildAvailable(x,y,w))
             w.buildBlock(x, y);
         else
             throw new InvalidBuildException();
+    }
+
+    /**
+     * Method used to initialize the worker on the gameboard in the cell(x,y)
+     * @param x
+     * @param y
+     * @param w
+     * @throws OccupiedCellException if the cell(x,y) is already occupied
+     */
+    public void setInitialPosition(int x, int y, Worker w) throws OccupiedCellException {
+        if (w.getCurrentX() == -1 && w.getCurrentY() == -1) {
+            if (GameBoard.getInstance().getCell(x, y).getWorker() == null)
+                w.setPosition(x, y);
+            else
+                throw new OccupiedCellException();
+        }
     }
 }

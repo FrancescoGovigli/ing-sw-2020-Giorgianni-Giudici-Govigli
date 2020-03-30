@@ -19,7 +19,7 @@ public class GameBoard {
     }
 
     /**
-     * Function to return the unique instance of the board
+     * Method to return the unique instance of the board
      * @return instance
      */
     public static GameBoard getInstance() {
@@ -29,7 +29,7 @@ public class GameBoard {
     }
 
     /**
-     * Function to return the object Cell specified by the Cartesian coordinates (x, y)
+     * Method to return the object Cell specified by the Cartesian coordinates (x, y)
      * @param x
      * @param y
      * @return Cell
@@ -79,7 +79,7 @@ public class GameBoard {
     }
 
     /**
-     * Function to obtain the available cell around your position (x,y)
+     * Method to obtain the available cell around your position (x,y)
      * (it return an array which contains all the possible cell)
      * @param x
      * @param y
