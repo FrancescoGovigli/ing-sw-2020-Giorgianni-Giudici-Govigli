@@ -40,114 +40,85 @@ public class GameBoard {
     }
 
     /**
-     * Auxiliary method to calculate the correct Row and Column index for adjacentCell... methods for Cell(x,y)
-     * @param x
-     * @param y
-     * @return an array which position are:
-     * a[0] is startRow, a[1] is stopRow, a[2] is startCol, a[3] is stopCol
+     * Method to obtain a sub-matrix with cells surrounded the specified cell
+     * @param x (x coordinate of the specified cell)
+     * @param y (y coordinate of the specified cell)
+     * @return c[][] (sub-matrix with center in x, y)
      */
-    private int[] setIndexRowColumn(int x, int y) {
-        int[] a = {0,0,0,0};
-        switch (x) {    //setting conditions 1st for
-            case 0:     //first row
-                a[0] = x;
-                a[1] = x + 1;
-                break;
-            case 4:     //last row
-                a[0] = x - 1;
-                a[1] = x;
-                break;
-            default:
-                a[0] = x - 1;
-                a[1] = x + 1;
-                break;
-        }
-        switch (y) {    //setting conditions 2nd for
-            case 0:     //first column
-                a[2] = y;
-                a[3] = y + 1;
-                break;
-            case 4:     //last column
-                a[2] = y - 1;
-                a[3] = y;
-                break;
-            default:
-                a[2] = y - 1;
-                a[3] = y + 1;
-                break;
-        }
-        return a;
+    public Cell[][] submatrixGenerator(int x, int y) {
+        Cell[][] c = new Cell[3][3];
+        for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 3; j++)
+                if ((y-1 == -1 && j == 0) || (y+1 == 5 && j == 2) ||
+                    (x-1 == -1 && i == 0) || (x+1 == 5 && i == 2))
+                    c[i][j] = null;
+                else
+                    c[i][j] = board[i][j];
+        return c;
     }
 
     /**
      * Method to obtain the available cell around your position (x,y)
-     * (it return an array which contains all the possible cell)
-     * @param x
-     * @param y
-     * @return Cell[]
+     * @param x (x coordinate of your position)
+     * @param y (y coordinate of your position)
+     * @return adjCellMoveAvailable[] (array which contains all the possible cell where move)
      */
     public Cell[] adjacentCellMoveAvailable(int x, int y) {
-        Cell[] adjCell = {null, null, null, null, null, null, null, null};
         int index = 0;
-        int[] a = setIndexRowColumn(x, y);
-        for (int i = a[0] ; i <= a[1]; i++) {    //search around the cell(x,y)
-            for (int j = a[2]; j <= a[3]; j++) {
-                //if there isn't a worker and level is not 4 and 1 level gap
-                if(x!=i || y!=j) {
-                    if ((board[i][j].getWorker() == null) && (board[i][j].getLevel() != 4) &&
-                            ( (board[i][j].getLevel() - board[x][y].getLevel())<=1 || (board[x] [y].getLevel()- board[i][j].getLevel()) <= 3)) {
-                        adjCell[index] = board[i][j];
-                        index++;
-                    }
+        Cell[] adjCellMoveAvailable = new Cell[8];  // 8 is the maximum number of possible adjacent cell where move
+        Cell[][] c = submatrixGenerator(x, y);
+        for (int i = 0; i < 3; i++) {    //searching around the cell(x,y)
+            for (int j = 0; j < 3; j++) {
+                if ((c[i][j] == null || c[i][j].getWorker() == null) &&     // c cell is out of map or there isn't a worker
+                    (c[i][j].getLevel() != 4) &&                            // is not 4th level
+                    (c[i][j].getLevel() - board[x][y].getLevel()) <= 1 ||   // one gap level on ascent
+                    (c[i][j].getLevel() - board[x][y].getLevel()) >= - 3)   // limit for the descent
+                {
+                    adjCellMoveAvailable[index] = c[i][j];
+                    index++;
                 }
             }
         }
-        Cell[] result = new Cell[index];
-        for(int i=0; i<index;i++)
-            result[i]=adjCell[i];
-        return result;
-
+        return adjCellMoveAvailable;
     }
 
     /**
      * Used to know if worker w can be moved in (x,y) position
-     * @param x
-     * @param y
-     * @param w
+     * @param x (x coordinate of your position)
+     * @param y (y coordinate of your position)
+     * @param w (your worker)
      * @return true if worker can be moved, false otherwise
      */
     public boolean moveAvailable(int x, int y, Worker w) {
         boolean condition = false;
         Cell[] c = adjacentCellMoveAvailable(w.getCurrentX(),w.getCurrentY());
         for(int i=0; i < c.length; i++)
-            if(c[i].equals(getCell(x,y)))
+            if(c[i] != null && c[i].equals(getCell(x,y)))
                 condition = true;
         return condition;
     }
 
     /**
-     * Used to obtain a list of cell where the worker can build
-     * @param x
-     * @param y
-     * @return
+     * Method to obtain a list of cell where the worker can build
+     * @param x (x coordinate of your position)
+     * @param y (y coordinate of your position)
+     * @return adjCellBuildAvailable[] (array which contains all the possible cell where build)
      */
     public Cell[] adjacentCellBuildAvailable(int x, int y) {
-        Cell[] adjCell = {null, null, null, null, null, null, null, null};
         int index = 0;
-        int[] a = setIndexRowColumn(x, y);
-        for (int i = a[0]; i <= a[1]; i++) {    //search around the cell(x,y)
-            for (int j = a[2]; j <= a[3]; j++) {
-                //if there isn't a worker and level is not 4
-                if ((board[i][j].getWorker() == null) && (board[i][j].getLevel() != 4)) {
-                    adjCell[index] = board[i][j];
+        Cell[] adjCellBuildAvailable = new Cell[8];  // 8 is the maximum number of possible adjacent cell where build
+        Cell[][] c = submatrixGenerator(x, y);
+        for (int i = 0; i < 3; i++) {    //searching around the cell(x,y)
+            for (int j = 0; j < 3; j++) {
+                if ((c[i][j] == null || c[i][j].getWorker() == null) &&     // c cell is out of map or there isn't a worker
+                    (c[i][j].getLevel() != 4))                              // is not 4th level
+                {
+                    adjCellBuildAvailable[index] = c[i][j];
                     index++;
                 }
             }
         }
-        Cell[] result = new Cell[index];
-        for(int i=0; i<index;i++)
-            result[i]=adjCell[i];
-        return result;
+        return adjCellBuildAvailable;
     }
 
     /**
@@ -161,7 +132,7 @@ public class GameBoard {
         boolean condition = false;
         Cell[] c = adjacentCellBuildAvailable(w.getCurrentX(), w.getCurrentY());
         for(int i = 0; i < c.length; i++)
-            if(c[i].equals(getCell(x,y)))
+            if(c[i] != null && c[i].equals(getCell(x,y)))
                 condition = true;
         return condition;
     }
