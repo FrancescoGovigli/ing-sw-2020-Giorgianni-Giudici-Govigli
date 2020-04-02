@@ -1,0 +1,102 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Maindemo</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw2020.PSP042.model</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Maindemo (it.polimi.ingsw2020.PSP042.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Maindemo</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 12)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw2020.PSP042.model;
+<i>2</i>&nbsp;
+<b class="nc"><i>3</i>&nbsp;public class Maindemo {</b>
+<i>4</i>&nbsp;    public static void main(String[] args) throws OccupiedCellException, UnavailableWorkerException, NotYourWorkerException, InvalidMoveException, InvalidBuildException {
+<b class="nc"><i>5</i>&nbsp;        GameBoard b= GameBoard.getInstance();</b>
+<b class="nc"><i>6</i>&nbsp;        System.out.println(b.getCell(0,0).getLevel());</b>
+<b class="nc"><i>7</i>&nbsp;        Player p1 = new Player(&quot;Frankie&quot;,1);</b>
+<b class="nc"><i>8</i>&nbsp;        p1.setInitialPosition(0,0,p1.getWorker1());</b>
+<b class="nc"><i>9</i>&nbsp;        p1.setInitialPosition(1,1,p1.getWorker2());</b>
+<b class="nc"><i>10</i>&nbsp;        System.out.print(&quot;Posizione w1 &quot;+ p1.getWorker1().getCurrentX() + p1.getWorker1().getCurrentY()+ &quot;\n&quot;);</b>
+<b class="nc"><i>11</i>&nbsp;        System.out.print(&quot;Posizione w2 &quot; + p1.getWorker2().getCurrentX() + p1.getWorker2().getCurrentY()+ &quot;\n&quot;);</b>
+<b class="nc"><i>12</i>&nbsp;        p1.setPosWorker(0,1,p1.getWorker1());</b>
+<b class="nc"><i>13</i>&nbsp;        System.out.print(&quot;Posizione w1 dopo move  &quot;+ p1.getWorker1().getCurrentX() + p1.getWorker1().getCurrentY()+ &quot;\n&quot;);</b>
+<b class="nc"><i>14</i>&nbsp;        p1.build(1,2,p1.getWorker1());</b>
+<b class="nc"><i>15</i>&nbsp;        System.out.println(b.getCell(1,2).getLevel());</b>
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;    }
+<i>19</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-03-30 18:12</div>
+</div>
+</body>
+</html>

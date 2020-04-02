@@ -1,4 +1,4 @@
-package it.polimi.ingsw2020.PSP042.model;
+package it.polimi.ingsw.PSP42.model;
 
 /**
  * @author Daniele Giorgianni (Bob)

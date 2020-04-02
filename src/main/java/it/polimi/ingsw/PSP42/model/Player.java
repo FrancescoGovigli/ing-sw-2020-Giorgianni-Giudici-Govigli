@@ -1,4 +1,4 @@
-package it.polimi.ingsw2020.PSP042.model;
+package it.polimi.ingsw.PSP42.model;
 
 public class Player {
     //private SimpleGod card;
@@ -69,10 +69,10 @@ public class Player {
                     throw new InvalidMoveException("The cell selected isn't available for moving");
             }
             else
-                throw new UnavailableWorkerException("Your worker is blocked");
+               throw new UnavailableWorkerException("Your worker is blocked");
         }
         else
-            throw new NotYourWorkerException("This worker is not yours");
+          throw new NotYourWorkerException("This worker is not yours");
     }
 
     /**
@@ -86,7 +86,7 @@ public class Player {
         if(GameBoard.getInstance().buildAvailable(x,y,w))
             w.buildBlock(x, y);
         else
-            throw new InvalidBuildException("The cell choosen is incorrect");
+           throw new InvalidBuildException("The cell choosen is incorrect");
     }
 
     /**
@@ -98,10 +98,10 @@ public class Player {
      */
     public void setInitialPosition(int x, int y, Worker w) throws OccupiedCellException {
         if (w.getCurrentX() == -1 && w.getCurrentY() == -1) {
-            if (GameBoard.getInstance().getCell(x, y).getWorker() == null)
-                w.setPosition(x, y);
-            else
-                throw new OccupiedCellException("Cell is already occupied");
+                if (GameBoard.getInstance().getCell(x, y).getWorker() == null)
+                    w.setPosition(x, y);
+           else
+               throw new OccupiedCellException("Cell is already occupied");
         }
     }
 }

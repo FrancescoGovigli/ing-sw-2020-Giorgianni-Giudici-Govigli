@@ -1,4 +1,4 @@
-package it.polimi.ingsw2020.PSP042.model;
+package it.polimi.ingsw.PSP42.model;
 
 /**
  * @author Luca Giudici
@@ -46,8 +46,11 @@ public class Worker {
      * @param y position on y-axis
      */
     public void setPosition(int x, int y) {
+        if(this.currentX != -1 && this.currentY != -1)
+            GameBoard.getInstance().getCell(currentX,currentY).unSetWorker();
         this.currentX = x;
         this.currentY = y;
+        GameBoard.getInstance().getCell(x,y).setWorker(this);
     }
 
     /**

@@ -1,4 +1,4 @@
-package it.polimi.ingsw2020.PSP042.model;
+package it.polimi.ingsw.PSP42.model;
 import java.util.ArrayList;
 
 public class GameBoard {
@@ -6,7 +6,9 @@ public class GameBoard {
     private ArrayList<Player> players;
     private int currentPlayer;
     private static GameBoard instance = null;
-
+    public void reset(){
+        instance=null;
+    }
     /**
      * Constructor to initialize the board of dimension 5x5
      */
@@ -61,7 +63,7 @@ public class GameBoard {
      * Method to obtain the available cell around your position (x,y)
      * @param x (x coordinate of your position)
      * @param y (y coordinate of your position)
-     * @return adjCellMoveAvailable[] (array which contains all the possible cell where move)
+     * @return adjCellMoveAvailable (array which contains all the possible cell where move)
      */
     public Cell[] adjacentCellMoveAvailable(int x, int y) {
         int index = 0;

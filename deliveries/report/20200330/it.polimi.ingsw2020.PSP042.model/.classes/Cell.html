@@ -1,0 +1,156 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Cell</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw2020.PSP042.model</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Cell (it.polimi.ingsw2020.PSP042.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Cell</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    57,1%
+  </span>
+  <span class="absValue">
+    (4/ 7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    68,4%
+  </span>
+  <span class="absValue">
+    (13/ 19)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw2020.PSP042.model;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;/**
+<i>4</i>&nbsp; * @author Daniele Giorgianni (Bob)
+<i>5</i>&nbsp; */
+<i>6</i>&nbsp;public class Cell {
+<i>7</i>&nbsp;    private boolean[] cellLevel;
+<i>8</i>&nbsp;    private Worker worker;
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;    /**
+<i>11</i>&nbsp;     *Constructor to create a map&#39;s cell which has set level 0 (the ground) to true and no worker above it self
+<i>12</i>&nbsp;     */
+<b class="fc"><i>13</i>&nbsp;    public Cell(){</b>
+<b class="fc"><i>14</i>&nbsp;        this.cellLevel = new boolean[]{true, false, false, false, false};</b>
+<b class="fc"><i>15</i>&nbsp;        this.worker = null;</b>
+<b class="fc"><i>16</i>&nbsp;    }</b>
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;    /**
+<i>19</i>&nbsp;     *Function to obtain which level are build on the cell under form of array
+<i>20</i>&nbsp;     * @return cellLevel (array&#39;s address)
+<i>21</i>&nbsp;     */
+<i>22</i>&nbsp;    public boolean[] getCellLevel() {
+<b class="nc"><i>23</i>&nbsp;        return cellLevel;</b>
+<i>24</i>&nbsp;    }
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;    /**
+<i>27</i>&nbsp;     *Function to obtain the current level of a cell, which is i if the using are correct or -1 otherwise
+<i>28</i>&nbsp;     * @return i or -1
+<i>29</i>&nbsp;     */
+<i>30</i>&nbsp;    public int getLevel(){
+<b class="fc"><i>31</i>&nbsp;        for (int i = 0; i &lt; 5; i++) {</b>
+<b class="fc"><i>32</i>&nbsp;            if (cellLevel[i] &amp;&amp; (i == 4 || !cellLevel[i + 1]))</b>
+<b class="fc"><i>33</i>&nbsp;                return i;</b>
+<i>34</i>&nbsp;        }
+<b class="nc"><i>35</i>&nbsp;        return (-1);</b>
+<i>36</i>&nbsp;    }
+<i>37</i>&nbsp;
+<i>38</i>&nbsp;    /**
+<i>39</i>&nbsp;     *Function to increase the level of a cell
+<i>40</i>&nbsp;     */
+<i>41</i>&nbsp;    public void setCellLevel() {
+<b class="fc"><i>42</i>&nbsp;        for (int i = 0; i &lt; 5; i++) {</b>
+<b class="fc"><i>43</i>&nbsp;            if (!cellLevel[i]) {</b>
+<b class="fc"><i>44</i>&nbsp;                this.cellLevel[i] = true;</b>
+<b class="fc"><i>45</i>&nbsp;                i = 5;</b>
+<i>46</i>&nbsp;            }
+<i>47</i>&nbsp;        }
+<b class="fc"><i>48</i>&nbsp;    }</b>
+<i>49</i>&nbsp;
+<i>50</i>&nbsp;    /**
+<i>51</i>&nbsp;     *Function to obtain which worker stay on the cell
+<i>52</i>&nbsp;     * @return worker (if it is set, null otherwise)
+<i>53</i>&nbsp;     */
+<i>54</i>&nbsp;    public Worker getWorker() {
+<b class="fc"><i>55</i>&nbsp;        return worker;</b>
+<i>56</i>&nbsp;    }
+<i>57</i>&nbsp;
+<i>58</i>&nbsp;    /**
+<i>59</i>&nbsp;     *Function to set a worker on the cell
+<i>60</i>&nbsp;     * @param w (is the worker to set)
+<i>61</i>&nbsp;     */
+<i>62</i>&nbsp;    public void setWorker(Worker w) {
+<b class="nc"><i>63</i>&nbsp;        this.worker =  w;</b>
+<b class="nc"><i>64</i>&nbsp;    }</b>
+<i>65</i>&nbsp;
+<i>66</i>&nbsp;    /**
+<i>67</i>&nbsp;     *Function to unset a worker on the cell
+<i>68</i>&nbsp;     */
+<i>69</i>&nbsp;    public void unSetWorker() {
+<b class="nc"><i>70</i>&nbsp;        this.worker = null;</b>
+<b class="nc"><i>71</i>&nbsp;    }</b>
+<i>72</i>&nbsp;
+<i>73</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-03-30 18:12</div>
+</div>
+</body>
+</html>
