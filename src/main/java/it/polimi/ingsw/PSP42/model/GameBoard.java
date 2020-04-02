@@ -9,6 +9,7 @@ public class GameBoard {
     public void reset(){
         instance=null;
     }
+
     /**
      * Constructor to initialize the board of dimension 5x5
      */
@@ -45,7 +46,7 @@ public class GameBoard {
      * Method to obtain a sub-matrix with cells surrounded the specified cell
      * @param x (x coordinate of the specified cell)
      * @param y (y coordinate of the specified cell)
-     * @return c[][] (sub-matrix with center in x, y)
+     * @return c (sub-matrix with center in x, y)
      */
     public Cell[][] submatrixGenerator(int x, int y) {
         Cell[][] c = new Cell[3][3];
@@ -55,7 +56,7 @@ public class GameBoard {
                     (x-1 == -1 && i == 0) || (x+1 == 5 && i == 2))
                     c[i][j] = null;
                 else
-                    c[i][j] = board[i][j];
+                    c[i][j] = board[x-1+i][y-1+j];
         return c;
     }
 
@@ -71,10 +72,11 @@ public class GameBoard {
         Cell[][] c = submatrixGenerator(x, y);
         for (int i = 0; i < 3; i++) {    //searching around the cell(x,y)
             for (int j = 0; j < 3; j++) {
-                if ((c[i][j] == null || c[i][j].getWorker() == null) &&     // c cell is out of map or there isn't a worker
-                    (c[i][j].getLevel() != 4) &&                            // is not 4th level
-                    (c[i][j].getLevel() - board[x][y].getLevel()) <= 1 ||   // one gap level on ascent
-                    (c[i][j].getLevel() - board[x][y].getLevel()) >= - 3)   // limit for the descent
+                if (c[i][j] != null &&                                          // c cell isn't out of map and
+                    (c[i][j].getWorker() == null) &&                            // there isn't a worker and
+                    (c[i][j].getLevel() != 4) &&                                // is not 4th level and
+                    ((c[i][j].getLevel() - board[x][y].getLevel() <= 1) ||      // one gap level on ascent and
+                    (c[i][j].getLevel() - board[x][y].getLevel() >= - 3)))      // limit for the descent
                 {
                     adjCellMoveAvailable[index] = c[i][j];
                     index++;
@@ -94,7 +96,7 @@ public class GameBoard {
     public boolean moveAvailable(int x, int y, Worker w) {
         boolean condition = false;
         Cell[] c = adjacentCellMoveAvailable(w.getCurrentX(),w.getCurrentY());
-        for(int i=0; i < c.length; i++)
+        for(int i = 0; i < c.length && !condition; i++) // !condition used to stop for loop just condition becomes true
             if(c[i] != null && c[i].equals(getCell(x,y)))
                 condition = true;
         return condition;
@@ -104,7 +106,7 @@ public class GameBoard {
      * Method to obtain a list of cell where the worker can build
      * @param x (x coordinate of your position)
      * @param y (y coordinate of your position)
-     * @return adjCellBuildAvailable[] (array which contains all the possible cell where build)
+     * @return adjCellBuildAvailable (array which contains all the possible cell where build)
      */
     public Cell[] adjacentCellBuildAvailable(int x, int y) {
         int index = 0;
@@ -112,8 +114,9 @@ public class GameBoard {
         Cell[][] c = submatrixGenerator(x, y);
         for (int i = 0; i < 3; i++) {    //searching around the cell(x,y)
             for (int j = 0; j < 3; j++) {
-                if ((c[i][j] == null || c[i][j].getWorker() == null) &&     // c cell is out of map or there isn't a worker
-                    (c[i][j].getLevel() != 4))                              // is not 4th level
+                if (c[i][j] != null &&                  // c cell isn't out of map and
+                    (c[i][j].getWorker() == null) &&    // there isn't a worker and
+                    (c[i][j].getLevel() != 4))          // is not 4th level
                 {
                     adjCellBuildAvailable[index] = c[i][j];
                     index++;
@@ -124,24 +127,24 @@ public class GameBoard {
     }
 
     /**
-     * Used to check if it's possible build in (x,y) position with worker w
-     * @param x
-     * @param y
-     * @param w worker
+     * Method to check if it's possible build in a position
+     * @param x (x coordinate of where you would like to build)
+     * @param y (y coordinate of where you would like to build)
+     * @param w (worker who would like to build)
      * @return true if worker can build, false otherwise
      */
     public boolean buildAvailable(int x, int y, Worker w) {
         boolean condition = false;
         Cell[] c = adjacentCellBuildAvailable(w.getCurrentX(), w.getCurrentY());
-        for(int i = 0; i < c.length; i++)
+        for(int i = 0; i < c.length && !condition; i++) // !condition used to stop for loop just condition becomes true
             if(c[i] != null && c[i].equals(getCell(x,y)))
                 condition = true;
         return condition;
     }
 
     /**
-     * Used to know which workers are available
-     * @param w worker
+     * Method to know which workers are available
+     * @param w (worker to be verified)
      * @return true if worker can be used, false otherwise
      */
     public boolean workerAvailable(Worker w) {
