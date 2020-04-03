@@ -155,4 +155,19 @@ public class GameBoard {
             w.setAvailable(true);
         return w.getAvailable();
     }
+
+    public void loseCondition(Player p){
+        if(!p.getWorker1().getAvailable() && !p.getWorker2().getAvailable()){
+            GameBoard.getInstance().getCell(p.getWorker1().getCurrentX(),p.getWorker1().getCurrentY()).unSetWorker();
+            GameBoard.getInstance().getCell(p.getWorker2().getCurrentX(),p.getWorker2().getCurrentY()).unSetWorker();
+            p.setPlayerstate("LOSE");
+        }
+    }
+
+    public void winCondition(Player p){
+
+    }
+
+
+
 }
