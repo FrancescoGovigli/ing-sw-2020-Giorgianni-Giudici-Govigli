@@ -19,7 +19,6 @@ public class Player {
         //this.card = card;
         this.worker1 = new Worker(-1,-1,this);
         this.worker2 = new Worker(-1,-1,this);
-
     }
 
     /**

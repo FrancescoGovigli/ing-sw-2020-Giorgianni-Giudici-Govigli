@@ -1,15 +1,14 @@
-package it.polimi.ingsw2020.PSP042.model;
+package it.polimi.ingsw.PSP42.model;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
 import static org.junit.Assert.*;
 
 public class WorkerTest {
 
-    GameBoard board = GameBoard.getInstance();
-    Player p = new Player("Cipo", 1);
-    Worker w = new Worker(-1,-1, p);
+    private GameBoard board = GameBoard.getInstance();
+    private Player p = new Player("Cipo", 1);
+    private Worker w = new Worker(-1,-1, p);
 
     @Test
     public void getCurrentX() {
@@ -35,13 +34,13 @@ public class WorkerTest {
 
     @Test
     public void getAvailable() {
-        assertEquals(true, w.getAvailable());
+        assertTrue(w.getAvailable());
     }
 
     @Test
     public void setAvailable() {
         w.setAvailable(false);
-        assertEquals(false, w.getAvailable());
+        assertFalse(w.getAvailable());
     }
 
     @Test

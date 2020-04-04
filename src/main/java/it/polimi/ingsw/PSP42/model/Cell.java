@@ -51,6 +51,14 @@ public class Cell {
     }
 
     /**
+     * Used to set a specific level instead of set the successive level
+     * @param level the level that the worker want to build
+     */
+    public void setSpecificCellLevel(int level){
+        this.cellLevel[level] = true;
+    }
+
+    /**
      * Method to obtain which worker stay on the cell
      * @return worker (if it is set, null otherwise)
      */

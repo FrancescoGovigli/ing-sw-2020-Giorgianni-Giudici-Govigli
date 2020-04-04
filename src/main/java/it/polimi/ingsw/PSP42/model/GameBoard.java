@@ -48,7 +48,7 @@ public class GameBoard {
      * @param y (y coordinate of the specified cell)
      * @return c (sub-matrix with center in x, y)
      */
-    public Cell[][] submatrixGenerator(int x, int y) {
+    public Cell[][] subMatrixGenerator(int x, int y) {
         Cell[][] c = new Cell[3][3];
         for (int i = 0; i < 3; i++)
             for (int j = 0; j < 3; j++)
@@ -69,7 +69,7 @@ public class GameBoard {
     public Cell[] adjacentCellMoveAvailable(int x, int y) {
         int index = 0;
         Cell[] adjCellMoveAvailable = new Cell[8];  // 8 is the maximum number of possible adjacent cell where move
-        Cell[][] c = submatrixGenerator(x, y);
+        Cell[][] c = subMatrixGenerator(x, y);
         for (int i = 0; i < 3; i++) {    //searching around the cell(x,y)
             for (int j = 0; j < 3; j++) {
                 if (c[i][j] != null &&                                          // c cell isn't out of map and
@@ -111,7 +111,7 @@ public class GameBoard {
     public Cell[] adjacentCellBuildAvailable(int x, int y) {
         int index = 0;
         Cell[] adjCellBuildAvailable = new Cell[8];  // 8 is the maximum number of possible adjacent cell where build
-        Cell[][] c = submatrixGenerator(x, y);
+        Cell[][] c = subMatrixGenerator(x, y);
         for (int i = 0; i < 3; i++) {    //searching around the cell(x,y)
             for (int j = 0; j < 3; j++) {
                 if (c[i][j] != null &&                  // c cell isn't out of map and
@@ -154,5 +154,13 @@ public class GameBoard {
         else
             w.setAvailable(true);
         return w.getAvailable();
+    }
+
+    public void loseCondition(Player p) {
+        if(!p.getWorker1().getAvailable() && !p.getWorker2().getAvailable()) {
+            GameBoard.getInstance().getCell(p.getWorker1().getCurrentX(),p.getWorker1().getCurrentY()).unSetWorker();
+            GameBoard.getInstance().getCell(p.getWorker2().getCurrentX(),p.getWorker2().getCurrentY()).unSetWorker();
+            //p.setState("Lose");
+        }
     }
 }
