@@ -1,8 +1,11 @@
 package it.polimi.ingsw.PSP42.model;
+import it.polimi.ingsw.PSP42.*;
+
 import java.util.ArrayList;
 
-public class GameBoard {
+public class GameBoard implements GameObservable {
     private Cell[][] board = new Cell[5][5];
+    private ArrayList<GameObserver> obs;
     private ArrayList<Player> players;
     private int currentPlayer;
     private static GameBoard instance = null;
@@ -169,5 +172,35 @@ public class GameBoard {
     }
 
 
+    //PATTER OBSERVER
 
+    /**
+     * Aggiunge un osservatore alla lista dell'osservato
+     *
+     * @param ob
+     */
+    @Override
+    public void attach(GameObserver ob) {
+        obs.add(ob);
+    }
+
+    /**
+     * Rimuove un osservatore dalla lista dell'osservato
+     *
+     * @param ob
+     */
+    @Override
+    public void detach(GameObserver ob) {
+      obs.remove(ob);
+    }
+
+    /**
+     * notifica tutti gli osservati interessati ad un cambiamento di stato
+     */
+    @Override
+    public void notifyObservers() {
+        for (int i = 0; i <obs.size() ; i++) {
+            obs.get(i).update();
+        }
+    }
 }
