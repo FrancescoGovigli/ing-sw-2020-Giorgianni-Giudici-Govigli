@@ -1,5 +1,7 @@
 package it.polimi.ingsw.PSP42.model;
 
+import it.polimi.ingsw.PSP42.controller.ControllerCLI;
+
 /**
  * This simple god allow a worker to build twice.
  */
@@ -68,12 +70,17 @@ public class Demeter extends YourBuildGod {
     public void buildPower(int x, int y, Worker w) {
         if(getCounter() == 1) {
             w.buildBlock(x,y);
-            //secondBuild() //method in controller that ask at player if,
+            ControllerCLI con = new ControllerCLI();
+            String s = con.secondBuild();//method in controller that ask at player if,
                             // and if he wants, where to build the second block
-            int newX = x-2;
-            int newY = y-2;
-            setCounter(2);
-            w.getPlayer().build(newX, newY, w);
+            if(!s.equals("No")) {
+                int newX = s.charAt(0) - 48;
+                int newY = s.charAt(1) - 48;
+                //int newX = x-2;
+                //int newY = y-2;
+                setCounter(2);
+                w.getPlayer().build(newX, newY, w);
+            }
         }
         else {
             w.buildBlock(x, y);

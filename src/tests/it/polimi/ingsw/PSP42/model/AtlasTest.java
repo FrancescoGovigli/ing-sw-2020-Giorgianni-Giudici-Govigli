@@ -22,7 +22,7 @@ public class AtlasTest {
     }
 
     @Test
-    public void buildPower() throws OccupiedCellException, UnavailableWorkerException, NotYourWorkerException, InvalidMoveException, InvalidBuildException {
+    public void buildPower() {
         p1.setInitialPosition(0,0, p1.getWorker1());
         p1.setInitialPosition(4,4, p1.getWorker2());
         p1.setPosWorker(1,1, p1.getWorker1());

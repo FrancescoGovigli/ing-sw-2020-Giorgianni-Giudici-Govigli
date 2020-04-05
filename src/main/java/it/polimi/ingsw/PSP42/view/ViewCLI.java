@@ -1,6 +1,7 @@
 package it.polimi.ingsw.PSP42.view;
 
 import java.awt.*;
+import java.util.Scanner;
 
 public class ViewCLI {
 
@@ -72,6 +73,18 @@ public class ViewCLI {
             }
             System.out.print("\n");
         }
+    }
+
+    public String atlasRequest() {
+        System.out.println("What level do you wanna build? 'Next level' or Dome? \n");
+        Scanner input = new Scanner(System.in);
+        return input.nextLine();
+    }
+
+    public String demeterRequest() {
+        System.out.println("Do you wanna build again? If you want type the cell (es. '1 1'), otherwise type 'No' \n");
+        Scanner input = new Scanner(System.in);
+        return input.nextLine();
     }
 
     public static void main(String[] args) {

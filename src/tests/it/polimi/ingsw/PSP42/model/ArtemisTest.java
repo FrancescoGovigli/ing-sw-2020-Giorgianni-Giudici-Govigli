@@ -23,23 +23,23 @@ public class ArtemisTest {
     }
 
     @Test
-    public void setPowerOK() throws OccupiedCellException, UnavailableWorkerException, NotYourWorkerException, InvalidMoveException, InvalidBuildException{
+    public void setPowerOK() {
         p1.setInitialPosition(2, 2, p1.getWorker1());
         p1.setInitialPosition(0, 0, p1.getWorker2());
         p1.setPosWorker(4, 4, p1.getWorker1());
         assertEquals(GameBoard.getInstance().getCell(4, 4), GameBoard.getInstance().getCell(p1.getWorker1().getCurrentX(), p1.getWorker1().getCurrentY()));
     }
 
-    @Test (expected = UnavailableWorkerException.class)
-    public void setPowerKOPosOccupied() throws OccupiedCellException, UnavailableWorkerException, NotYourWorkerException, InvalidMoveException, InvalidBuildException{
+    @Test
+    public void setPowerKOPosOccupied() {
         p1.setInitialPosition(2, 2, p1.getWorker1());
         p1.setInitialPosition(0, 0, p1.getWorker2());
         p1.setPosWorker(0, 0, p1.getWorker1());
         //assertEquals(GameBoard.getInstance().getCell(0, 0), GameBoard.getInstance().getCell(p1.getWorker1().getCurrentX(), p1.getWorker1().getCurrentY()));
     }
 
-    @Test (expected = UnavailableWorkerException.class)
-    public void setPowerKOSamePos() throws OccupiedCellException, UnavailableWorkerException, NotYourWorkerException, InvalidMoveException, InvalidBuildException{
+    @Test
+    public void setPowerKOSamePos() {
         p1.setInitialPosition(2, 2, p1.getWorker1());
         p1.setInitialPosition(0, 0, p1.getWorker2());
         p1.setPosWorker(2, 2, p1.getWorker1());
@@ -47,7 +47,7 @@ public class ArtemisTest {
     }
 
     @Test
-    public void setPowerOKOneStep() throws OccupiedCellException, UnavailableWorkerException, NotYourWorkerException, InvalidMoveException, InvalidBuildException{
+    public void setPowerOKOneStep() {
         p1.setInitialPosition(2, 2, p1.getWorker1());
         p1.setInitialPosition(0, 0, p1.getWorker2());
         p1.setPosWorker(1, 1, p1.getWorker1());
@@ -55,17 +55,17 @@ public class ArtemisTest {
     }
 
     @Test
-    public void powerMoveAvailable() throws OccupiedCellException, UnavailableWorkerException, NotYourWorkerException, InvalidMoveException, InvalidBuildException{
+    public void powerMoveAvailable() {
 
     }
 
     @Test
-    public void setPowerPosition() throws OccupiedCellException, UnavailableWorkerException, NotYourWorkerException, InvalidMoveException, InvalidBuildException{
+    public void setPowerPosition() {
 
     }
 
     @Test
-    public void adjacentCellMovePowerAvailable() throws OccupiedCellException, UnavailableWorkerException, NotYourWorkerException, InvalidMoveException, InvalidBuildException{
+    public void adjacentCellMovePowerAvailable() {
 
     }
 }
