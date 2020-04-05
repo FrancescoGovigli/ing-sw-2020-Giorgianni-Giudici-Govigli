@@ -9,6 +9,7 @@ public class GameBoard implements GameObservable {
     private ArrayList<Player> players;
     private int currentPlayer;
     private static GameBoard instance = null;
+
     public void reset(){
         instance=null;
     }
@@ -78,7 +79,7 @@ public class GameBoard implements GameObservable {
                 if (c[i][j] != null &&                                          // c cell isn't out of map and
                     (c[i][j].getWorker() == null) &&                            // there isn't a worker and
                     (c[i][j].getLevel() != 4) &&                                // is not 4th level and
-                    ((c[i][j].getLevel() - board[x][y].getLevel() <= 1) ||      // one gap level on ascent and
+                    ((c[i][j].getLevel() - board[x][y].getLevel() <= 1) ||      // one gap level on ascent or
                     (c[i][j].getLevel() - board[x][y].getLevel() >= - 3)))      // limit for the descent
                 {
                     adjCellMoveAvailable[index] = c[i][j];
@@ -90,18 +91,20 @@ public class GameBoard implements GameObservable {
     }
 
     /**
-     * Used to know if worker w can be moved in (x,y) position
-     * @param x (x coordinate of your position)
-     * @param y (y coordinate of your position)
-     * @param w (your worker)
+     * Method to know if a worker can be moved in (x,y) position
+     * @param x (x coordinate of where you would like to go)
+     * @param y (y coordinate of where you would like to go)
+     * @param w (worker who would like to move)
      * @return true if worker can be moved, false otherwise
      */
     public boolean moveAvailable(int x, int y, Worker w) {
         boolean condition = false;
         Cell[] c = adjacentCellMoveAvailable(w.getCurrentX(),w.getCurrentY());
-        for(int i = 0; i < c.length && !condition; i++) // !condition used to stop for loop just condition becomes true
-            if(c[i] != null && c[i].equals(getCell(x,y)))
+        for (int i = 0; i < c.length && !condition; i++) // !condition used to stop for loop just condition becomes true
+            if (c[i] != null && c[i].equals(getCell(x,y))) {
                 condition = true;
+                winCondition(x, y, w);
+            }
         return condition;
     }
 
@@ -139,8 +142,8 @@ public class GameBoard implements GameObservable {
     public boolean buildAvailable(int x, int y, Worker w) {
         boolean condition = false;
         Cell[] c = adjacentCellBuildAvailable(w.getCurrentX(), w.getCurrentY());
-        for(int i = 0; i < c.length && !condition; i++) // !condition used to stop for loop just condition becomes true
-            if(c[i] != null && c[i].equals(getCell(x,y)))
+        for (int i = 0; i < c.length && !condition; i++) // !condition used to stop for loop just condition becomes true
+            if (c[i] != null && c[i].equals(getCell(x,y)))
                 condition = true;
         return condition;
     }
@@ -152,23 +155,37 @@ public class GameBoard implements GameObservable {
      */
     public boolean workerAvailable(Worker w) {
         Cell[] c = adjacentCellMoveAvailable(w.getCurrentX(), w.getCurrentY());
-        if(c[0] == null)
+        if (c[0] == null)
             w.setAvailable(false);
         else
             w.setAvailable(true);
         return w.getAvailable();
     }
 
+    /**
+     * Method to verify if the player are still in the game or not,
+     * if both of his players are not available the player's status will be changed to "LOSE"
+     * @param p (player to be verified)
+     */
     public void loseCondition(Player p){
         if(!p.getWorker1().getAvailable() && !p.getWorker2().getAvailable()){
-            GameBoard.getInstance().getCell(p.getWorker1().getCurrentX(),p.getWorker1().getCurrentY()).unSetWorker();
-            GameBoard.getInstance().getCell(p.getWorker2().getCurrentX(),p.getWorker2().getCurrentY()).unSetWorker();
-            p.setPlayerstate("LOSE");
+            GameBoard.getInstance().getCell(p.getWorker1().getCurrentX(), p.getWorker1().getCurrentY()).unSetWorker();
+            GameBoard.getInstance().getCell(p.getWorker2().getCurrentX(), p.getWorker2().getCurrentY()).unSetWorker();
+            p.setPlayerState("LOSE");
         }
     }
 
-    public void winCondition(Player p){
-
+    /**
+     * Method to verify if the worker who has moved has won
+     * @param x (x coordinate of the future position of the worker)
+     * @param y (y coordinate of the future position of the worker)
+     * @param w (worker on moving)
+     */
+    public void winCondition(int x, int y, Worker w){
+        if (getCell(w.getCurrentX(), w.getCurrentY()).getLevel() == 2 &&    // worker w on level 2
+            getCell(x, y).getLevel() == 3) {                                // next position on level 3
+            w.getPlayer().setPlayerState("WIN");
+        }
     }
 
 

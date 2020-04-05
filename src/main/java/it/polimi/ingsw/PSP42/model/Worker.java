@@ -24,37 +24,37 @@ public class Worker {
     }
 
     /**
-     * Used to obtain position on x-axis
+     * Used to obtain worker's position on x-axis.
      * @return current position on x-axis
      */
     public int getCurrentX() {
-        return currentX;
+        return this.currentX;
     }
 
     /**
-     * Used to obtain position on y-axis
+     * Used to obtain worker's position on y-axis.
      * @return current position on y-axis
      */
     public int getCurrentY() {
-        return currentY;
+        return this.currentY;
     }
 
     /**
-     * Set Cartesian position. Used in Player's method: "setPositionWorker"
+     * Set Cartesian position. Used in Player's method: "setPositionWorker".
      * @see Player
      * @param x position on x-axis
      * @param y position on y-axis
      */
     public void setPosition(int x, int y) {
         if(this.currentX != -1 && this.currentY != -1)
-            GameBoard.getInstance().getCell(currentX,currentY).unSetWorker();
+            GameBoard.getInstance().getCell(this.currentX,this.currentY).unSetWorker();
         this.currentX = x;
         this.currentY = y;
         GameBoard.getInstance().getCell(x,y).setWorker(this);
     }
 
     /**
-     * Method to know which player used this worker
+     * Method to know which player used this worker.
      * @return worker's player reference
      */
     public Player getPlayer() {
@@ -62,7 +62,7 @@ public class Worker {
     }
 
     /**
-     * Used to know if worker can be moved
+     * Used to know if worker can be moved.
      * @return true if worker can be moved, false otherwise
      */
     public boolean getAvailable() {
@@ -70,7 +70,7 @@ public class Worker {
     }
 
     /**
-     * Used to set if worker is able to move
+     * Used to set if worker is able to move.
      * @param available true if worker is able to move, false otherwise
      */
     public void setAvailable(boolean available) {
@@ -78,7 +78,8 @@ public class Worker {
     }
 
     /**
-     * Used by Player to decide where to build
+     * Used by Player to decide where to build.
+     * @see Player
      * @param x block's position on x-axis
      * @param y block's position on y-axis
      */
