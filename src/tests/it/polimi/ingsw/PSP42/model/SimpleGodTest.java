@@ -21,7 +21,7 @@ public class SimpleGodTest {
         g.reset();
     }
     @Test
-    public void highLeftCorner_4WorkerSet_ApolloPower() throws OccupiedCellException, UnavailableWorkerException, NotYourWorkerException, InvalidMoveException, InvalidBuildException {
+    public void highLeftCorner_4WorkerSet_ApolloPower() {
         p1.setInitialPosition(0,0,p1.getWorker1());
         p1.setInitialPosition(0,1,p1.getWorker2());
         p2.setInitialPosition(1,0,p2.getWorker1());

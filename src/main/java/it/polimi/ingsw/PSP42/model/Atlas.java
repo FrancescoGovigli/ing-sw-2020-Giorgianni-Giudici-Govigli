@@ -1,5 +1,7 @@
 package it.polimi.ingsw.PSP42.model;
 
+import it.polimi.ingsw.PSP42.controller.ControllerCLI;
+
 /**
  * Simple god that allowed one worker to build a dome even if the level of the cell isn't 3.
  */
@@ -27,7 +29,10 @@ public class Atlas extends YourBuildGod {
      * @param w worker who build thanks Atlas' power
      */
     public void buildPower(int x, int y, Worker w) {
-        //String c = whatLevel();   //method in controller that ask at the player what level want to build
+        /*
+        ControllerCLI con = new ControllerCLI();
+        String c = con.whatLevel();   //method in controller that ask at the player what level want to build
+        */
         String c = "Dome";
         switch (c) {
             case "Next level": {
