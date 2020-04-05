@@ -7,7 +7,7 @@ public class Player {
     private final Worker worker1;
     private final Worker worker2;
     private enum State {WIN,LOSE,INGAME};
-    private State playerstate = State.INGAME;
+    private State playerState = State.INGAME;
 
     /**
      *Constructor to initialize a player object and istantiating 2 workers used by the player outside the Map cell(-1,-1)
@@ -21,8 +21,8 @@ public class Player {
         this.id = id;
         this.worker1 = new Worker(-1,-1,this);
         this.worker2 = new Worker(-1,-1,this);
-        this.card = null;
-        //this.card = new Apollo(worker1,worker2);
+        //this.card = null;
+        this.card = new Artemis(worker1,worker2);
     }
 
     /**
@@ -37,8 +37,8 @@ public class Player {
      * It is an important getter to know the status of a player during the game
      * @return
      */
-    public State getPlayerstate() {
-        return playerstate;
+    public State getPlayerState() {
+        return playerState;
     }
 
     /**
@@ -46,8 +46,8 @@ public class Player {
      * The gameboard has methods to change state of player looking at the whole Game State
      * @param s
      */
-    public void setPlayerstate(String s){
-        playerstate = State.valueOf(s);
+    public void setPlayerState(String s){
+        playerState = State.valueOf(s);
     }
 
     public String getNickname() {
@@ -79,7 +79,7 @@ public class Player {
      * @throws UnavailableWorkerException the worker choosed isnt able to move
      * @throws NotYourWorkerException the worker choosed isn't assigned to the player
      */
-    public void setPosWorker(int x, int y, Worker w) throws InvalidMoveException, UnavailableWorkerException, NotYourWorkerException{
+    public void setPosWorker(int x, int y, Worker w) throws InvalidMoveException, UnavailableWorkerException, NotYourWorkerException, InvalidBuildException {
         if(w.equals(worker1) || w.equals(worker2)) {
             if(w.getAvailable()){
                if(card==null){

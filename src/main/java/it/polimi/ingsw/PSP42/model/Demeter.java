@@ -65,7 +65,7 @@ public class Demeter extends YourBuildGod {
      * @param w worker that wants to build
      */
     @Override
-    public void buildPower(int x, int y, Worker w) {
+    public void buildPower(int x, int y, Worker w) throws InvalidBuildException {
         if(getCounter() == 1) {
             w.buildBlock(x,y);
             //secondBuild() //method in controller that ask at player if,

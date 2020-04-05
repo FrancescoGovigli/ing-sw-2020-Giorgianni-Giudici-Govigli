@@ -14,7 +14,7 @@ public class Artemis extends YourMoveGod {
      * @param x position on x-axis of desired destination
      * @param y position on y-axis of desired destination
      * @param w worker that want to move
-     * @return
+     * @return true if the cell specified is reachable, false otherwise
      */
     public boolean powerMoveAvailable(int x, int y, Worker w) {
         Cell[] availableCell = adjacentCellMovePowerAvailable(w);

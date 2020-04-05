@@ -21,7 +21,7 @@ public abstract class YourBuildGod extends SimpleGod {
      * @param y position on the y-axis
      * @param w worker that want to build
      */
-    public abstract void buildPower(int x, int y,Worker w);
+    public abstract void buildPower(int x, int y,Worker w) throws InvalidBuildException;
 
     /**
 
@@ -43,7 +43,7 @@ public abstract class YourBuildGod extends SimpleGod {
      * @param w the worker that has the functionality added
      */
     @Override
-    public void setPower(int x, int y,Worker w) {
+    public void setPower(int x, int y,Worker w) throws InvalidBuildException {
         this.buildPower(x,y,w);
     }
 }
