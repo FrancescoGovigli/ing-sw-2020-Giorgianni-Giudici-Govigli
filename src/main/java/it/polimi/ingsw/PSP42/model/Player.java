@@ -107,7 +107,7 @@ public class Player {
         if (!(card instanceof YourBuildGod))
                 w.buildBlock(x, y);
         else
-            card.setPower(x, y,w);
+            card.setPower(x, y, w);
         }
 
 
@@ -145,7 +145,7 @@ public class Player {
             else
                 return false;
         }
-        public boolean checkOutofBoard(Worker w){
+        public boolean checkOutOfBoard(Worker w){
             return w.getCurrentX() == - 1 && w.getCurrentY() == - 1;
         }
 

@@ -29,6 +29,5 @@ public class SimpleGodTest {
         p1.setPosWorker(1,1,p1.getWorker1());
         assertEquals(1,p1.getWorker1().getCurrentX());
         assertEquals(1,p1.getWorker1().getCurrentY());
-
     }
 }

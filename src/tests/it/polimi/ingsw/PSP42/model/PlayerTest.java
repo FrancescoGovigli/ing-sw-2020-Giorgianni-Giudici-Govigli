@@ -35,8 +35,8 @@ public class PlayerTest<excepted> {
         p1.setInitialPosition(0,0,p1.getWorker1());
         p1.setInitialPosition(1,1,p1.getWorker2());
         p1.setPosWorker(0,1,p1.getWorker1());
-     assertEquals(0, p1.getWorker1().getCurrentX());
-     assertEquals(1, p1.getWorker1().getCurrentY());
+        assertEquals(0, p1.getWorker1().getCurrentX());
+        assertEquals(1, p1.getWorker1().getCurrentY());
     }
 
     @Test
@@ -56,16 +56,16 @@ public class PlayerTest<excepted> {
         p1.setInitialPosition(1,1,p1.getWorker2());
         p1.setPosWorker(0,1,p1.getWorker1());
         p1.build(1,2,p1.getWorker1());
-        assertEquals(1,GameBoard.getInstance().getCell(1,2).getLevel());
+        assertEquals(1, GameBoard.getInstance().getCell(1,2).getLevel());
     }
 
     @Test //(expected = OccupiedCellException.class)
     public void setInitialPosition_2Worker_expectedOK() {
-        assertEquals(-1,p1.getWorker1().getCurrentX());
-        assertEquals(-1,p1.getWorker1().getCurrentY());
-        assertEquals(-1,p1.getWorker2().getCurrentX());
-        assertEquals(-1,p1.getWorker2().getCurrentY());
-        p1.setInitialPosition(0,0,p1.getWorker1());
-        p1.setInitialPosition(1,1,p1.getWorker2());
+        assertEquals(-1, p1.getWorker1().getCurrentX());
+        assertEquals(-1, p1.getWorker1().getCurrentY());
+        assertEquals(-1, p1.getWorker2().getCurrentX());
+        assertEquals(-1, p1.getWorker2().getCurrentY());
+        p1.setInitialPosition(0,0, p1.getWorker1());
+        p1.setInitialPosition(1,1, p1.getWorker2());
     }
 }

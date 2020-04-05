@@ -67,7 +67,7 @@ public class Demeter extends YourBuildGod {
      * @param w worker that wants to build
      */
     @Override
-    public void buildPower(int x, int y, Worker w) throws InvalidBuildException {
+    public void buildPower(int x, int y, Worker w){
         if(getCounter() == 1) {
             w.buildBlock(x,y);
             ControllerCLI con = new ControllerCLI();

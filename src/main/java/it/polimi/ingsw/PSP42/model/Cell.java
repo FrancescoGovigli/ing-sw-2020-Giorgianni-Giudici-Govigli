@@ -3,6 +3,7 @@ package it.polimi.ingsw.PSP42.model;
 /**
  * @author Daniele Giorgianni (Bob)
  */
+
 public class Cell {
     private boolean[] cellLevel;
     private Worker worker;

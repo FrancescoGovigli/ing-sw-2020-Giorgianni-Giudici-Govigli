@@ -26,12 +26,5 @@ public abstract class SimpleGod {
      * @param y the y-axis of the cell interested for the action
      * @param w the worker that has the functionality added
      */
-    public abstract void setPower(int x,int y, Worker w) throws InvalidBuildException;
-
-
-
-
-
-
-
+    public abstract void setPower(int x,int y, Worker w);
 }

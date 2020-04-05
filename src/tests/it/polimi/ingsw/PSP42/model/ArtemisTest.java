@@ -56,16 +56,13 @@ public class ArtemisTest {
 
     @Test
     public void powerMoveAvailable() {
-
     }
 
     @Test
     public void setPowerPosition() {
-
     }
 
     @Test
     public void adjacentCellMovePowerAvailable() {
-
     }
 }

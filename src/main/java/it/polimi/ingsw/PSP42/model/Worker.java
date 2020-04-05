@@ -47,10 +47,10 @@ public class Worker {
      */
     public void setPosition(int x, int y) {
         if(this.currentX != -1 && this.currentY != -1)
-            GameBoard.getInstance().getCell(this.currentX,this.currentY).unSetWorker();
+            GameBoard.getInstance().getCell(this.currentX, this.currentY).unSetWorker();
         this.currentX = x;
         this.currentY = y;
-        GameBoard.getInstance().getCell(x,y).setWorker(this);
+        GameBoard.getInstance().getCell(x, y).setWorker(this);
     }
 
     /**
@@ -84,6 +84,6 @@ public class Worker {
      * @param y block's position on y-axis
      */
     public void buildBlock(int x, int y) {
-        GameBoard.getInstance().getCell(x,y).setCellLevel();
+        GameBoard.getInstance().getCell(x, y).setCellLevel();
     }
 }

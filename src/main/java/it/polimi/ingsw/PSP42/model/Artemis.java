@@ -6,7 +6,7 @@ package it.polimi.ingsw.PSP42.model;
 public class Artemis extends YourMoveGod {
 
     public Artemis (Worker w1, Worker w2) {
-        super(w1,w2);
+        super(w1, w2);
     }
 
     /**
