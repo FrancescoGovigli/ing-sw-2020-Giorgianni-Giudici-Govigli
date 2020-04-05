@@ -7,7 +7,7 @@ public class Player {
     private final Worker worker1;
     private final Worker worker2;
     private enum State {WIN,LOSE,INGAME};
-    private State playerstate = State.INGAME;
+    private State playerState = State.INGAME;
 
     /**
      *Constructor to initialize a player object and istantiating 2 workers used by the player outside the Map cell(-1,-1)
@@ -21,8 +21,10 @@ public class Player {
         this.id = id;
         this.worker1 = new Worker(-1,-1,this);
         this.worker2 = new Worker(-1,-1,this);
-        this.card = null;
-        //this.card = new Apollo(worker1,worker2);
+        //this.card = null;
+        //this.card = new Apollo(worker1, worker2);
+        //this.card = new Atlas(worker1, worker2);
+        this.card = new Demeter(worker1, worker2);
     }
 
     /**
@@ -37,8 +39,8 @@ public class Player {
      * It is an important getter to know the status of a player during the game
      * @return
      */
-    public State getPlayerstate() {
-        return playerstate;
+    public State getPlayerState() {
+        return playerState;
     }
 
     /**
@@ -46,8 +48,8 @@ public class Player {
      * The gameboard has methods to change state of player looking at the whole Game State
      * @param s
      */
-    public void setPlayerstate(String s){
-        playerstate = State.valueOf(s);
+    public void setPlayerState(String s){
+        playerState = State.valueOf(s);
     }
 
     public String getNickname() {
@@ -79,21 +81,21 @@ public class Player {
      * @throws UnavailableWorkerException the worker choosed isnt able to move
      * @throws NotYourWorkerException the worker choosed isn't assigned to the player
      */
-    public void setPosWorker(int x, int y, Worker w) throws InvalidMoveException, UnavailableWorkerException, NotYourWorkerException{
+    public void setPosWorker(int x, int y, Worker w) throws InvalidMoveException, UnavailableWorkerException, NotYourWorkerException, InvalidBuildException {
         if(w.equals(worker1) || w.equals(worker2)) {
             if(w.getAvailable()){
-               if(card==null){
+               if(! (card instanceof YourMoveGod)){
                 if(GameBoard.getInstance().moveAvailable(x, y, w))
                     w.setPosition(x, y);
                 else
                     throw new InvalidMoveException("The cell selected isn't available for moving");
             }
-            else
-                if(card.powerAvailable(x,y,w))
-                    card.setPower(x,y,w);
-
-            else
-               throw new UnavailableWorkerException("Your worker is blocked");
+            else {
+                if (card.powerAvailable(x, y, w))
+                    card.setPower(x, y, w);
+                else
+                    throw new UnavailableWorkerException("Your worker is blocked");
+               }
         }
         else
           throw new NotYourWorkerException("This worker is not yours");
@@ -108,11 +110,19 @@ public class Player {
      * @param w position is set for the worker w
      * @throws InvalidBuildException if the build method returns false
      */
-    public void build(int x, int y, Worker w) throws InvalidBuildException{
-        if(GameBoard.getInstance().buildAvailable(x,y,w))
-            w.buildBlock(x, y);
-        else
-           throw new InvalidBuildException("The cell choosen is incorrect");
+    public void build(int x, int y, Worker w) throws InvalidBuildException {
+        if(!(card instanceof YourBuildGod)) {
+            if (GameBoard.getInstance().buildAvailable(x, y, w))
+                w.buildBlock(x, y);
+            else
+                throw new InvalidBuildException("The cell choosen is incorrect");
+        }
+        else {
+            if(card.powerAvailable(x, y, w))
+                card.setPower(x, y, w);
+            else
+                throw new InvalidBuildException("The cell choosen is incorrect");
+        }
     }
 
     /**

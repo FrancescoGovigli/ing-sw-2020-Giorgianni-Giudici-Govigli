@@ -15,10 +15,7 @@ public class PlayerTest<excepted> {
     @Before
     public void setUp() throws Exception {
         p1 = new Player("DG",1);
-        p2 = new Player("CIPOOO",2);
-
-
-
+        p2 = new Player("CIPO",2);
     }
 
     @After
@@ -27,10 +24,12 @@ public class PlayerTest<excepted> {
         p2= null;
         g.reset();
     }
+
     @Test
     public void checkNickname(){
         assertEquals("DG",p1.getNickname());
     }
+
     @Test
     public void setPosWorker_positionAvailable_expectedNewPos() throws InvalidMoveException, UnavailableWorkerException, NotYourWorkerException, OccupiedCellException, InvalidBuildException {
         p1.setInitialPosition(0,0,p1.getWorker1());
@@ -38,10 +37,10 @@ public class PlayerTest<excepted> {
         p1.setPosWorker(0,1,p1.getWorker1());
      assertEquals(0, p1.getWorker1().getCurrentX());
      assertEquals(1, p1.getWorker1().getCurrentY());
-
     }
+
     @Test (expected = InvalidMoveException.class)
-    public void highLeftCorner_4Worker_1Blocked() throws OccupiedCellException, UnavailableWorkerException, NotYourWorkerException, InvalidMoveException {
+    public void highLeftCorner_4Worker_1Blocked() throws OccupiedCellException, UnavailableWorkerException, NotYourWorkerException, InvalidMoveException, InvalidBuildException {
         p1.setInitialPosition(0,0,p1.getWorker1());
         p1.setInitialPosition(0,1,p1.getWorker2());
         p2.setInitialPosition(1,0,p2.getWorker1());
@@ -49,8 +48,8 @@ public class PlayerTest<excepted> {
         p1.setPosWorker(1,1,p1.getWorker1());
         assertEquals(0,p1.getWorker1().getCurrentX());
         assertEquals(0,p1.getWorker1().getCurrentY());
-
     }
+
     @Test
     public void build_positionAvailable_expectedLevel1() throws InvalidBuildException,InvalidMoveException,UnavailableWorkerException,NotYourWorkerException,OccupiedCellException {
         p1.setInitialPosition(0,0,p1.getWorker1());
@@ -58,8 +57,6 @@ public class PlayerTest<excepted> {
         p1.setPosWorker(0,1,p1.getWorker1());
         p1.build(1,2,p1.getWorker1());
         assertEquals(1,GameBoard.getInstance().getCell(1,2).getLevel());
-
-
     }
 
     @Test //(expected = OccupiedCellException.class)
@@ -70,6 +67,5 @@ public class PlayerTest<excepted> {
         assertEquals(-1,p1.getWorker2().getCurrentY());
         p1.setInitialPosition(0,0,p1.getWorker1());
         p1.setInitialPosition(1,1,p1.getWorker2());
-
     }
 }

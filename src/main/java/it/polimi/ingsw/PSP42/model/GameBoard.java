@@ -160,7 +160,7 @@ public class GameBoard {
         if(!p.getWorker1().getAvailable() && !p.getWorker2().getAvailable()){
             GameBoard.getInstance().getCell(p.getWorker1().getCurrentX(),p.getWorker1().getCurrentY()).unSetWorker();
             GameBoard.getInstance().getCell(p.getWorker2().getCurrentX(),p.getWorker2().getCurrentY()).unSetWorker();
-            p.setPlayerstate("LOSE");
+            p.setPlayerState("LOSE");
         }
     }
 
