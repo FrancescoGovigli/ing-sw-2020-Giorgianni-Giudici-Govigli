@@ -31,7 +31,7 @@ public class Atlas extends YourBuildGod {
     public void buildPower(int x, int y, Worker w) {
         /*
         ControllerCLI con = new ControllerCLI();
-        String c = con.whatLevel();   //method in controller that ask at the player what level want to build
+        String c = con.whatLevel();   // method in controller that ask at the player what level want to build
         */
         String c = "Dome";
         switch (c) {

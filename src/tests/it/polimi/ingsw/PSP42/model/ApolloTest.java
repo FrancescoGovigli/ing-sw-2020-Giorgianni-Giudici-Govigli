@@ -3,8 +3,8 @@ package it.polimi.ingsw.PSP42.model;
 import org.junit.*;
 
 import static org.junit.Assert.*;
-// TEST CON CARTA FISSA
-public class SimpleGodTest {
+// TEST CON CARTA FISSA APOLLO
+public class ApolloTest {
     private Player p1;
     private Player p2;
     private GameBoard g=GameBoard.getInstance();
@@ -29,6 +29,5 @@ public class SimpleGodTest {
         p1.setPosWorker(1,1,p1.getWorker1());
         assertEquals(1,p1.getWorker1().getCurrentX());
         assertEquals(1,p1.getWorker1().getCurrentY());
-
     }
 }

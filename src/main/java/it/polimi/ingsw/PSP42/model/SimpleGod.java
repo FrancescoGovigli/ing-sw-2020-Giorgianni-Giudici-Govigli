@@ -27,11 +27,4 @@ public abstract class SimpleGod {
      * @param w the worker that has the functionality added
      */
     public abstract void setPower(int x,int y, Worker w);
-
-
-
-
-
-
-
 }

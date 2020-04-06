@@ -18,7 +18,7 @@ public class DemeterTest {
 
     @After
     public void tearDown() throws Exception {
-        p1= null;
+        p1 = null;
         g.reset();
     }
 

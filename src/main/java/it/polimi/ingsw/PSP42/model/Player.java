@@ -27,6 +27,7 @@ public class Player {
         //this.card = null;
         //this.card = new Demeter(worker1, worker2);
         this.card = new Atlas(worker1, worker2);
+        //this.card = new Apollo(worker1, worker2);
         //this.card = new Artemis(worker1, worker2);
     }
 
@@ -87,10 +88,13 @@ public class Player {
      * @param w position is set for the worker w
      */
     public void setPosWorker(int x, int y, Worker w) {
-        if (!(card instanceof YourMoveGod))
-            w.setPosition(x, y);
-        else
-            card.setPower(x, y, w);
+        if (checkWorkerAvailable(w)) {
+            if (! (card instanceof YourMoveGod)) {
+                if (checkMoveAvailable(x, y, w))
+                    w.setPosition(x, y);
+            } else if (checkPowerAvailable(x, y, w))
+                card.setPower(x, y, w);
+        }
     }
 
     /**
@@ -107,7 +111,8 @@ public class Player {
                 w.buildBlock(x, y);
         }
         else
-            card.setPower(x, y, w);
+            if(checkPowerAvailable(x,y,w))
+             card.setPower(x, y,w);
         }
 
 
@@ -145,7 +150,7 @@ public class Player {
             else
                 return false;
         }
-        public boolean checkOutofBoard(Worker w){
+        public boolean checkOutOfBoard(Worker w){
             return w.getCurrentX() == - 1 && w.getCurrentY() == - 1;
         }
 

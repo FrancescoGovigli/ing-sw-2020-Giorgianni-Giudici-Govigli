@@ -13,7 +13,7 @@ public abstract class YourBuildGod extends SimpleGod {
      * @param w worker that want to build
      * @return true if it's possible to use build's power, false otherwise
      */
-    public abstract boolean powerBuildAvailable(int x,int y,Worker w);
+    public abstract boolean powerBuildAvailable(int x,int y, Worker w);
 
     /**
      * Used to build in one position thanks to god's power.
@@ -21,7 +21,7 @@ public abstract class YourBuildGod extends SimpleGod {
      * @param y position on the y-axis
      * @param w worker that want to build
      */
-    public abstract void buildPower(int x, int y,Worker w);
+    public abstract void buildPower(int x, int y, Worker w);
 
     /**
 
@@ -33,7 +33,7 @@ public abstract class YourBuildGod extends SimpleGod {
      */
     @Override
     public boolean powerAvailable(int x, int y,Worker w) {
-        return this.powerBuildAvailable(x,y,w);
+        return this.powerBuildAvailable(x, y, w);
     }
 
     /**
@@ -43,7 +43,7 @@ public abstract class YourBuildGod extends SimpleGod {
      * @param w the worker that has the functionality added
      */
     @Override
-    public void setPower(int x, int y,Worker w) {
-        this.buildPower(x,y,w);
+    public void setPower(int x, int y, Worker w){
+        this.buildPower(x, y, w);
     }
 }

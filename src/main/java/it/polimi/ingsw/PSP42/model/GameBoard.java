@@ -193,7 +193,6 @@ public class GameBoard implements GameObservable {
 
     /**
      * Aggiunge un osservatore alla lista dell'osservato
-     *
      * @param ob
      */
     @Override
@@ -203,7 +202,6 @@ public class GameBoard implements GameObservable {
 
     /**
      * Rimuove un osservatore dalla lista dell'osservato
-     *
      * @param ob
      */
     @Override
@@ -216,7 +214,7 @@ public class GameBoard implements GameObservable {
      */
     @Override
     public void notifyObservers() {
-        for (int i = 0; i <obs.size() ; i++) {
+        for (int i = 0; i <obs.size(); i++) {
             obs.get(i).update();
         }
     }

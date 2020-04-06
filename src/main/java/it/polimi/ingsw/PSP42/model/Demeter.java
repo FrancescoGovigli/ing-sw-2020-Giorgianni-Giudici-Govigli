@@ -67,7 +67,7 @@ public class Demeter extends YourBuildGod {
      * @param w worker that wants to build
      */
     @Override
-    public void buildPower(int x, int y, Worker w) {
+    public void buildPower(int x, int y, Worker w){
         if(getCounter() == 1) {
             w.buildBlock(x,y);
             setCounter(2);
