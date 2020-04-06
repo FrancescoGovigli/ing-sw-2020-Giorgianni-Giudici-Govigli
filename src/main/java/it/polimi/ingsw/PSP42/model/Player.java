@@ -24,9 +24,10 @@ public class Player {
         this.id = id;
         this.worker1 = new Worker(- 1, - 1, this);
         this.worker2 = new Worker(- 1, - 1, this);
-        this.card = null;
+        //this.card = null;
         //this.card = new Demeter(worker1, worker2);
-        //this.card = new Atlas(worker1, worker2);
+        this.card = new Atlas(worker1, worker2);
+        //this.card = new Artemis(worker1, worker2);
     }
 
     /**
@@ -86,13 +87,10 @@ public class Player {
      * @param w position is set for the worker w
      */
     public void setPosWorker(int x, int y, Worker w) {
-        if (!(card instanceof YourMoveGod)) {
-            if (checkMoveAvailable(x, y, w))
-                w.setPosition(x, y);
-        }
+        if (!(card instanceof YourMoveGod))
+            w.setPosition(x, y);
         else
-            if(checkMoveAvailable(x, y, w))
-                card.setPower(x, y, w);
+            card.setPower(x, y, w);
     }
 
     /**
@@ -104,10 +102,12 @@ public class Player {
 
      */
     public void build(int x, int y, Worker w) {
-        if (!(card instanceof YourBuildGod))
+        if (!(card instanceof YourBuildGod)) {
+            if (checkBuildAvailable(x, y, w))
                 w.buildBlock(x, y);
+        }
         else
-            card.setPower(x, y,w);
+            card.setPower(x, y, w);
         }
 
 

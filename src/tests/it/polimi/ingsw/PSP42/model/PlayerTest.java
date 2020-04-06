@@ -27,7 +27,7 @@ public class PlayerTest<excepted> {
 
     @Test
     public void checkNickname(){
-        assertEquals("DG",p1.getNickname());
+        assertEquals("DG", p1.getNickname());
     }
 
     @Test
@@ -35,8 +35,8 @@ public class PlayerTest<excepted> {
         p1.setInitialPosition(0,0,p1.getWorker1());
         p1.setInitialPosition(1,1,p1.getWorker2());
         p1.setPosWorker(0,1,p1.getWorker1());
-     assertEquals(0, p1.getWorker1().getCurrentX());
-     assertEquals(1, p1.getWorker1().getCurrentY());
+        assertEquals(0, p1.getWorker1().getCurrentX());
+        assertEquals(1, p1.getWorker1().getCurrentY());
     }
 
     @Test

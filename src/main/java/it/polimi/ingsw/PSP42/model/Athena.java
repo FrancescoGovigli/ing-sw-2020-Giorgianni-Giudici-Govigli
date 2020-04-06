@@ -30,4 +30,8 @@ public class Athena extends OpponentTurnGod {
     public void blockOthersStepUp () {
 
     }
+
+    public void godRequest() {
+
+    }
 }

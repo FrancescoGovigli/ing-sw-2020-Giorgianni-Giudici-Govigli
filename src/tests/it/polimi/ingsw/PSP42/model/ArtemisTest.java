@@ -35,7 +35,7 @@ public class ArtemisTest {
         p1.setInitialPosition(2, 2, p1.getWorker1());
         p1.setInitialPosition(0, 0, p1.getWorker2());
         p1.setPosWorker(0, 0, p1.getWorker1());
-        //assertEquals(GameBoard.getInstance().getCell(0, 0), GameBoard.getInstance().getCell(p1.getWorker1().getCurrentX(), p1.getWorker1().getCurrentY()));
+        assertEquals(GameBoard.getInstance().getCell(0, 0), GameBoard.getInstance().getCell(p1.getWorker1().getCurrentX(), p1.getWorker1().getCurrentY()));
     }
 
     @Test
@@ -43,7 +43,7 @@ public class ArtemisTest {
         p1.setInitialPosition(2, 2, p1.getWorker1());
         p1.setInitialPosition(0, 0, p1.getWorker2());
         p1.setPosWorker(2, 2, p1.getWorker1());
-        //assertEquals(GameBoard.getInstance().getCell(0, 0), GameBoard.getInstance().getCell(p1.getWorker1().getCurrentX(), p1.getWorker1().getCurrentY()));
+        assertEquals(GameBoard.getInstance().getCell(2, 2), GameBoard.getInstance().getCell(p1.getWorker1().getCurrentX(), p1.getWorker1().getCurrentY()));
     }
 
     @Test

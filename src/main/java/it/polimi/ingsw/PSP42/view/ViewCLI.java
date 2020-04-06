@@ -45,15 +45,12 @@ public class ViewCLI {
     public ViewCLI(){
         show();
     }
+
     public void show(){
         System.out.print("\nMAP\n");
         for (int i = 0; i < 6 ; i++) {
             for (int j = 0; j < 5 * 10; j++) {
                     System.out.print(Color. ANSI_YELLOW + "-");
-
-
-
-
             }
             System.out.print("\n");
             for (int k = 0; k <=5 * 10 ; k++) {
@@ -74,7 +71,7 @@ public class ViewCLI {
             System.out.print("\n");
         }
     }
-
+    /*
     public String atlasRequest() {
         System.out.println("What level do you wanna build? 'Next level' or Dome? \n");
         Scanner input = new Scanner(System.in);
@@ -86,7 +83,7 @@ public class ViewCLI {
         Scanner input = new Scanner(System.in);
         return input.nextLine();
     }
-
+    */
     public static void main(String[] args) {
         ViewCLI v = new ViewCLI();
     }

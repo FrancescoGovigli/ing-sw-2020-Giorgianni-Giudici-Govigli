@@ -8,6 +8,7 @@ public class ControllerCLI {
         //WHILE WINCONDITION
     }
 
+    /*
     public String whatLevel(){
         ViewCLI view = new ViewCLI();
         return view.atlasRequest();
@@ -17,5 +18,6 @@ public class ControllerCLI {
         ViewCLI view = new ViewCLI();
         return view.demeterRequest();
     }
+    */
 
 }
