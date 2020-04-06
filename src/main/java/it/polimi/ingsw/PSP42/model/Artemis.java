@@ -54,7 +54,7 @@ public class Artemis extends YourMoveGod {
                 if (firstStepCell[i][j] != null &&                                          // c cell isn't out of map and
                     (firstStepCell[i][j].getWorker() == null) &&                            // there isn't a worker and
                     (firstStepCell[i][j].getLevel() != 4) &&                                // is not 4th level and
-                    ((firstStepCell[i][j].getLevel() - GameBoard.getInstance().getCell(currentX, currentY).getLevel() <= 1) ||      // one gap level on ascent or
+                    ((firstStepCell[i][j].getLevel() - GameBoard.getInstance().getCell(currentX, currentY).getLevel() <= 1) &&      // one gap level on ascent and
                      (firstStepCell[i][j].getLevel() - GameBoard.getInstance().getCell(currentX, currentY).getLevel() >= - 3)))      // limit for the descent
                 {
                     secondStepCell = GameBoard.getInstance().submatrixGenerator(currentX-1+i, currentY-1+j);
@@ -64,7 +64,7 @@ public class Artemis extends YourMoveGod {
                                 secondStepCell[r][c] != GameBoard.getInstance().getCell(currentX-1+i, currentY-1+j) &&
                                 (secondStepCell[r][c].getWorker() == null) &&                            // there isn't a worker and
                                 (secondStepCell[r][c].getLevel() != 4) &&                                // is not 4th level and
-                                ((secondStepCell[r][c].getLevel() - GameBoard.getInstance().getCell(currentX-1+i, currentY-1+j).getLevel() <= 1) ||      // one gap level on ascent or
+                                ((secondStepCell[r][c].getLevel() - GameBoard.getInstance().getCell(currentX-1+i, currentY-1+j).getLevel() <= 1) &&      // one gap level on ascent and
                                  (secondStepCell[r][c].getLevel() - GameBoard.getInstance().getCell(currentX-1+i, currentY-1+j).getLevel() >= - 3)))      // limit for the descent
                             {
                                 cellPowerAvailable[index] = secondStepCell[r][c];

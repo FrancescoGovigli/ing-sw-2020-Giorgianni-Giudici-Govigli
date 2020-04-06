@@ -27,7 +27,7 @@ public class PlayerTest<excepted> {
 
     @Test
     public void checkNickname(){
-        assertEquals("DG",p1.getNickname());
+        assertEquals("DG", p1.getNickname());
     }
 
     @Test

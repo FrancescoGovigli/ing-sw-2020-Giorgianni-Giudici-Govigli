@@ -12,6 +12,7 @@ public class ControllerCLI implements GameObserver {
        view=v;
    }
 
+    /*
     public String whatLevel(){
         ViewCLI view = new ViewCLI();
         return view.atlasRequest();
@@ -21,6 +22,7 @@ public class ControllerCLI implements GameObserver {
         ViewCLI view = new ViewCLI();
         return view.demeterRequest();
     }
+    */
 
 
 
