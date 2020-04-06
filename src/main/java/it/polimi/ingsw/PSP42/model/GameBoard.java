@@ -79,7 +79,7 @@ public class GameBoard implements GameObservable {
                 if (c[i][j] != null &&                                          // c cell isn't out of map and
                     (c[i][j].getWorker() == null) &&                            // there isn't a worker and
                     (c[i][j].getLevel() != 4) &&                                // is not 4th level and
-                    ((c[i][j].getLevel() - board[x][y].getLevel() <= 1) ||      // one gap level on ascent or
+                    ((c[i][j].getLevel() - board[x][y].getLevel() <= 1) &&      // one gap level on ascent and
                     (c[i][j].getLevel() - board[x][y].getLevel() >= - 3)))      // limit for the descent
                 {
                     adjCellMoveAvailable[index] = c[i][j];

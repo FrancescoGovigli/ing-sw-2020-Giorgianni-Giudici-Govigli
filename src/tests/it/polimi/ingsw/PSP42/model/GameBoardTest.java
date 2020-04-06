@@ -1,5 +1,7 @@
 package it.polimi.ingsw.PSP42.model;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -10,14 +12,25 @@ public class GameBoardTest {
     private Player p = new Player("BOB", 1);
     private Worker w = new Worker(-1,-1, p);
 
+    @Before
+    public void setUp() throws Exception {
+        p = new Player("BOB", 1);
+
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        p = null;
+        board.reset();
+    }
+
     /*@Test
     public void reset() {
-        assertEquals(null, GameBoard.getInstance());
     }*/
 
     @Test
     public void getInstance() {
-        assertEquals(GameBoard.getInstance(), GameBoard.getInstance());
+        assertEquals(GameBoard.getInstance(), board);
     }
 
     @Test
@@ -30,9 +43,9 @@ public class GameBoardTest {
         assertEquals(GameBoard.getInstance().getCell(0, 0), board.submatrixGenerator(1, 1));
     }*/
 
-    @Test
+    /*@Test
     public void adjacentCellMoveAvailable() {
-    }
+    }*/
 
     @Test
     public void moveAvailable() {
@@ -40,9 +53,9 @@ public class GameBoardTest {
         assertEquals(true, board.moveAvailable(0, 1, w));
     }
 
-    @Test
+    /*@Test
     public void adjacentCellBuildAvailable() {
-    }
+    }*/
 
     @Test
     public void buildAvailable() {
@@ -69,4 +82,39 @@ public class GameBoardTest {
         p.build(1, 1, w);
         assertEquals();
     }*/
+
+    @Test
+    public void demo_Step_Up_And_Down(){
+        p.setInitialPosition(2, 2, p.getWorker1());
+        p.build(2, 1, p.getWorker1());
+        p.build(1, 1, p.getWorker1());
+        p.build(1, 1, p.getWorker1());
+        p.build(1, 2, p.getWorker1());
+        p.build(1, 2, p.getWorker1());
+        p.build(1, 2, p.getWorker1());
+        p.setPosWorker(2, 1, p.getWorker1());
+        p.setPosWorker(1, 1, p.getWorker1());
+        p.setPosWorker(1, 2, p.getWorker1());
+        p.setPosWorker(0, 2, p.getWorker1());
+        assertEquals(null, board.getCell(2, 2).getWorker());
+        assertEquals(1, board.getCell(2, 1).getLevel());
+        assertEquals(2, board.getCell(1, 1).getLevel());
+        assertEquals(3, board.getCell(1, 2).getLevel());
+        assertEquals(board.getCell(0, 2), board.getCell(p.getWorker1().getCurrentX(), p.getWorker1().getCurrentY()));
+    }
+
+    @Test
+    public void demo_Worker_unAvailable(){
+        p.setInitialPosition(0, 0, p.getWorker1());
+        p.build(0, 1, p.getWorker1());
+        p.build(0, 1, p.getWorker1());
+        p.build(1, 1, p.getWorker1());
+        p.build(1, 1, p.getWorker1());
+        p.build(1, 0, p.getWorker1());
+        p.build(1, 0, p.getWorker1());
+        assertEquals(2, board.getCell(0, 1).getLevel());
+        assertEquals(2, board.getCell(1, 1).getLevel());
+        assertEquals(2, board.getCell(1, 0).getLevel());
+        assertEquals(false, board.workerAvailable(p.getWorker1()));
+    }
 }
