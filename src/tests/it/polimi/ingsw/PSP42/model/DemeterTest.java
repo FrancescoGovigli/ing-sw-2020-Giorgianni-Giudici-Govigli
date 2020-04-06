@@ -23,7 +23,7 @@ public class DemeterTest {
     }
 
     @Test
-    public void buildPower() {
+    public void buildPower_buildIn2Cell_level1In22And00() {
         p1.setInitialPosition(0,0, p1.getWorker1());
         p1.setInitialPosition(4,4, p1.getWorker2());
         p1.setPosWorker(1,1, p1.getWorker1());

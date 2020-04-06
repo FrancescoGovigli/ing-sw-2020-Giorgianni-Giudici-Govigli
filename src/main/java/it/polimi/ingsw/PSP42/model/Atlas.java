@@ -33,16 +33,27 @@ public class Atlas extends YourBuildGod {
         ControllerCLI con = new ControllerCLI();
         String c = con.whatLevel();   // method in controller that ask at the player what level want to build
         */
-        String c = "Dome";
-        switch (c) {
-            case "Next level": {
-                GameBoard.getInstance().getCell(x, y).setCellLevel();
-                break;
-            }
-            case "Dome": {
-                GameBoard.getInstance().getCell(x, y).setSpecificCellLevel(4);
-                break;
+        //String c = this.setNextLevel(); //initialize thanks "setNextLevel"
+        String c = this.setDome(); //initialize thanks "setDome"
+        if(c.equals("Next level") || c.equals("Dome")) {
+            switch (c) {
+                case "Next level": {
+                    GameBoard.getInstance().getCell(x, y).setCellLevel();
+                    break;
+                }
+                case "Dome": {
+                    GameBoard.getInstance().getCell(x, y).setSpecificCellLevel(4);
+                    break;
+                }
             }
         }
+    }
+
+    public String setNextLevel() {
+        return "Next level";
+    }
+
+    public String setDome() {
+        return "Dome";
     }
 }
