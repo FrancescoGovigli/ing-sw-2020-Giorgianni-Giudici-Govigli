@@ -73,6 +73,8 @@ public class Demeter extends YourBuildGod {
             setCounter(2);
             int newX = x-2;
             int newY = y-2;
+            setCounter(2);
+            w.getPlayer().build(newX, newY, w);
             /*
             ControllerCLI con = new ControllerCLI();
             String s = con.secondBuild();//method in controller that ask at player if,
