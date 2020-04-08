@@ -3,16 +3,13 @@ import it.polimi.ingsw.PSP42.*;
 
 import java.util.ArrayList;
 
-public class GameBoard implements GameObservable {
+public class GameBoard implements ModelObservable {
     private Cell[][] board = new Cell[5][5];
-    private ArrayList<GameObserver> obs;
-    private ArrayList<Player> players;
-    private int currentPlayer;
-    private static GameBoard instance = null;
 
-    public void reset(){
-        instance=null;
-    }
+    /*TODO added constructor */private ArrayList<ModelObserver> obs = new ArrayList<ModelObserver>();
+    private ArrayList<Player> players;
+    private int currentPlayer=0;
+    private static GameBoard instance = null;
 
     /**
      * Constructor to initialize the board of dimension 5x5
@@ -25,6 +22,33 @@ public class GameBoard implements GameObservable {
         this.players = null;
         this.currentPlayer = 0;
     }
+
+    /*TODO added  */public int getCurrentPlayer(){
+        return currentPlayer;
+    }
+    public void reset(){
+        instance=null;
+    }
+
+
+    /*TODO added  */public void setCurrentPlayer(int x){
+        currentPlayer=x;
+    }
+
+    /**
+     * used to set only one time all the players playing when initializing the game
+     * @param players
+     */
+    /*TODO added  */public void setPlayers(ArrayList<Player> players) {
+        if(this.players ==null)
+         this.players = players;
+    }
+
+    /*TODO added ritorna una copia */public ArrayList<Player> getPlayers(){
+        return (ArrayList<Player>) players.clone();
+    }
+
+
 
     /**
      * Method to return the unique instance of the board
@@ -192,30 +216,30 @@ public class GameBoard implements GameObservable {
     //PATTER OBSERVER
 
     /**
-     * Aggiunge un osservatore alla lista dell'osservato
+     * Add an observer to the Model's observer list
      * @param ob
      */
     @Override
-    public void attach(GameObserver ob) {
+    /*TODO modified*/public void attach(ModelObserver ob) {
         obs.add(ob);
     }
 
     /**
-     * Rimuove un osservatore dalla lista dell'osservato
+     *Removes an observer to the Model's observer list
      * @param ob
      */
     @Override
-    public void detach(GameObserver ob) {
+    /*TODO modified*/public void detach(ModelObserver ob) {
       obs.remove(ob);
     }
 
     /**
-     * notifica tutti gli osservati interessati ad un cambiamento di stato
+     * notifies the observers who need update
      */
     @Override
-    public void notifyObservers() {
+    /*TODO modified*/public void notifyObservers(Object o) {
         for (int i = 0; i <obs.size(); i++) {
-            obs.get(i).update();
+            obs.get(i).update(o);
         }
     }
 }

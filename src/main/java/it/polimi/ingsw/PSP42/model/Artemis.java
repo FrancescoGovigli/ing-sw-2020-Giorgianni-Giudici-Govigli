@@ -1,7 +1,7 @@
 package it.polimi.ingsw.PSP42.model;
 
 /**
- * Simple god able of moving 2 times (the starting position cannot be the same as the arrival)
+ * Simple god able to move 2 times (the starting position cannot be the same as the arrival)
  */
 public class Artemis extends YourMoveGod {
 

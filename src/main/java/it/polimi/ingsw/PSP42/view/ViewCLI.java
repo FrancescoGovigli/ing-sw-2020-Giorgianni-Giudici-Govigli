@@ -2,56 +2,121 @@ package it.polimi.ingsw.PSP42.view;
 
 import it.polimi.ingsw.PSP42.*;
 
-import java.awt.*;
 import java.io.*;
-import java.sql.*;
 import java.util.*;
 
-public class ViewCLI implements GameObservable,GameObserver {
+public class ViewCLI implements ViewObservable, ModelObserver {
     private Scanner scanner;
     private PrintStream outputStream;
     private boolean done;
-    private ArrayList<GameObserver> obs;
+    private ArrayList<ViewObserver> obs = new ArrayList<>();
+    private enum State {INIT,MOVE,BUILD,END}
+    private State gameState;
+    private int numPlayers;
+    private Choice c;
 
+    public Choice getChoice(){
+        return c;
+    }
     public ViewCLI(){
         scanner = new Scanner(System.in);
         outputStream = new PrintStream(System.out);
         done = false;
+        gameState = State.INIT;
 
     }
 
+    public String getGameState(){
+        return gameState.toString();
+    }
+    public void setGameState(State s){
+        gameState = s;
+    }
+    public int getNumPlayers(){
+        return numPlayers;
+    }
+
     /**
-     * Aggiunge un osservatore alla lista dell'osservato
+     * This method helps the Controller to ask for the players names during the creation of game
+     * @return arraylist player names given through System.in
+     */
+    public ArrayList<String> getPlayernames(){
+        ArrayList<String> players = new ArrayList<>();
+        for (int i = 0; i < numPlayers ; i++) {
+            outputStream.println("Inserire il nome del giocatore :"+(i+1) );
+            players.add(scanner.next());
+        }
+
+        return players;
+    }
+
+    /**
+     * Add an observer to the View's observer list
      *
      * @param ob
      */
     @Override
-    public void attach(GameObserver ob) {
+    public void attach(ViewObserver ob) {
         obs.add(ob);
     }
 
     /**
-     * Rimuove un osservatore dalla lista dell'osservato
+     * Removes an observer to the View's observer list
      *
      * @param ob
      */
     @Override
-    public void detach(GameObserver ob) {
+    public void detach(ViewObserver ob) {
         obs.remove(ob);
     }
 
-    /**
-     * notifica tutti gli osservati interessati ad un cambiamento di stato
+
+
+     /**
+     *notifies all observers that the view is initializing the game
+     * @param o
      */
     @Override
-    public void notifyObservers() {
-        for (int i = 0; i <obs.size() ; i++) {
-            obs.get(i).update();
-        }
+    public void notifyInit(Object o) {
+        for (int i = 0; i <obs.size() ; i++)
+            obs.get(i).updateInit(o);
+
+    }
+
+    /**
+     * notifies all observers that the user selected a move coordinate
+     * @param o
+     */
+    @Override
+    public void notifyMove(Object o) {
+        for (int i = 0; i <obs.size() ; i++)
+            obs.get(i).updateMove(o);
+
+    }
+
+    /**
+     * notifies all observers that the user selected a build coordinate
+     * @param o
+     */
+    @Override
+    public void notifyBuild(Object o) {
+        for (int i = 0; i <obs.size() ; i++)
+            obs.get(i).updateBuild(o);
     }
 
     @Override
-    public void update() {
+    public String notifyCurrentPlayer() {
+           return obs.get(0).updateCurrentPlayer();
+    }
+
+    @Override
+    public void notifyEnd() {
+        obs.get(0).updateEnd();
+    }
+
+
+    @Override
+    public void update(Object o) {
         this.show();
     }
 
@@ -96,30 +161,85 @@ public class ViewCLI implements GameObservable,GameObserver {
     }
 
 
-
-
-
-
-
+    /**
+     * The method used to start the game and handle a turn
+     */
     public void run(){
-        outputStream.println("\n Benvenuti al gioco SANTORINI di Giorgianni-Giudici_Govigli"+" \uD83D\uDE0A");
+        outputStream.println("\nBenvenuti al gioco SANTORINI di Giorgianni-Giudici_Govigli"+" \uD83D\uDE0A");
+        outputStream.println("Inserire il numero di giocatori");
+        int numPlayer = scanner.nextInt();
+        numPlayers = numPlayer;
+        handleInit();
+        handleInitialPosition();
 
-        this.show();
-        while(done){
+        while(!done){
+            String nome = handleCurrentPlayer();
+            outputStream.println("\n"+nome+ " it's your turn!!!");
+            //MOVE
+            setGameState(State.MOVE);
+            outputStream.println("\nInserire quale worker muovere (digitare 1 o 2)");
+            Integer worker = scanner.nextInt();
+            outputStream.println("\nInserire una posizione in cui muoversi (digitare x,y)");
             String input = scanner.next();
-            outputStream.println("Inserire una posizione in cui muoversi digitare x,y");
             String[] s = input.split(",");
-            handleMove(Integer.parseInt(s[0]),Integer.parseInt(s[1]));
+            handleMove(Integer.parseInt(s[0]),Integer.parseInt(s[1]),worker);
+            outputStream.println("\nInserire una posizione in cui costruire con il tuo worker"+worker+ "(digitare x,y)");
+            String build = scanner.next();
+            String[] b = input.split(",");
+            handleBuild(Integer.parseInt(b[0]),Integer.parseInt(b[1]),worker);
+            handleEnd();
 
         }
     }
-    public void handleMove(Integer x,Integer y){
-        notifyObservers();
+
+    /**
+     * Its a handle method to notify observer that have to handle a move action from the user
+     * @param x x-axis for the new map position
+     * @param y y-axis for the new map position
+     * @param worker is an integer that tells which of the two worker are selected from the user
+     */
+    public void handleMove(Integer x,Integer y,Integer worker){
+        notifyMove(c=new Choice(x,y,worker));
     }
 
+    /**
+     * this method has the task to initialize the Gameboard and set the initial players position
+     */
+    public void handleInit(){notifyInit(c=new Choice(null,null,null));}
+    public void handleEnd(){notifyEnd();}
+    /**
+     * Has the task to ask the user to insert the two coordinates for his 2 workers and notify observers
+     * to set this data
+     */
+    public void handleInitialPosition(){
+        this.show();
+        for (int i = 0; i <numPlayers; i++) {
+            for (int j = 0; j <2; j++) {
+                outputStream.println("Giocatore "+(i+1)+", Inserire dove posizionare il tuo worker"+ (j+1) + "(digitare x,y)\"");
+                String input = scanner.next();
+                String[] s = input.split(",");
+                notifyInit(c=new Choice(Integer.parseInt(s[0]),Integer.parseInt(s[1]),j+1));
+            }
 
 
+        }
 
+    }
+
+    /**
+     * Its a handle method to notify observer that have to handle a build action from the user
+     * @param x x-axis for the new map position
+     * @param y y-axis for the new map position
+     * @param worker is an integer that tells which of the two worker are selected from the user
+     *               its the same one called from the move action
+     */
+    public void handleBuild(Integer x,Integer y,Integer worker){
+        notifyBuild(c=new Choice(x,y,worker));
+    }
+
+    public String handleCurrentPlayer(){
+        return notifyCurrentPlayer();
+    }
 
     public void show(){
         int cont=0;
@@ -197,29 +317,11 @@ public class ViewCLI implements GameObservable,GameObserver {
                 else
                     System.out.print(" ");
             }
-            System.out.print("\n");
+            System.out.print("\n"+Color.RESET);
             cont++;
         }
     }
 
-    public String atlasRequest() {
-        System.out.println("What level do you wanna build? 'Next level' or Dome? \n");
-        Scanner input = new Scanner(System.in);
-        return input.nextLine();
-    }
-
-    public String demeterRequest() {
-        System.out.println("Do you wanna build again? If you want type the cell (es. '1 1'), otherwise type 'No' \n");
-        Scanner input = new Scanner(System.in);
-        return input.nextLine();
-    }
-
-    public static void main(String[] args) {
-        ViewCLI v = new ViewCLI();
-    }
-    public void generateCell(int x,int y){
-
-    }
 
 
 }

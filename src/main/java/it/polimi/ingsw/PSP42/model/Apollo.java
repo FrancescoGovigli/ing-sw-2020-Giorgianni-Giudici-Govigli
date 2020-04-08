@@ -60,7 +60,7 @@ public class Apollo extends YourMoveGod {
             for (int j = 0; j < 3; j++) {
                 if (c[i][j] != null &&                             // c cell isn't out of map and and
                         (c[i][j].getLevel() != 4) &&                  // is not 4th level and
-                        ((c[i][j].getLevel() - GameBoard.getInstance().getCell(x, y).getLevel() <= 1) ||      // one gap level on ascent and
+                        ((c[i][j].getLevel() - GameBoard.getInstance().getCell(x, y).getLevel() <= 1) &&      // one gap level on ascent and
                                 (c[i][j].getLevel() - GameBoard.getInstance().getCell(x, y).getLevel() >= - 3)))      // limit for the descent
                 {
                     adjCellMoveAvailable[index] = c[i][j];

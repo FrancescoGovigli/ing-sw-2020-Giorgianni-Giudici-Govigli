@@ -24,9 +24,9 @@ public class Player {
         this.id = id;
         this.worker1 = new Worker(- 1, - 1, this);
         this.worker2 = new Worker(- 1, - 1, this);
-        //this.card = null;
+        this.card = null;
         //this.card = new Demeter(worker1, worker2);
-        this.card = new Atlas(worker1, worker2);
+        //this.card = new Atlas(worker1, worker2);
         //this.card = new Apollo(worker1, worker2);
         //this.card = new Artemis(worker1, worker2);
     }
