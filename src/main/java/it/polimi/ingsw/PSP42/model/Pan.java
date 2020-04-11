@@ -1,12 +1,11 @@
 package it.polimi.ingsw.PSP42.model;
 
 /**
- * TODO
- * Thanks to this simple god if a player's worker, who have this god, step up, the workers of other players can't.
+ * Simple god that wins if it drops by at least 2 levels
  */
-public class Athena extends SimpleGod {
+public class Pan extends SimpleGod{
 
-    public Athena(Worker w1, Worker w2) {
+    public Pan(Worker w1, Worker w2) {
         super(w1, w2);
     }
 
@@ -24,22 +23,37 @@ public class Athena extends SimpleGod {
 
     @Override
     public boolean powerMoveAvailable(int x, int y, Worker w) {
-        //TODO
+        if (GameBoard.getInstance().moveAvailable(x, y, w))
+            return true;
+        return false;
     }
 
     @Override
     public boolean powerMove(int x, int y, Worker w) {
-        //TODO
+        if (powerMoveAvailable(x, y, w)) {
+            if (GameBoard.getInstance().getCell(x, y).getLevel() -  //where he wants to go minus
+                GameBoard.getInstance().getCell(w.getCurrentX(), w.getCurrentY()).getLevel() <= -2)    //where is the worker
+                w.getPlayer().setPlayerState("WIN");
+            w.setPosition(x, y);
+            return true;
+        }
+        return false;
     }
 
     @Override
     public boolean powerBuildAvailable(int x, int y, int level, Worker w) {
-        //TODO
+        if (GameBoard.getInstance().buildAvailable(x, y, w))
+            return true;
+        return false;
     }
 
     @Override
     public boolean powerBuild(int x, int y, int level, Worker w) {
-        //TODO
+        if (powerMoveAvailable(x, y, w)){
+            w.buildBlock(x, y);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -55,17 +69,5 @@ public class Athena extends SimpleGod {
     @Override
     public String[][] getWhatToDo() {
         return phase;
-    }
-
-    public boolean workerStepUp(int x, int y, Worker w) {
-        if (GameBoard.getInstance().getCell(w.getCurrentX(), w.getCurrentY()).getLevel() -
-                GameBoard.getInstance().getCell(x, y).getLevel() == -1)
-            return true;
-        else
-            return false;
-    }
-
-    public void blockOthersStepUp () {
-
     }
 }

@@ -1,7 +1,5 @@
 package it.polimi.ingsw.PSP42.model;
 
-import it.polimi.ingsw.PSP42.controller.ControllerCLI;
-
 /**
  * This simple god allow a worker to build twice.
  */
@@ -15,8 +13,15 @@ public class Demeter extends SimpleGod {
     }
 
     @Override
-    public void godHashMap() {
-        hashMap.put("PreBuild","Build");
+    public String[][] setPhase() {
+        String[] start = {"NULL"};
+        String[] preMove = {"NULL"};
+        String[] move = {"move"};
+        String[] preBuild = {"build"};
+        String[] build = {"build"};
+        String[] end = {"NULL"};
+        String[][] phase = {start, preMove, move, preBuild, build, end};
+        return phase;
     }
 
     public int getCounter() {
@@ -49,7 +54,7 @@ public class Demeter extends SimpleGod {
     }
 
     @Override
-    public void powerMove(int x, int y, Worker w) {
+    public boolean powerMove(int x, int y, Worker w) {
         w.setPosition(x, y);
     }
 
@@ -82,7 +87,7 @@ public class Demeter extends SimpleGod {
      * @param w worker that wants to build
      */
     @Override
-    public void powerBuild(int x, int y, int level, Worker w){
+    public boolean powerBuild(int x, int y, int level, Worker w){
         if(getCounter() == 1) {
             w.buildBlock(x,y);
             setCounter(2);
@@ -117,8 +122,13 @@ public class Demeter extends SimpleGod {
     }
 
     @Override
-    public void powerEffect() {
+    public boolean powerEffect() {
+        return false;
+    }
 
+    @Override
+    public String[][] getWhatToDo() {
+        return phase;
     }
 
     /**

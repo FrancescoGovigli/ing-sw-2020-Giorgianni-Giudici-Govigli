@@ -87,29 +87,31 @@ public class Player {
     }
 
     /**
-     * sets during a move the new position of the worker
-     *
+     * Method used to move the worker w in (x,y) position
      * @param x the position x of the cell in the matrix
      * @param y the position y of the cell in the matrix
      * @param w position is set for the worker w
      */
     public boolean move(int x, int y, Worker w) {
-        return card.powerMoveAvailable(x,y,w);
+        return card.powerMove(x, y, w);
     }
 
     /**
-     * Used to select (x,y) position for the building
-     *
+     * Method used to build with worker w in (x,y) position
      * @param x the position x of the cell in the matrix
      * @param y the position y of the cell in the matrix
-     * @param w position is set for the worker w
+     * @param w build for the worker w
      */
     public boolean build(int x, int y, int level, Worker w) {
-        return card.powerBuildAvailable(x, y, level, w);
+        return card.powerBuild(x, y, level, w);
     }
 
+    /**
+     * TODO
+     * @return
+     */
     public boolean effect(){
-        return card.powerEffectAvailable();
+        return card.powerEffect();
     }
 
     /**
@@ -123,12 +125,13 @@ public class Player {
         }
 
     /**
-     * this method return a multiple value hashmap defined in Simplegod to know
-     * all the power the card has
-     * @return hashmap
+     * Method used to know the phase sequence of a Simple God
+     * @return an array of strings with variable size lines, initialized by the specific phases that a god has during his turn
+     * Structured like:
+     *  start   preMove     Move    preBuild    Build   End
+     *  [   ]   [   ]       [   ]   [       ]   [   ]   [   ]
      */
-    public HashMap<String,List<String>> checkWhatTodo(){
+    public String[][] checkWhatTodo(){
             return card.getWhatToDo();
         }
-
 }

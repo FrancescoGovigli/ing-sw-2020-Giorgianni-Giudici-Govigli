@@ -34,7 +34,7 @@ public class Cell {
     public int getLevel(){
         int level = 0;
         for (int i = 0; i < 5; i++)
-            if (cellLevel[i] && (i == 4 || !cellLevel[i + 1]))
+            if (cellLevel[i])
                 level = i;
         return level;
     }
@@ -56,7 +56,8 @@ public class Cell {
      * @param level the level that the worker want to build.
      */
     public void setSpecificCellLevel(int level){
-        this.cellLevel[level] = true;
+        if (level >= 0 && level <= 4)
+            this.cellLevel[level] = true;
     }
 
     /**

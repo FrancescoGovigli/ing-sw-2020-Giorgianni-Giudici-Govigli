@@ -1,7 +1,5 @@
 package it.polimi.ingsw.PSP42.model;
 
-import it.polimi.ingsw.PSP42.controller.ControllerCLI;
-
 /**
  * Simple god that allowed one worker to build a dome even if the level of the cell isn't 3.
  */
@@ -12,8 +10,15 @@ public class Atlas extends SimpleGod {
     }
 
     @Override
-    public void godHashMap() {
-
+    public String[][] setPhase() {
+        String[] start = {"NULL"};
+        String[] preMove = {"NULL"};
+        String[] move = {"move"};
+        String[] preBuild = {"NULL"};
+        String[] build = {"build"};
+        String[] end = {"NULL"};
+        String[][] phase = {start, preMove, move, preBuild, build, end};
+        return phase;
     }
 
     @Override
@@ -22,7 +27,7 @@ public class Atlas extends SimpleGod {
     }
 
     @Override
-    public void powerMove(int x, int y, Worker w) {
+    public boolean powerMove(int x, int y, Worker w) {
         w.setPosition(x, y);
     }
 
@@ -45,7 +50,7 @@ public class Atlas extends SimpleGod {
      * @param w worker who build thanks Atlas' power
      */
     @Override
-    public void powerBuild(int x, int y, int level, Worker w) {
+    public boolean powerBuild(int x, int y, int level, Worker w) {
         /*
         ControllerCLI con = new ControllerCLI();
         String c = con.whatLevel();   // method in controller that ask at the player what level want to build
@@ -59,7 +64,12 @@ public class Atlas extends SimpleGod {
     }
 
     @Override
-    public void powerEffect() {
+    public boolean powerEffect() {
+        return false;
+    }
 
+    @Override
+    public String[][] getWhatToDo() {
+        return phase;
     }
 }

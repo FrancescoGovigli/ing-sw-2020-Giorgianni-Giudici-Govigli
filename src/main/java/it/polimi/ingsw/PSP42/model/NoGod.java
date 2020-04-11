@@ -7,28 +7,47 @@ public class NoGod extends SimpleGod{
     }
 
     @Override
-    public void godHashMap() {
-
+    public String[][] setPhase() {
+        String[] start = {"NULL"};
+        String[] preMove = {"NULL"};
+        String[] move = {"move"};
+        String[] preBuild = {"NULL"};
+        String[] build = {"build"};
+        String[] end = {"NULL"};
+        String[][] phase = {start, preMove, move, preBuild, build, end};
+        return phase;
     }
 
     @Override
     public boolean powerMoveAvailable(int x, int y, Worker w) {
-        return GameBoard.getInstance().moveAvailable(x, y, w);
+        if (GameBoard.getInstance().moveAvailable(x, y, w))
+            return true;
+        return false;
     }
 
     @Override
-    public void powerMove(int x, int y, Worker w) {
-        w.setPosition(x, y);
+    public boolean powerMove(int x, int y, Worker w) {
+        if (powerMoveAvailable(x, y, w)) {
+            w.setPosition(x, y);
+            return true;
+        }
+        return false;
     }
 
     @Override
     public boolean powerBuildAvailable(int x, int y, int level, Worker w) {
-        return GameBoard.getInstance().buildAvailable(x, y, w);
+        if (GameBoard.getInstance().buildAvailable(x, y, w))
+            return true;
+        return false;
     }
 
     @Override
-    public void powerBuild(int x, int y, int level, Worker w) {
-        w.buildBlock(x, y);
+    public boolean powerBuild(int x, int y, int level, Worker w) {
+        if (powerMoveAvailable(x, y, w)){
+            w.buildBlock(x, y);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -37,7 +56,12 @@ public class NoGod extends SimpleGod{
     }
 
     @Override
-    public void powerEffect() {
+    public boolean powerEffect() {
+        return false;
+    }
 
+    @Override
+    public String[][] getWhatToDo() {
+        return phase;
     }
 }

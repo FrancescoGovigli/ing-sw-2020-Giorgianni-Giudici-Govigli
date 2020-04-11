@@ -1,5 +1,8 @@
 package it.polimi.ingsw.PSP42.model;
 
+/**
+ * TODO
+ */
 public class Hephaestus extends SimpleGod {
 
     private int counter = 1;
@@ -17,8 +20,15 @@ public class Hephaestus extends SimpleGod {
     }
 
     @Override
-    public void godHashMap() {
-        hashMap.put("Build", "Build");
+    public String[][] setPhase() {
+        String[] start = {"NULL"};
+        String[] preMove = {"NULL"};
+        String[] move = {"move"};
+        String[] preBuild = {"build"};
+        String[] build = {"build"};
+        String[] end = {"NULL"};
+        String[][] phase = {start, preMove, move, preBuild, build, end};
+        return phase;
     }
 
     @Override
@@ -27,8 +37,8 @@ public class Hephaestus extends SimpleGod {
     }
 
     @Override
-    public void powerMove(int x, int y, Worker w) {
-
+    public boolean powerMove(int x, int y, Worker w) {
+            //TODO
     }
 
     @Override
@@ -37,7 +47,7 @@ public class Hephaestus extends SimpleGod {
     }
 
     @Override
-    public void powerBuild(int x, int y, int level, Worker w) {
+    public boolean powerBuild(int x, int y, int level, Worker w) {
         if(getCounter()==1) {
             w.buildBlock(x, y);
             //if player want to build again in the same place
@@ -56,8 +66,12 @@ public class Hephaestus extends SimpleGod {
     }
 
     @Override
-    public void powerEffect() {
-
+    public boolean powerEffect() {
+        return false;
     }
 
+    @Override
+    public String[][] getWhatToDo() {
+        return phase;
+    }
 }
