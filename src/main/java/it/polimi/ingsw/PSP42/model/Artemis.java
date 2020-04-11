@@ -3,10 +3,15 @@ package it.polimi.ingsw.PSP42.model;
 /**
  * Simple god able to move 2 times (the starting position cannot be the same as the arrival)
  */
-public class Artemis extends YourMoveGod {
+public class Artemis extends SimpleGod {
 
     public Artemis (Worker w1, Worker w2) {
         super(w1, w2);
+    }
+
+    @Override
+    public void godHashMap() {
+
     }
 
     /**
@@ -16,6 +21,7 @@ public class Artemis extends YourMoveGod {
      * @param w worker that want to move
      * @return true if the cell specified is reachable, false otherwise
      */
+    @Override
     public boolean powerMoveAvailable(int x, int y, Worker w) {
         Cell[] availableCell = adjacentCellMovePowerAvailable(w);
         for (int i = 0; i < availableCell.length && availableCell[i] != null; i++){
@@ -31,8 +37,29 @@ public class Artemis extends YourMoveGod {
      * @param y position on y-axis of destination
      * @param w worker that want to move
      */
-    public void setPowerPosition(int x, int y, Worker w){
+    @Override
+    public void powerMove(int x, int y, Worker w) {
         w.setPosition(x, y);
+    }
+
+    @Override
+    public boolean powerBuildAvailable(int x, int y, int level, Worker w) {
+        return GameBoard.getInstance().buildAvailable(x, y, w);
+    }
+
+    @Override
+    public void powerBuild(int x, int y, int level, Worker w) {
+        w.buildBlock(x, y);
+    }
+
+    @Override
+    public boolean powerEffectAvailable() {
+        return false;
+    }
+
+    @Override
+    public void powerEffect() {
+
     }
 
     /**

@@ -5,13 +5,18 @@ import it.polimi.ingsw.PSP42.controller.ControllerCLI;
 /**
  * This simple god allow a worker to build twice.
  */
-public class Demeter extends YourBuildGod {
+public class Demeter extends SimpleGod {
 
     private int counter = 1;
     private Cell precedentCell;
 
     public Demeter(Worker w1, Worker w2) {
         super(w1, w2);
+    }
+
+    @Override
+    public void godHashMap() {
+        hashMap.put("PreBuild","Build");
     }
 
     public int getCounter() {
@@ -38,6 +43,16 @@ public class Demeter extends YourBuildGod {
         return precedentCell;
     }
 
+    @Override
+    public boolean powerMoveAvailable(int x, int y, Worker w) {
+        return GameBoard.getInstance().moveAvailable(x, y, w);
+    }
+
+    @Override
+    public void powerMove(int x, int y, Worker w) {
+        w.setPosition(x, y);
+    }
+
     /**
      * Used to verify if it's possible to build in that position.
      * Verify with different methods if it's the first or the second call of this method.
@@ -47,7 +62,7 @@ public class Demeter extends YourBuildGod {
      * @return true if worker can build, false otherwise
      */
     @Override
-    public boolean powerBuildAvailable(int x, int y, Worker w) {
+    public boolean powerBuildAvailable(int x, int y, int level, Worker w) {
         if(getCounter() == 1) {
             if(GameBoard.getInstance().buildAvailable(x, y, w)) {
                 this.setPrecedentCell(GameBoard.getInstance().getCell(x, y));
@@ -67,14 +82,14 @@ public class Demeter extends YourBuildGod {
      * @param w worker that wants to build
      */
     @Override
-    public void buildPower(int x, int y, Worker w){
+    public void powerBuild(int x, int y, int level, Worker w){
         if(getCounter() == 1) {
             w.buildBlock(x,y);
             setCounter(2);
             int newX = x-2;
             int newY = y-2;
             setCounter(2);
-            w.getPlayer().build(newX, newY, w);
+            w.getPlayer().build(newX, newY, level, w);
             /*
             ControllerCLI con = new ControllerCLI();
             String s = con.secondBuild();//method in controller that ask at player if,
@@ -91,9 +106,19 @@ public class Demeter extends YourBuildGod {
         }
         else {
             w.buildBlock(x, y);
-            counter = 1;
+            setCounter(1);
             setPrecedentCell(null);
         }
+    }
+
+    @Override
+    public boolean powerEffectAvailable() {
+        return false;
+    }
+
+    @Override
+    public void powerEffect() {
+
     }
 
     /**

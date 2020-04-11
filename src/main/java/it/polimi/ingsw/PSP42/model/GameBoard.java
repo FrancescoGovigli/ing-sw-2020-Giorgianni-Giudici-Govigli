@@ -26,10 +26,10 @@ public class GameBoard implements ModelObservable {
     /*TODO added  */public int getCurrentPlayer(){
         return currentPlayer;
     }
+
     public void reset(){
         instance=null;
     }
-
 
     /*TODO added  */public void setCurrentPlayer(int x){
         currentPlayer=x;
@@ -47,8 +47,6 @@ public class GameBoard implements ModelObservable {
     /*TODO added ritorna una copia */public ArrayList<Player> getPlayers(){
         return (ArrayList<Player>) players.clone();
     }
-
-
 
     /**
      * Method to return the unique instance of the board

@@ -1,0 +1,33 @@
+package it.polimi.ingsw.PSP42.model;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
+public class HephaestusTest {
+
+    private Player p1;
+    private GameBoard g=GameBoard.getInstance();
+
+    @Before
+    public void setUp() throws Exception {
+        p1 = new Player("Fra",1);
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        p1 = null;
+        g.reset();
+    }
+
+    @Test
+    public void buildPower_build2Level_level4InCell22() {
+        p1.setInitialPosition(0,0, p1.getWorker1());
+        p1.setInitialPosition(4,4, p1.getWorker2());
+        p1.setPosWorker(1,1, p1.getWorker1());
+        p1.build(2,2, p1.getWorker1());
+        assertEquals(2, GameBoard.getInstance().getCell(2,2).getLevel());
+    }
+}

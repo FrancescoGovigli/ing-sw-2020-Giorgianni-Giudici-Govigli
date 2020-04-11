@@ -9,10 +9,7 @@ public class Player {
     private final String nickname;
     private final Worker worker1;
     private final Worker worker2;
-
     private enum State {WIN, LOSE, INGAME}
-
-    ;
     private State playerState = State.INGAME;
 
     /**
@@ -33,6 +30,7 @@ public class Player {
         //this.card = new Atlas(worker1, worker2);
         //this.card = new Apollo(worker1, worker2);
         //this.card = new Artemis(worker1, worker2);
+        //this.card = new Hephaestus(worker 1, worker2);
     }
 
     public int getAge() {
@@ -96,7 +94,7 @@ public class Player {
      * @param w position is set for the worker w
      */
     public boolean move(int x, int y, Worker w) {
-        card.powerMoveAvailable(x,y,w);
+        return card.powerMoveAvailable(x,y,w);
     }
 
     /**
@@ -105,26 +103,23 @@ public class Player {
      * @param x the position x of the cell in the matrix
      * @param y the position y of the cell in the matrix
      * @param w position is set for the worker w
-
      */
-    public boolean build(int x, int y,int level, Worker w) {
-        return card.powerBuildAvailable(x, y,lev,w);
+    public boolean build(int x, int y, int level, Worker w) {
+        return card.powerBuildAvailable(x, y, level, w);
     }
 
     public boolean effect(){
         return card.powerEffectAvailable();
     }
 
-
-        /**
-         * Method used to initialize the worker on the gameboard in the cell(x,y)
-         * @param x
-         * @param y
-         * @param w
-
-         */
-        public boolean InitialPosition ( int x, int y, Worker w){
-            return card.InitPosition(x,y,w);
+    /**
+     * Method used to initialize the worker on the gameboard in the cell(x,y)
+     * @param x
+     * @param y
+     * @param w
+     */
+    public boolean InitialPosition ( int x, int y, Worker w){
+            return card.initPosition(x, y, w);
         }
 
     /**
@@ -135,7 +130,5 @@ public class Player {
     public HashMap<String,List<String>> checkWhatTodo(){
             return card.getWhatToDo();
         }
-
-
 
 }

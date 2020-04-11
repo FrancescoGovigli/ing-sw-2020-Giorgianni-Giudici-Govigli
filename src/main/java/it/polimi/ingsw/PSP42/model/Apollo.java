@@ -5,10 +5,15 @@ import javax.swing.*;
 /**
  * Simple god that allowed a worker to move in a cell occupied by another worker, switching their position.
  */
-public class Apollo extends YourMoveGod {
+public class Apollo extends SimpleGod {
 
     public Apollo(Worker w1,Worker w2) {
         super(w1, w2);
+    }
+
+    @Override
+    public void godHashMap() {
+
     }
 
     /**
@@ -18,6 +23,7 @@ public class Apollo extends YourMoveGod {
      * @param w worker who wants to move
      * @return true if worker is able to move, false otherwise
      */
+    @Override
     public boolean powerMoveAvailable(int x, int y, Worker w) {
         Cell[] adj = this.adjacentCellMovePowerAvailable(x, y, w);
         for (int i = 0; i < adj.length; i++) {
@@ -33,7 +39,8 @@ public class Apollo extends YourMoveGod {
      * @param y position on the y-axis
      * @param w worker who wants to move
      */
-    public void setPowerPosition(int x, int y, Worker w){
+    @Override
+    public void powerMove(int x, int y, Worker w) {
         Worker change;
         int tempPosX = 0;
         int tempPosY;
@@ -43,6 +50,26 @@ public class Apollo extends YourMoveGod {
             change.setPosition(w.getCurrentX(), w.getCurrentY());
             w.setPosition(tempPosX, tempPosY);
         }
+    }
+
+    @Override
+    public boolean powerBuildAvailable(int x, int y, int level, Worker w) {
+        return GameBoard.getInstance().buildAvailable(x, y, w);
+    }
+
+    @Override
+    public void powerBuild(int x, int y, int level, Worker w) {
+        w.buildBlock(x, y);
+    }
+
+    @Override
+    public boolean powerEffectAvailable() {
+        return false;
+    }
+
+    @Override
+    public void powerEffect() {
+
     }
 
     /**
@@ -70,6 +97,4 @@ public class Apollo extends YourMoveGod {
         }
         return adjCellMoveAvailable;
     }
-
 }
-
