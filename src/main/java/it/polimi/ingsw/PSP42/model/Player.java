@@ -1,8 +1,11 @@
 package it.polimi.ingsw.PSP42.model;
 
+import java.util.*;
+
 public class Player {
     private final SimpleGod card;
     private final int id;
+    private final int age;
     private final String nickname;
     private final Worker worker1;
     private final Worker worker2;
@@ -19,8 +22,9 @@ public class Player {
      * @param id   id automatically given to choose the order of gameplay during constructing
      * @param card choosed from the player
      */
-    public Player(String nick, int id)/*,Simplegod card*/ {
+    public Player(String nick, int id,int age/*,Simplegod card*/) {
         this.nickname = nick;
+        this.age = age;
         this.id = id;
         this.worker1 = new Worker(- 1, - 1, this);
         this.worker2 = new Worker(- 1, - 1, this);
@@ -29,6 +33,10 @@ public class Player {
         //this.card = new Atlas(worker1, worker2);
         //this.card = new Apollo(worker1, worker2);
         //this.card = new Artemis(worker1, worker2);
+    }
+
+    public int getAge() {
+        return age;
     }
 
     /**
@@ -87,14 +95,8 @@ public class Player {
      * @param y the position y of the cell in the matrix
      * @param w position is set for the worker w
      */
-    public void setPosWorker(int x, int y, Worker w) {
-        if (checkWorkerAvailable(w)) {
-            if (! (card instanceof YourMoveGod)) {
-                if (checkMoveAvailable(x, y, w))
-                    w.setPosition(x, y);
-            } else if (checkPowerAvailable(x, y, w))
-                card.setPower(x, y, w);
-        }
+    public boolean move(int x, int y, Worker w) {
+        card.powerMoveAvailable(x,y,w);
     }
 
     /**
@@ -105,15 +107,13 @@ public class Player {
      * @param w position is set for the worker w
 
      */
-    public void build(int x, int y, Worker w) {
-        if (!(card instanceof YourBuildGod)) {
-            if (checkBuildAvailable(x, y, w))
-                w.buildBlock(x, y);
-        }
-        else
-            if(checkPowerAvailable(x,y,w))
-             card.setPower(x, y,w);
-        }
+    public boolean build(int x, int y,int level, Worker w) {
+        return card.powerBuildAvailable(x, y,lev,w);
+    }
+
+    public boolean effect(){
+        return card.powerEffectAvailable();
+    }
 
 
         /**
@@ -123,35 +123,19 @@ public class Player {
          * @param w
 
          */
-        public void setInitialPosition ( int x, int y, Worker w){
-            w.setPosition(x, y);
+        public boolean InitialPosition ( int x, int y, Worker w){
+            return card.InitPosition(x,y,w);
         }
 
-        public boolean checkCorrectWorker(Worker w){
-            return (w.equals(worker1) || w.equals(worker2));
+    /**
+     * this method return a multiple value hashmap defined in Simplegod to know
+     * all the power the card has
+     * @return hashmap
+     */
+    public HashMap<String,List<String>> checkWhatTodo(){
+            return card.getWhatToDo();
+        }
 
-        }
-        public boolean checkWorkerAvailable(Worker w){
-            return w.getAvailable();
-        }
-        public boolean checkMoveAvailable(int x, int y,Worker w){
-            return GameBoard.getInstance().moveAvailable(x, y, w);
-        }
-        public boolean checkBuildAvailable(int x,int y,Worker w){
-            return GameBoard.getInstance().buildAvailable(x, y, w);
-        }
-        public boolean checkPowerAvailable(int x,int y,Worker w){
-            assert card != null;
-            return card.powerAvailable(x, y, w);
-        }
-        public boolean checkOccupiedCell(int x,int y){
-            if (GameBoard.getInstance().getCell(x, y).getWorker() == null)
-                return true;
-            else
-                return false;
-        }
-        public boolean checkOutOfBoard(Worker w){
-            return w.getCurrentX() == - 1 && w.getCurrentY() == - 1;
-        }
+
 
 }
