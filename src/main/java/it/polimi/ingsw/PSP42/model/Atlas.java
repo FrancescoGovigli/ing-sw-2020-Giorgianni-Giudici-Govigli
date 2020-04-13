@@ -28,7 +28,20 @@ public class Atlas extends SimpleGod {
 
     @Override
     public boolean powerMove(int x, int y, Worker w) {
-        w.setPosition(x, y);
+        if(effectMove) {
+            if (effectPlayer.getCard().powerMoveAvailable(x, y, w)) {
+                if(powerMoveAvailable(x, y, w)) {
+                    w.setPosition(x, y);
+                    return true;
+                }
+            }
+            return false;
+        }
+        if(powerMoveAvailable(x, y, w)) {
+            w.setPosition(x, y);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -44,18 +57,21 @@ public class Atlas extends SimpleGod {
     }
 
     /**
-     * Used to build a dome (cell level 4) in a cell of the game board.
+     * Used to build a dome (cell level 4) or next level in a cell of the game board.
      * @param x position on x-axis
      * @param y position on y-axis
      * @param w worker who build thanks Atlas' power
      */
     @Override
     public boolean powerBuild(int x, int y, int level, Worker w) {
-        /*
-        ControllerCLI con = new ControllerCLI();
-        String c = con.whatLevel();   // method in controller that ask at the player what level want to build
-        */
-        GameBoard.getInstance().getCell(x, y).setSpecificCellLevel(level);
+        if(powerBuildAvailable(x, y, level, w)) {
+            if(level == 4)
+                GameBoard.getInstance().getCell(x, y).setSpecificCellLevel(level);
+            else
+                GameBoard.getInstance().getCell(x, y).setCellLevel();
+            return true;
+        }
+        return false;
     }
 
     @Override

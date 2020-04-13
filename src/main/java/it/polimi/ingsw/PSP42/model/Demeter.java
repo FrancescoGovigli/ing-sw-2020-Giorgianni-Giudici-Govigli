@@ -29,8 +29,8 @@ public class Demeter extends SimpleGod {
     }
 
     /**
-     * Used to keep count of worker's build.
-     * @param counter it's 1 or 2
+     * Used to keep count how much time worker wants to build.
+     * @param counter is 1 or 2
      */
     public void setCounter(int counter) {
         this.counter = counter;
@@ -38,7 +38,7 @@ public class Demeter extends SimpleGod {
 
     /**
      * Used to set and keep in memory which was the precedent cell.
-     * @param precedentCell first Cell where worker have build
+     * @param precedentCell first Cell where worker has build
      */
     private void setPrecedentCell(Cell precedentCell) {
         this.precedentCell = precedentCell;
@@ -55,7 +55,20 @@ public class Demeter extends SimpleGod {
 
     @Override
     public boolean powerMove(int x, int y, Worker w) {
-        w.setPosition(x, y);
+        if(effectMove) {
+            if (effectPlayer.getCard().powerMoveAvailable(x, y, w)) {
+                if(powerMoveAvailable(x, y, w)) {
+                    w.setPosition(x, y);
+                    return true;
+                }
+            }
+            return false;
+        }
+        if(powerMoveAvailable(x, y, w)) {
+            w.setPosition(x, y);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -88,31 +101,22 @@ public class Demeter extends SimpleGod {
      */
     @Override
     public boolean powerBuild(int x, int y, int level, Worker w){
-        if(getCounter() == 1) {
-            w.buildBlock(x,y);
-            setCounter(2);
-            int newX = x-2;
-            int newY = y-2;
-            setCounter(2);
-            w.getPlayer().build(newX, newY, level, w);
-            /*
-            ControllerCLI con = new ControllerCLI();
-            String s = con.secondBuild();//method in controller that ask at player if,
-                            // and if he wants, where to build the second block
-            if(!s.equals("No")) {
-                int newX = s.charAt(0) - 48;
-                int newY = s.charAt(1) - 48;
-                int newX = x-2;
-                int newY = y-2;
+        if(powerBuildAvailable(x, y, level, w)) {
+            if (getCounter() == 1) {
+                w.buildBlock(x, y);
                 setCounter(2);
-                w.getPlayer().build(newX, newY, w);
+                return true;
+            } else {
+                w.buildBlock(x, y);
+                setCounter(1);
+                setPrecedentCell(null);
+                return true;
             }
-            */
         }
         else {
-            w.buildBlock(x, y);
             setCounter(1);
             setPrecedentCell(null);
+            return false;
         }
     }
 
@@ -148,7 +152,7 @@ public class Demeter extends SimpleGod {
     }
 
     /**
-     * Used to know in which cells the worker is able to build.
+     * Used to know in which cells the worker is able to build for the second time.
      * @param x position of the worker on x-axis
      * @param y position of the worker on y-axis
      * @return array of all available cells where worker can build
