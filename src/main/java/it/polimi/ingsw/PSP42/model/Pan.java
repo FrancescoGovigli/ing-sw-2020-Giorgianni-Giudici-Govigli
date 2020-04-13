@@ -13,23 +13,25 @@ public class Pan extends SimpleGod{
     public String[][] setPhase() {
         String[] start = {"NULL"};
         String[] preMove = {"NULL"};
-        String[] move = {"move"};
+        String[] move = {"MOVE"};
         String[] preBuild = {"NULL"};
-        String[] build = {"build"};
+        String[] build = {"BUILD"};
         String[] end = {"NULL"};
         String[][] phase = {start, preMove, move, preBuild, build, end};
         return phase;
     }
 
-    @Override
-    public boolean powerMoveAvailable(int x, int y, Worker w) {
-        if (GameBoard.getInstance().moveAvailable(x, y, w))
-            return true;
-        return false;
-    }
-
+    /**
+     * Method used to move the worker in cell (x,y) and checking if he wins doing this move
+     * @param x (x coordinate of where you would like to go)
+     * @param y (y coordinate of where you would like to go)
+     * @param w (worker who would like to move)
+     * @return true if worker can be moved, false otherwise
+     */
     @Override
     public boolean powerMove(int x, int y, Worker w) {
+        if (effectMove && ! effectPlayer.getCard().powerMoveAvailable(x, y, w))
+            return false;
         if (powerMoveAvailable(x, y, w)) {
             if (GameBoard.getInstance().getCell(x, y).getLevel() -  //where he wants to go minus
                 GameBoard.getInstance().getCell(w.getCurrentX(), w.getCurrentY()).getLevel() <= -2)    //where is the worker
@@ -38,36 +40,5 @@ public class Pan extends SimpleGod{
             return true;
         }
         return false;
-    }
-
-    @Override
-    public boolean powerBuildAvailable(int x, int y, int level, Worker w) {
-        if (GameBoard.getInstance().buildAvailable(x, y, w))
-            return true;
-        return false;
-    }
-
-    @Override
-    public boolean powerBuild(int x, int y, int level, Worker w) {
-        if (powerMoveAvailable(x, y, w)){
-            w.buildBlock(x, y);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean powerEffectAvailable() {
-        return false;
-    }
-
-    @Override
-    public boolean powerEffect() {
-        return false;
-    }
-
-    @Override
-    public String[][] getWhatToDo() {
-        return phase;
     }
 }

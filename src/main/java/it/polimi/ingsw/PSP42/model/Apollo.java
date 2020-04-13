@@ -13,9 +13,9 @@ public class Apollo extends SimpleGod {
     public String[][] setPhase() {
         String[] start = {"NULL"};
         String[] preMove = {"NULL"};
-        String[] move = {"move"};
+        String[] move = {"MOVE"};
         String[] preBuild = {"NULL"};
-        String[] build = {"build"};
+        String[] build = {"BUILD"};
         String[] end = {"NULL"};
         String[][] phase = {start, preMove, move, preBuild, build, end};
         return phase;
@@ -49,6 +49,8 @@ public class Apollo extends SimpleGod {
         Worker toSwap = null;
         int tempPosX = 0;
         int tempPosY = 0;
+        if (effectMove && !effectPlayer.getCard().powerMoveAvailable(x, y, w))
+            return false;
         if (powerMoveAvailable(x, y, w)){
             toSwap = GameBoard.getInstance().getCell(x, y).getWorker();
             tempPosX = toSwap.getCurrentX();
@@ -58,37 +60,6 @@ public class Apollo extends SimpleGod {
             return true;
         }
         return false;
-    }
-
-    @Override
-    public boolean powerBuildAvailable(int x, int y, int level, Worker w) {
-        if (GameBoard.getInstance().buildAvailable(x, y, w))
-            return true;
-        return false;
-    }
-
-    @Override
-    public boolean powerBuild(int x, int y, int level, Worker w) {
-        if (powerMoveAvailable(x, y, w)){
-            w.buildBlock(x, y);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean powerEffectAvailable() {
-        return false;
-    }
-
-    @Override
-    public boolean powerEffect() {
-        return false;
-    }
-
-    @Override
-    public String[][] getWhatToDo() {
-        return phase;
     }
 
     /**

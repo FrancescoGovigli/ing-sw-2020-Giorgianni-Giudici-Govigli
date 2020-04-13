@@ -15,29 +15,45 @@ public class Prometheus extends SimpleGod{
     @Override
     public String[][] setPhase() {
         String[] start = {"NULL"};
-        String[] preMove = {"build"};
-        String[] move = {"move"};
+        String[] preMove = {"BUILD"};
+        String[] move = {"MOVE"};
         String[] preBuild = {"NULL"};
-        String[] build = {"build"};
+        String[] build = {"BUILD"};
         String[] end = {"NULL"};
         String[][] phase = {start, preMove, move, preBuild, build, end};
         return phase;
     }
 
+    /**
+     * Method used to move the worker in cell (x,y) and checking if he building before
+     * @param x (x coordinate of where you would like to go)
+     * @param y (y coordinate of where you would like to go)
+     * @param w (worker who would like to move)
+     * @return true if worker can be moved, false otherwise
+     */
     @Override
     public boolean powerMoveAvailable(int x, int y, Worker w) {
         if (buildNum == 0 && GameBoard.getInstance().moveAvailable(x, y, w))    // if building pre-move was not done
             return true;
         if (buildNum != 0 &&    // if building pre-move was done &&
-            (GameBoard.getInstance().getCell(x, y).getCellLevel() !=    // (the level of the future cell is not the same as the current one
+            (GameBoard.getInstance().getCell(x, y).getCellLevel() ==    // (the level of the future cell is the same as the current one
              GameBoard.getInstance().getCell(w.getCurrentX(), w.getCurrentY()).getCellLevel()) &&   // as the current one) &&
             GameBoard.getInstance().moveAvailable(x, y, w)) // the future cell is available
             return true;
         return false;
     }
 
+    /**
+     * Method used to move the worker in cell (x,y)
+     * @param x (x coordinate of where you would like to go)
+     * @param y (y coordinate of where you would like to go)
+     * @param w (worker who would like to move)
+     * @return true if worker can be moved, false otherwise
+     */
     @Override
     public boolean powerMove(int x, int y, Worker w) {
+        if (effectMove && ! effectPlayer.getCard().powerMoveAvailable(x, y, w))
+            return false;
         if (powerMoveAvailable(x, y, w)) {
             w.setPosition(x, y);
             buildNum = 0;
@@ -47,6 +63,13 @@ public class Prometheus extends SimpleGod{
         return false;
     }
 
+    /**
+     * Method to check if it's possible build in a position and counting the building times in a turn
+     * @param x (x coordinate of where you would like to build)
+     * @param y (y coordinate of where you would like to build)
+     * @param w (worker who would like to build)
+     * @return true if worker can build, false otherwise
+     */
     @Override
     public boolean powerBuildAvailable(int x, int y, int level, Worker w) {
         if (GameBoard.getInstance().buildAvailable(x, y, w)) {
@@ -58,29 +81,5 @@ public class Prometheus extends SimpleGod{
             return true;
         }
         return false;
-    }
-
-    @Override
-    public boolean powerBuild(int x, int y, int level, Worker w) {
-        if (powerMoveAvailable(x, y, w)){
-            w.buildBlock(x, y);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean powerEffectAvailable() {
-        return false;
-    }
-
-    @Override
-    public boolean powerEffect() {
-        return false;
-    }
-
-    @Override
-    public String[][] getWhatToDo() {
-        return phase;
     }
 }

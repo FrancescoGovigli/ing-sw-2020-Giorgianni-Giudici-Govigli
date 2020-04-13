@@ -16,15 +16,22 @@ public class Artemis extends SimpleGod {
     @Override
     public String[][] setPhase() {
         String[] start = {"NULL"};
-        String[] preMove = {"move"};
-        String[] move = {"move"};
+        String[] preMove = {"MOVE"};
+        String[] move = {"MOVE"};
         String[] preBuild = {"NULL"};
-        String[] build = {"build"};
+        String[] build = {"BUILD"};
         String[] end = {"NULL"};
         String[][] phase = {start, preMove, move, preBuild, build, end};
         return phase;
     }
 
+    /**
+     * Method used to check if is possible move the worker in cell (x,y) and checking if he would not come back at starting position
+     * @param x (x coordinate of where you would like to go)
+     * @param y (y coordinate of where you would like to go)
+     * @param w (worker who would like to move)
+     * @return true if worker can be moved, false otherwise
+     */
     @Override
     public boolean powerMoveAvailable(int x, int y, Worker w) {
         if (moveNum == 0){
@@ -38,44 +45,22 @@ public class Artemis extends SimpleGod {
         return false;
     }
 
-    @Override
-    public boolean powerMove(int x, int y, Worker w) {
-        if (powerMoveAvailable(x, y, w)) {
-            w.setPosition(x, y);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean powerBuildAvailable(int x, int y, int level, Worker w) {
-        if (GameBoard.getInstance().buildAvailable(x, y, w))
-            return true;
-        return false;
-    }
-
+    /**
+     * Method to build in a position and resetting at default value the attributes
+     * @param x (x coordinate of where you would like to build)
+     * @param y (y coordinate of where you would like to build)
+     * @param w (worker who would like to build)
+     * @return true if worker can build, false otherwise
+     */
     @Override
     public boolean powerBuild(int x, int y, int level, Worker w) {
-        if (powerMoveAvailable(x, y, w)){
+        if (powerBuildAvailable(x, y, level, w)){
             w.buildBlock(x, y);
             moveNum = 0;
+            startX = 0;
+            startY = 0;
             return true;
         }
         return false;
-    }
-
-    @Override
-    public boolean powerEffectAvailable() {
-        return false;
-    }
-
-    @Override
-    public boolean powerEffect() {
-        return false;
-    }
-
-    @Override
-    public String[][] getWhatToDo() {
-        return phase;
     }
 }

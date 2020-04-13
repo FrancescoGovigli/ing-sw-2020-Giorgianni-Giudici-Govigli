@@ -1,7 +1,5 @@
 package it.polimi.ingsw.PSP42.model;
 
-import java.util.*;
-
 public class Player {
     private final SimpleGod card;
     private final int id;
@@ -13,13 +11,12 @@ public class Player {
     private State playerState = State.INGAME;
 
     /**
-     * Constructor to initialize a player object and istantiating 2 workers used by the player outside the Map cell(-1,-1)
-     *
+     * Constructor to initialize a player object and instantiating 2 workers used by the player outside the Map cell(-1,-1)
      * @param nick nickname choosed from the player
      * @param id   id automatically given to choose the order of gameplay during constructing
      * @param card choosed from the player
      */
-    public Player(String nick, int id,int age/*,Simplegod card*/) {
+    public Player(String nick, int id, int age/*,Simplegod card*/) {
         this.nickname = nick;
         this.age = age;
         this.id = id;
@@ -38,8 +35,7 @@ public class Player {
     }
 
     /**
-     * used to get the id of a player to know the order of the gameplay
-     *
+     * Used to get the id of a player to know the order of the gameplay
      * @return id (it's an integer from 1 to 3 if the game is planned for 3 player)
      */
     public int getId() {
@@ -48,7 +44,6 @@ public class Player {
 
     /**
      * It is an important getter to know the status of a player during the game
-     *
      * @return
      */
     public State getPlayerState() {
@@ -58,7 +53,6 @@ public class Player {
     /**
      * Enum State used to know if a player is still in game, have lost or won the game.
      * The gameboard has methods to change state of player looking at the whole Game State
-     *
      * @param s
      */
     public void setPlayerState(String s) {
@@ -78,8 +72,7 @@ public class Player {
     }
 
     /**
-     * in every move of a player it's important to get the GodCard assigned to the player
-     *
+     * In every move of a player it's important to get the GodCard assigned to the player
      * @return card
      */
     public SimpleGod getCard() {
@@ -88,22 +81,26 @@ public class Player {
 
     /**
      * Method used to move the worker w in (x,y) position
-     * @param x the position x of the cell in the matrix
-     * @param y the position y of the cell in the matrix
-     * @param w position is set for the worker w
+     * @param x is the x-coordinate for the move
+     * @param y is the y-coordinate for the move
+     * @param w is the worker who moves
      */
     public boolean move(int x, int y, Worker w) {
-        return card.powerMove(x, y, w);
+        if (x >= 0 && x <= 4 && y >= 0 && y <= 4)
+            return card.powerMove(x, y, w);
+        return false;
     }
 
     /**
      * Method used to build with worker w in (x,y) position
-     * @param x the position x of the cell in the matrix
-     * @param y the position y of the cell in the matrix
-     * @param w build for the worker w
+     * @param x is the x-coordinate for the construction
+     * @param y is the y-coordinate for the construction
+     * @param w is the worker who builds
      */
     public boolean build(int x, int y, int level, Worker w) {
-        return card.powerBuild(x, y, level, w);
+        if (x >= 0 && x <= 4 && y >= 0 && y <= 4 && level >= 0 && level <= 4)
+            return card.powerBuild(x, y, level, w);
+        return false;
     }
 
     /**
@@ -115,14 +112,16 @@ public class Player {
     }
 
     /**
-     * Method used to initialize the worker on the gameboard in the cell(x,y)
-     * @param x
-     * @param y
-     * @param w
+     * Method used to initialize the worker in cell (x,y)
+     * @param x is the initialization x-coordinate
+     * @param y is the initialization y-coordinate
+     * @param w is the worker initialized in gameboard
      */
-    public boolean InitialPosition ( int x, int y, Worker w){
-            return card.initPosition(x, y, w);
-        }
+    public boolean initialPosition ( int x, int y, Worker w){
+        if (x >= 0 && x <= 4 && y >= 0 && y <= 4)
+            return card.powerInitialPosition(x, y, w);
+        return false;
+    }
 
     /**
      * Method used to know the phase sequence of a Simple God

@@ -5,10 +5,9 @@ import java.util.ArrayList;
 
 public class GameBoard implements ModelObservable {
     private Cell[][] board = new Cell[5][5];
-
-    /*TODO added constructor */private ArrayList<ModelObserver> obs = new ArrayList<ModelObserver>();
+    private ArrayList<ModelObserver> obs = new ArrayList<ModelObserver>();
     private ArrayList<Player> players;
-    private int currentPlayer=0;
+    private int currentPlayer = 0;
     private static GameBoard instance = null;
 
     /**
@@ -23,7 +22,7 @@ public class GameBoard implements ModelObservable {
         this.currentPlayer = 0;
     }
 
-    /*TODO added  */public int getCurrentPlayer(){
+    public int getCurrentPlayer(){
         return currentPlayer;
     }
 
@@ -31,20 +30,24 @@ public class GameBoard implements ModelObservable {
         instance=null;
     }
 
-    /*TODO added  */public void setCurrentPlayer(int x){
+    public void setCurrentPlayer(int x){
         currentPlayer=x;
     }
 
     /**
-     * used to set only one time all the players playing when initializing the game
+     * Used to set only one time all the players playing when initializing the game
      * @param players
      */
-    /*TODO added  */public void setPlayers(ArrayList<Player> players) {
+    public void setPlayers(ArrayList<Player> players) {
         if(this.players ==null)
          this.players = players;
     }
 
-    /*TODO added ritorna una copia */public ArrayList<Player> getPlayers(){
+    /**
+     *
+     * @return
+     */
+    public ArrayList<Player> getPlayers(){
         return (ArrayList<Player>) players.clone();
     }
 
@@ -190,7 +193,7 @@ public class GameBoard implements ModelObservable {
      * @param p (player to be verified)
      */
     public void loseCondition(Player p){
-        if(!p.getWorker1().getAvailable() && !p.getWorker2().getAvailable()){
+        if (!p.getWorker1().getAvailable() && !p.getWorker2().getAvailable()){
             GameBoard.getInstance().getCell(p.getWorker1().getCurrentX(), p.getWorker1().getCurrentY()).unSetWorker();
             GameBoard.getInstance().getCell(p.getWorker2().getCurrentX(), p.getWorker2().getCurrentY()).unSetWorker();
             p.setPlayerState("LOSE");
@@ -218,24 +221,24 @@ public class GameBoard implements ModelObservable {
      * @param ob
      */
     @Override
-    /*TODO modified*/public void attach(ModelObserver ob) {
+    public void attach(ModelObserver ob) {
         obs.add(ob);
     }
 
     /**
-     *Removes an observer to the Model's observer list
+     * Removes an observer to the Model's observer list
      * @param ob
      */
     @Override
-    /*TODO modified*/public void detach(ModelObserver ob) {
+    public void detach(ModelObserver ob) {
       obs.remove(ob);
     }
 
     /**
-     * notifies the observers who need update
+     * Notifies the observers who need update
      */
     @Override
-    /*TODO modified*/public void notifyObservers(Object o) {
+    public void notifyObservers(Object o) {
         for (int i = 0; i <obs.size(); i++) {
             obs.get(i).update(o);
         }
