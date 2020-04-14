@@ -38,13 +38,13 @@ public class Athena extends SimpleGod {
 
     @Override
     public String[][] setPhase() {
-        String[] start = {"effect"};
-        String[] preMove = {"NULL"};
-        String[] move = {"move"};
-        String[] preBuild = {"NULL"};
-        String[] build = {"build"};
-        String[] end = {"effect"};
-        String[][] phase = {start, preMove, move, preBuild, build, end};
+        String[] START = {"effect"};
+        String[] PREMOVE = {"NULL"};
+        String[] MOVE = {"move"};
+        String[] PREBUILD = {"NULL"};
+        String[] BUILD = {"build"};
+        String[] END = {"effect"};
+        String[][] phase = {START, PREMOVE, MOVE, PREBUILD, BUILD, END};
         return phase;
     }
 
@@ -61,41 +61,16 @@ public class Athena extends SimpleGod {
         if(getBlockOpponentsStepUp())
             return powerMoveBlockedStepUpAvailable(x, y, w);
         return GameBoard.getInstance().moveAvailable(x, y, w);
-
     }
 
     @Override
     public boolean powerMove(int x, int y, Worker w) {
-        if(effectMove) {
-            if (effectPlayer.getCard().powerMoveAvailable(x, y, w)) {
-                if(powerMoveAvailable(x, y, w)) {
-                    if (workerStepUp(x, y, w))
-                        setBlockOpponentsStepUp(true);
-                    w.setPosition(x, y);
-                }
-            }
+        if(effectMove && !effectPlayer.getCard().powerMoveAvailable(x, y, w))
             return false;
-        }
         if(powerMoveAvailable(x, y, w)) {
             if (workerStepUp(x, y, w))
                 setBlockOpponentsStepUp(true);
             w.setPosition(x, y);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean powerBuildAvailable(int x, int y, int level, Worker w) {
-        if (GameBoard.getInstance().buildAvailable(x, y, w))
-            return true;
-        return false;
-    }
-
-    @Override
-    public boolean powerBuild(int x, int y, int level, Worker w) {
-        if (powerBuildAvailable(x, y, level, w)){
-            w.buildBlock(x, y);
             return true;
         }
         return false;
@@ -141,11 +116,6 @@ public class Athena extends SimpleGod {
         }
     }
 
-    @Override
-    public String[][] getWhatToDo() {
-        return phase;
-    }
-
     public boolean workerStepUp(int x, int y, Worker w) {
         if (GameBoard.getInstance().getCell(w.getCurrentX(), w.getCurrentY()).getLevel() -
                 GameBoard.getInstance().getCell(x, y).getLevel() == -1)
@@ -183,11 +153,7 @@ public class Athena extends SimpleGod {
         Cell[][] c = GameBoard.getInstance().submatrixGenerator(x, y);
         for (int i = 0; i < 3; i++) {    //searching around the cell(x,y)
             for (int j = 0; j < 3; j++) {
-                if (c[i][j] != null &&                    // c cell isn't out of map and
-                        (c[i][j].getWorker() == null) &&   // there isn't a worker and
-                            (c[i][j].getLevel() != 4) &&    // is not 4th level and
-                                (c[i][j].getLevel() - GameBoard.getInstance().getCell(x, y).getLevel() >= - 3) && // limit for the descent
-                                    (c[i][j].getLevel() <= GameBoard.getInstance().getCell(x, y).getLevel())) //cell at the same or lower level
+                if ((c[i][j].getLevel() <= GameBoard.getInstance().getCell(x, y).getLevel())) //cell at the same or lower level
                 {
                     adjCellMoveAvailable[index] = c[i][j];
                     index++;

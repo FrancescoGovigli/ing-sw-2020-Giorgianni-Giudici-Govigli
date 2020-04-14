@@ -14,13 +14,13 @@ public class Demeter extends SimpleGod {
 
     @Override
     public String[][] setPhase() {
-        String[] start = {"NULL"};
-        String[] preMove = {"NULL"};
-        String[] move = {"move"};
-        String[] preBuild = {"build"};
-        String[] build = {"build"};
-        String[] end = {"NULL"};
-        String[][] phase = {start, preMove, move, preBuild, build, end};
+        String[] START = {"NULL"};
+        String[] PREMOVE = {"NULL"};
+        String[] MOVE = {"move"};
+        String[] PREBUILD = {"build"};
+        String[] BUILD = {"build"};
+        String[] END = {"NULL"};
+        String[][] phase = {START, PREMOVE, MOVE, PREBUILD, BUILD, END};
         return phase;
     }
 
@@ -46,29 +46,6 @@ public class Demeter extends SimpleGod {
 
     public Cell getPrecedentCell() {
         return precedentCell;
-    }
-
-    @Override
-    public boolean powerMoveAvailable(int x, int y, Worker w) {
-        return GameBoard.getInstance().moveAvailable(x, y, w);
-    }
-
-    @Override
-    public boolean powerMove(int x, int y, Worker w) {
-        if(effectMove) {
-            if (effectPlayer.getCard().powerMoveAvailable(x, y, w)) {
-                if(powerMoveAvailable(x, y, w)) {
-                    w.setPosition(x, y);
-                    return true;
-                }
-            }
-            return false;
-        }
-        if(powerMoveAvailable(x, y, w)) {
-            w.setPosition(x, y);
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -118,21 +95,6 @@ public class Demeter extends SimpleGod {
             setPrecedentCell(null);
             return false;
         }
-    }
-
-    @Override
-    public boolean powerEffectAvailable() {
-        return false;
-    }
-
-    @Override
-    public boolean powerEffect() {
-        return false;
-    }
-
-    @Override
-    public String[][] getWhatToDo() {
-        return phase;
     }
 
     /**

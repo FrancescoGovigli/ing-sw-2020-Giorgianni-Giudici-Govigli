@@ -11,13 +11,13 @@ public class Minotaur extends SimpleGod{
 
     @Override
     public String[][] setPhase() {
-        String[] start = {"NULL"};
-        String[] preMove = {"NULL"};
-        String[] move = {"move"};
-        String[] preBuild = {"NULL"};
-        String[] build = {"build"};
-        String[] end = {"NULL"};
-        String[][] phase = {start, preMove, move, preBuild, build, end};
+        String[] START = {"NULL"};
+        String[] PREMOVE = {"NULL"};
+        String[] MOVE = {"move"};
+        String[] PREBUILD = {"NULL"};
+        String[] BUILD = {"build"};
+        String[] END = {"NULL"};
+        String[][] phase = {START, PREMOVE, MOVE, PREBUILD, BUILD, END};
         return phase;
     }
 
@@ -51,37 +51,6 @@ public class Minotaur extends SimpleGod{
             }
         }
         return false;
-    }
-
-    @Override
-    public boolean powerBuildAvailable(int x, int y, int level, Worker w) {
-        if (GameBoard.getInstance().buildAvailable(x, y, w))
-            return true;
-        return false;
-    }
-
-    @Override
-    public boolean powerBuild(int x, int y, int level, Worker w) {
-        if (powerBuildAvailable(x, y, level, w)){
-            w.buildBlock(x, y);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean powerEffectAvailable() {
-        return false;
-    }
-
-    @Override
-    public boolean powerEffect() {
-        return false;
-    }
-
-    @Override
-    public String[][] getWhatToDo() {
-        return phase;
     }
 
     public Cell[] adjacentCellMovePowerAvailable(int x, int y, Worker w) {
