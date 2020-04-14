@@ -56,7 +56,7 @@ public abstract class SimpleGod {
 
     public boolean powerInitialPosition(int x, int y, Worker w) {
         if (w.getCurrentX() == -1 && w.getCurrentY() == -1 &&   // if w is out of map and
-            GameBoard.getInstance().getCell(x, y).getWorker() != null &&    // the initial cell is free and
+            GameBoard.getInstance().getCell(x, y).getWorker() == null &&    // the initial cell is free and
             GameBoard.getInstance().getCell(x, y).getLevel() == 0) {        // the cell level is 0 (ground)
             w.setPosition(x, y);
             return true;

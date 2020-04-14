@@ -10,8 +10,8 @@ public class ApolloTest {
     private GameBoard g=GameBoard.getInstance();
     @Before
     public void setUp() throws Exception {
-        p1 = new Player("DG",1);
-        p2 = new Player("CIPOOO",2);
+        p1 = new Player("DG",1,21);
+        p2 = new Player("CIPOOO",2,21);
     }
 
     @After
@@ -22,11 +22,11 @@ public class ApolloTest {
     }
     @Test
     public void highLeftCorner_4WorkerSet_ApolloPower() {
-        p1.setInitialPosition(0,0,p1.getWorker1());
-        p1.setInitialPosition(0,1,p1.getWorker2());
-        p2.setInitialPosition(1,0,p2.getWorker1());
-        p2.setInitialPosition(1,1,p2.getWorker2());
-        p1.setPosWorker(1,1,p1.getWorker1());
+        p1.initialPosition(0,0,p1.getWorker1());
+        p1.initialPosition(0,1,p1.getWorker2());
+        p2.initialPosition(1,0,p2.getWorker1());
+        p2.initialPosition(1,1,p2.getWorker2());
+        p1.move(1,1,p1.getWorker1());
         assertEquals(1,p1.getWorker1().getCurrentX());
         assertEquals(1,p1.getWorker1().getCurrentY());
     }

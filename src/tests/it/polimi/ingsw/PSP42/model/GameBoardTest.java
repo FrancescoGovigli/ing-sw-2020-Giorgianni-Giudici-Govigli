@@ -9,12 +9,12 @@ import static org.junit.Assert.*;
 public class GameBoardTest {
 
     private GameBoard board = GameBoard.getInstance();
-    private Player p = new Player("BOB", 1);
+    private Player p = new Player("BOB", 1,21);
     private Worker w = new Worker(-1,-1, p);
 
     @Before
     public void setUp() throws Exception {
-        p = new Player("BOB", 1);
+        p = new Player("BOB", 1,21);
 
     }
 
@@ -85,17 +85,17 @@ public class GameBoardTest {
 
     @Test
     public void demo_Step_Up_And_Down(){
-        p.setInitialPosition(2, 2, p.getWorker1());
-        p.build(2, 1, p.getWorker1());
-        p.build(1, 1, p.getWorker1());
-        p.build(1, 1, p.getWorker1());
-        p.build(1, 2, p.getWorker1());
-        p.build(1, 2, p.getWorker1());
-        p.build(1, 2, p.getWorker1());
-        p.setPosWorker(2, 1, p.getWorker1());
-        p.setPosWorker(1, 1, p.getWorker1());
-        p.setPosWorker(1, 2, p.getWorker1());
-        p.setPosWorker(0, 2, p.getWorker1());
+        p.initialPosition(2, 2, p.getWorker1());
+        p.build(2, 1,board.getCell(2,1).getLevel()+1, p.getWorker1());
+        p.build(1, 1,board.getCell(1,1).getLevel()+1, p.getWorker1());
+        p.build(1, 1,board.getCell(1,1).getLevel()+1, p.getWorker1());
+        p.build(1, 2,board.getCell(1,2).getLevel()+1, p.getWorker1());
+        p.build(1, 2,board.getCell(1,2).getLevel()+1, p.getWorker1());
+        p.build(1, 2,board.getCell(1,2).getLevel()+1,p.getWorker1());
+        p.move(2, 1, p.getWorker1());
+        p.move(1, 1, p.getWorker1());
+        p.move(1, 2, p.getWorker1());
+        p.move(0, 2, p.getWorker1());
         assertEquals(null, board.getCell(2, 2).getWorker());
         assertEquals(1, board.getCell(2, 1).getLevel());
         assertEquals(2, board.getCell(1, 1).getLevel());
@@ -105,13 +105,13 @@ public class GameBoardTest {
 
     @Test
     public void demo_Worker_unAvailable(){
-        p.setInitialPosition(0, 0, p.getWorker1());
-        p.build(0, 1, p.getWorker1());
-        p.build(0, 1, p.getWorker1());
-        p.build(1, 1, p.getWorker1());
-        p.build(1, 1, p.getWorker1());
-        p.build(1, 0, p.getWorker1());
-        p.build(1, 0, p.getWorker1());
+        p.initialPosition(0, 0, p.getWorker1());
+        p.build(0, 1,board.getCell(0,1).getLevel()+1, p.getWorker1());
+        p.build(0, 1,board.getCell(0,1).getLevel()+1, p.getWorker1());
+        p.build(1, 1,board.getCell(1,1).getLevel()+1, p.getWorker1());
+        p.build(1, 1,board.getCell(1,1).getLevel()+1 ,p.getWorker1());
+        p.build(1, 0,board.getCell(1,0).getLevel()+1, p.getWorker1());
+        p.build(1, 0,board.getCell(1,0).getLevel()+1, p.getWorker1());
         assertEquals(2, board.getCell(0, 1).getLevel());
         assertEquals(2, board.getCell(1, 1).getLevel());
         assertEquals(2, board.getCell(1, 0).getLevel());

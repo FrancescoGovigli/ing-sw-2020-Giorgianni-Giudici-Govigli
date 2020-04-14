@@ -4,6 +4,8 @@ import it.polimi.ingsw.PSP42.controller.*;
 import it.polimi.ingsw.PSP42.model.*;
 import it.polimi.ingsw.PSP42.view.*;
 
+import java.util.*;
+
 public class App {
     public static void main(String[] args) {
         ViewCLI view = new ViewCLI();
@@ -12,6 +14,7 @@ public class App {
         view.attach(control);
         g.attach(view);
         view.run();
+
 
     }
 }

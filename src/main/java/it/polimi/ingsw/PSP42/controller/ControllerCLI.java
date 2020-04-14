@@ -22,9 +22,9 @@ public class ControllerCLI implements ViewObserver {
      */
     public void createGame(int numPlayer) {
         ArrayList<Player> players = new ArrayList<>();
-        ArrayList<String> names = view.getPlayernames();
+        ArrayList<UserData> data = view.getPlayerdata();
         for (int i = 0; i < view.getNumPlayers(); i++) {
-            players.add(new Player(names.get(i), i + 1));
+            players.add(new Player(data.get(i).getNickname(), i + 1,data.get(i).getAge()));
         }
         g.setPlayers(players);
     }
@@ -38,9 +38,9 @@ public class ControllerCLI implements ViewObserver {
     @Override
     public void updateInit(Object o) {
 
-        if (view.getChoice().allfieldsnull())
+        if (view.getChoice().allFieldsNull())
             createGame(view.getNumPlayers());
-        if (! view.getChoice().allfieldsnull()) {
+        if (! view.getChoice().allFieldsNull()) {
             Worker w = null;
             //DEVO CHIEDERE QUALE WORKER VUOLE
             if (view.getChoice().getW() == 1)
@@ -48,7 +48,7 @@ public class ControllerCLI implements ViewObserver {
             if (view.getChoice().getW() == 2)
                 w = (g.getPlayers()).get(g.getCurrentPlayer()).getWorker2();
 
-            (g.getPlayers()).get(g.getCurrentPlayer()).setInitialPosition(view.getChoice().getX().intValue(), view.getChoice().getY().intValue(), w);
+            (g.getPlayers()).get(g.getCurrentPlayer()).initialPosition(view.getChoice().getX().intValue(), view.getChoice().getY().intValue(), w);
         }
     }
 
@@ -64,7 +64,7 @@ public class ControllerCLI implements ViewObserver {
         if (view.getChoice().getW() == 2)
             w = (g.getPlayers()).get(g.getCurrentPlayer()).getWorker2();
 
-        (g.getPlayers()).get(g.getCurrentPlayer()).setPosWorker(view.getChoice().getX().intValue(),view.getChoice().getY().intValue(),w);
+        (g.getPlayers()).get(g.getCurrentPlayer()).move(view.getChoice().getX().intValue(),view.getChoice().getY().intValue(),w);
 
     }
     /**
@@ -79,13 +79,13 @@ public class ControllerCLI implements ViewObserver {
         if (view.getChoice().getW() == 2)
             w = (g.getPlayers()).get(g.getCurrentPlayer()).getWorker2();
 
-        (g.getPlayers()).get(g.getCurrentPlayer()).build(view.getChoice().getX().intValue(),view.getChoice().getY().intValue(),w);
+        (g.getPlayers()).get(g.getCurrentPlayer()).build(view.getChoice().getX().intValue(),view.getChoice().getY().intValue(),view.getChoice().getLevel(),w);
     }
 
     @Override
     public String updateCurrentPlayer() {
-        String temp;
-        return temp = g.getPlayers().get(g.getCurrentPlayer()).getNickname();
+
+        return  g.getPlayers().get(g.getCurrentPlayer()).getNickname();
     }
 
     @Override
@@ -96,6 +96,25 @@ public class ControllerCLI implements ViewObserver {
             g.setCurrentPlayer(curr+1);
         else
             g.setCurrentPlayer(0);
+    }
+
+    @Override
+    public void updateState(String s) {
+        if(s.equals("START") && g.getPlayers().get(g.getCurrentPlayer()).getPlayerState().equals("LOSE")) {
+            //g.setGameState("END");
+            view.setGameState("END");
+            return;
+        }
+
+        if(s.equals("PREMOVE"))
+            g.loseCondition(g.getPlayers().get(g.getCurrentPlayer()),"PREMOVE");
+
+        if(s.equals("PREBUILD"))
+            g.loseCondition(g.getPlayers().get(g.getCurrentPlayer()),"PREBUILD");
+
+
+        //g.setGameState(s);
+        view.setGameState(s);
     }
 
 }

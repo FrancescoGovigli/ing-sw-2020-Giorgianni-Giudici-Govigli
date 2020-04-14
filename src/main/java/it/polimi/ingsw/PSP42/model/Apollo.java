@@ -53,10 +53,14 @@ public class Apollo extends SimpleGod {
             return false;
         if (powerMoveAvailable(x, y, w)){
             toSwap = GameBoard.getInstance().getCell(x, y).getWorker();
-            tempPosX = toSwap.getCurrentX();
-            tempPosY = toSwap.getCurrentY();
-            toSwap.setPosition(w.getCurrentX(), w.getCurrentY());
-            w.setPosition(tempPosX, tempPosY);
+            if(toSwap!=null) {
+                tempPosX = toSwap.getCurrentX();
+                tempPosY = toSwap.getCurrentY();
+                toSwap.setPosition(w.getCurrentX(), w.getCurrentY());
+                w.setPosition(tempPosX, tempPosY);
+            }
+            else
+             w.setPosition(x,y);
             return true;
         }
         return false;

@@ -36,4 +36,6 @@ public interface ViewObservable {
 
     public abstract void notifyEnd();
 
+    public abstract void notifyState(String s);
+
 }

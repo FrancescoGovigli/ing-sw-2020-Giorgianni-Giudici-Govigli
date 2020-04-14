@@ -1,19 +1,31 @@
 package it.polimi.ingsw.PSP42.view;
 
 import it.polimi.ingsw.PSP42.*;
+import it.polimi.ingsw.PSP42.model.*;
 
+import javax.swing.text.*;
 import java.io.*;
 import java.util.*;
 
 public class ViewCLI implements ViewObservable, ModelObserver {
     private Scanner scanner;
     private PrintStream outputStream;
-    private boolean done;
+    private boolean gameDone;
+    private boolean turnDone;
+    private boolean actionDone;
     private ArrayList<ViewObserver> obs = new ArrayList<>();
-    private enum State {INIT,MOVE,BUILD,END}
-    private State gameState;
+
+    private String gameState;
     private int numPlayers;
     private Choice c;
+
+
+    public void setTurnDone(boolean value){
+        turnDone = value;
+    }
+    public void setActionDone(boolean value){
+        actionDone = value;
+    }
 
     public Choice getChoice(){
         return c;
@@ -21,15 +33,17 @@ public class ViewCLI implements ViewObservable, ModelObserver {
     public ViewCLI(){
         scanner = new Scanner(System.in);
         outputStream = new PrintStream(System.out);
-        done = false;
-        gameState = State.INIT;
+        gameDone = false;
+        turnDone = false;
+        actionDone = false;
+        gameState = "START";
 
     }
 
     public String getGameState(){
-        return gameState.toString();
+        return gameState;
     }
-    public void setGameState(State s){
+    public void setGameState(String s){
         gameState = s;
     }
     public int getNumPlayers(){
@@ -40,11 +54,14 @@ public class ViewCLI implements ViewObservable, ModelObserver {
      * This method helps the Controller to ask for the players names during the creation of game
      * @return arraylist player names given through System.in
      */
-    public ArrayList<String> getPlayernames(){
-        ArrayList<String> players = new ArrayList<>();
+    public ArrayList<UserData> getPlayerdata(){
+        ArrayList<UserData> players = new ArrayList<>();
         for (int i = 0; i < numPlayers ; i++) {
-            outputStream.println("Inserire il nome del giocatore :"+(i+1) );
-            players.add(scanner.next());
+            outputStream.println("Inserire il nome del giocatore:"+(i+1) );
+            String nick = scanner.next();
+            outputStream.println("Inserire l'età del giocatore:"+(i+1) );
+            int age = scanner.nextInt();
+            players.add(new UserData(nick,age));
         }
 
         return players;
@@ -114,82 +131,95 @@ public class ViewCLI implements ViewObservable, ModelObserver {
         obs.get(0).updateEnd();
     }
 
+    @Override
+    public void notifyState(String s) {
+        obs.get(0).updateState(s);
+    }
+
 
     @Override
-    public void update(Object o) {
+    public void updateBoard(Object o) {
         this.show();
+
     }
-
-    public enum Color
-    {
-        ANSI_SMILE("\u1F60"),
-        ANSI_RED("\u001B[31m"),
-        ANSI_GREEN("\u001B[38;5;70m"),
-        ANSI_WATER("\u001B[36m"),
-        ANSI_YELLOW("\u001B[33m"),
-        ANSI_REVERSE("\u001B[7m"),
-        ANSI_BLUE("\u001B[34m"),
-        ANSI_PURPLE("\u001B[35m");
-        static final String RESET = "\u001B[0m"; // resetta il valore a un default
-        //In questo modo il metodo values() (che Java genera in
-        //automatico e restituisce un array di tutti gli elementi della
-        //enum) non lo restituisce
-        //In fondo,
-        //“RESET” non è un colore!
-
-        private String escape; // contiene il codice testo che modifica il colore
-        Color(String escape)
-        {
-            this.escape = escape;
-        }
-        public String getEscape()
-        {
-            return escape;
-        }
-
-        /**
-         * Il metodo toString() è speciale perché viene
-         * chiamato da Java implicitamente quando serve
-         * convertire un oggetto in stringa
-         * @return
-         */
-        @Override
-        public String toString()
-        {
-            return escape;
-        }
-    }
-
 
     /**
-     * The method used to start the game and handle a turn
+     * * The method used to start the game and handle a turn
      */
-    public void run(){
-        outputStream.println("\nBenvenuti al gioco SANTORINI di Giorgianni-Giudici_Govigli"+" \uD83D\uDE0A");
-        outputStream.println("Inserire il numero di giocatori");
-        int numPlayer = scanner.nextInt();
-        numPlayers = numPlayer;
+    public void run() {
+        outputStream.println("\nBenvenuti al gioco SANTORINI di Giorgianni-Giudici_Govigli" + " \uD83D\uDE0A");
+        while(!actionDone) {
+            outputStream.println("Inserire il numero di giocatori");
+            int numPlayer = scanner.nextInt();
+            if(numPlayer==2 || numPlayer==3)
+                setActionDone(true);
+            numPlayers = numPlayer;
+        }
+
         handleInit();
         handleInitialPosition();
 
-        while(!done){
+        while (!gameDone) {
+            setActionDone(false);
+            setTurnDone(false);
             String nome = handleCurrentPlayer();
-            outputStream.println("\n"+nome+ " it's your turn!!!");
-            //MOVE
-            setGameState(State.MOVE);
-            outputStream.println("\nInserire quale worker muovere (digitare 1 o 2)");
+            outputStream.println("\n" + nome + " it's your turn!!!");
+            outputStream.println(ViewMessage.workerMessage);
             Integer worker = scanner.nextInt();
-            outputStream.println("\nInserire una posizione in cui muoversi (digitare x,y)");
-            String input = scanner.next();
-            String[] s = input.split(",");
-            handleMove(Integer.parseInt(s[0]),Integer.parseInt(s[1]),worker);
-            outputStream.println("\nInserire una posizione in cui costruire con il tuo worker"+worker+ "(digitare x,y)");
-            String build = scanner.next();
-            String[] b = input.split(",");
-            handleBuild(Integer.parseInt(b[0]),Integer.parseInt(b[1]),worker);
-            handleEnd();
+            while(!turnDone) {
+
+                switch (gameState) {
+                    case "START":
+                        while(!actionDone) {
+                            handleStateChange("PREMOVE");
+                        }
+                        break;
+                    case "PREMOVE":
+                        while(!actionDone) {
+                            handleStateChange("MOVE");
+                        }
+
+                        break;
+
+                    case "MOVE":
+                        while (!actionDone) {
+                            outputStream.println(ViewMessage.moveMessage);
+                            String input = scanner.next();
+                            String[] s = input.split(",");
+                            handleMove(Integer.parseInt(s[0]), Integer.parseInt(s[1]), worker);
+                            handleStateChange("PREBUILD");
+                        }
+                        break;
+
+                    case "PREBUILD":
+                        handleStateChange("BUILD");
+                        break;
+
+                    case "BUILD":
+                        outputStream.println(ViewMessage.buildMessage + worker);
+                        String build = scanner.next();
+                        String[] b = build.split(",");
+                        outputStream.println(ViewMessage.LevelMessage);
+                        String answer = scanner.next();
+                        if (answer.equals("YES")) {
+                            outputStream.println("Insert level:");
+                            Integer level = scanner.nextInt();
+                            handleBuild(Integer.parseInt(b[0]), Integer.parseInt(b[1]), worker, level);
+                        } else
+                            handleBuild(Integer.parseInt(b[0]), Integer.parseInt(b[1]), worker, 0);
+                        handleStateChange("END");
+                        break;
+                    case "END":
+                        handleEnd();
+                        handleStateChange("START");
+                        break;
+
+                }
+            }
 
         }
+        String winner = handleCurrentPlayer();
+        System.out.println(winner + ViewMessage.winMessage);
     }
 
     /**
@@ -199,14 +229,17 @@ public class ViewCLI implements ViewObservable, ModelObserver {
      * @param worker is an integer that tells which of the two worker are selected from the user
      */
     public void handleMove(Integer x,Integer y,Integer worker){
-        notifyMove(c=new Choice(x,y,worker));
+        notifyMove(c=new Choice(x,y,worker,null));
     }
 
     /**
      * this method has the task to initialize the Gameboard and set the initial players position
      */
-    public void handleInit(){notifyInit(c=new Choice(null,null,null));}
-    public void handleEnd(){notifyEnd();}
+    public void handleInit(){notifyInit(c=new Choice(null,null,null,null));}
+    public void handleEnd(){
+        turnDone=true;
+        notifyEnd();
+    }
     /**
      * Has the task to ask the user to insert the two coordinates for his 2 workers and notify observers
      * to set this data
@@ -218,7 +251,7 @@ public class ViewCLI implements ViewObservable, ModelObserver {
                 outputStream.println("Giocatore "+(i+1)+", Inserire dove posizionare il tuo worker"+ (j+1) + "(digitare x,y)\"");
                 String input = scanner.next();
                 String[] s = input.split(",");
-                notifyInit(c=new Choice(Integer.parseInt(s[0]),Integer.parseInt(s[1]),j+1));
+                notifyInit(c=new Choice(Integer.parseInt(s[0]),Integer.parseInt(s[1]),j+1,null));
             }
 
 
@@ -233,18 +266,22 @@ public class ViewCLI implements ViewObservable, ModelObserver {
      * @param worker is an integer that tells which of the two worker are selected from the user
      *               its the same one called from the move action
      */
-    public void handleBuild(Integer x,Integer y,Integer worker){
-        notifyBuild(c=new Choice(x,y,worker));
+    public void handleBuild(Integer x,Integer y,Integer worker,Integer level){
+        notifyBuild(c=new Choice(x,y,worker,level));
     }
 
     public String handleCurrentPlayer(){
         return notifyCurrentPlayer();
     }
 
+    public void handleStateChange(String s){
+        notifyState(s);
+    }
+
     public void show(){
         int cont=0;
         int init=0;
-        int succ;
+
         boolean spazio=true;
 
 

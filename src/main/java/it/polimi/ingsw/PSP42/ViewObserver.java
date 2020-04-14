@@ -1,5 +1,7 @@
 package it.polimi.ingsw.PSP42;
 
+
+
 public interface ViewObserver {
     /**
      * the methods updates the observer telling in particular the progression of the game (INIT ACTION)
@@ -19,4 +21,6 @@ public interface ViewObserver {
     public abstract String updateCurrentPlayer();
 
     public abstract void updateEnd();
+
+    public abstract void updateState(String s);
 }

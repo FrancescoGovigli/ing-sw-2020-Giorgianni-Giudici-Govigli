@@ -22,8 +22,8 @@ public class Player {
         this.id = id;
         this.worker1 = new Worker(- 1, - 1, this);
         this.worker2 = new Worker(- 1, - 1, this);
-        this.card = null;
-        //this.card = new Demeter(worker1, worker2);
+        //this.card = null;
+        this.card = new Demeter(worker1, worker2);
         //this.card = new Atlas(worker1, worker2);
         //this.card = new Apollo(worker1, worker2);
         //this.card = new Artemis(worker1, worker2);
@@ -46,8 +46,14 @@ public class Player {
      * It is an important getter to know the status of a player during the game
      * @return
      */
-    public State getPlayerState() {
-        return playerState;
+    public String getPlayerState() {
+        if(playerState.equals(State.INGAME))
+            return "INGAME";
+        if(playerState.equals(State.WIN))
+            return "WIN";
+        if(playerState.equals(State.LOSE))
+            return "LOSE";
+        return "NO_STATE";
     }
 
     /**
