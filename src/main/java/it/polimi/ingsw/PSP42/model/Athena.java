@@ -153,7 +153,8 @@ public class Athena extends SimpleGod {
         Cell[][] c = GameBoard.getInstance().submatrixGenerator(x, y);
         for (int i = 0; i < 3; i++) {    //searching around the cell(x,y)
             for (int j = 0; j < 3; j++) {
-                if ((c[i][j].getLevel() <= GameBoard.getInstance().getCell(x, y).getLevel())) //cell at the same or lower level
+                if (c[i][j] != null &&
+                        (c[i][j].getLevel() <= GameBoard.getInstance().getCell(x, y).getLevel())) //cell at the same or lower level
                 {
                     adjCellMoveAvailable[index] = c[i][j];
                     index++;
