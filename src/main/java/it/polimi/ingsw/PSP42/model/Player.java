@@ -16,14 +16,17 @@ public class Player {
      * @param id   id automatically given to choose the order of gameplay during constructing
      * @param card choosed from the player
      */
-    public Player(String nick, int id, int age/*,Simplegod card*/) {
+    public Player(String nick, int id, int age /*, String cardName*/) {
         this.nickname = nick;
         this.age = age;
         this.id = id;
         this.worker1 = new Worker(- 1, - 1, this);
         this.worker2 = new Worker(- 1, - 1, this);
-        //this.card = null;
-        this.card = new Demeter(worker1, worker2);
+        //TODO
+        //this.card = GodAvailable.setGod(cardName, worker1, worker2);
+
+        //this.card = NoGod;
+        //this.card = new Demeter(worker1, worker2);
         //this.card = new Atlas(worker1, worker2);
         //this.card = new Apollo(worker1, worker2);
         //this.card = new Artemis(worker1, worker2);
