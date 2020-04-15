@@ -38,7 +38,7 @@ public class Artemis extends SimpleGod {
             startX = w.getCurrentX();
             startY = w.getCurrentY();
         }
-        if (startX != x && startY != y && GameBoard.getInstance().moveAvailable(x, y, w)) {
+        if ((startX != x || startY != y) && GameBoard.getInstance().moveAvailable(x, y, w)) {
             moveNum = moveNum + 1;
             return true;
         }
