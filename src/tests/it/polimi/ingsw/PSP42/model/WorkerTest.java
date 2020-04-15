@@ -11,17 +11,17 @@ public class WorkerTest {
     private Worker w = new Worker(-1,-1, p);
 
     @Test
-    public void getCurrentX() {
+    public void getCurrentX_afterConstructor_currentXMinus1() {
         assertEquals(-1, w.getCurrentX());
     }
 
     @Test
-    public void getCurrentY() {
+    public void getCurrentY_afterConstructor_currentYMinus1() {
         assertEquals(-1, w.getCurrentY());
     }
 
     @Test
-    public void setPosition() {
+    public void setPosition_move_00() {
         w.setPosition(0,0);
         assertEquals(0, w.getCurrentX());
         assertEquals(0, w.getCurrentY());
@@ -33,18 +33,18 @@ public class WorkerTest {
     }
 
     @Test
-    public void getAvailable() {
+    public void getAvailable_noAction_true() {
         assertTrue(w.getAvailable());
     }
 
     @Test
-    public void setAvailable() {
+    public void setAvailable_setFalse_returnFalse() {
         w.setAvailable(false);
         assertFalse(w.getAvailable());
     }
 
     @Test
-    public void buildBlock() {
+    public void buildBlock_in11_levelIn11Is1() {
         w.buildBlock(1,1);
         assertEquals(1, board.getCell(1,1).getLevel());
     }

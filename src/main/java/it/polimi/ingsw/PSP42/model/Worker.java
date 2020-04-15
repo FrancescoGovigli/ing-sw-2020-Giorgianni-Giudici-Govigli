@@ -1,8 +1,5 @@
 package it.polimi.ingsw.PSP42.model;
 
-/**
- * @author Luca Giudici
- */
 public class Worker {
 
     private int currentX;
@@ -48,11 +45,22 @@ public class Worker {
     public void setPosition(int x, int y) {
         if (GameBoard.getInstance().getCell(x, y).getWorker() == null) {
             if (this.currentX != -1 && this.currentY != -1)
-                GameBoard.getInstance().getCell(this.currentX, this.currentY).unSetWorker();
+                this.unSetPosition();
             this.currentX = x;
             this.currentY = y;
             GameBoard.getInstance().getCell(x, y).setWorker(this);
         }
+    }
+
+    /**
+     * Used to unset worker on the cell and to set currentX and currentY out of map
+     */
+    public void unSetPosition() {
+        if(this.currentX != -1 && this.currentY != -1) {
+            GameBoard.getInstance().getCell(this.currentX, this.currentY).unSetWorker();
+            this.currentX = -1;
+            this.currentY = -1;
+            }
     }
 
     /**

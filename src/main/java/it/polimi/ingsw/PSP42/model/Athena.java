@@ -63,6 +63,13 @@ public class Athena extends SimpleGod {
         return GameBoard.getInstance().moveAvailable(x, y, w);
     }
 
+    /**
+     * Used to move worker and to set BlockOpponentsStepUp if necessary
+     * @param x position on x-axis
+     * @param y position on y-axis
+     * @param w worker
+     * @return true if worker was moved, false otherwise
+     */
     @Override
     public boolean powerMove(int x, int y, Worker w) {
         if(effectMove && !effectPlayer.getCard().powerMoveAvailable(x, y, w))
@@ -76,6 +83,10 @@ public class Athena extends SimpleGod {
         return false;
     }
 
+    /**
+     * Check if power was activated.
+     * @return true if other players were blocked, false otherwise
+     */
     @Override
     public boolean powerEffectAvailable() {
         return getBlockOpponentsStepUp();
@@ -116,6 +127,13 @@ public class Athena extends SimpleGod {
         }
     }
 
+    /**
+     * Check if worker, during his movement, step up.
+     * @param x position on x-axis where worker is going
+     * @param y position on y-axis where worker is going
+     * @param w worker
+     * @return true if worker step up, false otherwise
+     */
     public boolean workerStepUp(int x, int y, Worker w) {
         if (GameBoard.getInstance().getCell(w.getCurrentX(), w.getCurrentY()).getLevel() -
                 GameBoard.getInstance().getCell(x, y).getLevel() == -1)

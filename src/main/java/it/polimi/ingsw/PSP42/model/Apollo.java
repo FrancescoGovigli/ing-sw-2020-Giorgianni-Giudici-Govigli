@@ -30,7 +30,7 @@ public class Apollo extends SimpleGod {
      */
     @Override
     public boolean powerMoveAvailable(int x, int y, Worker w) {
-        Cell[] adj = this.adjacentCellMovePowerAvailable(x, y, w);
+        Cell[] adj = this.adjacentCellMovePowerAvailable(w.getCurrentX(), w.getCurrentY());
         for (int i = 0; i < adj.length; i++) {
             if (GameBoard.getInstance().getCell(x, y).equals(adj[i]))
                 return true;
@@ -46,21 +46,19 @@ public class Apollo extends SimpleGod {
      */
     @Override
     public boolean powerMove(int x, int y, Worker w) {
-        Worker toSwap = null;
-        int tempPosX = 0;
-        int tempPosY = 0;
         if (effectMove && !effectPlayer.getCard().powerMoveAvailable(x, y, w))
             return false;
         if (powerMoveAvailable(x, y, w)){
-            toSwap = GameBoard.getInstance().getCell(x, y).getWorker();
+            Worker toSwap = GameBoard.getInstance().getCell(x, y).getWorker();
             if(toSwap!=null) {
-                tempPosX = toSwap.getCurrentX();
-                tempPosY = toSwap.getCurrentY();
-                toSwap.setPosition(w.getCurrentX(), w.getCurrentY());
-                w.setPosition(tempPosX, tempPosY);
+                int tempPosX = w.getCurrentX();
+                int tempPosY = w.getCurrentY();
+                toSwap.unSetPosition();
+                w.setPosition(x, y);
+                toSwap.setPosition(tempPosX, tempPosY);
             }
             else
-             w.setPosition(x,y);
+                w.setPosition(x,y);
             return true;
         }
         return false;
@@ -68,20 +66,19 @@ public class Apollo extends SimpleGod {
 
     /**
      * Used to know where the worker can move even if the cell is occupied by another worker.
-     * @param x position on the x-axis
-     * @param y position on the y-axis
-     * @param w worker who wants to move
+     * @param x starting position on the x-axis
+     * @param y starting position on the y-axis
      * @return a position's array of all the possible moves
      */
-    public Cell[] adjacentCellMovePowerAvailable(int x, int y, Worker w){
+    public Cell[] adjacentCellMovePowerAvailable(int x, int y){
         int index = 0;
         Cell[] adjCellMoveAvailable = new Cell[8];  // 8 is the maximum number of possible adjacent cell where move
-        Cell[][] c = GameBoard.getInstance().submatrixGenerator(w.getCurrentX(), w.getCurrentY());
+        Cell[][] c = GameBoard.getInstance().submatrixGenerator(x, y);
         for (int i = 0; i < 3; i++) {   //searching around the cell(x,y)
             for (int j = 0; j < 3; j++) {
                 if (c[i][j] != null &&                                      // c cell isn't out of map and and
                     (c[i][j].getWorker() == null ||                         // (there is no worker in the cell or
-                            c[i][j].getWorker().getPlayer() != w.getPlayer()) &&   // worker to be exchanged is not of the same player) and
+                            c[i][j].getWorker().getPlayer() != GameBoard.getInstance().getCell(x, y).getWorker().getPlayer()) &&   // worker to be exchanged is not of the same player) and
                     (c[i][j].getLevel() != 4) &&                            // is not 4th level and
                     ((c[i][j].getLevel() - GameBoard.getInstance().getCell(x, y).getLevel() <= 1) &&    // one gap level on ascent and
                      (c[i][j].getLevel() - GameBoard.getInstance().getCell(x, y).getLevel() >= - 3)))   // limit for the descent

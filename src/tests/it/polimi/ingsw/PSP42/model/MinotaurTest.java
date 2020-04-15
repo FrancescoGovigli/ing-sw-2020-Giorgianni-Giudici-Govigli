@@ -33,8 +33,10 @@ public class MinotaurTest {
         p1.move(1,1, p1.getWorker1());
         assertEquals(1, p1.getWorker1().getCurrentX());
         assertEquals(1, p1.getWorker1().getCurrentY());
+        assertEquals(g.getCell(1,1).getWorker(), p1.getWorker1());
         assertEquals(2, p2.getWorker1().getCurrentX());
         assertEquals(2, p2.getWorker1().getCurrentY());
+        assertEquals(g.getCell(2,2).getWorker(), p2.getWorker1());
     }
 
     @Test
@@ -46,7 +48,9 @@ public class MinotaurTest {
         p1.move(1,1, p1.getWorker1());
         assertEquals(1, p1.getWorker1().getCurrentX());
         assertEquals(1, p1.getWorker1().getCurrentY());
+        assertEquals(g.getCell(1,1).getWorker(), p1.getWorker1());
         assertEquals(0, p2.getWorker1().getCurrentX());
         assertEquals(0, p2.getWorker1().getCurrentY());
+        assertEquals(g.getCell(0,0).getWorker(), p2.getWorker1());
     }
 }
