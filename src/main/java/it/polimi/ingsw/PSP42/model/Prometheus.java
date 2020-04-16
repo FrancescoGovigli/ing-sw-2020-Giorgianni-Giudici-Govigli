@@ -36,8 +36,8 @@ public class Prometheus extends SimpleGod{
         if (buildNum == 0 && GameBoard.getInstance().moveAvailable(x, y, w))    // if building pre-move was not done
             return true;
         if (buildNum != 0 &&    // if building pre-move was done &&
-            (GameBoard.getInstance().getCell(x, y).getCellLevel() ==    // (the level of the future cell is the same as the current one
-             GameBoard.getInstance().getCell(w.getCurrentX(), w.getCurrentY()).getCellLevel()) &&   // as the current one) &&
+            (GameBoard.getInstance().getCell(x, y).getLevel() ==    // (the level of the future cell is the same as the current one
+             GameBoard.getInstance().getCell(w.getCurrentX(), w.getCurrentY()).getLevel()) &&   // as the current one) &&
             GameBoard.getInstance().moveAvailable(x, y, w)) // the future cell is available
             return true;
         return false;
