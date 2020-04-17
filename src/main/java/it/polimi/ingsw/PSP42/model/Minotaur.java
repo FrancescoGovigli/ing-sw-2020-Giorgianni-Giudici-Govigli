@@ -14,9 +14,9 @@ public class Minotaur extends SimpleGod{
     public String[][] setPhase() {
         String[] START = {"NULL"};
         String[] PREMOVE = {"NULL"};
-        String[] MOVE = {"move"};
+        String[] MOVE = {"MOVE"};
         String[] PREBUILD = {"NULL"};
-        String[] BUILD = {"build"};
+        String[] BUILD = {"BUILD"};
         String[] END = {"NULL"};
         String[][] phase = {START, PREMOVE, MOVE, PREBUILD, BUILD, END};
         return phase;

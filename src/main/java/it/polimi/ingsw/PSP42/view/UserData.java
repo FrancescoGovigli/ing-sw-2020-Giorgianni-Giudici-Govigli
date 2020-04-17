@@ -3,9 +3,11 @@ package it.polimi.ingsw.PSP42.view;
 public class UserData {
     private int age;
     private String nickname;
-    public UserData(String nickname,int age){
+    private String cardname;
+    public UserData(String nickname,int age,String cardname){
         this.nickname=nickname;
         this.age=age;
+        this.cardname=cardname;
     }
 
     public int getAge() {
@@ -14,5 +16,9 @@ public class UserData {
 
     public String getNickname() {
         return nickname;
+    }
+
+    public String getCardChoosed() {
+        return cardname;
     }
 }

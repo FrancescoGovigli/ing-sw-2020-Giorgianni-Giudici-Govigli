@@ -40,9 +40,9 @@ public class Hephaestus extends SimpleGod {
     public String[][] setPhase() {
         String[] START = {"NULL"};
         String[] PREMOVE = {"NULL"};
-        String[] MOVE = {"move"};
-        String[] PREBUILD = {"build"};
-        String[] BUILD = {"build"};
+        String[] MOVE = {"MOVE"};
+        String[] PREBUILD = {"BUILD"};
+        String[] BUILD = {"BUILD"};
         String[] END = {"NULL"};
         String[][] phase = {START, PREMOVE, MOVE, PREBUILD, BUILD, END};
         return phase;

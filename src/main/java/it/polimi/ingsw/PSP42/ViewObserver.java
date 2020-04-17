@@ -23,4 +23,10 @@ public interface ViewObserver {
     public abstract void updateEnd();
 
     public abstract void updateState(String s);
+
+    public abstract String[][] updateWhatToDo();
+
+    public abstract int updateStart();
+
+    public abstract void updateEffect();
 }

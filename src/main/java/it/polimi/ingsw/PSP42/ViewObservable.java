@@ -38,4 +38,9 @@ public interface ViewObservable {
 
     public abstract void notifyState(String s);
 
+    public abstract String[][] notifyWhatToDo();
+
+    public abstract int notifyStart();
+
+    public abstract void notifyEffect();
 }

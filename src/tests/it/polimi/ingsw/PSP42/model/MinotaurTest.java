@@ -13,8 +13,8 @@ public class MinotaurTest {
 
     @Before
     public void setUp() {
-        p1 = new Player("Fra",1,21);
-        p2 = new Player("Luca", 2,21);
+        p1 = new Player("Fra",1,21,"MINOTAUR");
+        p2 = new Player("Luca", 2,21,"MINOTAUR");
     }
 
     @After

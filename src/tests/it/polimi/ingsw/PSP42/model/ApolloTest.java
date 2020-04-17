@@ -1,16 +1,17 @@
 package it.polimi.ingsw.PSP42.model;
 
 import org.junit.*;
-import static org.junit.Assert.*;
 
+import static org.junit.Assert.*;
+// TEST CON CARTA FISSA APOLLO
 public class ApolloTest {
     private Player p1;
     private Player p2;
     private GameBoard g=GameBoard.getInstance();
     @Before
     public void setUp() throws Exception {
-        p1 = new Player("DG",1,21/*, "APOLLO"*/);
-        p2 = new Player("CIPO",2,21/*, "APOLLO"*/);
+        p1 = new Player("DG",1,21,"APOLLO");
+        p2 = new Player("CIPOOO",2,21,"APOLLO");
     }
 
     @After

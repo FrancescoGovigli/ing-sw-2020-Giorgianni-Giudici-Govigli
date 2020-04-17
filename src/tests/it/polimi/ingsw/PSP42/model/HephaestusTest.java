@@ -12,12 +12,12 @@ public class HephaestusTest {
     private GameBoard g = GameBoard.getInstance();
 
     @Before
-    public void setUp() {
-        p1 = new Player("Luca",1,21);
+    public void setUp() throws Exception {
+        p1 = new Player("Fra",1,21,"HEPHAESTUS");
     }
 
     @After
-    public void tearDown() {
+    public void tearDown() throws Exception {
         p1 = null;
         g.reset();
     }

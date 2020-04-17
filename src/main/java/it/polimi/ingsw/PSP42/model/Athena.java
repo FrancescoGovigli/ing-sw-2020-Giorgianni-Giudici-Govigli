@@ -38,12 +38,12 @@ public class Athena extends SimpleGod {
 
     @Override
     public String[][] setPhase() {
-        String[] START = {"effect"};
+        String[] START = {"EFFECT"};
         String[] PREMOVE = {"NULL"};
-        String[] MOVE = {"move"};
+        String[] MOVE = {"MOVE"};
         String[] PREBUILD = {"NULL"};
-        String[] BUILD = {"build"};
-        String[] END = {"effect"};
+        String[] BUILD = {"BUILD"};
+        String[] END = {"EFFECT"};
         String[][] phase = {START, PREMOVE, MOVE, PREBUILD, BUILD, END};
         return phase;
     }

@@ -11,12 +11,12 @@ public class AtlasTest {
     private GameBoard g = GameBoard.getInstance();
 
     @Before
-    public void setUp() {
-        p1 = new Player("Dan",1,21);
+    public void setUp() throws Exception {
+        p1 = new Player("Dan", 1, 21, "ATLAS");
     }
 
     @After
-    public void tearDown() {
+    public void tearDown() throws Exception {
         p1 = null;
         g.reset();
     }

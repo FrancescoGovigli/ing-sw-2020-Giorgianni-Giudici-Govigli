@@ -4,7 +4,7 @@ import org.junit.*;
 
 import static org.junit.Assert.*;
 
-//STATE ATTENTI NON FUNZIONA SE METTETE UNA CARTA != NULL
+//STATE ATTENTI NON FUNZIONA SE METTETE UNA CARTA != NOGOD
 
 public class PlayerTest<excepted> {
 
@@ -14,8 +14,8 @@ public class PlayerTest<excepted> {
 
     @Before
     public void setUp() throws Exception {
-        p1 = new Player("DG",1,21);
-        p2 = new Player("CIPO",2,22);
+        p1 = new Player("DG",1,21,"NOGOD");
+        p2 = new Player("CIPO",2,22,"NOGOD");
     }
 
     @After

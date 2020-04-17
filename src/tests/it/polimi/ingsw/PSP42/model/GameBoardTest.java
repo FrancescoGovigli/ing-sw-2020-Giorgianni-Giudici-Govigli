@@ -9,12 +9,12 @@ import static org.junit.Assert.*;
 public class GameBoardTest {
 
     private GameBoard board = GameBoard.getInstance();
-    private Player p = new Player("BOB", 1,21);
+    private Player p = new Player("BOB", 1,21,"APOLLO");
     private Worker w = new Worker(-1,-1, p);
 
     @Before
     public void setUp() throws Exception {
-        p = new Player("BOB", 1,21);
+        p = new Player("BOB", 1,21,"APOLLO");
 
     }
 

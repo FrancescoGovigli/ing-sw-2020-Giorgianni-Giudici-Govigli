@@ -16,8 +16,8 @@ public class AthenaTest {
 
     @Before
     public void setUp() {
-        p1 = new Player("Dan",1,21);
-        p2 = new Player("Bob",2,21);
+        p1 = new Player("Dan",1,21,"ATHENA");
+        p2 = new Player("Bob",2,21,"ATHENA");
         players.add(p1);
         players.add(p2);
         g.setPlayers(players);

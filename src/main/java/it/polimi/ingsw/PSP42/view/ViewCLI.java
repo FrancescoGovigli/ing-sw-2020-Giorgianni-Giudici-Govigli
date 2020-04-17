@@ -26,6 +26,10 @@ public class ViewCLI implements ViewObservable, ModelObserver {
     public void setActionDone(boolean value){
         actionDone = value;
     }
+    public void setGameDone(boolean value){
+        gameDone = value;
+    }
+
 
     public Choice getChoice(){
         return c;
@@ -54,18 +58,54 @@ public class ViewCLI implements ViewObservable, ModelObserver {
      * This method helps the Controller to ask for the players names during the creation of game
      * @return arraylist player names given through System.in
      */
-    public ArrayList<UserData> getPlayerdata(){
+    public ArrayList<UserData> getPlayerdata(String[] set){
+        List<String> setOfCards = new LinkedList<String>(Arrays.asList(set));
+        setOfCards.add("NOGOD");
         ArrayList<UserData> players = new ArrayList<>();
         for (int i = 0; i < numPlayers ; i++) {
-            outputStream.println("Inserire il nome del giocatore:"+(i+1) );
+            outputStream.println("Insert your name player :"+(i+1) );
             String nick = scanner.next();
-            outputStream.println("Inserire l'età del giocatore:"+(i+1) );
+            outputStream.println("Insert your age player :"+(i+1) );
             int age = scanner.nextInt();
-            players.add(new UserData(nick,age));
+            boolean choiceDone=false;
+            String selectedCard = null;
+            while(!choiceDone) {
+                outputStream.println("Select one of the card in the set player :" + (i + 1));
+                for (int j = 0; j < setOfCards.size(); j++) {
+                    System.out.println(setOfCards.get(j));
+                }
+                selectedCard = scanner.next();
+
+                if (setOfCards.contains(selectedCard.toUpperCase())) {
+                    if(!selectedCard.toUpperCase().equals("NOGOD"))
+                       setOfCards.remove(selectedCard.toUpperCase());
+                    choiceDone = true;
+                }
+            }
+
+            players.add(new UserData(nick,age,selectedCard.toUpperCase()));
+            }
+        return players;
         }
 
-        return players;
-    }
+        public int getWorker(){
+           Integer worker=null;
+           boolean correct=false;
+           while(!correct) {
+               outputStream.println(ViewMessage.workerMessage);
+               try {
+                   worker = scanner.nextInt();
+                   if (worker == 1 || worker == 2)
+                       correct = true;
+               }
+               catch(InputMismatchException e){
+                   System.out.println(ErrorMessage.InputMessage);
+               }
+               scanner.nextLine();//Clear del buffer
+           }
+            return worker;
+        }
+
 
     /**
      * Add an observer to the View's observer list
@@ -136,6 +176,21 @@ public class ViewCLI implements ViewObservable, ModelObserver {
         obs.get(0).updateState(s);
     }
 
+    @Override
+    public String[][] notifyWhatToDo() {
+        return obs.get(0).updateWhatToDo();
+    }
+
+    @Override
+    public int notifyStart() {
+       return obs.get(0).updateStart();
+    }
+
+    @Override
+    public void notifyEffect() {
+        obs.get(0).updateEffect();
+    }
+
 
     @Override
     public void updateBoard(Object o) {
@@ -147,12 +202,20 @@ public class ViewCLI implements ViewObservable, ModelObserver {
      * * The method used to start the game and handle a turn
      */
     public void run() {
-        outputStream.println("\nBenvenuti al gioco SANTORINI di Giorgianni-Giudici_Govigli" + " \uD83D\uDE0A");
+        outputStream.println("\nWELCOME TO SANTORINI GAME by Giorgianni-Giudici_Govigli" + " \uD83D\uDE0A \n");
         while(!actionDone) {
-            outputStream.println("Inserire il numero di giocatori");
-            int numPlayer = scanner.nextInt();
-            if(numPlayer==2 || numPlayer==3)
+            outputStream.println(ViewMessage.numberOfPlayersMessage);
+            int numPlayer=0;
+            try {
+                numPlayer = scanner.nextInt();
                 setActionDone(true);
+            }
+            catch(InputMismatchException e){
+                System.out.println(ErrorMessage.InputMessage+"\n");
+                scanner.nextLine();
+            }
+            //if(numPlayer==2 || numPlayer==3)
+
             numPlayers = numPlayer;
         }
 
@@ -160,66 +223,66 @@ public class ViewCLI implements ViewObservable, ModelObserver {
         handleInitialPosition();
 
         while (!gameDone) {
-            setActionDone(false);
-            setTurnDone(false);
+            Integer worker=null;
             String nome = handleCurrentPlayer();
             outputStream.println("\n" + nome + " it's your turn!!!");
-            outputStream.println(ViewMessage.workerMessage);
-            Integer worker = scanner.nextInt();
+            String[][] whatToDo = handleWhatToDo();
             while(!turnDone) {
-
                 switch (gameState) {
                     case "START":
                         while(!actionDone) {
-                            handleStateChange("PREMOVE");
+                            if(whatToDo[0][0].equals("NULL"))
+                                actionDone=true;
+                            else {
+                                for (int i = 0; i < whatToDo[0].length; i++) {
+                                    String move = whatToDo[0][i];
+                                    callFunction(move, worker);
+                                }
+                            }
                         }
+                        handleStateChange("PREMOVE");
+                        worker = handleStart();
                         break;
                     case "PREMOVE":
-                        while(!actionDone) {
-                            handleStateChange("MOVE");
-                        }
-
+                            if(whatToDo[1][0].equals("NULL"))
+                                actionDone=true;
+                            else {
+                                for (int i = 0; i < whatToDo[1].length; i++) {
+                                    String move = whatToDo[1][i];
+                                    callFunction(move, worker);
+                                }
+                            }
+                        handleStateChange("MOVE");
                         break;
-
                     case "MOVE":
-                        while (!actionDone) {
-                            outputStream.println(ViewMessage.moveMessage);
-                            String input = scanner.next();
-                            String[] s = input.split(",");
-                            handleMove(Integer.parseInt(s[0]), Integer.parseInt(s[1]), worker);
-                            handleStateChange("PREBUILD");
-                        }
+                        handleMove(worker);
+                        handleStateChange("PREBUILD");
                         break;
-
                     case "PREBUILD":
+                        if(whatToDo[3][0].equals("NULL"))
+                            actionDone=true;
+                        else {
+                            for (int i = 0; i < whatToDo[3].length; i++) {
+                                String move = whatToDo[3][i];
+                                callFunction(move, worker);
+                            }
+                        }
                         handleStateChange("BUILD");
                         break;
-
                     case "BUILD":
-                        outputStream.println(ViewMessage.buildMessage + worker);
-                        String build = scanner.next();
-                        String[] b = build.split(",");
-                        outputStream.println(ViewMessage.LevelMessage);
-                        String answer = scanner.next();
-                        if (answer.equals("YES")) {
-                            outputStream.println("Insert level:");
-                            Integer level = scanner.nextInt();
-                            handleBuild(Integer.parseInt(b[0]), Integer.parseInt(b[1]), worker, level);
-                        } else
-                            handleBuild(Integer.parseInt(b[0]), Integer.parseInt(b[1]), worker, 0);
+                        handleBuild(worker);
                         handleStateChange("END");
                         break;
                     case "END":
                         handleEnd();
                         handleStateChange("START");
                         break;
-
                 }
             }
 
         }
         String winner = handleCurrentPlayer();
-        System.out.println(winner + ViewMessage.winMessage);
+        System.out.println(winner +" "+ ViewMessage.winMessage);
     }
 
     /**
@@ -228,14 +291,22 @@ public class ViewCLI implements ViewObservable, ModelObserver {
      * @param y y-axis for the new map position
      * @param worker is an integer that tells which of the two worker are selected from the user
      */
-    public void handleMove(Integer x,Integer y,Integer worker){
-        notifyMove(c=new Choice(x,y,worker,null));
+    public void handleMove(Integer worker){
+        while(!actionDone) {
+            outputStream.println(ViewMessage.moveMessage);
+            String input = scanner.next();
+            String[] s = input.split(",");
+            notifyMove(c = new Choice(Integer.parseInt(s[0]), Integer.parseInt(s[1]), worker, null,null));
+        }
     }
 
     /**
      * this method has the task to initialize the Gameboard and set the initial players position
      */
-    public void handleInit(){notifyInit(c=new Choice(null,null,null,null));}
+    public void handleInit(){
+        notifyInit(c=new Choice(null,null,null,null,null));
+        setActionDone(false);
+    }
     public void handleEnd(){
         turnDone=true;
         notifyEnd();
@@ -248,14 +319,18 @@ public class ViewCLI implements ViewObservable, ModelObserver {
         this.show();
         for (int i = 0; i <numPlayers; i++) {
             for (int j = 0; j <2; j++) {
-                outputStream.println("Giocatore "+(i+1)+", Inserire dove posizionare il tuo worker"+ (j+1) + "(digitare x,y)\"");
+                while (! actionDone) {
+                outputStream.println("Player " + (i + 1) + ", "+ViewMessage.initialPositionMessage + (j + 1) + "(digit x,y)\"");
                 String input = scanner.next();
                 String[] s = input.split(",");
-                notifyInit(c=new Choice(Integer.parseInt(s[0]),Integer.parseInt(s[1]),j+1,null));
+                notifyInit(c = new Choice(Integer.parseInt(s[0]), Integer.parseInt(s[1]), j + 1, null,i));
+                }
+                setActionDone(false);
             }
 
 
         }
+        setActionDone(false);
 
     }
 
@@ -266,22 +341,50 @@ public class ViewCLI implements ViewObservable, ModelObserver {
      * @param worker is an integer that tells which of the two worker are selected from the user
      *               its the same one called from the move action
      */
-    public void handleBuild(Integer x,Integer y,Integer worker,Integer level){
-        notifyBuild(c=new Choice(x,y,worker,level));
+    public void handleBuild(Integer worker){
+        while(!actionDone) {
+            outputStream.println(ViewMessage.buildMessage + worker);
+            String build = scanner.next();
+            String[] b = build.split(",");
+            outputStream.println(ViewMessage.LevelMessage);
+            String answer = scanner.next();
+            if (answer.toUpperCase().equals("YES")) {
+                outputStream.println("Insert level:");
+                Integer level = scanner.nextInt();
+                notifyBuild(c = new Choice(Integer.parseInt(b[0]), Integer.parseInt(b[1]), worker, level,null));
+            } else
+                notifyBuild(c = new Choice(Integer.parseInt(b[0]), Integer.parseInt(b[1]), worker, 0,null));
+        }
     }
 
     public String handleCurrentPlayer(){
+        setTurnDone(false);
         return notifyCurrentPlayer();
     }
 
     public void handleStateChange(String s){
         notifyState(s);
+        setActionDone(false);
+    }
+
+    public String[][] handleWhatToDo(){ return notifyWhatToDo();
+    }
+
+    public int handleStart(){
+        int x=0;
+        while(!actionDone)
+          x = notifyStart();
+        setActionDone(false);
+       return x;
+    }
+
+    public void handleEffect(){
+        notifyEffect();
     }
 
     public void show(){
         int cont=0;
         int init=0;
-
         boolean spazio=true;
 
 
@@ -357,6 +460,23 @@ public class ViewCLI implements ViewObservable, ModelObserver {
             System.out.print("\n"+Color.RESET);
             cont++;
         }
+    }
+
+    public void callFunction(String s,Integer worker){
+        System.out.println(s+"POWER:"+ViewMessage.applyPowerMessage);
+        String input = scanner.next();
+        if(input.toUpperCase().equals("YES")) {
+            switch (s) {
+                case "MOVE":
+                    handleMove(worker);
+                case "BUILD":
+                    handleBuild(worker);
+                case "EFFECT":
+                    handleEffect();
+            }
+        }
+        else
+            setActionDone(true);
     }
 
 

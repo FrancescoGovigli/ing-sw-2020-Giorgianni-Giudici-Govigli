@@ -9,7 +9,7 @@ public class PrometheusTest {
 
     @Before
     public void setUp() {
-        p1 = new Player("BOB", 1,21/*, "PROMETHEUS"*/);
+        p1 = new Player("BOB", 1,21, "PROMETHEUS");
     }
 
     @After

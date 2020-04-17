@@ -12,7 +12,7 @@ public class ArtemisTest {
 
     @Before
     public void setUp() throws Exception {
-        p1 = new Player("BOB", 1,21/*, "ARTEMIS"*/);
+        p1 = new Player("BOB", 1,21,"ARTEMIS");
 
     }
 
