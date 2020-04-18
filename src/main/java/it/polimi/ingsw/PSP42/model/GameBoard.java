@@ -9,7 +9,7 @@ public class GameBoard implements ModelObservable {
     private ArrayList<Player> players;
     private int currentPlayer = 0;
     private static GameBoard instance = null;
-    /*TODO added Status*/ private Turn gamePhase = Turn.valueOf("START");
+    private Turn gamePhase = null;
 
     /**
      * Constructor to initialize the board of dimension 5x5
@@ -23,16 +23,26 @@ public class GameBoard implements ModelObservable {
         this.currentPlayer = 0;
     }
 
-    public int getCurrentPlayer(){
-        return currentPlayer;
+    /**
+     * Method to return the unique instance of the board
+     * @return instance
+     */
+    public static GameBoard getInstance() {
+        if (instance == null)
+            instance = new GameBoard();
+        return instance;
     }
 
     public void reset(){
         instance=null;
     }
 
+    public int getCurrentPlayer(){
+        return currentPlayer;
+    }
+
     public void setCurrentPlayer(int x){
-        currentPlayer=x;
+        currentPlayer = x;
     }
 
     /**
@@ -45,21 +55,20 @@ public class GameBoard implements ModelObservable {
     }
 
     /**
+     * Method to obtain a minimal copy of the gameboard, useful in printing on CLI
+     * @return gCopy (FakeCell matrix containing only player name, worker 1 or 2 and construction level)
+     */
+    public FakeCell[][] gameBoardCopy(){
+        FakeCell[][] gCopy = FakeCell.getGameBoardCopy();
+        return gCopy;
+    }
+
+    /**
      *
      * @return
      */
     public ArrayList<Player> getPlayers(){
         return (ArrayList<Player>) players.clone();
-    }
-
-    /**
-     * Method to return the unique instance of the board
-     * @return instance
-     */
-    public static GameBoard getInstance() {
-        if (instance == null)
-            instance = new GameBoard();
-        return instance;
     }
 
     /**
@@ -70,6 +79,14 @@ public class GameBoard implements ModelObservable {
      */
     public Cell getCell(int x, int y) {
         return this.board[x][y];
+    }
+
+    public String getGamePhase() {
+        return gamePhase.toString();
+    }
+
+    public void setGamePhase(String gamePhase) {
+        this.gamePhase = Turn.valueOf(gamePhase);
     }
 
     /**

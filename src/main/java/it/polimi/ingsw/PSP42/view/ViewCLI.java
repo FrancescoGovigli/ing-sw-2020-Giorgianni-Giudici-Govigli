@@ -19,7 +19,6 @@ public class ViewCLI implements ViewObservable, ModelObserver {
     private int numPlayers;
     private Choice c;
 
-
     public void setTurnDone(boolean value){
         turnDone = value;
     }
@@ -29,7 +28,6 @@ public class ViewCLI implements ViewObservable, ModelObserver {
     public void setGameDone(boolean value){
         gameDone = value;
     }
-
 
     public Choice getChoice(){
         return c;
@@ -41,7 +39,6 @@ public class ViewCLI implements ViewObservable, ModelObserver {
         turnDone = false;
         actionDone = false;
         gameState = "START";
-
     }
 
     public String getGameState(){
@@ -75,36 +72,34 @@ public class ViewCLI implements ViewObservable, ModelObserver {
                     System.out.println(setOfCards.get(j));
                 }
                 selectedCard = scanner.next();
-
                 if (setOfCards.contains(selectedCard.toUpperCase())) {
                     if(!selectedCard.toUpperCase().equals("NOGOD"))
                        setOfCards.remove(selectedCard.toUpperCase());
                     choiceDone = true;
                 }
             }
-
             players.add(new UserData(nick,age,selectedCard.toUpperCase()));
             }
         return players;
-        }
+    }
 
-        public int getWorker(){
-           Integer worker=null;
-           boolean correct=false;
-           while(!correct) {
-               outputStream.println(ViewMessage.workerMessage);
-               try {
-                   worker = scanner.nextInt();
-                   if (worker == 1 || worker == 2)
-                       correct = true;
-               }
-               catch(InputMismatchException e){
-                   System.out.println(ErrorMessage.InputMessage);
-               }
-               scanner.nextLine();//Clear del buffer
+    public int getWorker(){
+       Integer worker=null;
+       boolean correct=false;
+       while(!correct) {
+           outputStream.println(ViewMessage.workerMessage);
+           try {
+               worker = scanner.nextInt();
+               if (worker == 1 || worker == 2)
+                   correct = true;
            }
-            return worker;
-        }
+           catch(InputMismatchException e){
+               System.out.println(ErrorMessage.InputMessage);
+           }
+           scanner.nextLine();//Clear del buffer
+       }
+        return worker;
+    }
 
 
     /**
@@ -127,8 +122,6 @@ public class ViewCLI implements ViewObservable, ModelObserver {
         obs.remove(ob);
     }
 
-
-
      /**
      *notifies all observers that the view is initializing the game
      * @param o
@@ -137,7 +130,6 @@ public class ViewCLI implements ViewObservable, ModelObserver {
     public void notifyInit(Object o) {
         for (int i = 0; i <obs.size() ; i++)
             obs.get(i).updateInit(o);
-
     }
 
     /**
@@ -148,7 +140,6 @@ public class ViewCLI implements ViewObservable, ModelObserver {
     public void notifyMove(Object o) {
         for (int i = 0; i <obs.size() ; i++)
             obs.get(i).updateMove(o);
-
     }
 
     /**
@@ -195,7 +186,6 @@ public class ViewCLI implements ViewObservable, ModelObserver {
     @Override
     public void updateBoard(Object o) {
         this.show();
-
     }
 
     /**
@@ -215,13 +205,10 @@ public class ViewCLI implements ViewObservable, ModelObserver {
                 scanner.nextLine();
             }
             //if(numPlayer==2 || numPlayer==3)
-
             numPlayers = numPlayer;
         }
-
         handleInit();
         handleInitialPosition();
-
         while (!gameDone) {
             Integer worker=null;
             String nome = handleCurrentPlayer();
@@ -279,7 +266,6 @@ public class ViewCLI implements ViewObservable, ModelObserver {
                         break;
                 }
             }
-
         }
         String winner = handleCurrentPlayer();
         System.out.println(winner +" "+ ViewMessage.winMessage);
@@ -327,11 +313,8 @@ public class ViewCLI implements ViewObservable, ModelObserver {
                 }
                 setActionDone(false);
             }
-
-
         }
         setActionDone(false);
-
     }
 
     /**
@@ -367,7 +350,8 @@ public class ViewCLI implements ViewObservable, ModelObserver {
         setActionDone(false);
     }
 
-    public String[][] handleWhatToDo(){ return notifyWhatToDo();
+    public String[][] handleWhatToDo(){
+        return notifyWhatToDo();
     }
 
     public int handleStart(){
@@ -382,84 +366,51 @@ public class ViewCLI implements ViewObservable, ModelObserver {
         notifyEffect();
     }
 
+    /**
+     * Method to print the current GameBoard situation on the screen
+     */
     public void show(){
-        int cont=0;
-        int init=0;
-        boolean spazio=true;
-
-
-        System.out.print(Color.ANSI_WATER+"\n           MAP\n\n"+Color.RESET);
-
-        for (int i = 0; i <56 ; i++) {
-            if(i==0)
-                System.out.print("          ");
-            if(spazio && (i-init)!=6) {
-                System.out.print(" ");
-
+        //TODO make the appropriate setting of the individual cells based on the copy of the GameBoard received
+        int rowIndex = 0;
+        int colIndex = 0;
+        System.out.println();
+        for (int i = 0; i < 16; i++) {
+            for (int j = 0; j < 41; j++) {
+                boolean row1 = (i == 1 || i == 4 || i == 7 || i == 10 || i == 13);
+                boolean row2 = (i == 2 || i == 5 || i == 8 || i == 11 || i == 14);
+                boolean col1 = (j == 3 || j == 11 || j == 19 || j == 27 || j == 35);
+                boolean col2 = (j == 5 || j == 13 || j == 21 || j == 29 || j == 37);
+                if (i % 3 == 0)
+                    if (j % 8 == 0)
+                        System.out.print(Color.ANSI_REVERSE + "+" + Color.RESET);
+                    else
+                        System.out.print(Color.ANSI_REVERSE + "―" + Color.RESET);
+                else if (j % 8 == 0)
+                    System.out.print(Color.ANSI_REVERSE + "|" + Color.RESET);
+                else if (col1 && row1)  // possible worker
+                    System.out.print("W");
+                else if (col2 && row1)  // worker's number
+                    System.out.print("1");
+                else if (col1 && row2)  // level
+                    System.out.print("L");
+                else if (col2 && row2)  // level's level
+                    System.out.print("0");
+                else
+                    System.out.print(" ");
+                if (j == 40 && row1)
+                    System.out.print(" ROW");
+                else if (j == 40 && row2) {
+                    System.out.print(" " + rowIndex);
+                    rowIndex++;
+                }
             }
-
-            if((i-init)==6) {
-
-                System.out.print(Color.ANSI_GREEN+""+ cont+Color.RESET);
-                cont++;
-                init=cont*12;
-            }
-
-
-
+            System.out.println();
         }
-        cont=0;
-        System.out.print("\n");
-        for (int i = 0; i < 6 ; i++) {
-            for (int j = 0; j <= 5 * 11; j++) {
-                if(j==0)
-                    System.out.print("          ");
-                if(j%11==0)
-                    System.out.print(Color.ANSI_GREEN +""+ Color.ANSI_REVERSE + "+"+Color.RESET);
-
-                if(j<55) {
-                    //System.out.print(" ");
-                    System.out.print(Color.ANSI_GREEN +""+ Color.ANSI_REVERSE + "-"+Color.RESET);
-                }
-
-            }
-
-            System.out.print("\n");
-            for (int k = 0; k <=61 ; k++) {
-                if(k==0)
-                    System.out.print("          "+Color.ANSI_GREEN);
-                if ((k % 12 == 0) && i<5) {
-                    System.out.print(Color.ANSI_REVERSE+"|"+Color.RESET+Color.ANSI_GREEN);
-                }
-                else
-                    System.out.print(" ");
-            }
-            System.out.print("\n");
-
-            for (int l = 0; l <=61 ; l++) {
-                if(l==0 && i<5)
-                    System.out.print("       " +cont+"  ");
-                if ((l% 12 == 0) && i<5) {
-                    //System.out.print(" ");
-                    System.out.print(Color.ANSI_REVERSE+"|"+Color.RESET+Color.ANSI_GREEN);
-                }
-                else
-                    System.out.print(" ");
-            }
-            System.out.print("\n");
-            for (int m = 0; m <=61 ; m++) {
-                if(m==0)
-                    System.out.print("          ");
-                if ((m % 12 == 0) && i<5) {
-                   // System.out.print(" ");
-                    System.out.print(Color.ANSI_REVERSE+"|"+Color.RESET+Color.ANSI_GREEN);
-                }
-                else
-                    System.out.print(" ");
-            }
-            System.out.print("\n"+Color.RESET);
-            cont++;
+        for (int j = 0; j < 5; j++){
+            System.out.print("  COL " + colIndex + " ");
+            colIndex++;
         }
+        System.out.println();
     }
 
     public void callFunction(String s,Integer worker){
@@ -478,7 +429,4 @@ public class ViewCLI implements ViewObservable, ModelObserver {
         else
             setActionDone(true);
     }
-
-
-
 }

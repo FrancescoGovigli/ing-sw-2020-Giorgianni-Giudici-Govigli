@@ -14,7 +14,7 @@ public class Player {
      * Constructor to initialize a player object and instantiating 2 workers used by the player outside the Map cell(-1,-1)
      * @param nick nickname choosed from the player
      * @param id   id automatically given to choose the order of gameplay during constructing
-     * @param card choosed from the player
+     * @param cardName choosed from the player
      */
     public Player(String nick, int id, int age, String cardName) {
         this.nickname = nick;
