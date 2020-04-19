@@ -38,12 +38,12 @@ public class Hephaestus extends SimpleGod {
 
     @Override
     public String[][] setPhase() {
-        String[] START = {"NULL"};
-        String[] PREMOVE = {"NULL"};
+        String[] START = {"EMPTY"};
+        String[] PREMOVE = {"EMPTY"};
         String[] MOVE = {"MOVE"};
         String[] PREBUILD = {"BUILD"};
         String[] BUILD = {"BUILD"};
-        String[] END = {"NULL"};
+        String[] END = {"EMPTY"};
         String[][] phase = {START, PREMOVE, MOVE, PREBUILD, BUILD, END};
         return phase;
     }

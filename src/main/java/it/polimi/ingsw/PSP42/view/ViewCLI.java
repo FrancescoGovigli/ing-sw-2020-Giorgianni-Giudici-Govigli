@@ -16,21 +16,22 @@ public class ViewCLI implements ViewObservable, ModelObserver {
     private boolean turnDone;
     private boolean actionDone;
     private ArrayList<ViewObserver> obs = new ArrayList<>();
+
     private String gameState;
     private int numPlayers;
     private Choice c;
 
+
     public void setTurnDone(boolean value){
         turnDone = value;
     }
-
     public void setActionDone(boolean value){
         actionDone = value;
     }
-
     public void setGameDone(boolean value){
         gameDone = value;
     }
+
 
     public Choice getChoice(){
         return c;
@@ -81,6 +82,7 @@ public class ViewCLI implements ViewObservable, ModelObserver {
                     scanner.nextLine();
                 }
             }
+
             boolean choiceDone=false;
             String selectedCard = null;
             while(!choiceDone) {
@@ -96,9 +98,11 @@ public class ViewCLI implements ViewObservable, ModelObserver {
                     choiceDone = true;
                 }
             }
+
             players.add(new UserData(nick,age,selectedCard.toUpperCase()));
             setActionDone(false);
             }
+
         return players;
     }
 
@@ -122,6 +126,7 @@ public class ViewCLI implements ViewObservable, ModelObserver {
 
     /**
      * Add an observer to the View's observer list
+     *
      * @param ob
      */
     @Override
@@ -131,12 +136,14 @@ public class ViewCLI implements ViewObservable, ModelObserver {
 
     /**
      * Removes an observer to the View's observer list
+     *
      * @param ob
      */
     @Override
     public void detach(ViewObserver ob) {
         obs.remove(ob);
     }
+
 
      /**
      *notifies all observers that the view is initializing the game
@@ -198,6 +205,7 @@ public class ViewCLI implements ViewObservable, ModelObserver {
         obs.get(0).updateEffect();
     }
 
+
     @Override
     public void updateBoard(Object o) {
         this.show(o);
@@ -211,13 +219,13 @@ public class ViewCLI implements ViewObservable, ModelObserver {
                 "| |/ \\| || {_  | |   /  ___}/  {}  \\|  `.'  || {_     {_   _}/  {}  \\   { {__   / {} \\ |  `| |{_   _}/  {}  \\| {}  }| ||  `| || |\n" +
                 "|  .'.  || {__ | `--.\\     }\\      /| |\\ /| || {__      | |  \\      /   .-._} }/  /\\  \\| |\\  |  | |  \\      /| .-. \\| || |\\  || |\n" +
                 "`-'   `-'`----'`----' `---'  `----' `-' ` `-'`----'     `-'   `----'    `----' `-'  `-'`-' `-'  `-'   `----' `-' `-'`-'`-' `-'`-'");
-        outputStream.println("\nby Giorgianni-Giudici_Govigli" + " \uD83D\uDE0A \n");
+        outputStream.println("\nby Giorgianni-Giudici-Govigli" + " \uD83D\uDE0A \n");
         while(!actionDone) {
             outputStream.println(ViewMessage.numberOfPlayersMessage+"\n");
             int numPlayer=0;
             try {
                 numPlayer = scanner.nextInt();
-                //setActionDone(true);
+
             }
             catch(InputMismatchException e){
                 System.out.println(ErrorMessage.InputMessage+"\n");
@@ -228,21 +236,25 @@ public class ViewCLI implements ViewObservable, ModelObserver {
                 setActionDone(true);
             }
         }
+
         handleInit();
         handleInitialPosition();
+
         while (!gameDone) {
             Integer worker=null;
             String[][] whatToDo=null;
             String nome = handleCurrentPlayer();
             while(!turnDone) {
+
                 if(gameState.equals("START")) {
                     outputStream.println("\n" + nome + " it's your turn!!!"+"\n");
                     whatToDo = handleWhatToDo();
                 }
+
                 switch (gameState) {
                     case "START":
                         while(!actionDone) {
-                            if(whatToDo[0][0].equals("NULL"))
+                            if(whatToDo[0][0].equals("EMPTY"))
                                 actionDone=true;
                             else {
                                 for (int i = 0; i < whatToDo[0].length; i++) {
@@ -255,7 +267,7 @@ public class ViewCLI implements ViewObservable, ModelObserver {
                         worker = handleStart();
                         break;
                     case "PREMOVE":
-                            if(whatToDo[1][0].equals("NULL"))
+                            if(whatToDo[1][0].equals("EMPTY"))
                                 actionDone=true;
                             else {
                                 for (int i = 0; i < whatToDo[1].length; i++) {
@@ -270,7 +282,7 @@ public class ViewCLI implements ViewObservable, ModelObserver {
                         handleStateChange("PREBUILD");
                         break;
                     case "PREBUILD":
-                        if(whatToDo[3][0].equals("NULL"))
+                        if(whatToDo[3][0].equals("EMPTY"))
                             actionDone=true;
                         else {
                             for (int i = 0; i < whatToDo[3].length; i++) {
@@ -285,7 +297,7 @@ public class ViewCLI implements ViewObservable, ModelObserver {
                         handleStateChange("END");
                         break;
                     case "END":
-                        if(whatToDo[5][0].equals("NULL"))
+                        if(whatToDo[5][0].equals("EMPTY"))
                             actionDone = true;
                         else {
                             for (int i = 0; i < whatToDo[5].length; i++) {
@@ -298,6 +310,7 @@ public class ViewCLI implements ViewObservable, ModelObserver {
                         break;
                 }
             }
+
         }
         String winner = handleCurrentPlayer();
         System.out.println(winner +" "+ ViewMessage.winMessage);
@@ -309,10 +322,19 @@ public class ViewCLI implements ViewObservable, ModelObserver {
      */
     public void handleMove(Integer worker){
         while(!actionDone) {
+            String[] s=null;
             outputStream.println(ViewMessage.moveMessage);
-            String input = scanner.next();
-            String[] s = input.split(",");
-            notifyMove(c = new Choice(Integer.parseInt(s[0]), Integer.parseInt(s[1]), worker, null,null));
+            try{
+                String input = scanner.next();
+                s = input.split(",");
+                notifyMove(c = new Choice(Integer.parseInt(s[0]), Integer.parseInt(s[1]), worker, null,null));
+            }
+            catch (NumberFormatException e){
+                System.out.println(ErrorMessage.InputMessage + "\n");
+                scanner.nextLine();
+            }
+
+
         }
     }
 
@@ -336,16 +358,28 @@ public class ViewCLI implements ViewObservable, ModelObserver {
     public void handleInitialPosition(){
         for (int i = 0; i <numPlayers; i++) {
             for (int j = 0; j <2; j++) {
+                String[] s = null;
                 while (! actionDone) {
                 outputStream.println("Player " + (i + 1) + ", "+ViewMessage.initialPositionMessage + (j + 1) + "(digit x,y)"+"\n");
-                String input = scanner.next();
-                String[] s = input.split(",");
-                notifyInit(c = new Choice(Integer.parseInt(s[0]), Integer.parseInt(s[1]), j + 1, null,i));
+                try{
+                    String input = scanner.next();
+                    s = input.split(",");
+                    notifyInit(c = new Choice(Integer.parseInt(s[0]), Integer.parseInt(s[1]), j + 1, null,i));
                 }
+                catch (NumberFormatException e){
+                    System.out.println(ErrorMessage.InputMessage + "\n");
+                    scanner.nextLine();
+                }
+
+                }
+
                 setActionDone(false);
             }
+
+
         }
         setActionDone(false);
+
     }
 
     /**
@@ -356,16 +390,24 @@ public class ViewCLI implements ViewObservable, ModelObserver {
     public void handleBuild(Integer worker){
         while(!actionDone) {
             outputStream.println(ViewMessage.buildMessage + worker+"\n");
-            String build = scanner.next();
-            String[] b = build.split(",");
-            outputStream.println(ViewMessage.LevelMessage+"\n");
-            String answer = scanner.next();
-            if (answer.toUpperCase().equals("YES")) {
-                outputStream.println("Insert level:"+"\n");
-                Integer level = scanner.nextInt();
-                notifyBuild(c = new Choice(Integer.parseInt(b[0]), Integer.parseInt(b[1]), worker, level,null));
-            } else
-                notifyBuild(c = new Choice(Integer.parseInt(b[0]), Integer.parseInt(b[1]), worker, 0,null));
+            String[] b=null;
+            try{
+                String build = scanner.next();
+                b = build.split(",");
+                outputStream.println(ViewMessage.LevelMessage+"\n");
+                String answer = scanner.next();
+                if (answer.toUpperCase().equals("YES")) {
+                    outputStream.println("Insert level:"+"\n");
+                    Integer level = scanner.nextInt();
+                    notifyBuild(c = new Choice(Integer.parseInt(b[0]), Integer.parseInt(b[1]), worker, level,null));
+                } else
+                    notifyBuild(c = new Choice(Integer.parseInt(b[0]), Integer.parseInt(b[1]), worker, 0,null));
+            }
+            catch (NumberFormatException e){
+                System.out.println(ErrorMessage.InputMessage + "\n");
+                scanner.nextLine();
+            }
+
         }
     }
 
@@ -455,7 +497,7 @@ public class ViewCLI implements ViewObservable, ModelObserver {
                     System.out.print("L");
                 else if (col2 && row2)  // level's level
                     System.out.print(gCopy[x][y].getLevel());
-                    else
+                else
                     System.out.print(" ");
                 if (j == 40 && row1)
                     System.out.print(" ROW");
@@ -484,6 +526,7 @@ public class ViewCLI implements ViewObservable, ModelObserver {
     }
 
     public void callFunction(String s,Integer worker){
+
         switch (s) {
             case "MOVE":
                 System.out.println(s + "POWER:" + ViewMessage.applyPowerMessage);
@@ -507,4 +550,7 @@ public class ViewCLI implements ViewObservable, ModelObserver {
     public void loseMessage(String s){
         System.out.println(s+ " " + ViewMessage.loseMessage);
     }
+
+
+
 }

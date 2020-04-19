@@ -26,7 +26,21 @@ public class ControllerCLI implements ViewObserver {
         for (int i = 0; i < view.getNumPlayers(); i++) {
             players.add(new Player(data.get(i).getNickname(), i + 1,data.get(i).getAge(),data.get(i).getCardChoosed()));
         }
+        /*Collections.sort(players, new Comparator<Player>() {
+            @Override
+            public int compare(Player o1, Player o2) {
+                int value=0;
+                if (o2.getAge() < o1.getAge())
+                    value = - 1;
+                else if (o2.getAge() == o1.getAge())
+                    value = 0;
+                else if (o2.getAge() > o1.getAge())
+                    value = 1;
+                return value;
+            }
+        });*/
         g.setPlayers(players);
+        g.setGamePhase("START");
     }
 
     /**
@@ -50,9 +64,10 @@ public class ControllerCLI implements ViewObserver {
             if (view.getChoice().getW() == 2)
                 w = (g.getPlayers()).get(view.getChoice().getIdPlayer()).getWorker2();
             boolean check = (g.getPlayers()).get(view.getChoice().getIdPlayer()).initialPosition(view.getChoice().getX().intValue(), view.getChoice().getY().intValue(), w);
-            if(check)
+            if(check) {
                 view.setActionDone(true);
-            GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
+                GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
+            }
         }
     }
     /*TODO DEVO GESTIRE IL WORKER NON AVAILABLE RICHIEDI IN CASO, SE LA MOSSA è ERRATA RICHIEDO INPUT

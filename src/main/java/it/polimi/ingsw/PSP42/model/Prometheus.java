@@ -14,12 +14,12 @@ public class Prometheus extends SimpleGod{
 
     @Override
     public String[][] setPhase() {
-        String[] start = {"NULL"};
+        String[] start = {"EMPTY"};
         String[] preMove = {"BUILD"};
         String[] move = {"MOVE"};
-        String[] preBuild = {"NULL"};
+        String[] preBuild = {"EMPTY"};
         String[] build = {"BUILD"};
-        String[] end = {"NULL"};
+        String[] end = {"EMPTY"};
         String[][] phase = {start, preMove, move, preBuild, build, end};
         return phase;
     }

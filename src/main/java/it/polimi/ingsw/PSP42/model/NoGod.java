@@ -8,12 +8,12 @@ public class NoGod extends SimpleGod{
 
     @Override
     public String[][] setPhase() {
-        String[] start = {"NULL"};
-        String[] preMove = {"NULL"};
+        String[] start = {"EMPTY"};
+        String[] preMove = {"EMPTY"};
         String[] move = {"MOVE"};
-        String[] preBuild = {"NULL"};
+        String[] preBuild = {"EMPTY"};
         String[] build = {"BUILD"};
-        String[] end = {"NULL"};
+        String[] end = {"EMPTY"};
         String[][] phase = {start, preMove, move, preBuild, build, end};
         return phase;
     }
