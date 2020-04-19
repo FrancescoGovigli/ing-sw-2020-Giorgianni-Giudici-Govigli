@@ -1,12 +1,13 @@
 package it.polimi.ingsw.PSP42.view;
 
-
 import it.polimi.ingsw.PSP42.*;
 import it.polimi.ingsw.PSP42.model.*;
 
 import javax.swing.text.*;
 import java.io.*;
 import java.util.*;
+
+import it.polimi.ingsw.PSP42.model.FakeCell;
 
 public class ViewCLI implements ViewObservable, ModelObserver {
     private Scanner scanner;
@@ -42,7 +43,6 @@ public class ViewCLI implements ViewObservable, ModelObserver {
         turnDone = false;
         actionDone = false;
         gameState = "START";
-
     }
 
     public String getGameState(){
@@ -101,9 +101,9 @@ public class ViewCLI implements ViewObservable, ModelObserver {
             }
 
         return players;
-        }
+    }
 
-        public int getWorker(){
+    public int getWorker(){
            Integer worker=null;
            boolean correct=false;
            while(!correct) {
@@ -119,8 +119,7 @@ public class ViewCLI implements ViewObservable, ModelObserver {
                scanner.nextLine();//Clear del buffer
            }
             return worker;
-        }
-
+    }
 
     /**
      * Add an observer to the View's observer list
@@ -143,7 +142,6 @@ public class ViewCLI implements ViewObservable, ModelObserver {
     }
 
 
-
      /**
      *notifies all observers that the view is initializing the game
      * @param o
@@ -152,7 +150,6 @@ public class ViewCLI implements ViewObservable, ModelObserver {
     public void notifyInit(Object o) {
         for (int i = 0; i <obs.size() ; i++)
             obs.get(i).updateInit(o);
-
     }
 
     /**
@@ -163,7 +160,6 @@ public class ViewCLI implements ViewObservable, ModelObserver {
     public void notifyMove(Object o) {
         for (int i = 0; i <obs.size() ; i++)
             obs.get(i).updateMove(o);
-
     }
 
     /**
@@ -210,7 +206,6 @@ public class ViewCLI implements ViewObservable, ModelObserver {
     @Override
     public void updateBoard(Object o) {
         this.show(o);
-
     }
 
     /**
@@ -227,7 +222,7 @@ public class ViewCLI implements ViewObservable, ModelObserver {
             int numPlayer=0;
             try {
                 numPlayer = scanner.nextInt();
-                setActionDone(true);
+                //setActionDone(true);
             }
             catch(InputMismatchException e){
                 System.out.println(ErrorMessage.InputMessage+"\n");
@@ -332,6 +327,7 @@ public class ViewCLI implements ViewObservable, ModelObserver {
         notifyInit(c=new Choice(null,null,null,null,null));
         setActionDone(false);
     }
+
     public void handleEnd(){
         turnDone=true;
         notifyEnd();
@@ -411,17 +407,20 @@ public class ViewCLI implements ViewObservable, ModelObserver {
      * Method to print the current GameBoard situation on the screen
      */
     public void show(Object o){
-        //TODO make the appropriate setting of the individual cells based on the copy of the GameBoard received
-        FakeCell[][] copy = (FakeCell[][]) o;
+        FakeCell[][] gCopy = (FakeCell[][]) o;
         int rowIndex = 0;
         int colIndex = 0;
+        int x = 0;
+        int y = 0;
         System.out.println();
         for (int i = 0; i < 16; i++) {
+            boolean row1 = (i == 1 || i == 4 || i == 7 || i == 10 || i == 13);
+            boolean row2 = (i == 2 || i == 5 || i == 8 || i == 11 || i == 14);
+            boolean rowBoardIndex = (i == 3 || i == 6 || i == 9 || i == 12);
             for (int j = 0; j < 41; j++) {
-                boolean row1 = (i == 1 || i == 4 || i == 7 || i == 10 || i == 13);
-                boolean row2 = (i == 2 || i == 5 || i == 8 || i == 11 || i == 14);
                 boolean col1 = (j == 3 || j == 11 || j == 19 || j == 27 || j == 35);
                 boolean col2 = (j == 5 || j == 13 || j == 21 || j == 29 || j == 37);
+                boolean colBoardIndex = (j == 9 || j == 17 || j == 25 || j == 33);
                 if (i % 3 == 0)
                     if (j % 8 == 0)
                         System.out.print(Color.ANSI_REVERSE + "+" + Color.RESET);
@@ -430,29 +429,60 @@ public class ViewCLI implements ViewObservable, ModelObserver {
                 else if (j % 8 == 0)
                     System.out.print(Color.ANSI_REVERSE + "|" + Color.RESET);
                 else if (col1 && row1)  // possible worker
-                    System.out.print("W");
+                    if (gCopy[x][y].getPlayerName() != null)    // if a player has a worker set
+                        switch (gCopy[x][y].getId()){   // color (RGB) his "W" according to his id
+                            case 1:
+                                System.out.print(Color.ANSI_RED + "W" + Color.RESET);
+                                break;
+                            case 2:
+                                System.out.print(Color.ANSI_GREEN + "W" + Color.RESET);
+                                break;
+                            case 3:
+                                System.out.print(Color.ANSI_BLUE + "W" + Color.RESET);
+                                break;
+                            default:
+                                System.out.print("W");
+                                break;
+                        }
+                    else
+                        System.out.print(" ");
                 else if (col2 && row1)  // worker's number
-                    System.out.print("1");
+                    if (gCopy[x][y].getWorkerNum() == 1)
+                        System.out.print("1");
+                    else if (gCopy[x][y].getWorkerNum() == 2)
+                        System.out.print("2");
+                    else
+                        System.out.print(" ");
                 else if (col1 && row2)  // level
                     System.out.print("L");
                 else if (col2 && row2)  // level's level
-                    System.out.print("0");
-                else
+                    System.out.print(gCopy[x][y].getLevel());
+                    else
                     System.out.print(" ");
                 if (j == 40 && row1)
                     System.out.print(" ROW");
-                else if (j == 40 && row2) {
+                else if (j == 40 && row2) {     // to print the row index out of the map
                     System.out.print(" " + rowIndex);
                     rowIndex++;
                 }
+                if (colBoardIndex && (row1 || row2))  // increase column index for gCopy if you are in the worker or level row
+                    y++;
+            }
+            if (row1)   y = 0;  // reset column index for gCopy if you are in the level row
+            if (rowBoardIndex) {    // reset column index  and increase row index for gCopy if you are in the "―" line
+                y = 0;
+                x++;
             }
             System.out.println();
         }
-        for (int j = 0; j < 5; j++){
+        for (int j = 0; j < 5; j++){    // to print the column index off the map
             System.out.print("  COL " + colIndex + " ");
             colIndex++;
         }
         System.out.println();
+        System.out.println("Color matching to the letter 'W':");
+        System.out.println(Color.ANSI_RED + "Player 1 " + Color.ANSI_GREEN + "Player 2 " + Color.ANSI_BLUE + "Player 3 " + Color.RESET);
+        System.out.println("\n");
     }
 
     public void callFunction(String s,Integer worker){

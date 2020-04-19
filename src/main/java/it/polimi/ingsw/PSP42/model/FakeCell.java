@@ -4,11 +4,13 @@ public class FakeCell {
     public String playerName;
     public int workerNum;
     public int level;
+    public int id;
 
-    public FakeCell(String playerName, int workerNum, int level){
+    public FakeCell(String playerName, int workerNum, int level, int id){
         this.playerName = playerName;
         this.workerNum = workerNum;
         this.level = level;
+        this.id = id;
     }
 
     public int getLevel() {
@@ -23,6 +25,9 @@ public class FakeCell {
         return playerName;
     }
 
+    public int getId() {
+        return id;
+    }
 
     /**
      * Method that creates the copy of the game board at the call state
@@ -34,17 +39,22 @@ public class FakeCell {
         String playerName = null;
         int workerNum = 0;
         int level = 0;
+        int id = 0;
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
+                playerName = null;
+                workerNum = 0;
+                id = 0;
                 if (g.getCell(i, j).getWorker() != null){
                     playerName = g.getCell(i, j).getWorker().getPlayer().getNickname();
-                    if (g.getCell(i, j).getWorker().getPlayer().getWorker1() != null)
+                    id = g.getCell(i, j).getWorker().getPlayer().getId();
+                    if (g.getCell(i, j).getWorker().getPlayer().getWorker1() == g.getCell(i, j).getWorker())
                         workerNum = 1;
                     else
                         workerNum = 2;
                 }
                 level = g.getCell(i, j).getLevel();
-                gCopy[i][j] = new FakeCell(playerName, workerNum, level);
+                gCopy[i][j] = new FakeCell(playerName, workerNum, level, id);
             }
         }
         return gCopy;

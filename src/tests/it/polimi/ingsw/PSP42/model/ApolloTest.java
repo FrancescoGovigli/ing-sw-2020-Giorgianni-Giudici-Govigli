@@ -1,9 +1,8 @@
 package it.polimi.ingsw.PSP42.model;
 
 import org.junit.*;
-
 import static org.junit.Assert.*;
-// TEST CON CARTA FISSA APOLLO
+
 public class ApolloTest {
     private Player p1;
     private Player p2;
