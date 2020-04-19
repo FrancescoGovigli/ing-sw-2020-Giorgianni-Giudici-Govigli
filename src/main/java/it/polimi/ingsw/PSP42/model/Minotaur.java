@@ -41,8 +41,10 @@ public class Minotaur extends SimpleGod{
      */
     @Override
     public boolean powerMove(int x, int y, Worker w) {
-        if (effectMove && !effectPlayer.getCard().powerMoveAvailable(x, y, w))
-            return false;
+        for (Player effectPlayer : effectPlayers) {
+            if (effectPlayer != null && !effectPlayer.getCard().powerMoveAvailable(x, y, w))
+                return false;
+        }
         if(powerMoveAvailable(x, y, w)) {
             if(pushedAway(x, y, w)) {
                 w.setPosition(x, y);

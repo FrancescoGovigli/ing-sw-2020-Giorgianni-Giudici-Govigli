@@ -16,26 +16,26 @@ public class ViewCLI implements ViewObservable, ModelObserver {
     private boolean turnDone;
     private boolean actionDone;
     private ArrayList<ViewObserver> obs = new ArrayList<>();
-
     private String gameState;
     private int numPlayers;
     private Choice c;
 
-
     public void setTurnDone(boolean value){
         turnDone = value;
     }
+
     public void setActionDone(boolean value){
         actionDone = value;
     }
+
     public void setGameDone(boolean value){
         gameDone = value;
     }
 
-
     public Choice getChoice(){
         return c;
     }
+
     public ViewCLI(){
         scanner = new Scanner(System.in);
         outputStream = new PrintStream(System.out);
@@ -45,13 +45,15 @@ public class ViewCLI implements ViewObservable, ModelObserver {
         gameState = "START";
     }
 
-    public String getGameState(){
+    public String getGameState() {
         return gameState;
     }
-    public void setGameState(String s){
+
+    public void setGameState(String s) {
         gameState = s;
     }
-    public int getNumPlayers(){
+
+    public int getNumPlayers() {
         return numPlayers;
     }
 
@@ -79,7 +81,6 @@ public class ViewCLI implements ViewObservable, ModelObserver {
                     scanner.nextLine();
                 }
             }
-
             boolean choiceDone=false;
             String selectedCard = null;
             while(!choiceDone) {
@@ -95,11 +96,9 @@ public class ViewCLI implements ViewObservable, ModelObserver {
                     choiceDone = true;
                 }
             }
-
             players.add(new UserData(nick,age,selectedCard.toUpperCase()));
             setActionDone(false);
             }
-
         return players;
     }
 
@@ -123,7 +122,6 @@ public class ViewCLI implements ViewObservable, ModelObserver {
 
     /**
      * Add an observer to the View's observer list
-     *
      * @param ob
      */
     @Override
@@ -133,14 +131,12 @@ public class ViewCLI implements ViewObservable, ModelObserver {
 
     /**
      * Removes an observer to the View's observer list
-     *
      * @param ob
      */
     @Override
     public void detach(ViewObserver ob) {
         obs.remove(ob);
     }
-
 
      /**
      *notifies all observers that the view is initializing the game
@@ -202,7 +198,6 @@ public class ViewCLI implements ViewObservable, ModelObserver {
         obs.get(0).updateEffect();
     }
 
-
     @Override
     public void updateBoard(Object o) {
         this.show(o);
@@ -233,21 +228,17 @@ public class ViewCLI implements ViewObservable, ModelObserver {
                 setActionDone(true);
             }
         }
-
         handleInit();
         handleInitialPosition();
-
         while (!gameDone) {
             Integer worker=null;
             String[][] whatToDo=null;
             String nome = handleCurrentPlayer();
             while(!turnDone) {
-
                 if(gameState.equals("START")) {
                     outputStream.println("\n" + nome + " it's your turn!!!"+"\n");
                     whatToDo = handleWhatToDo();
                 }
-
                 switch (gameState) {
                     case "START":
                         while(!actionDone) {
@@ -294,21 +285,26 @@ public class ViewCLI implements ViewObservable, ModelObserver {
                         handleStateChange("END");
                         break;
                     case "END":
+                        if(whatToDo[5][0].equals("NULL"))
+                            actionDone = true;
+                        else {
+                            for (int i = 0; i < whatToDo[5].length; i++) {
+                                String move = whatToDo[5][i];
+                                callFunction(move, worker);
+                            }
+                        }
                         handleEnd();
                         handleStateChange("START");
                         break;
                 }
             }
-
         }
         String winner = handleCurrentPlayer();
         System.out.println(winner +" "+ ViewMessage.winMessage);
     }
 
     /**
-     * Its a handle method to notify observer that have to handle a move action from the user
-     * @param x x-axis for the new map position
-     * @param y y-axis for the new map position
+     * It's a handle method to notify observer that have to handle a move action from the user.
      * @param worker is an integer that tells which of the two worker are selected from the user
      */
     public void handleMove(Integer worker){
@@ -321,7 +317,7 @@ public class ViewCLI implements ViewObservable, ModelObserver {
     }
 
     /**
-     * this method has the task to initialize the Gameboard and set the initial players position
+     * This method has the task to initialize the Gameboard and set the initial players position.
      */
     public void handleInit(){
         notifyInit(c=new Choice(null,null,null,null,null));
@@ -335,7 +331,7 @@ public class ViewCLI implements ViewObservable, ModelObserver {
 
     /**
      * Has the task to ask the user to insert the two coordinates for his 2 workers and notify observers
-     * to set this data
+     * to set this data.
      */
     public void handleInitialPosition(){
         for (int i = 0; i <numPlayers; i++) {
@@ -348,17 +344,12 @@ public class ViewCLI implements ViewObservable, ModelObserver {
                 }
                 setActionDone(false);
             }
-
-
         }
         setActionDone(false);
-
     }
 
     /**
-     * Its a handle method to notify observer that have to handle a build action from the user
-     * @param x x-axis for the new map position
-     * @param y y-axis for the new map position
+     * It's a handle method to notify observer that have to handle a build action from the user.
      * @param worker is an integer that tells which of the two worker are selected from the user
      *               its the same one called from the move action
      */
@@ -403,6 +394,13 @@ public class ViewCLI implements ViewObservable, ModelObserver {
         notifyEffect();
     }
 
+    public void printEffect(String s, String effect) {
+        if(s.equals("ON"))
+            System.out.println("Your god's power started!\n" + effect );
+        if(s.equals("OFF"))
+            System.out.println("Your god's power finished!\n" + effect);
+    }
+
     /**
      * Method to print the current GameBoard situation on the screen
      */
@@ -425,7 +423,7 @@ public class ViewCLI implements ViewObservable, ModelObserver {
                     if (j % 8 == 0)
                         System.out.print(Color.ANSI_REVERSE + "+" + Color.RESET);
                     else
-                        System.out.print(Color.ANSI_REVERSE + "―" + Color.RESET);
+                        System.out.print(Color.ANSI_REVERSE + "-" + Color.RESET);
                 else if (j % 8 == 0)
                     System.out.print(Color.ANSI_REVERSE + "|" + Color.RESET);
                 else if (col1 && row1)  // possible worker
@@ -486,17 +484,16 @@ public class ViewCLI implements ViewObservable, ModelObserver {
     }
 
     public void callFunction(String s,Integer worker){
-
         switch (s) {
             case "MOVE":
-                System.out.println(s+"POWER:"+ViewMessage.applyPowerMessage);
+                System.out.println(s + "POWER:" + ViewMessage.applyPowerMessage);
                 String input = scanner.next();
                 if(input.toUpperCase().equals("YES"))
                     handleMove(worker);
                 else
                     setActionDone(true);
             case "BUILD":
-                System.out.println(s+"POWER:"+ViewMessage.applyPowerMessage);
+                System.out.println(s + "POWER:" + ViewMessage.applyPowerMessage);
                 input = scanner.next();
                 if(input.toUpperCase().equals("YES"))
                     handleBuild(worker);
@@ -510,7 +507,4 @@ public class ViewCLI implements ViewObservable, ModelObserver {
     public void loseMessage(String s){
         System.out.println(s+ " " + ViewMessage.loseMessage);
     }
-
-
-
 }

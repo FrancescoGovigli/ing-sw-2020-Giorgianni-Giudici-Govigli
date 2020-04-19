@@ -1,9 +1,10 @@
 package it.polimi.ingsw.PSP42.model;
 
+import java.util.ArrayList;
+
 public abstract class SimpleGod {
 
-    boolean effectMove = false;
-    Player effectPlayer = null;
+    protected ArrayList<Player> effectPlayers = new ArrayList<>();
     protected String[][] phase;
     protected Worker w1;
     protected Worker w2;
@@ -23,8 +24,9 @@ public abstract class SimpleGod {
     }
 
     public boolean powerMove(int x, int y, Worker w) {
-        if (effectMove && ! effectPlayer.getCard().powerMoveAvailable(x, y, w))
-            return false;
+        for (Player player: effectPlayers)
+            if (player != null && !player.getCard().powerMoveAvailable(x, y, w))
+                return false;
         if (powerMoveAvailable(x, y, w)) {
             w.setPosition(x, y);
             return true;
@@ -52,6 +54,14 @@ public abstract class SimpleGod {
 
     public boolean powerEffect() {
         return false;
+    }
+
+    public String effectON() {
+        return null;
+    }
+
+    public String effectOFF() {
+        return null;
     }
 
     public boolean powerInitialPosition(int x, int y, Worker w) {

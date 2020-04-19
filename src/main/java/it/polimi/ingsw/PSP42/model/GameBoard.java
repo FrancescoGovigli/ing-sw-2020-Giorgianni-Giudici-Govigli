@@ -51,7 +51,7 @@ public class GameBoard implements ModelObservable {
      */
     public void setPlayers(ArrayList<Player> players) {
         if(this.players ==null)
-         this.players = players;
+            this.players = players;
     }
 
     /**
@@ -100,7 +100,7 @@ public class GameBoard implements ModelObservable {
         for (int i = 0; i < 3; i++)
             for (int j = 0; j < 3; j++)
                 if ((y-1 == -1 && j == 0) || (y+1 == 5 && j == 2) ||
-                    (x-1 == -1 && i == 0) || (x+1 == 5 && i == 2))
+                        (x-1 == -1 && i == 0) || (x+1 == 5 && i == 2))
                     c[i][j] = null;
                 else
                     c[i][j] = board[x-1+i][y-1+j];
@@ -120,10 +120,10 @@ public class GameBoard implements ModelObservable {
         for (int i = 0; i < 3; i++) {    //searching around the cell(x,y)
             for (int j = 0; j < 3; j++) {
                 if (c[i][j] != null &&                                          // c cell isn't out of map and
-                    (c[i][j].getWorker() == null) &&                            // there isn't a worker and
-                    (c[i][j].getLevel() != 4) &&                                // is not 4th level and
-                    ((c[i][j].getLevel() - board[x][y].getLevel() <= 1) &&      // one gap level on ascent and
-                    (c[i][j].getLevel() - board[x][y].getLevel() >= - 3)))      // limit for the descent
+                        (c[i][j].getWorker() == null) &&                            // there isn't a worker and
+                        (c[i][j].getLevel() != 4) &&                                // is not 4th level and
+                        ((c[i][j].getLevel() - board[x][y].getLevel() <= 1) &&      // one gap level on ascent and
+                                (c[i][j].getLevel() - board[x][y].getLevel() >= - 3)))      // limit for the descent
                 {
                     adjCellMoveAvailable[index] = c[i][j];
                     index++;
@@ -164,8 +164,8 @@ public class GameBoard implements ModelObservable {
         for (int i = 0; i < 3; i++) {    //searching around the cell(x,y)
             for (int j = 0; j < 3; j++) {
                 if (c[i][j] != null &&                  // c cell isn't out of map and
-                    (c[i][j].getWorker() == null) &&    // there isn't a worker and
-                    (c[i][j].getLevel() != 4))          // is not 4th level
+                        (c[i][j].getWorker() == null) &&    // there isn't a worker and
+                        (c[i][j].getLevel() != 4))          // is not 4th level
                 {
                     adjCellBuildAvailable[index] = c[i][j];
                     index++;
@@ -252,7 +252,7 @@ public class GameBoard implements ModelObservable {
      */
     public void winCondition(int x, int y, Worker w){
         if (getCell(w.getCurrentX(), w.getCurrentY()).getLevel() == 2 &&    // worker w on level 2
-            getCell(x, y).getLevel() == 3) {                                // next position on level 3
+                getCell(x, y).getLevel() == 3) {                                // next position on level 3
             w.getPlayer().setPlayerState("WIN");
         }
     }
@@ -275,7 +275,7 @@ public class GameBoard implements ModelObservable {
      */
     @Override
     public void detach(ModelObserver ob) {
-      obs.remove(ob);
+        obs.remove(ob);
     }
 
     /**
@@ -284,7 +284,7 @@ public class GameBoard implements ModelObservable {
     @Override
     public void notifyObservers(Object o) {
         for (int i = 0; i <obs.size(); i++) {
-            obs.get(i).updateBoard(FakeCell.getGameBoardCopy());
+            obs.get(i).updateBoard(o);
         }
     }
 }

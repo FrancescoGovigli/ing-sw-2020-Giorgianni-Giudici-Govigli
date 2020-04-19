@@ -30,8 +30,10 @@ public class Pan extends SimpleGod{
      */
     @Override
     public boolean powerMove(int x, int y, Worker w) {
-        if (effectMove && ! effectPlayer.getCard().powerMoveAvailable(x, y, w))
-            return false;
+        for (Player effectPlayer : effectPlayers) {
+            if (effectPlayer != null && !effectPlayer.getCard().powerMoveAvailable(x, y, w))
+                return false;
+        }
         if (powerMoveAvailable(x, y, w)) {
             if (GameBoard.getInstance().getCell(x, y).getLevel() -  //where he wants to go minus
                 GameBoard.getInstance().getCell(w.getCurrentX(), w.getCurrentY()).getLevel() <= -2)    //where is the worker

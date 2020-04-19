@@ -22,7 +22,6 @@ public class ControllerCLI implements ViewObserver {
      */
     public void createGame(int numPlayer) {
         ArrayList<Player> players = new ArrayList<>();
-
         ArrayList<UserData> data = view.getPlayerdata(pickCards(numPlayer));
         for (int i = 0; i < view.getNumPlayers(); i++) {
             players.add(new Player(data.get(i).getNickname(), i + 1,data.get(i).getAge(),data.get(i).getCardChoosed()));
@@ -38,13 +37,11 @@ public class ControllerCLI implements ViewObserver {
      */
     @Override
     public void updateInit(Object o) {
-
         if (view.getChoice().allFieldsNull()){
             createGame(view.getNumPlayers());
             view.setActionDone(true);
             GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
         }
-
         if (!view.getChoice().allFieldsNull()) {
             Worker w = null;
             //DEVO CHIEDERE QUALE WORKER VUOLE
@@ -55,9 +52,7 @@ public class ControllerCLI implements ViewObserver {
             boolean check = (g.getPlayers()).get(view.getChoice().getIdPlayer()).initialPosition(view.getChoice().getX().intValue(), view.getChoice().getY().intValue(), w);
             if(check)
                 view.setActionDone(true);
-
             GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
-
         }
     }
     /*TODO DEVO GESTIRE IL WORKER NON AVAILABLE RICHIEDI IN CASO, SE LA MOSSA è ERRATA RICHIEDO INPUT
@@ -74,7 +69,6 @@ public class ControllerCLI implements ViewObserver {
             w = (g.getPlayers()).get(g.getCurrentPlayer()).getWorker1();
         if (view.getChoice().getW() == 2)
             w = (g.getPlayers()).get(g.getCurrentPlayer()).getWorker2();
-
         boolean check = (g.getPlayers()).get(g.getCurrentPlayer()).move(view.getChoice().getX().intValue(),view.getChoice().getY().intValue(),w);
         if(check) {
             view.setActionDone(true);
@@ -82,10 +76,8 @@ public class ControllerCLI implements ViewObserver {
         }
         if(g.getPlayers().get(g.getCurrentPlayer()).getPlayerState().equals("WIN"))
             view.setGameDone(true);
-
-
-
     }
+
     /**
      * Handles to call the method in the model to modify the building state of the GameBoard
      * @param o represent always the Choice done by the user
@@ -97,14 +89,11 @@ public class ControllerCLI implements ViewObserver {
             w = (g.getPlayers()).get(g.getCurrentPlayer()).getWorker1();
         if (view.getChoice().getW() == 2)
             w = (g.getPlayers()).get(g.getCurrentPlayer()).getWorker2();
-
         boolean check = (g.getPlayers()).get(g.getCurrentPlayer()).build(view.getChoice().getX().intValue(),view.getChoice().getY().intValue(),view.getChoice().getLevel(),w);
         if(check) {
             view.setActionDone(true);
             GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
         }
-
-
     }
 
     @Override
@@ -120,16 +109,13 @@ public class ControllerCLI implements ViewObserver {
                 view.loseMessage(g.getPlayers().get(g.getCurrentPlayer()).getNickname());
             }
         }
-
         return  g.getPlayers().get(g.getCurrentPlayer()).getNickname();
     }
 
     @Override
     public void updateEnd() {
-
         int num = view.getNumPlayers();
         int curr = g.getCurrentPlayer();
-
         if(curr+1<num) {
             if (g.getPlayers().get(curr + 1).getPlayerState().equals("LOSE")) {
                 if (curr + 2 < num)
@@ -146,13 +132,10 @@ public class ControllerCLI implements ViewObserver {
             else
                 g.setCurrentPlayer(0);
         }
-
-
     }
 
     @Override
     public void updateState(String s) {
-
         if(s.equals("PREMOVE")) {
             g.loseCondition(g.getPlayers().get(g.getCurrentPlayer()), "PREMOVE");
             if (g.getPlayers().get(g.getCurrentPlayer()).getPlayerState().equals("LOSE")) {
@@ -161,9 +144,7 @@ public class ControllerCLI implements ViewObserver {
                 view.loseMessage(g.getPlayers().get(g.getCurrentPlayer()).getNickname());
                 return;
             }
-
         }
-
         if(s.equals("PREBUILD")) {
             g.loseCondition(g.getPlayers().get(g.getCurrentPlayer()), "PREBUILD");
             if (g.getPlayers().get(g.getCurrentPlayer()).getPlayerState().equals("LOSE")) {
@@ -173,8 +154,6 @@ public class ControllerCLI implements ViewObserver {
                 return;
             }
         }
-
-
         g.setGamePhase(s);
         view.setGameState(s);
     }
@@ -189,26 +168,28 @@ public class ControllerCLI implements ViewObserver {
     public int updateStart() {
         int choice = view.getWorker();
         Worker w=null;
-
         if (choice == 1)
             w = (g.getPlayers()).get(g.getCurrentPlayer()).getWorker1();
-
         if (choice == 2)
             w = (g.getPlayers()).get(g.getCurrentPlayer()).getWorker2();
         boolean check = w.getAvailable();
         if (check)
             view.setActionDone(true);
-
         return choice;
     }
 
     @Override
     public void updateEffect() {
-        boolean check = g.getPlayers().get(g.getCurrentPlayer()).effect();
-        if(check) {
-            view.setActionDone(true);
-            GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
+        if (g.getPlayers().get(g.getCurrentPlayer()).effect()) {
+        //se vero e sei in END allora messaggio "Potere attivato"
+            if(g.getGamePhase().equals("END"))
+                view.printEffect("ON", g.getPlayers().get(g.getCurrentPlayer()).getCard().effectON());
+        //se vero e sei in START allora messaggio "Potere disattivato"
+            if(g.getGamePhase().equals("START"))
+                view.printEffect("OFF", g.getPlayers().get(g.getCurrentPlayer()).getCard().effectOFF());
         }
+        view.setActionDone(true);
+        GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
     }
 
     public String[] pickCards(int numPlayers){
@@ -225,7 +206,6 @@ public class ControllerCLI implements ViewObserver {
             }
             else
                 i--;
-
         }
         return randomPick;
     }

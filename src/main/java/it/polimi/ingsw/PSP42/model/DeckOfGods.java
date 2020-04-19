@@ -1,6 +1,7 @@
 package it.polimi.ingsw.PSP42.model;
 
 public class DeckOfGods {
+
     public static String[] godAvailable = {"APOLLO", "ARTEMIS", "ATHENA", "ATLAS", "DEMETER", "HEPHAESTUS", "MINOTAUR", "PAN", "PROMETHEUS"};
 
     public static String[] possibleGods(){return godAvailable;}

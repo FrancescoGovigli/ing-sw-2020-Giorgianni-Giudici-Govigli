@@ -6,7 +6,7 @@ public class ViewMessage {
     public static String initialPositionMessage = "insert where to position your worker";
     public static String moveMessage = "Make your move (x,y):";
     public static String buildMessage = "Make your build (x,y) with Worker ";
-    public static String LevelMessage = "Dou you want to build a none default level (YES or NO)?";
+    public static String LevelMessage = "Do you want to build a none default level (YES or NO)?";
     public static String waitMessage = "Wait for the other player's move!";
     public static String winMessage = "You won!";
     public static String loseMessage = "You lost!";

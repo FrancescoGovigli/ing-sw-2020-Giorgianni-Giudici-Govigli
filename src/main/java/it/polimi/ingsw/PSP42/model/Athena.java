@@ -5,23 +5,19 @@ package it.polimi.ingsw.PSP42.model;
  */
 public class Athena extends SimpleGod {
 
-    private int counter = 0;
     private boolean blockOpponentsStepUp = false;
+    private int counter = 0;
 
     public Athena(Worker w1, Worker w2) {
         super(w1, w2);
     }
 
-    /**
-     * Used to know in what phase we used effect.
-     * @return 0 = Start, or 1 = End
-     */
-    public int getCounter() {
-        return counter;
+    public String effectON() {
+        return "Until your next turn other players can't step up";
     }
 
-    public void setCounter(int counter) {
-        this.counter = counter;
+    public String effectOFF() {
+        return "Other players now can step up!";
     }
 
     /**
@@ -72,8 +68,10 @@ public class Athena extends SimpleGod {
      */
     @Override
     public boolean powerMove(int x, int y, Worker w) {
-        if(effectMove && !effectPlayer.getCard().powerMoveAvailable(x, y, w))
-            return false;
+        for (Player effectPlayer : effectPlayers) {
+            if (effectPlayer != null && !effectPlayer.getCard().powerMoveAvailable(x, y, w))
+                return false;
+        }
         if(powerMoveAvailable(x, y, w)) {
             if (workerStepUp(x, y, w))
                 setBlockOpponentsStepUp(true);
@@ -93,38 +91,43 @@ public class Athena extends SimpleGod {
     }
 
     /**
-     * If, at first iteration (counter = 0 = START), effect was applied in precedent turn set levelUp true for other players.
-     * Else if, at second iteration (counter = 1 = END), effect was applied in this turn set levelUp false for other players.
+     * If, at first iteration (counter = 0 = START),
+     * effect was applied in precedent turn set effectMove false and effectPlayer with this player for other players.
+     * Else if, at second iteration (counter = 1 = END),
+     * effect was applied in this turn set effectMove true and effectPlayer with this player for other players.
      * @return true if the method was been used, false otherwise
      */
     @Override
     public boolean powerEffect() {
-        if (getCounter()==0) {
+        if (GameBoard.getInstance().getGamePhase().equals("START")) {
+        //if (counter == 0) {
+        //if (nextEffectPhase.equals("START") {
             if(powerEffectAvailable()) {
                 for (Player player : GameBoard.getInstance().getPlayers()) {
-                    player.getCard().effectMove = false;
-                    player.getCard().effectPlayer = null;
+                    player.getCard().effectPlayers.remove(this.w1.getPlayer());
                 }
-                setCounter(1);
                 setBlockOpponentsStepUp(false);
+                counter = 1;
                 return true;
             } else {
-                setCounter(1);
+                counter = 1;
                 return false;
             }
-        } else {
+        } else if (GameBoard.getInstance().getGamePhase().equals("END")) {
+        //} else if (counter == 1) {
             if (powerEffectAvailable()) {
                 for (Player player : GameBoard.getInstance().getPlayers()) {
-                    player.getCard().effectMove = true;
-                    player.getCard().effectPlayer = this.w1.getPlayer();
+                    player.getCard().effectPlayers.add(this.w1.getPlayer());
                 }
-                setCounter(0);
+                counter = 0;
                 return true;
             } else {
-                setCounter(0);
+                counter = 0;
                 return false;
             }
         }
+        counter = 0;
+        return false;
     }
 
     /**

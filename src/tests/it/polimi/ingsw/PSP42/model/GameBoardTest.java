@@ -117,4 +117,15 @@ public class GameBoardTest {
         assertEquals(2, board.getCell(1, 0).getLevel());
         assertEquals(false, board.workerAvailable(p.getWorker1()));
     }
+
+    @Test
+    public void loseConditionSTART_unSetWorker_outOfMap() {
+        p.initialPosition(0,0, p.getWorker1());
+        p.initialPosition(1,1, p.getWorker2());
+        p.getWorker1().setAvailable(false);
+        p.getWorker2().setAvailable(false);
+        board.loseCondition(p,"START");
+        assertEquals(-1, p.getWorker1().getCurrentX());
+        assertEquals(-1, p.getWorker1().getCurrentY());
+    }
 }
