@@ -1,0 +1,189 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Minotaur</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.PSP42.model</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Minotaur (it.polimi.ingsw.PSP42.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Minotaur</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/ 6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    89,8%
+  </span>
+  <span class="absValue">
+    (44/ 49)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.PSP42.model;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;/**
+<i>4</i>&nbsp; * Thanks this simple god a worker is able to move in a cell occupied by an opponent worker,
+<i>5</i>&nbsp; * if the opponent worker can be pushed away in a free cell in same direction of the movement.
+<i>6</i>&nbsp; */
+<i>7</i>&nbsp;public class Minotaur extends SimpleGod{
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;    public Minotaur(Worker w1, Worker w2) {
+<b class="fc"><i>10</i>&nbsp;        super(w1, w2);</b>
+<b class="fc"><i>11</i>&nbsp;    }</b>
+<i>12</i>&nbsp;
+<i>13</i>&nbsp;    @Override
+<i>14</i>&nbsp;    public String[][] setPhase() {
+<b class="fc"><i>15</i>&nbsp;        String[] START = {&quot;NULL&quot;};</b>
+<b class="fc"><i>16</i>&nbsp;        String[] PREMOVE = {&quot;NULL&quot;};</b>
+<b class="fc"><i>17</i>&nbsp;        String[] MOVE = {&quot;MOVE&quot;};</b>
+<b class="fc"><i>18</i>&nbsp;        String[] PREBUILD = {&quot;NULL&quot;};</b>
+<b class="fc"><i>19</i>&nbsp;        String[] BUILD = {&quot;BUILD&quot;};</b>
+<b class="fc"><i>20</i>&nbsp;        String[] END = {&quot;NULL&quot;};</b>
+<b class="fc"><i>21</i>&nbsp;        String[][] phase = {START, PREMOVE, MOVE, PREBUILD, BUILD, END};</b>
+<b class="fc"><i>22</i>&nbsp;        return phase;</b>
+<i>23</i>&nbsp;    }
+<i>24</i>&nbsp;
+<i>25</i>&nbsp;    @Override
+<i>26</i>&nbsp;    public boolean powerMoveAvailable(int x, int y, Worker w) {
+<b class="fc"><i>27</i>&nbsp;        Cell[] adj = this.adjacentCellMovePowerAvailable(w.getCurrentX(), w.getCurrentY());</b>
+<b class="fc"><i>28</i>&nbsp;        for (int i = 0; i &lt; adj.length; i++) {</b>
+<b class="fc"><i>29</i>&nbsp;            if (GameBoard.getInstance().getCell(x, y).equals(adj[i]))</b>
+<b class="fc"><i>30</i>&nbsp;                return true;</b>
+<i>31</i>&nbsp;        }
+<b class="fc"><i>32</i>&nbsp;        return false;</b>
+<i>33</i>&nbsp;    }
+<i>34</i>&nbsp;
+<i>35</i>&nbsp;    /**
+<i>36</i>&nbsp;     * Used to move &quot;minotaur&quot; worker in a cell and to push away opponent&#39;s worker if he is along the way.
+<i>37</i>&nbsp;     * @param x position on x-axis
+<i>38</i>&nbsp;     * @param y position on y-axis
+<i>39</i>&nbsp;     * @param w worker
+<i>40</i>&nbsp;     * @return true if worker moved, false otherwise
+<i>41</i>&nbsp;     */
+<i>42</i>&nbsp;    @Override
+<i>43</i>&nbsp;    public boolean powerMove(int x, int y, Worker w) {
+<b class="fc"><i>44</i>&nbsp;        for (Player effectPlayer : effectPlayers) {</b>
+<b class="nc"><i>45</i>&nbsp;            if (effectPlayer != null &amp;&amp; !effectPlayer.getCard().powerMoveAvailable(x, y, w))</b>
+<b class="nc"><i>46</i>&nbsp;                return false;</b>
+<b class="nc"><i>47</i>&nbsp;        }</b>
+<b class="fc"><i>48</i>&nbsp;        if(powerMoveAvailable(x, y, w)) {</b>
+<b class="fc"><i>49</i>&nbsp;            if(pushedAway(x, y, w)) {</b>
+<b class="fc"><i>50</i>&nbsp;                w.setPosition(x, y);</b>
+<b class="fc"><i>51</i>&nbsp;                return true;</b>
+<i>52</i>&nbsp;            }
+<i>53</i>&nbsp;        }
+<b class="fc"><i>54</i>&nbsp;        return false;</b>
+<i>55</i>&nbsp;    }
+<i>56</i>&nbsp;
+<i>57</i>&nbsp;    /**
+<i>58</i>&nbsp;     * Used to know in what cells worker is able to move thanks to minotaur power.
+<i>59</i>&nbsp;     * @param x position on x-axis
+<i>60</i>&nbsp;     * @param y position on y-axis
+<i>61</i>&nbsp;     * @return array of cells where it&#39;s possible to move
+<i>62</i>&nbsp;     */
+<i>63</i>&nbsp;    public Cell[] adjacentCellMovePowerAvailable(int x, int y) {
+<b class="fc"><i>64</i>&nbsp;        int index = 0;</b>
+<b class="fc"><i>65</i>&nbsp;        Cell[] adjCellMoveAvailable = new Cell[8];  // 8 is the maximum number of possible adjacent cell where move</b>
+<b class="fc"><i>66</i>&nbsp;        Cell[][] c = GameBoard.getInstance().submatrixGenerator(x, y);</b>
+<b class="fc"><i>67</i>&nbsp;        for (int i = 0; i &lt; 3; i++) {   //searching around the cell(x,y)</b>
+<b class="fc"><i>68</i>&nbsp;            for (int j = 0; j &lt; 3; j++) {</b>
+<b class="fc"><i>69</i>&nbsp;                if (c[i][j] != null &amp;&amp;                                      // c cell isn&#39;t out of map and and</b>
+<b class="fc"><i>70</i>&nbsp;                        (c[i][j].getWorker() == null ||                         // (there is no worker in the cell or</b>
+<b class="fc"><i>71</i>&nbsp;                                c[i][j].getWorker().getPlayer() != GameBoard.getInstance().getCell(x, y).getWorker().getPlayer()) &amp;&amp;   // worker to be push away is not of the same player) and</b>
+<b class="fc"><i>72</i>&nbsp;                        (c[i][j].getLevel() != 4) &amp;&amp;                            // is not 4th level and</b>
+<b class="fc"><i>73</i>&nbsp;                        ((c[i][j].getLevel() - GameBoard.getInstance().getCell(x, y).getLevel() &lt;= 1) &amp;&amp;    // one gap level on ascent and</b>
+<b class="fc"><i>74</i>&nbsp;                                (c[i][j].getLevel() - GameBoard.getInstance().getCell(x, y).getLevel() &gt;= - 3)))   // limit for the descent</b>
+<i>75</i>&nbsp;                {
+<b class="fc"><i>76</i>&nbsp;                    adjCellMoveAvailable[index] = c[i][j];</b>
+<b class="fc"><i>77</i>&nbsp;                    index++;</b>
+<i>78</i>&nbsp;                }
+<i>79</i>&nbsp;            }
+<i>80</i>&nbsp;        }
+<b class="fc"><i>81</i>&nbsp;        return adjCellMoveAvailable;</b>
+<i>82</i>&nbsp;    }
+<i>83</i>&nbsp;
+<i>84</i>&nbsp;    /**
+<i>85</i>&nbsp;     * Used to push in same direction of worker movement an opponent&#39;s worker if it&#39;s possible.
+<i>86</i>&nbsp;     * @param x position on x-axis where the opponent&#39;s worker can be
+<i>87</i>&nbsp;     * @param y position on y-axis where the opponent&#39;s worker can be
+<i>88</i>&nbsp;     * @param w &quot;minotaur&quot; worker
+<i>89</i>&nbsp;     * @return true if there isn&#39;t an opponent&#39;s worker or if opponent&#39;s worker was pushed away, false otherwise
+<i>90</i>&nbsp;     */
+<i>91</i>&nbsp;    public boolean pushedAway(int x, int y, Worker w) {
+<b class="fc"><i>92</i>&nbsp;        Worker opponentWorker = GameBoard.getInstance().getCell(x, y).getWorker();</b>
+<b class="fc"><i>93</i>&nbsp;        if(opponentWorker != null) {</b>
+<b class="fc"><i>94</i>&nbsp;            int deltaX = x - w.getCurrentX();</b>
+<b class="fc"><i>95</i>&nbsp;            int deltaY = y - w.getCurrentY();</b>
+<b class="fc"><i>96</i>&nbsp;            int newOpponentX = opponentWorker.getCurrentX() + deltaX;</b>
+<b class="fc"><i>97</i>&nbsp;            int newOpponentY = opponentWorker.getCurrentY() + deltaY;</b>
+<b class="fc"><i>98</i>&nbsp;            if (GameBoard.getInstance().getCell(newOpponentX, newOpponentY).getWorker() == null) {</b>
+<b class="fc"><i>99</i>&nbsp;                opponentWorker.setPosition(newOpponentX, newOpponentY);</b>
+<b class="fc"><i>100</i>&nbsp;                return true;</b>
+<i>101</i>&nbsp;            }
+<b class="nc"><i>102</i>&nbsp;            return false;</b>
+<i>103</i>&nbsp;        }
+<b class="nc"><i>104</i>&nbsp;        return true;</b>
+<i>105</i>&nbsp;    }
+<i>106</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-04-19 19:58</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,373 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: GameBoard</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.PSP42.model</a> ]
+</div>
+
+<h1>Coverage Summary for Class: GameBoard (it.polimi.ingsw.PSP42.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GameBoard</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    73,9%
+  </span>
+  <span class="absValue">
+    (17/ 23)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    77,8%
+  </span>
+  <span class="absValue">
+    (84/ 108)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.PSP42.model;
+<i>2</i>&nbsp;import it.polimi.ingsw.PSP42.*;
+<i>3</i>&nbsp;
+<i>4</i>&nbsp;import java.util.ArrayList;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;public class GameBoard implements ModelObservable {
+<b class="fc"><i>7</i>&nbsp;    private Cell[][] board = new Cell[5][5];</b>
+<b class="fc"><i>8</i>&nbsp;    private ArrayList&lt;ModelObserver&gt; obs = new ArrayList&lt;ModelObserver&gt;();</b>
+<i>9</i>&nbsp;    private ArrayList&lt;Player&gt; players;
+<b class="fc"><i>10</i>&nbsp;    private int currentPlayer = 0;</b>
+<b class="fc"><i>11</i>&nbsp;    private static GameBoard instance = null;</b>
+<b class="fc"><i>12</i>&nbsp;    private Turn gamePhase = null;</b>
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;    /**
+<i>15</i>&nbsp;     * Constructor to initialize the board of dimension 5x5
+<i>16</i>&nbsp;     */
+<b class="fc"><i>17</i>&nbsp;    private GameBoard() {</b>
+<b class="fc"><i>18</i>&nbsp;        for (int i = 0; i &lt; 5; i++) {</b>
+<b class="fc"><i>19</i>&nbsp;            for (int j = 0; j &lt; 5; j++)</b>
+<b class="fc"><i>20</i>&nbsp;                this.board[i][j] = new Cell();</b>
+<i>21</i>&nbsp;        }
+<b class="fc"><i>22</i>&nbsp;        this.players = null;</b>
+<b class="fc"><i>23</i>&nbsp;        this.currentPlayer = 0;</b>
+<b class="fc"><i>24</i>&nbsp;    }</b>
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;    /**
+<i>27</i>&nbsp;     * Method to return the unique instance of the board
+<i>28</i>&nbsp;     * @return instance
+<i>29</i>&nbsp;     */
+<i>30</i>&nbsp;    public static GameBoard getInstance() {
+<b class="fc"><i>31</i>&nbsp;        if (instance == null)</b>
+<b class="fc"><i>32</i>&nbsp;            instance = new GameBoard();</b>
+<b class="fc"><i>33</i>&nbsp;        return instance;</b>
+<i>34</i>&nbsp;    }
+<i>35</i>&nbsp;
+<i>36</i>&nbsp;    public void reset(){
+<b class="fc"><i>37</i>&nbsp;        instance=null;</b>
+<b class="fc"><i>38</i>&nbsp;    }</b>
+<i>39</i>&nbsp;
+<i>40</i>&nbsp;    public int getCurrentPlayer(){
+<b class="nc"><i>41</i>&nbsp;        return currentPlayer;</b>
+<i>42</i>&nbsp;    }
+<i>43</i>&nbsp;
+<i>44</i>&nbsp;    public void setCurrentPlayer(int x){
+<b class="nc"><i>45</i>&nbsp;        currentPlayer = x;</b>
+<b class="nc"><i>46</i>&nbsp;    }</b>
+<i>47</i>&nbsp;
+<i>48</i>&nbsp;    /**
+<i>49</i>&nbsp;     * Used to set only one time all the players playing when initializing the game
+<i>50</i>&nbsp;     * @param players
+<i>51</i>&nbsp;     */
+<i>52</i>&nbsp;    public void setPlayers(ArrayList&lt;Player&gt; players) {
+<b class="fc"><i>53</i>&nbsp;        if(this.players ==null)</b>
+<b class="fc"><i>54</i>&nbsp;            this.players = players;</b>
+<b class="fc"><i>55</i>&nbsp;    }</b>
+<i>56</i>&nbsp;
+<i>57</i>&nbsp;    /**
+<i>58</i>&nbsp;     * Method to obtain a minimal copy of the gameboard, useful in printing on CLI
+<i>59</i>&nbsp;     * @return gCopy (FakeCell matrix containing only player name, worker 1 or 2 and construction level)
+<i>60</i>&nbsp;     */
+<i>61</i>&nbsp;    public FakeCell[][] gameBoardCopy(){
+<b class="nc"><i>62</i>&nbsp;        FakeCell[][] gCopy = FakeCell.getGameBoardCopy();</b>
+<b class="nc"><i>63</i>&nbsp;        return gCopy;</b>
+<i>64</i>&nbsp;    }
+<i>65</i>&nbsp;
+<i>66</i>&nbsp;    /**
+<i>67</i>&nbsp;     *
+<i>68</i>&nbsp;     * @return
+<i>69</i>&nbsp;     */
+<i>70</i>&nbsp;    public ArrayList&lt;Player&gt; getPlayers(){
+<b class="fc"><i>71</i>&nbsp;        return (ArrayList&lt;Player&gt;) players.clone();</b>
+<i>72</i>&nbsp;    }
+<i>73</i>&nbsp;
+<i>74</i>&nbsp;    /**
+<i>75</i>&nbsp;     * Method to return the object Cell specified by the Cartesian coordinates (x, y)
+<i>76</i>&nbsp;     * @param x
+<i>77</i>&nbsp;     * @param y
+<i>78</i>&nbsp;     * @return Cell
+<i>79</i>&nbsp;     */
+<i>80</i>&nbsp;    public Cell getCell(int x, int y) {
+<b class="fc"><i>81</i>&nbsp;        return this.board[x][y];</b>
+<i>82</i>&nbsp;    }
+<i>83</i>&nbsp;
+<i>84</i>&nbsp;    public String getGamePhase() {
+<b class="fc"><i>85</i>&nbsp;        return gamePhase.toString();</b>
+<i>86</i>&nbsp;    }
+<i>87</i>&nbsp;
+<i>88</i>&nbsp;    public void setGamePhase(String gamePhase) {
+<b class="fc"><i>89</i>&nbsp;        this.gamePhase = Turn.valueOf(gamePhase);</b>
+<b class="fc"><i>90</i>&nbsp;    }</b>
+<i>91</i>&nbsp;
+<i>92</i>&nbsp;    /**
+<i>93</i>&nbsp;     * Method to obtain a sub-matrix with cells surrounded the specified cell
+<i>94</i>&nbsp;     * @param x (x coordinate of the specified cell)
+<i>95</i>&nbsp;     * @param y (y coordinate of the specified cell)
+<i>96</i>&nbsp;     * @return c (sub-matrix with center in x, y)
+<i>97</i>&nbsp;     */
+<i>98</i>&nbsp;    public Cell[][] submatrixGenerator(int x, int y) {
+<b class="fc"><i>99</i>&nbsp;        Cell[][] c = new Cell[3][3];</b>
+<b class="fc"><i>100</i>&nbsp;        for (int i = 0; i &lt; 3; i++)</b>
+<b class="fc"><i>101</i>&nbsp;            for (int j = 0; j &lt; 3; j++)</b>
+<b class="fc"><i>102</i>&nbsp;                if ((y-1 == -1 &amp;&amp; j == 0) || (y+1 == 5 &amp;&amp; j == 2) ||</b>
+<i>103</i>&nbsp;                        (x-1 == -1 &amp;&amp; i == 0) || (x+1 == 5 &amp;&amp; i == 2))
+<b class="fc"><i>104</i>&nbsp;                    c[i][j] = null;</b>
+<i>105</i>&nbsp;                else
+<b class="fc"><i>106</i>&nbsp;                    c[i][j] = board[x-1+i][y-1+j];</b>
+<b class="fc"><i>107</i>&nbsp;        return c;</b>
+<i>108</i>&nbsp;    }
+<i>109</i>&nbsp;
+<i>110</i>&nbsp;    /**
+<i>111</i>&nbsp;     * Method to obtain the available cell around your position (x,y)
+<i>112</i>&nbsp;     * @param x (x coordinate of your position)
+<i>113</i>&nbsp;     * @param y (y coordinate of your position)
+<i>114</i>&nbsp;     * @return adjCellMoveAvailable (array which contains all the possible cell where move)
+<i>115</i>&nbsp;     */
+<i>116</i>&nbsp;    public Cell[] adjacentCellMoveAvailable(int x, int y) {
+<b class="fc"><i>117</i>&nbsp;        int index = 0;</b>
+<b class="fc"><i>118</i>&nbsp;        Cell[] adjCellMoveAvailable = new Cell[8];  // 8 is the maximum number of possible adjacent cell where move</b>
+<b class="fc"><i>119</i>&nbsp;        Cell[][] c = submatrixGenerator(x, y);</b>
+<b class="fc"><i>120</i>&nbsp;        for (int i = 0; i &lt; 3; i++) {    //searching around the cell(x,y)</b>
+<b class="fc"><i>121</i>&nbsp;            for (int j = 0; j &lt; 3; j++) {</b>
+<b class="fc"><i>122</i>&nbsp;                if (c[i][j] != null &amp;&amp;                                          // c cell isn&#39;t out of map and</b>
+<b class="fc"><i>123</i>&nbsp;                        (c[i][j].getWorker() == null) &amp;&amp;                            // there isn&#39;t a worker and</b>
+<b class="fc"><i>124</i>&nbsp;                        (c[i][j].getLevel() != 4) &amp;&amp;                                // is not 4th level and</b>
+<b class="fc"><i>125</i>&nbsp;                        ((c[i][j].getLevel() - board[x][y].getLevel() &lt;= 1) &amp;&amp;      // one gap level on ascent and</b>
+<b class="fc"><i>126</i>&nbsp;                                (c[i][j].getLevel() - board[x][y].getLevel() &gt;= - 3)))      // limit for the descent</b>
+<i>127</i>&nbsp;                {
+<b class="fc"><i>128</i>&nbsp;                    adjCellMoveAvailable[index] = c[i][j];</b>
+<b class="fc"><i>129</i>&nbsp;                    index++;</b>
+<i>130</i>&nbsp;                }
+<i>131</i>&nbsp;            }
+<i>132</i>&nbsp;        }
+<b class="fc"><i>133</i>&nbsp;        return adjCellMoveAvailable;</b>
+<i>134</i>&nbsp;    }
+<i>135</i>&nbsp;
+<i>136</i>&nbsp;    /**
+<i>137</i>&nbsp;     * Method to know if a worker can be moved in (x,y) position
+<i>138</i>&nbsp;     * @param x (x coordinate of where you would like to go)
+<i>139</i>&nbsp;     * @param y (y coordinate of where you would like to go)
+<i>140</i>&nbsp;     * @param w (worker who would like to move)
+<i>141</i>&nbsp;     * @return true if worker can be moved, false otherwise
+<i>142</i>&nbsp;     */
+<i>143</i>&nbsp;    public boolean moveAvailable(int x, int y, Worker w) {
+<b class="fc"><i>144</i>&nbsp;        boolean condition = false;</b>
+<b class="fc"><i>145</i>&nbsp;        Cell[] c = adjacentCellMoveAvailable(w.getCurrentX(),w.getCurrentY());</b>
+<b class="fc"><i>146</i>&nbsp;        for (int i = 0; i &lt; c.length &amp;&amp; !condition; i++) // !condition used to stop for loop just condition becomes true</b>
+<b class="fc"><i>147</i>&nbsp;            if (c[i] != null &amp;&amp; c[i].equals(getCell(x,y))) {</b>
+<b class="fc"><i>148</i>&nbsp;                condition = true;</b>
+<b class="fc"><i>149</i>&nbsp;                winCondition(x, y, w);</b>
+<i>150</i>&nbsp;            }
+<b class="fc"><i>151</i>&nbsp;        return condition;</b>
+<i>152</i>&nbsp;    }
+<i>153</i>&nbsp;
+<i>154</i>&nbsp;    /**
+<i>155</i>&nbsp;     * Method to obtain a list of cell where the worker can build
+<i>156</i>&nbsp;     * @param x (x coordinate of your position)
+<i>157</i>&nbsp;     * @param y (y coordinate of your position)
+<i>158</i>&nbsp;     * @return adjCellBuildAvailable (array which contains all the possible cell where build)
+<i>159</i>&nbsp;     */
+<i>160</i>&nbsp;    public Cell[] adjacentCellBuildAvailable(int x, int y) {
+<b class="fc"><i>161</i>&nbsp;        int index = 0;</b>
+<b class="fc"><i>162</i>&nbsp;        Cell[] adjCellBuildAvailable = new Cell[8];  // 8 is the maximum number of possible adjacent cell where build</b>
+<b class="fc"><i>163</i>&nbsp;        Cell[][] c = submatrixGenerator(x, y);</b>
+<b class="fc"><i>164</i>&nbsp;        for (int i = 0; i &lt; 3; i++) {    //searching around the cell(x,y)</b>
+<b class="fc"><i>165</i>&nbsp;            for (int j = 0; j &lt; 3; j++) {</b>
+<b class="fc"><i>166</i>&nbsp;                if (c[i][j] != null &amp;&amp;                  // c cell isn&#39;t out of map and</b>
+<b class="fc"><i>167</i>&nbsp;                        (c[i][j].getWorker() == null) &amp;&amp;    // there isn&#39;t a worker and</b>
+<b class="fc"><i>168</i>&nbsp;                        (c[i][j].getLevel() != 4))          // is not 4th level</b>
+<i>169</i>&nbsp;                {
+<b class="fc"><i>170</i>&nbsp;                    adjCellBuildAvailable[index] = c[i][j];</b>
+<b class="fc"><i>171</i>&nbsp;                    index++;</b>
+<i>172</i>&nbsp;                }
+<i>173</i>&nbsp;            }
+<i>174</i>&nbsp;        }
+<b class="fc"><i>175</i>&nbsp;        return adjCellBuildAvailable;</b>
+<i>176</i>&nbsp;    }
+<i>177</i>&nbsp;
+<i>178</i>&nbsp;    /**
+<i>179</i>&nbsp;     * Method to check if it&#39;s possible build in a position
+<i>180</i>&nbsp;     * @param x (x coordinate of where you would like to build)
+<i>181</i>&nbsp;     * @param y (y coordinate of where you would like to build)
+<i>182</i>&nbsp;     * @param w (worker who would like to build)
+<i>183</i>&nbsp;     * @return true if worker can build, false otherwise
+<i>184</i>&nbsp;     */
+<i>185</i>&nbsp;    public boolean buildAvailable(int x, int y, Worker w) {
+<b class="fc"><i>186</i>&nbsp;        boolean condition = false;</b>
+<b class="fc"><i>187</i>&nbsp;        Cell[] c = adjacentCellBuildAvailable(w.getCurrentX(), w.getCurrentY());</b>
+<b class="fc"><i>188</i>&nbsp;        for (int i = 0; i &lt; c.length &amp;&amp; !condition; i++) // !condition used to stop for loop just condition becomes true</b>
+<b class="fc"><i>189</i>&nbsp;            if (c[i] != null &amp;&amp; c[i].equals(getCell(x,y)))</b>
+<b class="fc"><i>190</i>&nbsp;                condition = true;</b>
+<b class="fc"><i>191</i>&nbsp;        return condition;</b>
+<i>192</i>&nbsp;    }
+<i>193</i>&nbsp;
+<i>194</i>&nbsp;    /**
+<i>195</i>&nbsp;     * Method to know which workers are available
+<i>196</i>&nbsp;     * @param w (worker to be verified)
+<i>197</i>&nbsp;     * @return true if worker can be used, false otherwise
+<i>198</i>&nbsp;     */
+<i>199</i>&nbsp;    public boolean workerAvailable(Worker w) {
+<b class="fc"><i>200</i>&nbsp;        Cell[] c = adjacentCellMoveAvailable(w.getCurrentX(), w.getCurrentY());</b>
+<b class="fc"><i>201</i>&nbsp;        if (c[0] == null)</b>
+<b class="fc"><i>202</i>&nbsp;            w.setAvailable(false);</b>
+<i>203</i>&nbsp;        else
+<b class="fc"><i>204</i>&nbsp;            w.setAvailable(true);</b>
+<b class="fc"><i>205</i>&nbsp;        return w.getAvailable();</b>
+<i>206</i>&nbsp;    }
+<i>207</i>&nbsp;
+<i>208</i>&nbsp;    //TODO check if it&#39;s correct with the new implementation
+<i>209</i>&nbsp;    /**
+<i>210</i>&nbsp;     * Method to verify if the player are still in the game or not,
+<i>211</i>&nbsp;     * if both of his workers are not available the player&#39;s status will be changed to &quot;LOSE&quot;
+<i>212</i>&nbsp;     * @param p (player to be verified)
+<i>213</i>&nbsp;     */
+<i>214</i>&nbsp;    public void loseCondition(Player p, String phase) {
+<b class="fc"><i>215</i>&nbsp;        switch (phase) {</b>
+<i>216</i>&nbsp;            case &quot;START&quot;: {
+<b class="fc"><i>217</i>&nbsp;                if (!p.getWorker1().getAvailable() &amp;&amp; !p.getWorker2().getAvailable()) {</b>
+<b class="fc"><i>218</i>&nbsp;                    p.getWorker1().unSetPosition();</b>
+<b class="fc"><i>219</i>&nbsp;                    p.getWorker2().unSetPosition();</b>
+<b class="fc"><i>220</i>&nbsp;                    p.setPlayerState(&quot;LOSE&quot;);</b>
+<i>221</i>&nbsp;                }
+<i>222</i>&nbsp;                break;
+<i>223</i>&nbsp;            }
+<i>224</i>&nbsp;            case &quot;PREMOVE&quot;: {
+<b class="nc"><i>225</i>&nbsp;                Cell[] moveCells1 = GameBoard.getInstance().adjacentCellMoveAvailable(p.getWorker1().getCurrentX(), p.getWorker1().getCurrentY());</b>
+<b class="nc"><i>226</i>&nbsp;                Cell[] moveCells2 = GameBoard.getInstance().adjacentCellMoveAvailable(p.getWorker2().getCurrentX(), p.getWorker2().getCurrentY());</b>
+<b class="nc"><i>227</i>&nbsp;                if (moveCells1[0] == null &amp;&amp; moveCells2[0] == null) {</b>
+<b class="nc"><i>228</i>&nbsp;                    p.getWorker1().unSetPosition();</b>
+<b class="nc"><i>229</i>&nbsp;                    p.getWorker2().unSetPosition();</b>
+<b class="nc"><i>230</i>&nbsp;                    p.setPlayerState(&quot;LOSE&quot;);</b>
+<i>231</i>&nbsp;                }
+<i>232</i>&nbsp;                break;
+<i>233</i>&nbsp;            }
+<i>234</i>&nbsp;            case &quot;PREBUILD&quot;: {
+<b class="nc"><i>235</i>&nbsp;                Cell[] buildCells1 = GameBoard.getInstance().adjacentCellBuildAvailable(p.getWorker1().getCurrentX(), p.getWorker1().getCurrentY());</b>
+<b class="nc"><i>236</i>&nbsp;                Cell[] buildCells2 = GameBoard.getInstance().adjacentCellBuildAvailable(p.getWorker2().getCurrentX(), p.getWorker2().getCurrentY());</b>
+<b class="nc"><i>237</i>&nbsp;                if (buildCells1[0] == null &amp;&amp; buildCells2[0] == null) {</b>
+<b class="nc"><i>238</i>&nbsp;                    p.getWorker1().unSetPosition();</b>
+<b class="nc"><i>239</i>&nbsp;                    p.getWorker2().unSetPosition();</b>
+<b class="nc"><i>240</i>&nbsp;                    p.setPlayerState(&quot;LOSE&quot;);</b>
+<i>241</i>&nbsp;                }
+<i>242</i>&nbsp;                break;
+<i>243</i>&nbsp;            }
+<i>244</i>&nbsp;        }
+<b class="fc"><i>245</i>&nbsp;    }</b>
+<i>246</i>&nbsp;
+<i>247</i>&nbsp;    /**
+<i>248</i>&nbsp;     * Method to verify if the worker who has moved has won
+<i>249</i>&nbsp;     * @param x (x coordinate of the future position of the worker)
+<i>250</i>&nbsp;     * @param y (y coordinate of the future position of the worker)
+<i>251</i>&nbsp;     * @param w (worker on moving)
+<i>252</i>&nbsp;     */
+<i>253</i>&nbsp;    public void winCondition(int x, int y, Worker w){
+<b class="fc"><i>254</i>&nbsp;        if (getCell(w.getCurrentX(), w.getCurrentY()).getLevel() == 2 &amp;&amp;    // worker w on level 2</b>
+<b class="fc"><i>255</i>&nbsp;                getCell(x, y).getLevel() == 3) {                                // next position on level 3</b>
+<b class="fc"><i>256</i>&nbsp;            w.getPlayer().setPlayerState(&quot;WIN&quot;);</b>
+<i>257</i>&nbsp;        }
+<b class="fc"><i>258</i>&nbsp;    }</b>
+<i>259</i>&nbsp;
+<i>260</i>&nbsp;
+<i>261</i>&nbsp;    //PATTER OBSERVER
+<i>262</i>&nbsp;
+<i>263</i>&nbsp;    /**
+<i>264</i>&nbsp;     * Add an observer to the Model&#39;s observer list
+<i>265</i>&nbsp;     * @param ob
+<i>266</i>&nbsp;     */
+<i>267</i>&nbsp;    @Override
+<i>268</i>&nbsp;    public void attach(ModelObserver ob) {
+<b class="nc"><i>269</i>&nbsp;        obs.add(ob);</b>
+<b class="nc"><i>270</i>&nbsp;    }</b>
+<i>271</i>&nbsp;
+<i>272</i>&nbsp;    /**
+<i>273</i>&nbsp;     * Removes an observer to the Model&#39;s observer list
+<i>274</i>&nbsp;     * @param ob
+<i>275</i>&nbsp;     */
+<i>276</i>&nbsp;    @Override
+<i>277</i>&nbsp;    public void detach(ModelObserver ob) {
+<b class="nc"><i>278</i>&nbsp;        obs.remove(ob);</b>
+<b class="nc"><i>279</i>&nbsp;    }</b>
+<i>280</i>&nbsp;
+<i>281</i>&nbsp;    /**
+<i>282</i>&nbsp;     * Notifies the observers who need update
+<i>283</i>&nbsp;     */
+<i>284</i>&nbsp;    @Override
+<i>285</i>&nbsp;    public void notifyObservers(Object o) {
+<b class="nc"><i>286</i>&nbsp;        for (int i = 0; i &lt;obs.size(); i++) {</b>
+<b class="nc"><i>287</i>&nbsp;            obs.get(i).updateBoard(o);</b>
+<i>288</i>&nbsp;        }
+<b class="nc"><i>289</i>&nbsp;    }</b>
+<i>290</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-04-19 19:58</div>
+</div>
+</body>
+</html>

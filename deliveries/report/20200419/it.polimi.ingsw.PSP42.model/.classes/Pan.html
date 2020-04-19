@@ -1,0 +1,129 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Pan</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.PSP42.model</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Pan (it.polimi.ingsw.PSP42.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Pan</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    81%
+  </span>
+  <span class="absValue">
+    (17/ 21)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.PSP42.model;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;/**
+<i>4</i>&nbsp; * Simple god that wins if it drops by at least 2 levels
+<i>5</i>&nbsp; */
+<i>6</i>&nbsp;public class Pan extends SimpleGod{
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;    public Pan(Worker w1, Worker w2) {
+<b class="fc"><i>9</i>&nbsp;        super(w1, w2);</b>
+<b class="fc"><i>10</i>&nbsp;    }</b>
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;    @Override
+<i>13</i>&nbsp;    public String[][] setPhase() {
+<b class="fc"><i>14</i>&nbsp;        String[] start = {&quot;NULL&quot;};</b>
+<b class="fc"><i>15</i>&nbsp;        String[] preMove = {&quot;NULL&quot;};</b>
+<b class="fc"><i>16</i>&nbsp;        String[] move = {&quot;MOVE&quot;};</b>
+<b class="fc"><i>17</i>&nbsp;        String[] preBuild = {&quot;NULL&quot;};</b>
+<b class="fc"><i>18</i>&nbsp;        String[] build = {&quot;BUILD&quot;};</b>
+<b class="fc"><i>19</i>&nbsp;        String[] end = {&quot;NULL&quot;};</b>
+<b class="fc"><i>20</i>&nbsp;        String[][] phase = {start, preMove, move, preBuild, build, end};</b>
+<b class="fc"><i>21</i>&nbsp;        return phase;</b>
+<i>22</i>&nbsp;    }
+<i>23</i>&nbsp;
+<i>24</i>&nbsp;    /**
+<i>25</i>&nbsp;     * Method used to move the worker in cell (x,y) and checking if he wins doing this move
+<i>26</i>&nbsp;     * @param x (x coordinate of where you would like to go)
+<i>27</i>&nbsp;     * @param y (y coordinate of where you would like to go)
+<i>28</i>&nbsp;     * @param w (worker who would like to move)
+<i>29</i>&nbsp;     * @return true if worker can be moved, false otherwise
+<i>30</i>&nbsp;     */
+<i>31</i>&nbsp;    @Override
+<i>32</i>&nbsp;    public boolean powerMove(int x, int y, Worker w) {
+<b class="fc"><i>33</i>&nbsp;        for (Player effectPlayer : effectPlayers) {</b>
+<b class="nc"><i>34</i>&nbsp;            if (effectPlayer != null &amp;&amp; !effectPlayer.getCard().powerMoveAvailable(x, y, w))</b>
+<b class="nc"><i>35</i>&nbsp;                return false;</b>
+<b class="nc"><i>36</i>&nbsp;        }</b>
+<b class="fc"><i>37</i>&nbsp;        if (powerMoveAvailable(x, y, w)) {</b>
+<b class="fc"><i>38</i>&nbsp;            if (GameBoard.getInstance().getCell(x, y).getLevel() -  //where he wants to go minus</b>
+<b class="fc"><i>39</i>&nbsp;                GameBoard.getInstance().getCell(w.getCurrentX(), w.getCurrentY()).getLevel() &lt;= -2)    //where is the worker</b>
+<b class="fc"><i>40</i>&nbsp;                w.getPlayer().setPlayerState(&quot;WIN&quot;);</b>
+<b class="fc"><i>41</i>&nbsp;            w.setPosition(x, y);</b>
+<b class="fc"><i>42</i>&nbsp;            return true;</b>
+<i>43</i>&nbsp;        }
+<b class="nc"><i>44</i>&nbsp;        return false;</b>
+<i>45</i>&nbsp;    }
+<i>46</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-04-19 19:58</div>
+</div>
+</body>
+</html>
