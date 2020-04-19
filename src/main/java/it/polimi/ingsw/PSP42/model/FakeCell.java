@@ -11,6 +11,19 @@ public class FakeCell {
         this.level = level;
     }
 
+    public int getLevel() {
+        return level;
+    }
+
+    public int getWorkerNum() {
+        return workerNum;
+    }
+
+    public String getPlayerName() {
+        return playerName;
+    }
+
+
     /**
      * Method that creates the copy of the game board at the call state
      * @return gCopy (FakeCell matrix containing only player name, worker 1 or 2 and construction level)

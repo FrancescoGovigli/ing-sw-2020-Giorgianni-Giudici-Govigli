@@ -1,5 +1,6 @@
 package it.polimi.ingsw.PSP42.view;
 
+
 import it.polimi.ingsw.PSP42.*;
 import it.polimi.ingsw.PSP42.model.*;
 
@@ -19,6 +20,7 @@ public class ViewCLI implements ViewObservable, ModelObserver {
     private int numPlayers;
     private Choice c;
 
+
     public void setTurnDone(boolean value){
         turnDone = value;
     }
@@ -28,6 +30,7 @@ public class ViewCLI implements ViewObservable, ModelObserver {
     public void setGameDone(boolean value){
         gameDone = value;
     }
+
 
     public Choice getChoice(){
         return c;
@@ -39,6 +42,7 @@ public class ViewCLI implements ViewObservable, ModelObserver {
         turnDone = false;
         actionDone = false;
         gameState = "START";
+
     }
 
     public String getGameState(){
@@ -56,50 +60,66 @@ public class ViewCLI implements ViewObservable, ModelObserver {
      * @return arraylist player names given through System.in
      */
     public ArrayList<UserData> getPlayerdata(String[] set){
+        setActionDone(false);
         List<String> setOfCards = new LinkedList<String>(Arrays.asList(set));
         setOfCards.add("NOGOD");
         ArrayList<UserData> players = new ArrayList<>();
+        int age = 0;
         for (int i = 0; i < numPlayers ; i++) {
-            outputStream.println("Insert your name player :"+(i+1) );
+            outputStream.println("Insert your name player : "+(i+1) +"\n" );
             String nick = scanner.next();
-            outputStream.println("Insert your age player :"+(i+1) );
-            int age = scanner.nextInt();
+            while(!actionDone) {
+                outputStream.println("Insert your age player : " + (i + 1) + "\n");
+
+                try {
+                    age = scanner.nextInt();
+                    setActionDone(true);
+                } catch (InputMismatchException e) {
+                    System.out.println(ErrorMessage.InputMessage + "\n");
+                    scanner.nextLine();
+                }
+            }
+
             boolean choiceDone=false;
             String selectedCard = null;
             while(!choiceDone) {
-                outputStream.println("Select one of the card in the set player :" + (i + 1));
+                outputStream.println("Select one of the card in the set player : " + (i + 1)+"\n");
                 for (int j = 0; j < setOfCards.size(); j++) {
                     System.out.println(setOfCards.get(j));
                 }
                 selectedCard = scanner.next();
+
                 if (setOfCards.contains(selectedCard.toUpperCase())) {
                     if(!selectedCard.toUpperCase().equals("NOGOD"))
                        setOfCards.remove(selectedCard.toUpperCase());
                     choiceDone = true;
                 }
             }
-            players.add(new UserData(nick,age,selectedCard.toUpperCase()));
-            }
-        return players;
-    }
 
-    public int getWorker(){
-       Integer worker=null;
-       boolean correct=false;
-       while(!correct) {
-           outputStream.println(ViewMessage.workerMessage);
-           try {
-               worker = scanner.nextInt();
-               if (worker == 1 || worker == 2)
-                   correct = true;
+            players.add(new UserData(nick,age,selectedCard.toUpperCase()));
+            setActionDone(false);
+            }
+
+        return players;
+        }
+
+        public int getWorker(){
+           Integer worker=null;
+           boolean correct=false;
+           while(!correct) {
+               outputStream.println(ViewMessage.workerMessage+"\n");
+               try {
+                   worker = scanner.nextInt();
+                   if (worker == 1 || worker == 2)
+                       correct = true;
+               }
+               catch(InputMismatchException e){
+                   System.out.println(ErrorMessage.InputMessage+"\n");
+               }
+               scanner.nextLine();//Clear del buffer
            }
-           catch(InputMismatchException e){
-               System.out.println(ErrorMessage.InputMessage);
-           }
-           scanner.nextLine();//Clear del buffer
-       }
-        return worker;
-    }
+            return worker;
+        }
 
 
     /**
@@ -122,6 +142,8 @@ public class ViewCLI implements ViewObservable, ModelObserver {
         obs.remove(ob);
     }
 
+
+
      /**
      *notifies all observers that the view is initializing the game
      * @param o
@@ -130,6 +152,7 @@ public class ViewCLI implements ViewObservable, ModelObserver {
     public void notifyInit(Object o) {
         for (int i = 0; i <obs.size() ; i++)
             obs.get(i).updateInit(o);
+
     }
 
     /**
@@ -140,6 +163,7 @@ public class ViewCLI implements ViewObservable, ModelObserver {
     public void notifyMove(Object o) {
         for (int i = 0; i <obs.size() ; i++)
             obs.get(i).updateMove(o);
+
     }
 
     /**
@@ -185,16 +209,21 @@ public class ViewCLI implements ViewObservable, ModelObserver {
 
     @Override
     public void updateBoard(Object o) {
-        this.show();
+        this.show(o);
+
     }
 
     /**
      * * The method used to start the game and handle a turn
      */
     public void run() {
-        outputStream.println("\nWELCOME TO SANTORINI GAME by Giorgianni-Giudici_Govigli" + " \uD83D\uDE0A \n");
+        outputStream.println(".-. . .-..----..-.    .---.  .----. .-.   .-..----.    .---.  .----.     .----.  .--.  .-. .-. .---.  .----. .----. .-..-. .-..-.\n" +
+                "| |/ \\| || {_  | |   /  ___}/  {}  \\|  `.'  || {_     {_   _}/  {}  \\   { {__   / {} \\ |  `| |{_   _}/  {}  \\| {}  }| ||  `| || |\n" +
+                "|  .'.  || {__ | `--.\\     }\\      /| |\\ /| || {__      | |  \\      /   .-._} }/  /\\  \\| |\\  |  | |  \\      /| .-. \\| || |\\  || |\n" +
+                "`-'   `-'`----'`----' `---'  `----' `-' ` `-'`----'     `-'   `----'    `----' `-'  `-'`-' `-'  `-'   `----' `-' `-'`-'`-' `-'`-'");
+        outputStream.println("\nby Giorgianni-Giudici_Govigli" + " \uD83D\uDE0A \n");
         while(!actionDone) {
-            outputStream.println(ViewMessage.numberOfPlayersMessage);
+            outputStream.println(ViewMessage.numberOfPlayersMessage+"\n");
             int numPlayer=0;
             try {
                 numPlayer = scanner.nextInt();
@@ -204,17 +233,26 @@ public class ViewCLI implements ViewObservable, ModelObserver {
                 System.out.println(ErrorMessage.InputMessage+"\n");
                 scanner.nextLine();
             }
-            //if(numPlayer==2 || numPlayer==3)
-            numPlayers = numPlayer;
+            if(numPlayer==2 || numPlayer==3) {
+                numPlayers = numPlayer;
+                setActionDone(true);
+            }
         }
+
         handleInit();
         handleInitialPosition();
+
         while (!gameDone) {
             Integer worker=null;
+            String[][] whatToDo=null;
             String nome = handleCurrentPlayer();
-            outputStream.println("\n" + nome + " it's your turn!!!");
-            String[][] whatToDo = handleWhatToDo();
             while(!turnDone) {
+
+                if(gameState.equals("START")) {
+                    outputStream.println("\n" + nome + " it's your turn!!!"+"\n");
+                    whatToDo = handleWhatToDo();
+                }
+
                 switch (gameState) {
                     case "START":
                         while(!actionDone) {
@@ -266,6 +304,7 @@ public class ViewCLI implements ViewObservable, ModelObserver {
                         break;
                 }
             }
+
         }
         String winner = handleCurrentPlayer();
         System.out.println(winner +" "+ ViewMessage.winMessage);
@@ -297,24 +336,27 @@ public class ViewCLI implements ViewObservable, ModelObserver {
         turnDone=true;
         notifyEnd();
     }
+
     /**
      * Has the task to ask the user to insert the two coordinates for his 2 workers and notify observers
      * to set this data
      */
     public void handleInitialPosition(){
-        this.show();
         for (int i = 0; i <numPlayers; i++) {
             for (int j = 0; j <2; j++) {
                 while (! actionDone) {
-                outputStream.println("Player " + (i + 1) + ", "+ViewMessage.initialPositionMessage + (j + 1) + "(digit x,y)\"");
+                outputStream.println("Player " + (i + 1) + ", "+ViewMessage.initialPositionMessage + (j + 1) + "(digit x,y)"+"\n");
                 String input = scanner.next();
                 String[] s = input.split(",");
                 notifyInit(c = new Choice(Integer.parseInt(s[0]), Integer.parseInt(s[1]), j + 1, null,i));
                 }
                 setActionDone(false);
             }
+
+
         }
         setActionDone(false);
+
     }
 
     /**
@@ -326,13 +368,13 @@ public class ViewCLI implements ViewObservable, ModelObserver {
      */
     public void handleBuild(Integer worker){
         while(!actionDone) {
-            outputStream.println(ViewMessage.buildMessage + worker);
+            outputStream.println(ViewMessage.buildMessage + worker+"\n");
             String build = scanner.next();
             String[] b = build.split(",");
-            outputStream.println(ViewMessage.LevelMessage);
+            outputStream.println(ViewMessage.LevelMessage+"\n");
             String answer = scanner.next();
             if (answer.toUpperCase().equals("YES")) {
-                outputStream.println("Insert level:");
+                outputStream.println("Insert level:"+"\n");
                 Integer level = scanner.nextInt();
                 notifyBuild(c = new Choice(Integer.parseInt(b[0]), Integer.parseInt(b[1]), worker, level,null));
             } else
@@ -350,8 +392,7 @@ public class ViewCLI implements ViewObservable, ModelObserver {
         setActionDone(false);
     }
 
-    public String[][] handleWhatToDo(){
-        return notifyWhatToDo();
+    public String[][] handleWhatToDo(){ return notifyWhatToDo();
     }
 
     public int handleStart(){
@@ -369,8 +410,9 @@ public class ViewCLI implements ViewObservable, ModelObserver {
     /**
      * Method to print the current GameBoard situation on the screen
      */
-    public void show(){
+    public void show(Object o){
         //TODO make the appropriate setting of the individual cells based on the copy of the GameBoard received
+        FakeCell[][] copy = (FakeCell[][]) o;
         int rowIndex = 0;
         int colIndex = 0;
         System.out.println();
@@ -414,19 +456,31 @@ public class ViewCLI implements ViewObservable, ModelObserver {
     }
 
     public void callFunction(String s,Integer worker){
-        System.out.println(s+"POWER:"+ViewMessage.applyPowerMessage);
-        String input = scanner.next();
-        if(input.toUpperCase().equals("YES")) {
-            switch (s) {
-                case "MOVE":
+
+        switch (s) {
+            case "MOVE":
+                System.out.println(s+"POWER:"+ViewMessage.applyPowerMessage);
+                String input = scanner.next();
+                if(input.toUpperCase().equals("YES"))
                     handleMove(worker);
-                case "BUILD":
+                else
+                    setActionDone(true);
+            case "BUILD":
+                System.out.println(s+"POWER:"+ViewMessage.applyPowerMessage);
+                input = scanner.next();
+                if(input.toUpperCase().equals("YES"))
                     handleBuild(worker);
-                case "EFFECT":
-                    handleEffect();
-            }
+                else
+                    setActionDone(true);
+            case "EFFECT":
+                handleEffect();
         }
-        else
-            setActionDone(true);
     }
+
+    public void loseMessage(String s){
+        System.out.println(s+ " " + ViewMessage.loseMessage);
+    }
+
+
+
 }

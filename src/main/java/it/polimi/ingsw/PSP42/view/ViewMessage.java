@@ -8,8 +8,8 @@ public class ViewMessage {
     public static String buildMessage = "Make your build (x,y) with Worker ";
     public static String LevelMessage = "Dou you want to build a none default level (YES or NO)?";
     public static String waitMessage = "Wait for the other player's move!";
-    public static String winMessage = "You win!";
-    public static String loseMessage = "You lose!";
+    public static String winMessage = "You won!";
+    public static String loseMessage = "You lost!";
     public static String drawMessage = "Draw!";
     public static String wrongTurnMessage = "It is not your turn!";
     public static String occupiedCellMessage = "The chosen cell is not empty!";

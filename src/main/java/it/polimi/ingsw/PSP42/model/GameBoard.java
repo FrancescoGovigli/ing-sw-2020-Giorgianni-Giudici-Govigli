@@ -284,7 +284,7 @@ public class GameBoard implements ModelObservable {
     @Override
     public void notifyObservers(Object o) {
         for (int i = 0; i <obs.size(); i++) {
-            obs.get(i).updateBoard(gamePhase.toString());
+            obs.get(i).updateBoard(FakeCell.getGameBoardCopy());
         }
     }
 }

@@ -122,6 +122,7 @@ public class Player {
     public boolean initialPosition ( int x, int y, Worker w){
         if (x >= 0 && x <= 4 && y >= 0 && y <= 4)
             return card.powerInitialPosition(x, y, w);
+        GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
         return false;
     }
 
