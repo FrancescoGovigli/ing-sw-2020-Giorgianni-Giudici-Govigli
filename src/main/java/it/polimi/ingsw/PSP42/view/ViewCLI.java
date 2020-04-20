@@ -333,6 +333,10 @@ public class ViewCLI implements ViewObservable, ModelObserver {
                 System.out.println(ErrorMessage.InputMessage + "\n");
                 scanner.nextLine();
             }
+            catch (ArrayIndexOutOfBoundsException e){
+                System.out.println(ErrorMessage.InputMessage + "\n");
+                scanner.nextLine();
+            }
 
 
         }
@@ -370,6 +374,10 @@ public class ViewCLI implements ViewObservable, ModelObserver {
                     System.out.println(ErrorMessage.InputMessage + "\n");
                     scanner.nextLine();
                 }
+                catch (ArrayIndexOutOfBoundsException e){
+                System.out.println(ErrorMessage.InputMessage + "\n");
+                scanner.nextLine();
+            }
 
                 }
 
@@ -404,6 +412,10 @@ public class ViewCLI implements ViewObservable, ModelObserver {
                     notifyBuild(c = new Choice(Integer.parseInt(b[0]), Integer.parseInt(b[1]), worker, 0,null));
             }
             catch (NumberFormatException e){
+                System.out.println(ErrorMessage.InputMessage + "\n");
+                scanner.nextLine();
+            }
+            catch (ArrayIndexOutOfBoundsException e){
                 System.out.println(ErrorMessage.InputMessage + "\n");
                 scanner.nextLine();
             }

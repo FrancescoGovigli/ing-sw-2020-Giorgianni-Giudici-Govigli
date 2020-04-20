@@ -206,7 +206,7 @@ public class ControllerCLI implements ViewObserver {
                 view.printEffect("OFF", g.getPlayers().get(g.getCurrentPlayer()).getCard().effectOFF());
         }
         view.setActionDone(true);
-        GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
+        //GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
     }
 
     public String[] pickCards(int numPlayers){
