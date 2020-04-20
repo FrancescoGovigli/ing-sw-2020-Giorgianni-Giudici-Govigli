@@ -89,8 +89,10 @@ public class ControllerCLI implements ViewObserver {
             view.setActionDone(true);
             GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
         }
-        if(g.getPlayers().get(g.getCurrentPlayer()).getPlayerState().equals("WIN"))
+        if(g.getPlayers().get(g.getCurrentPlayer()).getPlayerState().equals("WIN")) {
+            view.setTurnDone(true);
             view.setGameDone(true);
+        }
     }
 
     /**

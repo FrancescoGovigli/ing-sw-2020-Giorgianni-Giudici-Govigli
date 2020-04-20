@@ -529,21 +529,24 @@ public class ViewCLI implements ViewObservable, ModelObserver {
 
         switch (s) {
             case "MOVE":
-                System.out.println(s + "POWER:" + ViewMessage.applyPowerMessage);
+                System.out.println(s + " POWER: " + ViewMessage.applyPowerMessage);
                 String input = scanner.next();
                 if(input.toUpperCase().equals("YES"))
                     handleMove(worker);
                 else
                     setActionDone(true);
+                break;
             case "BUILD":
-                System.out.println(s + "POWER:" + ViewMessage.applyPowerMessage);
+                System.out.println(s + " POWER: " + ViewMessage.applyPowerMessage);
                 input = scanner.next();
                 if(input.toUpperCase().equals("YES"))
                     handleBuild(worker);
                 else
                     setActionDone(true);
+                break;
             case "EFFECT":
                 handleEffect();
+                break;
         }
     }
 
