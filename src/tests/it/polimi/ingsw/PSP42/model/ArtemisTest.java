@@ -142,17 +142,20 @@ public class ArtemisTest {
         assertEquals(1, GameBoard.getInstance().getCell(3, 2).getLevel());
     }
 
-    /*
     @Test
-    public void powerMoveAvailable() {
+    public void undoMove_And_undoBuild(){
+        p1.initialPosition(2, 2, p1.getWorker1());
+        p1.initialPosition(4, 4, p1.getWorker2());
+        p1.move(1, 1, p1.getWorker1());
+        p1.move(0, 0, p1.getWorker1());
+        p1.doUndoMove(p1.getWorker1());
+        assertNull(g.getCell(0, 0).getWorker());
+        assertNull(g.getCell(2, 2).getWorker());
+        assertEquals(g.getCell(1, 1), g.getCell(p1.getWorker1().getCurrentX(), p1.getWorker1().getCurrentY()));
+        p1.build(0, 0, 1, p1.getWorker1());
+        p1.doUndoBuild(p1.getWorker1());
+        p1.build(0, 2, 1, p1.getWorker1());
+        assertEquals(0, g.getCell(0, 0).getLevel());
+        assertEquals(1, g.getCell(0, 2).getLevel());
     }
-
-    @Test
-    public void setPowerPosition() {
-    }
-
-    @Test
-    public void adjacentCellMovePowerAvailable() {
-    }
-    */
 }

@@ -1,5 +1,7 @@
 package it.polimi.ingsw.PSP42.model;
 
+import java.util.ArrayList;
+
 /**
  * Simple God who can build before moving if he does not move up a level while moving
  */
@@ -83,5 +85,29 @@ public class Prometheus extends SimpleGod{
             return true;
         }
         return false;
+    }
+
+    // UNDO
+
+    /**
+     * Method to obtain the current state of the Simple God's variables
+     * @return values.clone() (a clone of the ArrayList of Integer containing these variables)
+     */
+    @Override
+    public ArrayList<Integer> getCurrentValues() {
+        ArrayList<Integer> values = new ArrayList<Integer>();
+        values.add(buildNum);
+        values.add(moveNum);
+        return (ArrayList<Integer>) values.clone();
+    }
+
+    /**
+     * Method to restore the state of the Simple God's variables
+     * @param valuesToRestore
+     */
+    @Override
+    public void reSetValues(ArrayList<Integer> valuesToRestore) {
+        this.buildNum = valuesToRestore.get(0);
+        this.moveNum = valuesToRestore.get(1);
     }
 }

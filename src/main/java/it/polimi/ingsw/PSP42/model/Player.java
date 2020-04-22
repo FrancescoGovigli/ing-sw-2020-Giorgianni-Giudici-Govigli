@@ -9,6 +9,7 @@ public class Player {
     private final Worker worker2;
     private enum State {WIN, LOSE, INGAME}
     private State playerState = State.INGAME;
+    private Undo undo;  // UNDO
 
     /**
      * Constructor to initialize a player object and instantiating 2 workers used by the player outside the Map cell(-1,-1)
@@ -23,11 +24,15 @@ public class Player {
         this.worker1 = new Worker(- 1, - 1, this);
         this.worker2 = new Worker(- 1, - 1, this);
         this.card = DeckOfGods.setGod(cardName, worker1, worker2);
-
+        this.undo = new Undo(); // UNDO
     }
 
-    public int getAge() {
-        return age;
+    /**
+     * In every move of a player it's important to get the GodCard assigned to the player
+     * @return card
+     */
+    public SimpleGod getCard() {
+        return card;
     }
 
     /**
@@ -36,6 +41,22 @@ public class Player {
      */
     public int getId() {
         return id;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public Worker getWorker1() {
+        return worker1;
+    }
+
+    public Worker getWorker2() {
+        return worker2;
     }
 
     /**
@@ -61,58 +82,6 @@ public class Player {
         playerState = State.valueOf(s);
     }
 
-    public String getNickname() {
-        return nickname;
-    }
-
-    public Worker getWorker1() {
-        return worker1;
-    }
-
-    public Worker getWorker2() {
-        return worker2;
-    }
-
-    /**
-     * In every move of a player it's important to get the GodCard assigned to the player
-     * @return card
-     */
-    public SimpleGod getCard() {
-        return card;
-    }
-
-    /**
-     * Method used to move the worker w in (x,y) position
-     * @param x is the x-coordinate for the move
-     * @param y is the y-coordinate for the move
-     * @param w is the worker who moves
-     */
-    public boolean move(int x, int y, Worker w) {
-        if (x >= 0 && x <= 4 && y >= 0 && y <= 4)
-            return card.powerMove(x, y, w);
-        return false;
-    }
-
-    /**
-     * Method used to build with worker w in (x,y) position
-     * @param x is the x-coordinate for the construction
-     * @param y is the y-coordinate for the construction
-     * @param w is the worker who builds
-     */
-    public boolean build(int x, int y, int level, Worker w) {
-        if (x >= 0 && x <= 4 && y >= 0 && y <= 4 && level >= 0 && level <= 4)
-            return card.powerBuild(x, y, level, w);
-        return false;
-    }
-
-    /**
-     * TODO
-     * @return
-     */
-    public boolean effect(){
-        return card.powerEffect();
-    }
-
     /**
      * Method used to initialize the worker in cell (x,y)
      * @param x is the initialization x-coordinate
@@ -123,6 +92,59 @@ public class Player {
         if (x >= 0 && x <= 4 && y >= 0 && y <= 4)
             return card.powerInitialPosition(x, y, w);
         return false;
+    }
+
+    /**
+     * Method used to move the worker w in (x,y) position
+     * @param x is the x-coordinate for the move
+     * @param y is the y-coordinate for the move
+     * @param w is the worker who moves
+     */
+    public boolean move(int x, int y, Worker w) {
+        if (x >= 0 && x <= 4 && y >= 0 && y <= 4) {
+            undo.undoMoveSet(w);    // UNDO
+            if (card.powerMove(x, y, w)) {   //[preV]return card.powerMove(x, y, w);
+                undo.undoMovePossible();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // UNDO MOVE
+    public void doUndoMove(Worker w){
+        undo.undoMoveApply(w);
+        undo.undoMoveDone();
+    }
+
+    /**
+     * Method used to build with worker w in (x,y) position
+     * @param x is the x-coordinate for the construction
+     * @param y is the y-coordinate for the construction
+     * @param w is the worker who builds
+     */
+    public boolean build(int x, int y, int level, Worker w) {
+        if (x >= 0 && x <= 4 && y >= 0 && y <= 4 && level >= 0 && level <= 4)
+            undo.undoBuildSet(x, y, w);    // UNDO
+            if (card.powerBuild(x, y, level, w)) {  //[preV]return card.powerBuild(x, y, level, w)
+                undo.undoBuildPossible();
+                return true;
+            }
+        return false;
+    }
+
+    // UNDO BUILD
+    public void doUndoBuild(Worker w){
+        undo.undoBuildApply(w);
+        undo.undoBuildDone();
+    }
+
+    /**
+     * TODO
+     * @return
+     */
+    public boolean effect(){
+        return card.powerEffect();
     }
 
     /**

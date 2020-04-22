@@ -9,6 +9,32 @@ public abstract class SimpleGod {
     protected Worker w1;
     protected Worker w2;
 
+    // UNDO
+    public ArrayList<Integer> values = null;
+
+    /**
+     * Method to obtain the current state of the Simple God's variables
+     * [NOTE] In the Simple God that make it override it is important to insert
+     * the variables in the ArrayList in the order in which they were declared in the class,
+     * in other words the first variable declared must be insert in the first position of values
+     * @return values.clone() (a clone of the ArrayList of Integer containing these variables)
+     */
+    public ArrayList<Integer> getCurrentValues() {
+        return (ArrayList<Integer>) values.clone();
+    }
+
+    /**
+     * Method to restore the state of the Simple God's variables
+     * [NOTE] In the Simple God that make it override it is important
+     * that the variables to be reset are taken from the ArrayList in the order in which they were declared in the class,
+     * in other words the first variable declared is in the first position of valuesToRestore
+     * @param valuesToRestore
+     */
+    public void reSetValues(ArrayList<Integer> valuesToRestore) {
+        values = null;
+    }
+
+    // CURRENT CODE
     public SimpleGod(Worker w1, Worker w2) {
         this.w1 = w1;
         this.w2 = w2;

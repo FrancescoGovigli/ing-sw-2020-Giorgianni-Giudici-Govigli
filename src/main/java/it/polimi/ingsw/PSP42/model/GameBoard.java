@@ -4,12 +4,12 @@ import it.polimi.ingsw.PSP42.*;
 import java.util.ArrayList;
 
 public class GameBoard implements ModelObservable {
+    private static GameBoard instance = null;
     private Cell[][] board = new Cell[5][5];
-    private ArrayList<ModelObserver> obs = new ArrayList<ModelObserver>();
     private ArrayList<Player> players;
     private int currentPlayer = 0;
-    private static GameBoard instance = null;
     private Turn gamePhase = null;
+    private ArrayList<ModelObserver> obs = new ArrayList<ModelObserver>();
 
     /**
      * Constructor to initialize the board of dimension 5x5
@@ -37,12 +37,22 @@ public class GameBoard implements ModelObservable {
         instance=null;
     }
 
-    public int getCurrentPlayer(){
-        return currentPlayer;
+    /**
+     * Method to return the object Cell specified by the Cartesian coordinates (x, y)
+     * @param x
+     * @param y
+     * @return Cell
+     */
+    public Cell getCell(int x, int y) {
+        return this.board[x][y];
     }
 
-    public void setCurrentPlayer(int x){
-        currentPlayer = x;
+    /**
+     * Method to return a copy an ArrayList containing the list of players
+     * @return players.clone()
+     */
+    public ArrayList<Player> getPlayers(){
+        return (ArrayList<Player>) players.clone();
     }
 
     /**
@@ -54,31 +64,12 @@ public class GameBoard implements ModelObservable {
             this.players = players;
     }
 
-    /**
-     * Method to obtain a minimal copy of the gameboard, useful in printing on CLI
-     * @return gCopy (FakeCell matrix containing only player name, worker 1 or 2 and construction level)
-     */
-    public FakeCell[][] gameBoardCopy(){
-        FakeCell[][] gCopy = FakeCell.getGameBoardCopy();
-        return gCopy;
+    public int getCurrentPlayer(){
+        return currentPlayer;
     }
 
-    /**
-     *
-     * @return
-     */
-    public ArrayList<Player> getPlayers(){
-        return (ArrayList<Player>) players.clone();
-    }
-
-    /**
-     * Method to return the object Cell specified by the Cartesian coordinates (x, y)
-     * @param x
-     * @param y
-     * @return Cell
-     */
-    public Cell getCell(int x, int y) {
-        return this.board[x][y];
+    public void setCurrentPlayer(int x){
+        currentPlayer = x;
     }
 
     public String getGamePhase() {
@@ -87,6 +78,15 @@ public class GameBoard implements ModelObservable {
 
     public void setGamePhase(String gamePhase) {
         this.gamePhase = Turn.valueOf(gamePhase);
+    }
+
+    /**
+     * Method to obtain a minimal copy of the gameboard, useful in printing on CLI
+     * @return gCopy (FakeCell matrix containing only player name, worker 1 or 2 and construction level)
+     */
+    public FakeCell[][] gameBoardCopy(){
+        FakeCell[][] gCopy = FakeCell.getGameBoardCopy();
+        return gCopy;
     }
 
     /**
