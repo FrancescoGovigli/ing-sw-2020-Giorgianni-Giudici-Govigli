@@ -15,6 +15,8 @@ public class ViewCLI implements ViewObservable, ModelObserver {
     private boolean gameDone;
     private boolean turnDone;
     private boolean actionDone;
+    private boolean undoDone;
+    private boolean powerApply;
     private ArrayList<ViewObserver> obs = new ArrayList<>();
 
     private String gameState;
@@ -112,7 +114,7 @@ public class ViewCLI implements ViewObservable, ModelObserver {
            while(!correct) {
                outputStream.println(ViewMessage.workerMessage+"\n");
                try {
-                   worker = scanner.nextInt();
+                   worker =scanner.nextInt();
                    if (worker == 1 || worker == 2)
                        correct = true;
                }
@@ -224,13 +226,14 @@ public class ViewCLI implements ViewObservable, ModelObserver {
             outputStream.println(ViewMessage.numberOfPlayersMessage+"\n");
             int numPlayer=0;
             try {
-                numPlayer = scanner.nextInt();
+                numPlayer = scanner.nextInt();;
 
             }
             catch(InputMismatchException e){
                 System.out.println(ErrorMessage.InputMessage+"\n");
-                scanner.nextLine();
+                scanner.next();
             }
+
             if(numPlayer==2 || numPlayer==3) {
                 numPlayers = numPlayer;
                 setActionDone(true);
@@ -325,13 +328,12 @@ public class ViewCLI implements ViewObservable, ModelObserver {
             String[] s=null;
             outputStream.println(ViewMessage.moveMessage);
             try{
-                String input = scanner.next();
+                String input = scanner.nextLine();
                 s = input.split(",");
                 notifyMove(c = new Choice(Integer.parseInt(s[0]), Integer.parseInt(s[1]), worker, null,null));
             }
             catch (NumberFormatException e){
-                System.out.println(ErrorMessage.InputMessage + "\n");
-                scanner.nextLine();
+
             }
             catch (ArrayIndexOutOfBoundsException e){
                 System.out.println(ErrorMessage.InputMessage + "\n");
@@ -399,21 +401,23 @@ public class ViewCLI implements ViewObservable, ModelObserver {
         while(!actionDone) {
             outputStream.println(ViewMessage.buildMessage + worker+"\n");
             String[] b=null;
-            try{
-                String build = scanner.next();
+            try {
+                String build = scanner.nextLine();
                 b = build.split(",");
-                outputStream.println(ViewMessage.LevelMessage+"\n");
-                String answer = scanner.next();
-                if (answer.toUpperCase().equals("YES")) {
-                    outputStream.println("Insert level:"+"\n");
-                    Integer level = scanner.nextInt();
-                    notifyBuild(c = new Choice(Integer.parseInt(b[0]), Integer.parseInt(b[1]), worker, level,null));
-                } else
-                    notifyBuild(c = new Choice(Integer.parseInt(b[0]), Integer.parseInt(b[1]), worker, 0,null));
+                if (! build.equals("")) {
+                    outputStream.println(ViewMessage.LevelMessage + "\n");
+                    String answer = scanner.nextLine();
+                    if (answer.toUpperCase().equals("YES")) {
+                        outputStream.println("Insert level:" + "\n");
+                        Integer level = scanner.nextInt();
+                        notifyBuild(c = new Choice(Integer.parseInt(b[0]), Integer.parseInt(b[1]), worker, level, null));
+
+                    } else
+                        notifyBuild(c = new Choice(Integer.parseInt(b[0]), Integer.parseInt(b[1]), worker, 0, null));
+                }
             }
             catch (NumberFormatException e){
                 System.out.println(ErrorMessage.InputMessage + "\n");
-                scanner.nextLine();
             }
             catch (ArrayIndexOutOfBoundsException e){
                 System.out.println(ErrorMessage.InputMessage + "\n");
@@ -429,8 +433,21 @@ public class ViewCLI implements ViewObservable, ModelObserver {
     }
 
     public void handleStateChange(String s){
-        notifyState(s);
+        if(undoDone && (getGameState().equals("PREMOVE") || getGameState().equals("PREBUILD")))
+            notifyState(getGameState());
+        else if(undoDone && powerApply && (getGameState().equals("MOVE") || getGameState().equals("BUILD"))){
+            if(getGameState().equals("MOVE"))
+                notifyState("PREMOVE");
+            if(getGameState().equals("BUILD"))
+                notifyState("PREBUILD");
+            powerApply=false;
+        }
+
+        else
+         notifyState(s);
         setActionDone(false);
+        undoDone=false;
+
     }
 
     public String[][] handleWhatToDo(){ return notifyWhatToDo();
@@ -447,6 +464,41 @@ public class ViewCLI implements ViewObservable, ModelObserver {
     public void handleEffect(){
         notifyEffect();
     }
+
+    public boolean undoOption() {
+        final boolean[] value = {true};
+        String str = "";
+        final String[] finalStr = {str};
+        TimerTask task = new TimerTask() {
+            public void run() {
+
+                if(finalStr[0].equals("")) {
+                    System.out.println("You input nothing. No undo is done...");
+                    value[0] = false;
+                }
+
+            }
+        };
+
+        Timer timer = new Timer();
+        timer.schedule(task, 5 * 1000);
+
+        System.out.println( "Input a YES within 5 seconds for UNDO : " );
+        str= scanner.nextLine();
+        timer.cancel();
+        if(value[0]==false || (!str.toUpperCase().equals("YES")) || str.equals("")) {
+            System.out.println("UNDO is not applied");
+            undoDone=false;
+            return false;
+        }
+        if(str.toUpperCase().equals("YES")) {
+            System.out.println("UNDO is applied");
+            undoDone=true;
+            return true;
+        }
+        else
+         return false;
+        }
 
     public void printEffect(String s, String effect) {
         if(s.equals("ON"))
@@ -542,17 +594,21 @@ public class ViewCLI implements ViewObservable, ModelObserver {
         switch (s) {
             case "MOVE":
                 System.out.println(s + " POWER: " + ViewMessage.applyPowerMessage);
-                String input = scanner.next();
-                if(input.toUpperCase().equals("YES"))
+                String input = scanner.nextLine();
+                if(input.toUpperCase().equals("YES")) {
                     handleMove(worker);
+                    powerApply=true;
+                }
                 else
                     setActionDone(true);
                 break;
             case "BUILD":
                 System.out.println(s + " POWER: " + ViewMessage.applyPowerMessage);
-                input = scanner.next();
-                if(input.toUpperCase().equals("YES"))
+                input = scanner.nextLine();
+                if(input.toUpperCase().equals("YES")) {
                     handleBuild(worker);
+                    powerApply = true;
+                }
                 else
                     setActionDone(true);
                 break;
