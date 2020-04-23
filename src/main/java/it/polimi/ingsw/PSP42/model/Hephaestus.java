@@ -1,41 +1,23 @@
 package it.polimi.ingsw.PSP42.model;
 
+import java.util.ArrayList;
+
 /**
- * This god allowed a worker to build twice in the same position
+ * This god allowed a worker to build twice in the same position in one turn.
  */
 public class Hephaestus extends SimpleGod {
 
     private Cell precedentCell;
-    private int counter = 1;
-
-    public Cell getPrecedentCell() {
-        return precedentCell;
-    }
-
-    /**
-     * Used to set and keep in memory which was the precedent cell.
-     * @param precedentCell first Cell where worker has build
-     */
-    public void setPrecedentCell(Cell precedentCell) {
-        this.precedentCell = precedentCell;
-    }
-
-    public int getCounter() {
-        return counter;
-    }
-
-    /**
-     * Used to keep count how much time worker wants to build.
-     * @param counter is 1 or 2
-     */
-    public void setCounter(int counter) {
-        this.counter = counter;
-    }
+    private int buildNum = 0;
 
     public Hephaestus (Worker w1, Worker w2) {
         super(w1, w2);
     }
 
+    /**
+     * Set standard actions in phase + first build in gamePhase "PREBUILD" and second in "BUILD".
+     * @return Game phase for Hephaestus as an array of Strings' arrays
+     */
     @Override
     public String[][] setPhase() {
         String[] START = {"EMPTY"};
@@ -48,58 +30,101 @@ public class Hephaestus extends SimpleGod {
         return phase;
     }
 
+    /**
+     * Used to set and keep in memory which was the precedent cell where worker has built.
+     * @param precedentCell first Cell where worker has build
+     */
+    public void setPrecedentCell(Cell precedentCell) {
+        this.precedentCell = precedentCell;
+    }
+
+    public Cell getPrecedentCell() {
+        return precedentCell;
+    }
+
+    /**
+     * Standard move with a reset function of attribute "buildNum" and "precedentCell" used in "powerBuild".
+     * @param x position on x-axis
+     * @param y position on y-axis
+     * @param w worker who wants to move
+     * @return true if worker moved, false otherwise
+     */
+    public boolean powerMove(int x, int y, Worker w) {
+        for (Player player: effectPlayers)
+            if (player != null && !player.getCard().powerMoveAvailable(x, y, w))
+                return false;
+        if (powerMoveAvailable(x, y, w)) {
+            setPrecedentCell(null);
+            buildNum = 0;
+            w.setPosition(x, y);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Used to verify if it's possible to build in that position.
+     * In first place as a standard "buildAvailable",
+     * second time ensuring that second build is in same place of before.
+     * @param x position on the x-axis (if method called twice this parameter changed)
+     * @param y position on the y-axis (if method called twice this parameter changed)
+     * @param w worker that want to build
+     * @return true if worker can build, false otherwise
+     */
     @Override
     public boolean powerBuildAvailable(int x, int y, int level, Worker w) {
-        if (getCounter() == 1) {
-            if (GameBoard.getInstance().buildAvailable(x, y, w)) {
-                this.setPrecedentCell(GameBoard.getInstance().getCell(x, y));
-                return true;
-            }
-            else
-                return false;
-        }
-        else
-            return this.powerSecondBuildAvailable(x, y);
+        if(buildNum == 0 && GameBoard.getInstance().buildAvailable(x, y, w))
+            return true;
+        if(buildNum == 1 &&
+                GameBoard.getInstance().buildAvailable(x, y, w) &&
+                    GameBoard.getInstance().getCell(x, y).equals(getPrecedentCell()) &&
+                        GameBoard.getInstance().getCell(x, y).getLevel() != 3)
+            return true;
+        return false;
     }
 
     /**
      * Used to build once or twice in (x,y).
      * @param x position on x-axis
      * @param y position on y-axis
-     * @param level
      * @param w worker
      * @return true if worker builds, false otherwise
      */
     @Override
     public boolean powerBuild(int x, int y, int level, Worker w) {
-        if (powerBuildAvailable(x, y, level, w)) {
-            if(getCounter() == 1) {
-                w.buildBlock(x, y);
-                setCounter(2);
-                return true;
-            } else {
-                w.buildBlock(x, y);
-                setCounter(1);
-                setPrecedentCell(null);
-                return true;
-            }
+        if (buildNum == 0 && powerBuildAvailable(x, y, level, w)) {
+            w.buildBlock(x, y);
+            buildNum = 1;
+            setPrecedentCell(GameBoard.getInstance().getCell(x, y));
+            return true;
         }
-        else {
-            setCounter(1);
-            setPrecedentCell(null);
-            return false;
+        if(buildNum == 1 && powerBuildAvailable(x, y, level, w)) {
+            w.buildBlock(x, y);
+            return true;
         }
+        return false;
+    }
+
+    // UNDO
+
+    /**
+     * Method to obtain the current state of the Simple God's variables
+     * @return values.clone() (a clone of the ArrayList of Integer containing these variables)
+     */
+    @Override
+    public ArrayList<Integer> getCurrentValues() {
+        ArrayList<Integer> values = new ArrayList<Integer>();
+        values.add(buildNum);
+        return (ArrayList<Integer>) values.clone();
     }
 
     /**
-     * Used to know if second building is in the same place of first.
-     * @param x position on x-axis
-     * @param y position on y-axis
-     * @return true if second building is in the same place of before, false otherwise
+     * Method to restore the state of the Simple God's variables
+     * @param valuesToRestore
      */
-    public boolean powerSecondBuildAvailable(int x, int y) {
-        if(GameBoard.getInstance().getCell(x, y).equals(getPrecedentCell()))
-            return true;
-        return false;
+    @Override
+    public void reSetValues(ArrayList<Integer> valuesToRestore) {
+        this.buildNum = valuesToRestore.get(0);
     }
 }
+

@@ -10,7 +10,7 @@ public abstract class SimpleGod {
     protected Worker w2;
 
     // UNDO
-    public ArrayList<Integer> values = null;
+    private ArrayList<Integer> values = null;
 
     /**
      * Method to obtain the current state of the Simple God's variables
@@ -20,7 +20,9 @@ public abstract class SimpleGod {
      * @return values.clone() (a clone of the ArrayList of Integer containing these variables)
      */
     public ArrayList<Integer> getCurrentValues() {
-        return (ArrayList<Integer>) values.clone();
+        if(values != null)
+            return (ArrayList<Integer>) values.clone();
+        return null;
     }
 
     /**

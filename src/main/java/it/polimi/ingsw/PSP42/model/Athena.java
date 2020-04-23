@@ -1,12 +1,14 @@
 package it.polimi.ingsw.PSP42.model;
 
+import java.util.ArrayList;
+
 /**
  * Thanks to this simple god if a player's worker, who have this god, step up, the workers of other players can't.
  */
 public class Athena extends SimpleGod {
 
-    private boolean blockOpponentsStepUp = false;
-    private int counter = 0;
+    private int blockOpponentsStepUp = 0;
+    private int counterPhase = 0;
 
     public Athena(Worker w1, Worker w2) {
         super(w1, w2);
@@ -20,17 +22,17 @@ public class Athena extends SimpleGod {
         return "Other players now can step up!";
     }
 
-    /**
-     * Used to know if we used effect in this turn
-     * @return true if Athena'll block opponents step up, false otherwise
-     */
+    /*
     public boolean getBlockOpponentsStepUp() {
-        return blockOpponentsStepUp;
+        if (blockOpponentsStepUp == 1)
+            return true;
+        return false;
     }
 
-    public void setBlockOpponentsStepUp(boolean blockOpponentsStepUp) {
+    public void setBlockOpponentsStepUp(int blockOpponentsStepUp) {
         this.blockOpponentsStepUp = blockOpponentsStepUp;
     }
+     */
 
     @Override
     public String[][] setPhase() {
@@ -49,21 +51,21 @@ public class Athena extends SimpleGod {
      * Used by opponents' workers, if they can't step up, to know if they can move in that position.
      * @param x x-axis position
      * @param y y-axis position
-     * @param w worker who want to move
+     * @param w worker who wants to move
      * @return true if worker's able to move, false otherwise
      */
     @Override
     public boolean powerMoveAvailable(int x, int y, Worker w) {
-        if(getBlockOpponentsStepUp())
+        if(!(w.getPlayer().getCard() instanceof Athena) && blockOpponentsStepUp == 1)
             return powerMoveBlockedStepUpAvailable(x, y, w);
         return GameBoard.getInstance().moveAvailable(x, y, w);
     }
 
     /**
-     * Used to move worker and to set BlockOpponentsStepUp if necessary
+     * Used to move worker and to set "blockOpponentsStepUp" if Athena's worker step up.
      * @param x position on x-axis
      * @param y position on y-axis
-     * @param w worker
+     * @param w worker who wants to move
      * @return true if worker was moved, false otherwise
      */
     @Override
@@ -73,8 +75,9 @@ public class Athena extends SimpleGod {
                 return false;
         }
         if(powerMoveAvailable(x, y, w)) {
+            counterPhase = 1;
             if (workerStepUp(x, y, w))
-                setBlockOpponentsStepUp(true);
+                blockOpponentsStepUp = 1;
             w.setPosition(x, y);
             return true;
         }
@@ -87,7 +90,9 @@ public class Athena extends SimpleGod {
      */
     @Override
     public boolean powerEffectAvailable() {
-        return getBlockOpponentsStepUp();
+        if(blockOpponentsStepUp == 1)
+            return true;
+        return false;
     }
 
     /**
@@ -99,34 +104,29 @@ public class Athena extends SimpleGod {
      */
     @Override
     public boolean powerEffect() {
-        if (GameBoard.getInstance().getGamePhase().equals("START")) {
-        //if (counter == 0) {
-        //if (nextEffectPhase.equals("START") {
+        if (counterPhase == 0) {
             if(powerEffectAvailable()) {
                 for (Player player : GameBoard.getInstance().getPlayers()) {
                     player.getCard().effectPlayers.remove(this.w1.getPlayer());
                 }
-                setBlockOpponentsStepUp(false);
-                counter = 1;
+                blockOpponentsStepUp = 0;
                 return true;
             } else {
-                counter = 1;
                 return false;
             }
-        } else if (GameBoard.getInstance().getGamePhase().equals("END")) {
-        //} else if (counter == 1) {
+        }
+        if (counterPhase == 1) {
             if (powerEffectAvailable()) {
                 for (Player player : GameBoard.getInstance().getPlayers()) {
                     player.getCard().effectPlayers.add(this.w1.getPlayer());
                 }
-                counter = 0;
+                counterPhase = 0;
                 return true;
             } else {
-                counter = 0;
+                counterPhase = 0;
                 return false;
             }
         }
-        counter = 0;
         return false;
     }
 
@@ -153,35 +153,43 @@ public class Athena extends SimpleGod {
      * @return true if worker can, false otherwise
      */
     public boolean powerMoveBlockedStepUpAvailable(int x, int y, Worker w) {
-        boolean condition = false;
-        Cell[] c = adjacentCellBlockedStepUpMoveAvailable(w.getCurrentX(),w.getCurrentY());
-        for (int i = 0; i < c.length && !condition; i++) // !condition used to stop for loop just condition becomes true
-            if (c[i] != null && c[i].equals(GameBoard.getInstance().getCell(x,y))) {
-                condition = true;
-            }
-        return condition;
+        if (GameBoard.getInstance().getCell(x, y).getLevel() -
+                GameBoard.getInstance().getCell(w.getCurrentX(), w.getCurrentY()).getLevel() <= 0 &&
+                    w.getPlayer().getCard().powerMoveAvailable(x, y, w))
+            return true;
+        return false;
+    }
+    /*
+    public boolean powerMoveBlockedStepUpAvailable(int x, int y, Worker w) {
+        if (GameBoard.getInstance().moveAvailable(x, y, w) &&
+                GameBoard.getInstance().getCell(x, y).getLevel() -
+                        GameBoard.getInstance().getCell(w.getCurrentX(), w.getCurrentY()).getLevel() <= 0)
+            return true;
+        return false;
+    }
+     */
+
+    //UNDO
+
+    /**
+     * Method to obtain the current state of the Simple God's variables
+     * @return values.clone() (a clone of the ArrayList of Integer containing these variables)
+     */
+    @Override
+    public ArrayList<Integer> getCurrentValues() {
+        ArrayList<Integer> values = new ArrayList<Integer>();
+        values.add(blockOpponentsStepUp);
+        values.add(counterPhase);
+        return (ArrayList<Integer>) values.clone();
     }
 
     /**
-     * Used to know in what cells a worker is able to move without step up.
-     * @param x starting position on x-axis
-     * @param y starting position on y-axis
-     * @return array of all available cells where worker can move
+     * Method to restore the state of the Simple God's variables
+     * @param valuesToRestore
      */
-    public Cell[] adjacentCellBlockedStepUpMoveAvailable(int x, int y) {
-        int index = 0;
-        Cell[] adjCellMoveAvailable = new Cell[8];  // 8 is the maximum number of possible adjacent cell where move
-        Cell[][] c = GameBoard.getInstance().submatrixGenerator(x, y);
-        for (int i = 0; i < 3; i++) {    //searching around the cell(x,y)
-            for (int j = 0; j < 3; j++) {
-                if (c[i][j] != null &&
-                        (c[i][j].getLevel() <= GameBoard.getInstance().getCell(x, y).getLevel())) //cell at the same or lower level
-                {
-                    adjCellMoveAvailable[index] = c[i][j];
-                    index++;
-                }
-            }
-        }
-        return adjCellMoveAvailable;
+    @Override
+    public void reSetValues(ArrayList<Integer> valuesToRestore) {
+        this.blockOpponentsStepUp = valuesToRestore.get(0);
+        this.counterPhase = valuesToRestore.get(1);
     }
 }

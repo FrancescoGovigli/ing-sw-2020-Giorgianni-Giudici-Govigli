@@ -1,17 +1,23 @@
 package it.polimi.ingsw.PSP42.model;
 
+import java.util.ArrayList;
+
 /**
- * This simple god allow a worker to build twice.
+ * This simple god allow a worker to build twice in one turn but not in same place.
  */
 public class Demeter extends SimpleGod {
 
-    private int counter = 1;
     private Cell precedentCell;
+    private int buildNum = 0;
 
     public Demeter(Worker w1, Worker w2) {
         super(w1, w2);
     }
 
+    /**
+     * Set standard actions in phase + first build in gamePhase "PREBUILD" and second in "BUILD".
+     * @return Game phase for Demeter as an array of Strings' arrays
+     */
     @Override
     public String[][] setPhase() {
         String[] START = {"EMPTY"};
@@ -24,20 +30,8 @@ public class Demeter extends SimpleGod {
         return phase;
     }
 
-    public int getCounter() {
-        return counter;
-    }
-
     /**
-     * Used to keep count how much time worker wants to build.
-     * @param counter is 1 or 2
-     */
-    public void setCounter(int counter) {
-        this.counter = counter;
-    }
-
-    /**
-     * Used to set and keep in memory which was the precedent cell.
+     * Used to set and keep in memory which was the precedent cell where worker has built.
      * @param precedentCell first Cell where worker has build
      */
     private void setPrecedentCell(Cell precedentCell) {
@@ -49,8 +43,29 @@ public class Demeter extends SimpleGod {
     }
 
     /**
+     * Standard move with a reset function of attribute "buildNum" and "precedentCell" used in "powerBuild".
+     * @param x position on x-axis
+     * @param y position on y-axis
+     * @param w worker who wants to move
+     * @return true if worker moved, false otherwise
+     */
+    public boolean powerMove(int x, int y, Worker w) {
+        for (Player player: effectPlayers)
+            if (player != null && !player.getCard().powerMoveAvailable(x, y, w))
+                return false;
+        if (powerMoveAvailable(x, y, w)) {
+            setPrecedentCell(null);
+            buildNum = 0;
+            w.setPosition(x, y);
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Used to verify if it's possible to build in that position.
-     * Verify with different methods if it's the first or the second call of this method.
+     * In first place as a standard "buildAvailable",
+     * second time ensuring that second build isn't in same place of before.
      * @param x position on the x-axis (if method called twice this parameter changed)
      * @param y position on the y-axis (if method called twice this parameter changed)
      * @param w worker that want to build
@@ -58,16 +73,13 @@ public class Demeter extends SimpleGod {
      */
     @Override
     public boolean powerBuildAvailable(int x, int y, int level, Worker w) {
-        if(getCounter() == 1) {
-            if(GameBoard.getInstance().buildAvailable(x, y, w)) {
-                this.setPrecedentCell(GameBoard.getInstance().getCell(x, y));
-                return true;
-            }
-            else
-                return false;
-        }
-        else
-            return this.powerSecondBuildAvailable(x, y, w);
+        if (buildNum == 0 && GameBoard.getInstance().buildAvailable(x, y, w))
+            return true;
+        if (buildNum == 1 &&
+                !GameBoard.getInstance().getCell(x, y).equals(getPrecedentCell()) &&
+                    GameBoard.getInstance().buildAvailable(x, y, w))
+            return true;
+        return false;
     }
 
     /**
@@ -75,66 +87,45 @@ public class Demeter extends SimpleGod {
      * @param x position on the x-axis (if method called twice this parameter changed)
      * @param y position on the y-axis (if method called twice this parameter changed)
      * @param w worker that wants to build
+     * @return true if worker built, false otherwise
      */
     @Override
-    public boolean powerBuild(int x, int y, int level, Worker w){
-        if(powerBuildAvailable(x, y, level, w)) {
-            if (getCounter() == 1) {
+    public boolean powerBuild(int x, int y, int level, Worker w) {
+        if (powerBuildAvailable(x, y, level, w)) {
+            if (buildNum == 0) {
                 w.buildBlock(x, y);
-                setCounter(2);
-                return true;
-            } else {
-                w.buildBlock(x, y);
-                setCounter(1);
-                setPrecedentCell(null);
+                buildNum = 1;
+                setPrecedentCell(GameBoard.getInstance().getCell(x, y));
                 return true;
             }
-        }
-        else {
-            setCounter(1);
-            setPrecedentCell(null);
-            return false;
-        }
-    }
-
-    /**
-     * Verify if the cell where the worker wants to build is in the list of the cell available with Demeter's power.
-     * @param x position of the cell on the x-axis
-     * @param y position of the cell on the y-axis
-     * @param w worker that wants to build
-     * @return true if worker is able to build for the second time in that position, false otherwise
-     */
-    public boolean powerSecondBuildAvailable(int x, int y, Worker w) {
-        Cell[] adj = this.adjacentCellBuildPowerAvailable(w.getCurrentX(), w.getCurrentY());
-        for (int i = 0; i < adj.length; i++) {
-            if (GameBoard.getInstance().getCell(x, y).equals(adj[i]))
+            if (buildNum == 1) {
+                w.buildBlock(x, y);
                 return true;
+            }
+            return false;
         }
         return false;
     }
 
+    // UNDO
+
     /**
-     * Used to know in which cells the worker is able to build for the second time.
-     * @param x position of the worker on x-axis
-     * @param y position of the worker on y-axis
-     * @return array of all available cells where worker can build
+     * Method to obtain the current state of the Simple God's variables
+     * @return values.clone() (a clone of the ArrayList of Integer containing these variables)
      */
-    public Cell[] adjacentCellBuildPowerAvailable(int x, int y) {
-        int index = 0;
-        Cell[] adjCellBuildAvailable = new Cell[8];  // 8 is the maximum number of possible adjacent cell where move
-        Cell[][] c = GameBoard.getInstance().submatrixGenerator(x, y);
-        for (int i = 0; i < 3; i++) {    //searching around the cell(x,y)
-            for (int j = 0; j < 3; j++) {
-                if (c[i][j] != null &&      // c cell isn't out of map and and
-                        (c[i][j].getLevel() != 4) &&        // is not 4th level and
-                            (c[i][j].getWorker() == null) &&        //there isn't a worker
-                                !(c[i][j].equals(getPrecedentCell())))     //it isn't the same cell where build before
-                {
-                    adjCellBuildAvailable[index] = c[i][j];
-                    index++;
-                }
-            }
-        }
-        return adjCellBuildAvailable;
+    @Override
+    public ArrayList<Integer> getCurrentValues() {
+        ArrayList<Integer> values = new ArrayList<Integer>();
+        values.add(buildNum);
+        return (ArrayList<Integer>) values.clone();
+    }
+
+    /**
+     * Method to restore the state of the Simple God's variables
+     * @param valuesToRestore
+     */
+    @Override
+    public void reSetValues(ArrayList<Integer> valuesToRestore) {
+        this.buildNum = valuesToRestore.get(0);
     }
 }

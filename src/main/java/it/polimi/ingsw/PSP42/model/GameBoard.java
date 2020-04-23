@@ -211,37 +211,35 @@ public class GameBoard implements ModelObservable {
      * if both of his workers are not available the player's status will be changed to "LOSE"
      * @param p (player to be verified)
      */
-    public void loseCondition(Player p, String phase) {
+    public void loseCondition (Player p, String phase) {
         switch (phase) {
             case "START": {
                 if (!p.getWorker1().getAvailable() && !p.getWorker2().getAvailable()) {
-                    p.getWorker1().unSetPosition();
-                    p.getWorker2().unSetPosition();
-                    p.setPlayerState("LOSE");
+                    playerLose(p);
                 }
                 break;
             }
             case "PREMOVE": {
                 Cell[] moveCells1 = GameBoard.getInstance().adjacentCellMoveAvailable(p.getWorker1().getCurrentX(), p.getWorker1().getCurrentY());
                 Cell[] moveCells2 = GameBoard.getInstance().adjacentCellMoveAvailable(p.getWorker2().getCurrentX(), p.getWorker2().getCurrentY());
-                if (moveCells1[0] == null && moveCells2[0] == null) {
-                    p.getWorker1().unSetPosition();
-                    p.getWorker2().unSetPosition();
-                    p.setPlayerState("LOSE");
-                }
+                if (moveCells1[0] == null && moveCells2[0] == null)
+                    playerLose(p);
                 break;
             }
             case "PREBUILD": {
                 Cell[] buildCells1 = GameBoard.getInstance().adjacentCellBuildAvailable(p.getWorker1().getCurrentX(), p.getWorker1().getCurrentY());
                 Cell[] buildCells2 = GameBoard.getInstance().adjacentCellBuildAvailable(p.getWorker2().getCurrentX(), p.getWorker2().getCurrentY());
-                if (buildCells1[0] == null && buildCells2[0] == null) {
-                    p.getWorker1().unSetPosition();
-                    p.getWorker2().unSetPosition();
-                    p.setPlayerState("LOSE");
-                }
+                if (buildCells1[0] == null && buildCells2[0] == null)
+                    playerLose(p);
                 break;
             }
         }
+    }
+
+    public void playerLose (Player p) {
+        p.getWorker1().unSetPosition();
+        p.getWorker2().unSetPosition();
+        p.setPlayerState("LOSE");
     }
 
     /**

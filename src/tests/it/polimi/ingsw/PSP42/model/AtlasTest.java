@@ -11,12 +11,12 @@ public class AtlasTest {
     private GameBoard g = GameBoard.getInstance();
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         p1 = new Player("Dan", 1, 21, "ATLAS");
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         p1 = null;
         g.reset();
     }
@@ -37,5 +37,30 @@ public class AtlasTest {
         p1.move(1,1, p1.getWorker1());
         p1.build(2,2,g.getCell(2,2).getLevel()+1, p1.getWorker1());
         assertEquals(1, GameBoard.getInstance().getCell(2,2).getLevel());
+    }
+
+    @Test
+    public void undoBuildPower_buildNextLevel_allOK() {
+        p1.initialPosition(0,0, p1.getWorker1());
+        p1.initialPosition(4,4, p1.getWorker2());
+        p1.build(1,1,4, p1.getWorker1());
+        p1.doUndoBuild(p1.getWorker1());
+        p1.build(1,1,g.getCell(2,2).getLevel()+1, p1.getWorker1());
+        assertEquals(1, GameBoard.getInstance().getCell(1,1).getLevel());
+    }
+
+    @Test
+    public void undoMoveAndUndoBuildNextLevel_buildDome_allOK() {
+        p1.initialPosition(0,0, p1.getWorker1());
+        p1.initialPosition(4,4, p1.getWorker2());
+        p1.move(0,1, p1.getWorker1());
+        p1.doUndoMove(p1.getWorker1());
+        assertEquals(g.getCell(0,0).getWorker(), p1.getWorker1());
+        assertNull(g.getCell(0,1).getWorker());
+        p1.move(1,1, p1.getWorker1());
+        p1.build(2,2,1, p1.getWorker1());
+        p1.doUndoBuild(p1.getWorker1());
+        p1.build(2,2,4, p1.getWorker1());
+        assertEquals(4, GameBoard.getInstance().getCell(2,2).getLevel());
     }
 }

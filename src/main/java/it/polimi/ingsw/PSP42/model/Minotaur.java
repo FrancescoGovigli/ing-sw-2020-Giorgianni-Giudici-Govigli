@@ -6,6 +6,11 @@ package it.polimi.ingsw.PSP42.model;
  */
 public class Minotaur extends SimpleGod{
 
+    private int opponentPrecedentX = -1;
+    private int opponentPrecedentY = -1;
+    private boolean opponentPushedAway = false;
+    private Worker opponentWorker = null;
+
     public Minotaur(Worker w1, Worker w2) {
         super(w1, w2);
     }
@@ -46,6 +51,8 @@ public class Minotaur extends SimpleGod{
                 return false;
         }
         if(powerMoveAvailable(x, y, w)) {
+            if(opponentPushedAway)
+                reSetOpponent();
             if(pushedAway(x, y, w)) {
                 w.setPosition(x, y);
                 return true;
@@ -89,8 +96,11 @@ public class Minotaur extends SimpleGod{
      * @return true if there isn't an opponent's worker or if opponent's worker was pushed away, false otherwise
      */
     public boolean pushedAway(int x, int y, Worker w) {
-        Worker opponentWorker = GameBoard.getInstance().getCell(x, y).getWorker();
+        opponentWorker = GameBoard.getInstance().getCell(x, y).getWorker();
         if(opponentWorker != null) {
+            opponentPushedAway = true;
+            opponentPrecedentX = opponentWorker.getCurrentX();
+            opponentPrecedentY = opponentWorker.getCurrentY();
             int deltaX = x - w.getCurrentX();
             int deltaY = y - w.getCurrentY();
             int newOpponentX = opponentWorker.getCurrentX() + deltaX;
@@ -102,5 +112,15 @@ public class Minotaur extends SimpleGod{
             return false;
         }
         return true;
+    }
+
+    //UNDO
+
+    public void reSetOpponent() {
+        opponentWorker.setPosition(opponentPrecedentX, opponentPrecedentY);
+        opponentPrecedentX = -1;
+        opponentPrecedentY = -1;
+        opponentPushedAway = false;
+        opponentWorker = null;
     }
 }
