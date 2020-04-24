@@ -1,9 +1,16 @@
 package it.polimi.ingsw.PSP42.model;
 
+import java.util.ArrayList;
+
 /**
  * Simple god that allowed a worker to move in a cell occupied by another worker, switching their position.
  */
 public class Apollo extends SimpleGod {
+
+    private int apolloX = -1;
+    private int apolloY = -1;
+    private int opponentX = -1;
+    private int opponentY = -1;
 
     public Apollo(Worker w1,Worker w2) {
         super(w1, w2);
@@ -32,8 +39,10 @@ public class Apollo extends SimpleGod {
     public boolean powerMoveAvailable(int x, int y, Worker w) {
         Cell[] adj = this.adjacentCellMovePowerAvailable(w.getCurrentX(), w.getCurrentY());
         for (int i = 0; i < adj.length; i++) {
-            if (GameBoard.getInstance().getCell(x, y).equals(adj[i]))
+            if (GameBoard.getInstance().getCell(x, y).equals(adj[i])) {
+                GameBoard.getInstance().winCondition(x, y, w);
                 return true;
+            }
         }
         return false;
     }
@@ -58,9 +67,21 @@ public class Apollo extends SimpleGod {
                 toSwap.unSetPosition();
                 w.setPosition(x, y);
                 toSwap.setPosition(tempPosX, tempPosY);
+                // UNDO
+                apolloX = tempPosX; // position of the worker before the swap
+                apolloY = tempPosY;
+                opponentX = x;      // position of the opposing worker before the swap
+                opponentY = y;
             }
-            else
-                w.setPosition(x,y);
+            else {
+                w.setPosition(x, y);
+                // UNDO
+                apolloX = -1;   // swap not done, then restore the variables to their default values
+                apolloY = -1;
+                opponentX = -1;
+                opponentY = -1;
+            }
+            // WIN CONDITION
             return true;
         }
         return false;
@@ -91,5 +112,32 @@ public class Apollo extends SimpleGod {
             }
         }
         return adjCellMoveAvailable;
+    }
+
+    @Override
+    public ArrayList<Integer> getCurrentValues() {
+        ArrayList<Integer> values = new ArrayList<Integer>();
+        values.add(apolloX);
+        values.add(apolloY);
+        values.add(opponentX);
+        values.add(opponentY);
+        return (ArrayList<Integer>) values.clone();
+    }
+
+    @Override
+    public void reSetValues(ArrayList<Integer> valuesToRestore) {
+        if (apolloX != -1 && apolloY != -1 && opponentX != -1 && opponentY != -1){  // if swap was done
+            // it is necessary execute the swap undo as follows, because the default method is not able to to that
+            // (the previous cell of Apollo is not free, but it is occupied by the opponent worker (toSwap))
+            Worker opponent = GameBoard.getInstance().getCell(apolloX, apolloY).getWorker();
+            Worker apollo = GameBoard.getInstance().getCell(opponentX, opponentY).getWorker();
+            opponent.unSetPosition();
+            apollo.setPosition(apolloX, apolloY);
+            opponent.setPosition(opponentX, opponentY);
+        }
+        this.apolloX = valuesToRestore.get(0);
+        this.apolloY = valuesToRestore.get(1);
+        this.opponentX = valuesToRestore.get(2);
+        this.opponentY = valuesToRestore.get(3);
     }
 }
