@@ -170,6 +170,7 @@ public class ControllerCLI implements ViewObserver {
                 g.getPlayers().get(g.getCurrentPlayer()).setPlayerState("LOSE");
                 g.getPlayers().get(g.getCurrentPlayer()).getWorker1().unSetPosition();
                 g.getPlayers().get(g.getCurrentPlayer()).getWorker2().unSetPosition();
+                view.setActionDone(true);
             }
         }
 
@@ -237,6 +238,13 @@ public class ControllerCLI implements ViewObserver {
             return;
         }
 
+        if((s.equals("MOVE") || s.equals("PREBUILD")) && g.getPlayers().get(g.getCurrentPlayer()).getPlayerState().equals("WIN")) {
+            g.setGamePhase("END");
+            view.setGameState("END");
+            view.setTurnDone(true);
+            view.setGameDone(true);
+            return;
+        }
         g.setGamePhase(s);
         view.setGameState(s);
     }
