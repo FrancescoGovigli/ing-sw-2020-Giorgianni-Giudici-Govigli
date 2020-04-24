@@ -465,7 +465,7 @@ public class ViewCLI implements ViewObservable, ModelObserver {
         notifyEffect();
     }
 
-    public boolean undoOption() {
+    public boolean undoOption(String warning) {
         final boolean[] value = {true};
         String str = "";
         final String[] finalStr = {str};
@@ -482,7 +482,8 @@ public class ViewCLI implements ViewObservable, ModelObserver {
 
         Timer timer = new Timer();
         timer.schedule(task, 5 * 1000);
-
+        if(warning.equals("WARNING"))
+            System.out.println(ErrorMessage.PowerBlockingMessage);
         System.out.println( "Input a YES within 5 seconds for UNDO : " );
         str= scanner.nextLine();
         timer.cancel();

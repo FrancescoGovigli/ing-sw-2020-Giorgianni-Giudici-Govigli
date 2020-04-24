@@ -100,8 +100,8 @@ public class ControllerCLI implements ViewObserver {
 
             check = (g.getPlayers()).get(g.getCurrentPlayer()).move(view.getChoice().getX(), view.getChoice().getY(), w);
             if (check) {
-                if (view.undoOption()) {
-                    (g.getPlayers()).get(g.getCurrentPlayer()).doUndoMove(w);
+                if (view.undoOption("NOWARNING")) {
+                    g.getPlayers().get(g.getCurrentPlayer()).doUndoMove(w);
                     if (g.getGamePhase().equals("PREMOVE") || g.getGamePhase().equals("PREBUILD"))
                         view.setActionDone(true);
                     GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
@@ -113,8 +113,8 @@ public class ControllerCLI implements ViewObserver {
 
         }
         else {
-            if (view.undoOption()) {
-                (g.getPlayers()).get(g.getCurrentPlayer()).doUndoMove(w);
+            if (view.undoOption("WARNING")) {
+                doUndoPower(w,getPrecedentGamePhase());
                 view.setActionDone(true);
                 GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
             }
@@ -122,7 +122,6 @@ public class ControllerCLI implements ViewObserver {
                 g.getPlayers().get(g.getCurrentPlayer()).setPlayerState("LOSE");
                 g.getPlayers().get(g.getCurrentPlayer()).getWorker1().unSetPosition();
                 g.getPlayers().get(g.getCurrentPlayer()).getWorker2().unSetPosition();
-                //g.playerLose(g.getPlayers().get(g.getCurrentPlayer()));
                 view.setActionDone(true);
             }
         }
@@ -147,7 +146,7 @@ public class ControllerCLI implements ViewObserver {
 
             check = (g.getPlayers()).get(g.getCurrentPlayer()).build(view.getChoice().getX(), view.getChoice().getY(), view.getChoice().getLevel(), w);
             if (check) {
-                if (view.undoOption()) {
+                if (view.undoOption("NOWARNING")) {
                     (g.getPlayers()).get(g.getCurrentPlayer()).doUndoBuild(w);
                     if (g.getGamePhase().equals("PREMOVE") || g.getGamePhase().equals("PREBUILD"))
                         view.setActionDone(true);
@@ -160,13 +159,12 @@ public class ControllerCLI implements ViewObserver {
 
         }
         else {
-            if (view.undoOption()) {
-                (g.getPlayers()).get(g.getCurrentPlayer()).doUndoBuild(w);
+            if (view.undoOption("WARNING")) {
+                doUndoPower(w,getPrecedentGamePhase());
                 view.setActionDone(true);
                 GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
             }
             else {
-                //g.playerLose(g.getPlayers().get(g.getCurrentPlayer()));
                 g.getPlayers().get(g.getCurrentPlayer()).setPlayerState("LOSE");
                 g.getPlayers().get(g.getCurrentPlayer()).getWorker1().unSetPosition();
                 g.getPlayers().get(g.getCurrentPlayer()).getWorker2().unSetPosition();
@@ -190,7 +188,15 @@ public class ControllerCLI implements ViewObserver {
             }
         }
         /*TODO*SE IL NUMERO DI GIOCATORI CHE NON HA PERSO E 1 ALLORA VINCE AUTOMATICAMENTE*/
-
+        int players_ingame=0;
+        for (Player p:g.getPlayers()) {
+            if (p.getPlayerState().equals("INGAME"))
+                players_ingame++;
+        }
+        if(players_ingame==1) {
+            view.setTurnDone(true);
+            view.setGameDone(true);
+        }
         return  g.getPlayers().get(g.getCurrentPlayer()).getNickname();
     }
 
@@ -222,12 +228,12 @@ public class ControllerCLI implements ViewObserver {
         //dire che il giocatore ha perso e far giocare il player successivo
         //Devo fare perciò ad ogni mossa la worker available del worker selezionato perchè potrebbe diventare non più disponibile
 
-        if(s.equals("PREMOVE") || s.equals("MOVE"))
+        /*if(s.equals("PREMOVE") || s.equals("MOVE"))
             g.loseCondition(g.getPlayers().get(g.getCurrentPlayer()), "PREMOVE");
 
 
         if(s.equals("PREBUILD") || s.equals("BUILD"))
-            g.loseCondition(g.getPlayers().get(g.getCurrentPlayer()), "PREBUILD");
+            g.loseCondition(g.getPlayers().get(g.getCurrentPlayer()), "PREBUILD");*/
 
 
         if (g.getPlayers().get(g.getCurrentPlayer()).getPlayerState().equals("LOSE")) {
@@ -299,6 +305,61 @@ public class ControllerCLI implements ViewObserver {
                 i--;
         }
         return randomPick;
+    }
+
+
+    public void doUndoPower(Worker w,String precedentPhase){
+        int current = g.getCurrentPlayer();
+        Player currentPlayer = g.getPlayers().get(current);
+        String[][]whatToDo= currentPlayer.getCard().getWhatToDo();
+        switch (precedentPhase){
+            case "PREMOVE":
+                if(whatToDo[1][0].equals("EMPTY"))
+                 break;
+                for (int i = 0; i < whatToDo[1].length; i++) {
+                   if(whatToDo[1][i].equals("MOVE"))
+                       currentPlayer.doUndoMove(w);
+                   if(whatToDo[1][i].equals("BUILD"))
+                       currentPlayer.doUndoMove(w);
+                }
+                break;
+            case "MOVE":
+                currentPlayer.doUndoMove(w);
+                break;
+            case "PREBUILD":
+                if(whatToDo[3][0].equals("EMPTY"))
+                    break;
+                for (int i = 0; i < whatToDo[3].length; i++) {
+                    if(whatToDo[3][i].equals("MOVE"))
+                        currentPlayer.doUndoMove(w);
+                    if(whatToDo[3][i].equals("BUILD"))
+                        currentPlayer.doUndoMove(w);
+                }
+                break;
+            case "BUILD":
+                currentPlayer.doUndoBuild(w);
+                break;
+        }
+    }
+
+    public String getPrecedentGamePhase(){
+        String precedentPhase=null;
+        String phase = g.getGamePhase();
+        switch (phase){
+            case "START":
+                precedentPhase = "END";
+            case "PREMOVE":
+                precedentPhase = "START";
+            case "MOVE":
+                precedentPhase = "PREMOVE";
+            case "PREBUILD":
+                precedentPhase = "MOVE";
+            case "BUILD":
+                precedentPhase = "PREBUILD";
+            case "END":
+                precedentPhase = "BUILD";
+        }
+        return precedentPhase;
     }
 
 }
