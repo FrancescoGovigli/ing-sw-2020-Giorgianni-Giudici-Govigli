@@ -38,8 +38,8 @@ public class Prometheus extends SimpleGod{
         if (buildNum == 0 && GameBoard.getInstance().moveAvailable(x, y, w))    // if building pre-move was not done
             return true;
         if (buildNum != 0 &&    // if building pre-move was done &&
-            (GameBoard.getInstance().getCell(x, y).getLevel() ==    // (the level of the future cell is the same as the current one
-             GameBoard.getInstance().getCell(w.getCurrentX(), w.getCurrentY()).getLevel()) &&   // as the current one) &&
+            (GameBoard.getInstance().getCell(x, y).getLevel() <=    // (the level of the future cell is less then or equal to
+             GameBoard.getInstance().getCell(w.getCurrentX(), w.getCurrentY()).getLevel()) &&   // the level of the current cell) &&
             GameBoard.getInstance().moveAvailable(x, y, w)) // the future cell is available
             return true;
         return false;
@@ -60,7 +60,7 @@ public class Prometheus extends SimpleGod{
         }
         if (powerMoveAvailable(x, y, w)) {
             w.setPosition(x, y);
-            buildNum = 0;
+            //buildNum = 0;
             moveNum = 1;
             return true;
         }
@@ -68,20 +68,22 @@ public class Prometheus extends SimpleGod{
     }
 
     /**
-     * Method to check if it's possible build in a position and counting the building times in a turn
+     * Method to build in a position and counting the building times in a turn
      * @param x (x coordinate of where you would like to build)
      * @param y (y coordinate of where you would like to build)
      * @param w (worker who would like to build)
      * @return true if worker can build, false otherwise
      */
     @Override
-    public boolean powerBuildAvailable(int x, int y, int level, Worker w) {
-        if (GameBoard.getInstance().buildAvailable(x, y, w)) {
+    public boolean powerBuild(int x, int y, int level, Worker w) {
+        if (powerBuildAvailable(x, y, level, w)) {
             if (moveNum == 0)
                 buildNum = 1;
             if (moveNum == 1) {
+                buildNum = 0;
                 moveNum = 0;
             }
+            w.buildBlock(x, y);
             return true;
         }
         return false;
