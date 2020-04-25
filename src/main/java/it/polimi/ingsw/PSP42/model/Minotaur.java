@@ -1,15 +1,17 @@
 package it.polimi.ingsw.PSP42.model;
 
+import java.util.ArrayList;
+
 /**
  * Thanks this simple god a worker is able to move in a cell occupied by an opponent worker,
  * if the opponent worker can be pushed away in a free cell in same direction of the movement.
  */
 public class Minotaur extends SimpleGod{
 
+    private int minotaurX = -1;
+    private int minotaurY = -1;
     private int opponentPrecedentX = -1;
     private int opponentPrecedentY = -1;
-    private boolean opponentPushedAway = false;
-    private Worker opponentWorker = null;
 
     public Minotaur(Worker w1, Worker w2) {
         super(w1, w2);
@@ -31,8 +33,10 @@ public class Minotaur extends SimpleGod{
     public boolean powerMoveAvailable(int x, int y, Worker w) {
         Cell[] adj = this.adjacentCellMovePowerAvailable(w.getCurrentX(), w.getCurrentY());
         for (int i = 0; i < adj.length; i++) {
-            if (GameBoard.getInstance().getCell(x, y).equals(adj[i]))
+            if (GameBoard.getInstance().getCell(x, y).equals(adj[i])) {
+                GameBoard.getInstance().winCondition(x, y, w);
                 return true;
+            }
         }
         return false;
     }
@@ -51,10 +55,29 @@ public class Minotaur extends SimpleGod{
                 return false;
         }
         if(powerMoveAvailable(x, y, w)) {
-            if(opponentPushedAway)
-                reSetOpponent();
-            if(pushedAway(x, y, w)) {
+            Worker opponentWorker = GameBoard.getInstance().getCell(x, y).getWorker();
+            if(opponentWorker != null) {
+                minotaurX = w.getCurrentX();
+                minotaurY = w.getCurrentY();
+                opponentPrecedentX = x;
+                opponentPrecedentY = y;
+                int deltaX = x - w.getCurrentX();
+                int deltaY = y - w.getCurrentY();
+                int newOpponentX = x + deltaX;
+                int newOpponentY = y + deltaY;
+                if (GameBoard.getInstance().getCell(newOpponentX, newOpponentY).getWorker() == null &&
+                        GameBoard.getInstance().getCell(newOpponentX, newOpponentY).getLevel() != 4) {
+                    opponentWorker.setPosition(newOpponentX, newOpponentY);
+                    w.setPosition(x, y);
+                    return true;
+                }
+            }
+            else {
                 w.setPosition(x, y);
+                minotaurX = -1;
+                minotaurY = -1;
+                opponentPrecedentX = -1;
+                opponentPrecedentY = -1;
                 return true;
             }
         }
@@ -88,39 +111,29 @@ public class Minotaur extends SimpleGod{
         return adjCellMoveAvailable;
     }
 
-    /**
-     * Used to push in same direction of worker movement an opponent's worker if it's possible.
-     * @param x position on x-axis where the opponent's worker can be
-     * @param y position on y-axis where the opponent's worker can be
-     * @param w "minotaur" worker
-     * @return true if there isn't an opponent's worker or if opponent's worker was pushed away, false otherwise
-     */
-    public boolean pushedAway(int x, int y, Worker w) {
-        opponentWorker = GameBoard.getInstance().getCell(x, y).getWorker();
-        if(opponentWorker != null) {
-            opponentPushedAway = true;
-            opponentPrecedentX = opponentWorker.getCurrentX();
-            opponentPrecedentY = opponentWorker.getCurrentY();
-            int deltaX = x - w.getCurrentX();
-            int deltaY = y - w.getCurrentY();
-            int newOpponentX = opponentWorker.getCurrentX() + deltaX;
-            int newOpponentY = opponentWorker.getCurrentY() + deltaY;
-            if (GameBoard.getInstance().getCell(newOpponentX, newOpponentY).getWorker() == null) {
-                opponentWorker.setPosition(newOpponentX, newOpponentY);
-                return true;
-            }
-            return false;
-        }
-        return true;
-    }
-
     //UNDO
 
-    public void reSetOpponent() {
-        opponentWorker.setPosition(opponentPrecedentX, opponentPrecedentY);
-        opponentPrecedentX = -1;
-        opponentPrecedentY = -1;
-        opponentPushedAway = false;
-        opponentWorker = null;
+    @Override
+    public ArrayList<Integer> getCurrentValues() {
+        ArrayList<Integer> values = new ArrayList<Integer>();
+        values.add(minotaurX);
+        values.add(minotaurY);
+        values.add(opponentPrecedentX);
+        values.add(opponentPrecedentY);
+        return (ArrayList<Integer>) values.clone();
+    }
+
+    @Override
+    public void reSetValues(ArrayList<Integer> valuesToRestore) {
+        if (minotaurX != -1 && minotaurY != -1 && opponentPrecedentX != -1 && opponentPrecedentY != -1) {
+            int deltaX = opponentPrecedentX - minotaurX;
+            int deltaY = opponentPrecedentY - minotaurY;
+            Worker opponent = GameBoard.getInstance().getCell(opponentPrecedentX + deltaX, opponentPrecedentY + deltaY).getWorker();
+            opponent.setPosition(opponentPrecedentX, opponentPrecedentY);
+        }
+        this.minotaurX = valuesToRestore.get(0);
+        this.minotaurY = valuesToRestore.get(1);
+        this.opponentPrecedentX = valuesToRestore.get(2);
+        this.opponentPrecedentY = valuesToRestore.get(3);
     }
 }

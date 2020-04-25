@@ -14,26 +14,6 @@ public class Athena extends SimpleGod {
         super(w1, w2);
     }
 
-    public String effectON() {
-        return "Until your next turn other players can't step up";
-    }
-
-    public String effectOFF() {
-        return "Other players now can step up!";
-    }
-
-    /*
-    public boolean getBlockOpponentsStepUp() {
-        if (blockOpponentsStepUp == 1)
-            return true;
-        return false;
-    }
-
-    public void setBlockOpponentsStepUp(int blockOpponentsStepUp) {
-        this.blockOpponentsStepUp = blockOpponentsStepUp;
-    }
-     */
-
     @Override
     public String[][] setPhase() {
         String[] START = {"EFFECT"};
@@ -62,6 +42,21 @@ public class Athena extends SimpleGod {
     }
 
     /**
+     * Used to know if Worker w can move in that position without step up.
+     * @param x where worker wants to move on x-axis
+     * @param y where worker wants to move on y-axis
+     * @param w worker who wants to move
+     * @return true if worker can, false otherwise
+     */
+    public boolean powerMoveBlockedStepUpAvailable(int x, int y, Worker w) {
+        if (GameBoard.getInstance().getCell(x, y).getLevel() -
+                GameBoard.getInstance().getCell(w.getCurrentX(), w.getCurrentY()).getLevel() <= 0 &&
+                w.getPlayer().getCard().powerMoveAvailable(x, y, w))
+            return true;
+        return false;
+    }
+
+    /**
      * Used to move worker and to set "blockOpponentsStepUp" if Athena's worker step up.
      * @param x position on x-axis
      * @param y position on y-axis
@@ -82,6 +77,21 @@ public class Athena extends SimpleGod {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Check if worker, during his movement, step up.
+     * @param x position on x-axis where worker is going
+     * @param y position on y-axis where worker is going
+     * @param w worker
+     * @return true if worker step up, false otherwise
+     */
+    public boolean workerStepUp(int x, int y, Worker w) {
+        if (GameBoard.getInstance().getCell(w.getCurrentX(), w.getCurrentY()).getLevel() -
+                GameBoard.getInstance().getCell(x, y).getLevel() == -1)
+            return true;
+        else
+            return false;
     }
 
     /**
@@ -130,44 +140,13 @@ public class Athena extends SimpleGod {
         return false;
     }
 
-    /**
-     * Check if worker, during his movement, step up.
-     * @param x position on x-axis where worker is going
-     * @param y position on y-axis where worker is going
-     * @param w worker
-     * @return true if worker step up, false otherwise
-     */
-    public boolean workerStepUp(int x, int y, Worker w) {
-        if (GameBoard.getInstance().getCell(w.getCurrentX(), w.getCurrentY()).getLevel() -
-                GameBoard.getInstance().getCell(x, y).getLevel() == -1)
-            return true;
-        else
-            return false;
+    public String effectON() {
+        return "Until your next turn other players can't step up";
     }
 
-    /**
-     * Used to know if Worker w can move in that position without step up.
-     * @param x where worker wants to move on x-axis
-     * @param y where worker wants to move on y-axis
-     * @param w worker who wants to move
-     * @return true if worker can, false otherwise
-     */
-    public boolean powerMoveBlockedStepUpAvailable(int x, int y, Worker w) {
-        if (GameBoard.getInstance().getCell(x, y).getLevel() -
-                GameBoard.getInstance().getCell(w.getCurrentX(), w.getCurrentY()).getLevel() <= 0 &&
-                    w.getPlayer().getCard().powerMoveAvailable(x, y, w))
-            return true;
-        return false;
+    public String effectOFF() {
+        return "Other players now can step up!";
     }
-    /*
-    public boolean powerMoveBlockedStepUpAvailable(int x, int y, Worker w) {
-        if (GameBoard.getInstance().moveAvailable(x, y, w) &&
-                GameBoard.getInstance().getCell(x, y).getLevel() -
-                        GameBoard.getInstance().getCell(w.getCurrentX(), w.getCurrentY()).getLevel() <= 0)
-            return true;
-        return false;
-    }
-     */
 
     //UNDO
 

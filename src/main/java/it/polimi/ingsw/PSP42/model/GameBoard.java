@@ -34,7 +34,7 @@ public class GameBoard implements ModelObservable {
     }
 
     public void reset(){
-        instance=null;
+        instance = null;
     }
 
     /**
@@ -205,7 +205,6 @@ public class GameBoard implements ModelObservable {
         return w.getAvailable();
     }
 
-    //TODO check if it's correct with the new implementation
     /**
      * Method to verify if the player are still in the game or not,
      * if both of his workers are not available the player's status will be changed to "LOSE"
@@ -219,33 +218,32 @@ public class GameBoard implements ModelObservable {
                 }
                 break;
             }
-            case "PREMOVE": {
+            case "MOVE": {
                 Cell[] moveCells1 = GameBoard.getInstance().adjacentCellMoveAvailable(p.getWorker1().getCurrentX(), p.getWorker1().getCurrentY());
                 Cell[] moveCells2 = GameBoard.getInstance().adjacentCellMoveAvailable(p.getWorker2().getCurrentX(), p.getWorker2().getCurrentY());
-                if (moveCells1[0] == null && moveCells2[0] == null)
+                if (moveCells1[0] == null && moveCells2[0] == null) {
                     playerLose(p);
-                 /*if(provaM(selected))
-                    return;
-                else {
-                    p.getWorker1().unSetPosition();
-                    p.getWorker2().unSetPosition();
-                    p.setPlayerState("LOSE");
+                    break;
                 }
-                */
+                if ((p.getWorker1().getAvailable() && !atLeastOneMove(p.getWorker1())) ||
+                        (p.getWorker2().getAvailable() && !atLeastOneMove(p.getWorker2()))) {
+                    playerLose(p);
+                    break;
+                }
                 break;
             }
-            case "PREBUILD": {
+            case "BUILD": {
                 Cell[] buildCells1 = GameBoard.getInstance().adjacentCellBuildAvailable(p.getWorker1().getCurrentX(), p.getWorker1().getCurrentY());
                 Cell[] buildCells2 = GameBoard.getInstance().adjacentCellBuildAvailable(p.getWorker2().getCurrentX(), p.getWorker2().getCurrentY());
-                if (buildCells1[0] == null && buildCells2[0] == null)
+                if (buildCells1[0] == null && buildCells2[0] == null) {
                     playerLose(p);
-                /*if(provaB(selected,level))
-                    return;
-                else {
-                    p.getWorker1().unSetPosition();
-                    p.getWorker2().unSetPosition();
-                    p.setPlayerState("LOSE");
-                }*/
+                    break;
+                }
+                if ((p.getWorker1().getAvailable() && !atLeastOneBuild(p.getWorker1(), 1)) ||
+                        (p.getWorker2().getAvailable() && !atLeastOneBuild(p.getWorker2(),1))) {
+                    playerLose(p);
+                    break;
+                }
                 break;
             }
         }
@@ -255,6 +253,50 @@ public class GameBoard implements ModelObservable {
         p.getWorker1().unSetPosition();
         p.getWorker2().unSetPosition();
         p.setPlayerState("LOSE");
+    }
+
+    public boolean atLeastOneMove(Worker w){
+        int x = w.getCurrentX();
+        int y = w.getCurrentY();
+        Player influences = null;
+        boolean oneMove = false;
+        if(!(w.getPlayer().getCard().effectPlayers.size()==0))
+            influences = w.getPlayer().getCard().effectPlayers.get(0);
+        for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 3; j++) {
+                if ((y - 1 == - 1 && j == 0) || (y + 1 == 5 && j == 2) ||
+                        (x - 1 == - 1 && i == 0) || (x + 1 == 5 && i == 2))
+                    oneMove = false;
+                else if(influences != null && influences.getCard().powerMoveAvailable(x - 1 + i,y - 1 + j, w)) {
+                    oneMove = true;
+                    i = 3;
+                    j = 3;
+                }
+                else if(influences == null && w.getPlayer().getCard().powerMoveAvailable(x - 1 + i,y - 1 + j, w)) {
+                    oneMove = true;
+                    i = 3;
+                    j = 3;
+                }
+            }
+        return oneMove;
+    }
+
+    public boolean atLeastOneBuild(Worker w, int level){
+        int x = w.getCurrentX();
+        int y = w.getCurrentY();
+        boolean oneBuild = false;
+        for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 3; j++) {
+                if ((y - 1 == - 1 && j == 0) || (y + 1 == 5 && j == 2) ||
+                        (x - 1 == - 1 && i == 0) || (x + 1 == 5 && i == 2))
+                    oneBuild = false;
+                else if(w.getPlayer().getCard().powerBuildAvailable(x - 1 + i,y - 1 + j, level, w)) {
+                    oneBuild = true;
+                    i = 3;
+                    j = 3;
+                }
+            }
+        return oneBuild;
     }
 
     /**
@@ -300,40 +342,4 @@ public class GameBoard implements ModelObservable {
             obs.get(i).updateBoard(o);
         }
     }
-
-    public boolean atLeastOneMove(Worker w){
-        int y=w.getCurrentY();
-        int x=w.getCurrentX();
-        Player influences=null;
-        boolean notFound;
-        if(!(w.getPlayer().getCard().effectPlayers.size()==0))
-            influences = w.getPlayer().getCard().effectPlayers.get(0);
-        for (int i = 0; i < 3; i++)
-            for (int j = 0; j < 3; j++) {
-                if ((y - 1 == - 1 && j == 0) || (y + 1 == 5 && j == 2) ||
-                        (x - 1 == - 1 && i == 0) || (x + 1 == 5 && i == 2))
-                    notFound=false;
-                else if(influences!=null && influences.getCard().powerMoveAvailable(x - 1 + i,y-1+j,w))
-                    return true;
-                else if(influences==null && w.getPlayer().getCard().powerMoveAvailable(x - 1 + i,y-1+j,w))
-                 return true;
-            }
-        return false;
-    }
-
-    public boolean atLeastOneBuild(Worker w,int level){
-        int y=w.getCurrentY();
-        int x=w.getCurrentX();
-        boolean nofound=false;
-        for (int i = 0; i < 3; i++)
-            for (int j = 0; j < 3; j++) {
-                if ((y - 1 == - 1 && j == 0) || (y + 1 == 5 && j == 2) ||
-                        (x - 1 == - 1 && i == 0) || (x + 1 == 5 && i == 2))
-                    nofound=false;
-                else if(w.getPlayer().getCard().powerBuildAvailable(x - 1 + i,y-1+j,level,w))
-                    return true;
-            }
-        return nofound;
-    }
-
 }

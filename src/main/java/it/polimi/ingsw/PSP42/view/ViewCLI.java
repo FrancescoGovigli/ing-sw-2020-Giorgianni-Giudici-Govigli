@@ -18,28 +18,27 @@ public class ViewCLI implements ViewObservable, ModelObserver {
     private boolean undoDone;
     private boolean powerApply;
     private ArrayList<ViewObserver> obs = new ArrayList<>();
-
     private String gameState;
     private int numPlayers;
     private Choice c;
 
-
     public void setTurnDone(boolean value){
         turnDone = value;
     }
+
     public void setActionDone(boolean value){
         actionDone = value;
     }
+
     public void setGameDone(boolean value){
         gameDone = value;
     }
-
 
     public Choice getChoice(){
         return c;
     }
 
-    public ViewCLI(){
+    public ViewCLI() {
         scanner = new Scanner(System.in);
         outputStream = new PrintStream(System.out);
         gameDone = false;
@@ -157,6 +156,26 @@ public class ViewCLI implements ViewObservable, ModelObserver {
             obs.get(i).updateInit(o);
     }
 
+    @Override
+    public String notifyCurrentPlayer() {
+        return obs.get(0).updateCurrentPlayer();
+    }
+
+    @Override
+    public int notifyStart() {
+        return obs.get(0).updateStart();
+    }
+
+    @Override
+    public void notifyState(String s) {
+        obs.get(0).updateState(s);
+    }
+
+    @Override
+    public String[][] notifyWhatToDo() {
+        return obs.get(0).updateWhatToDo();
+    }
+
     /**
      * notifies all observers that the user selected a move coordinate
      * @param o
@@ -178,35 +197,14 @@ public class ViewCLI implements ViewObservable, ModelObserver {
     }
 
     @Override
-    public String notifyCurrentPlayer() {
-           return obs.get(0).updateCurrentPlayer();
+    public void notifyEffect() {
+        obs.get(0).updateEffect();
     }
 
     @Override
     public void notifyEnd() {
         obs.get(0).updateEnd();
     }
-
-    @Override
-    public void notifyState(String s) {
-        obs.get(0).updateState(s);
-    }
-
-    @Override
-    public String[][] notifyWhatToDo() {
-        return obs.get(0).updateWhatToDo();
-    }
-
-    @Override
-    public int notifyStart() {
-       return obs.get(0).updateStart();
-    }
-
-    @Override
-    public void notifyEffect() {
-        obs.get(0).updateEffect();
-    }
-
 
     @Override
     public void updateBoard(Object o) {
@@ -313,10 +311,84 @@ public class ViewCLI implements ViewObservable, ModelObserver {
                         break;
                 }
             }
-
         }
         String winner = handleCurrentPlayer();
         System.out.println(winner +" "+ ViewMessage.winMessage);
+    }
+
+    /**
+     * This method has the task to initialize the Gameboard and set the initial players position.
+     */
+    public void handleInit(){
+        notifyInit(c=new Choice(null,null,null,null,null));
+        setActionDone(false);
+    }
+
+    /**
+     * Has the task to ask the user to insert the two coordinates for his 2 workers and notify observers
+     * to set this data.
+     */
+    public void handleInitialPosition(){
+        for (int i = 0; i <numPlayers; i++) {
+            for (int j = 0; j <2; j++) {
+                String[] s = null;
+                while (! actionDone) {
+                    outputStream.println("Player " + (i + 1) + ", "+ViewMessage.initialPositionMessage + (j + 1) + "(digit x,y)"+"\n");
+                    try{
+                        String input = scanner.next();
+                        s = input.split(",");
+                        notifyInit(c = new Choice(Integer.parseInt(s[0]), Integer.parseInt(s[1]), j + 1, null,i));
+                    }
+                    catch (NumberFormatException e) {
+                        System.out.println(ErrorMessage.InputMessage + "\n");
+                        scanner.nextLine();
+                    }
+                    catch (ArrayIndexOutOfBoundsException e) {
+                        System.out.println(ErrorMessage.InputMessage + "\n");
+                        scanner.nextLine();
+                    }
+                }
+                setActionDone(false);
+            }
+        }
+        setActionDone(false);
+    }
+
+    public String handleCurrentPlayer(){
+        setTurnDone(false);
+        return notifyCurrentPlayer();
+    }
+
+    public void loseMessage(String s){
+        System.out.println(s+ " " + ViewMessage.loseMessage);
+    }
+
+    public int handleStart(){
+        int x=0;
+        while(!actionDone)
+            x = notifyStart();
+        setActionDone(false);
+        return x;
+    }
+
+    public void handleStateChange(String s){
+        if(undoDone && (getGameState().equals("PREMOVE") || getGameState().equals("PREBUILD")))
+            notifyState(getGameState());
+        else if(undoDone && powerApply && (getGameState().equals("MOVE") || getGameState().equals("BUILD"))){
+            if(getGameState().equals("MOVE"))
+                notifyState("PREMOVE");
+            if(getGameState().equals("BUILD"))
+                notifyState("PREBUILD");
+            powerApply=false;
+        }
+        else
+            notifyState(s);
+        setActionDone(false);
+        undoDone=false;
+    }
+
+    public String[][] handleWhatToDo() {
+        return notifyWhatToDo();
     }
 
     /**
@@ -325,7 +397,7 @@ public class ViewCLI implements ViewObservable, ModelObserver {
      */
     public void handleMove(Integer worker){
         while(!actionDone) {
-            String[] s=null;
+            String[] s = null;
             outputStream.println(ViewMessage.moveMessage);
             try{
                 String input = scanner.nextLine();
@@ -339,57 +411,7 @@ public class ViewCLI implements ViewObservable, ModelObserver {
                 System.out.println(ErrorMessage.InputMessage + "\n");
                 scanner.nextLine();
             }
-
-
         }
-    }
-
-    /**
-     * This method has the task to initialize the Gameboard and set the initial players position.
-     */
-    public void handleInit(){
-        notifyInit(c=new Choice(null,null,null,null,null));
-        setActionDone(false);
-    }
-
-    public void handleEnd(){
-        turnDone=true;
-        notifyEnd();
-    }
-
-    /**
-     * Has the task to ask the user to insert the two coordinates for his 2 workers and notify observers
-     * to set this data.
-     */
-    public void handleInitialPosition(){
-        for (int i = 0; i <numPlayers; i++) {
-            for (int j = 0; j <2; j++) {
-                String[] s = null;
-                while (! actionDone) {
-                outputStream.println("Player " + (i + 1) + ", "+ViewMessage.initialPositionMessage + (j + 1) + "(digit x,y)"+"\n");
-                try{
-                    String input = scanner.next();
-                    s = input.split(",");
-                    notifyInit(c = new Choice(Integer.parseInt(s[0]), Integer.parseInt(s[1]), j + 1, null,i));
-                }
-                catch (NumberFormatException e){
-                    System.out.println(ErrorMessage.InputMessage + "\n");
-                    scanner.nextLine();
-                }
-                catch (ArrayIndexOutOfBoundsException e){
-                System.out.println(ErrorMessage.InputMessage + "\n");
-                scanner.nextLine();
-            }
-
-                }
-
-                setActionDone(false);
-            }
-
-
-        }
-        setActionDone(false);
-
     }
 
     /**
@@ -398,23 +420,27 @@ public class ViewCLI implements ViewObservable, ModelObserver {
      *               its the same one called from the move action
      */
     public void handleBuild(Integer worker){
+        int counter = 0;
         while(!actionDone) {
-            outputStream.println(ViewMessage.buildMessage + worker+"\n");
-            String[] b=null;
             try {
+                if(counter == 0)
+                    outputStream.println(ViewMessage.buildMessage + worker + "\n");
+                String[] b = null;
                 String build = scanner.nextLine();
                 b = build.split(",");
                 if (! build.equals("")) {
+                    counter = 0;
                     outputStream.println(ViewMessage.LevelMessage + "\n");
                     String answer = scanner.nextLine();
                     if (answer.toUpperCase().equals("YES")) {
                         outputStream.println("Insert level:" + "\n");
                         Integer level = scanner.nextInt();
                         notifyBuild(c = new Choice(Integer.parseInt(b[0]), Integer.parseInt(b[1]), worker, level, null));
-
                     } else
                         notifyBuild(c = new Choice(Integer.parseInt(b[0]), Integer.parseInt(b[1]), worker, 0, null));
                 }
+                else
+                    counter = 1;
             }
             catch (NumberFormatException e){
                 System.out.println(ErrorMessage.InputMessage + "\n");
@@ -423,89 +449,87 @@ public class ViewCLI implements ViewObservable, ModelObserver {
                 System.out.println(ErrorMessage.InputMessage + "\n");
                 scanner.nextLine();
             }
-
         }
-    }
-
-    public String handleCurrentPlayer(){
-        setTurnDone(false);
-        return notifyCurrentPlayer();
-    }
-
-    public void handleStateChange(String s){
-        if(undoDone && (getGameState().equals("PREMOVE") || getGameState().equals("PREBUILD")))
-            notifyState(getGameState());
-        else if(undoDone && powerApply && (getGameState().equals("MOVE") || getGameState().equals("BUILD"))){
-            if(getGameState().equals("MOVE"))
-                notifyState("PREMOVE");
-            if(getGameState().equals("BUILD"))
-                notifyState("PREBUILD");
-            powerApply=false;
-        }
-
-        else
-         notifyState(s);
-        setActionDone(false);
-        undoDone=false;
-
-    }
-
-    public String[][] handleWhatToDo(){ return notifyWhatToDo();
-    }
-
-    public int handleStart(){
-        int x=0;
-        while(!actionDone)
-          x = notifyStart();
-        setActionDone(false);
-       return x;
     }
 
     public void handleEffect(){
         notifyEffect();
     }
 
-    public boolean undoOption(String warning) {
-        final boolean[] value = {true};
-        String str = "";
-        final String[] finalStr = {str};
-        TimerTask task = new TimerTask() {
-            public void run() {
-
-                if(finalStr[0].equals("")) {
-                    System.out.println("You input nothing. No undo is done...");
-                    value[0] = false;
-                }
-
-            }
-        };
-
-        Timer timer = new Timer();
-        timer.schedule(task, 5 * 1000);
-        if(warning.equals("WARNING"))
-            System.out.println(ErrorMessage.PowerBlockingMessage);
-        System.out.println( "Input a YES within 5 seconds for UNDO : " );
-        str= scanner.nextLine();
-        timer.cancel();
-        if(value[0]==false || (!str.toUpperCase().equals("YES")) || str.equals("")) {
-            System.out.println("UNDO is not applied");
-            undoDone=false;
-            return false;
-        }
-        if(str.toUpperCase().equals("YES")) {
-            System.out.println("UNDO is applied");
-            undoDone=true;
-            return true;
-        }
-        else
-         return false;
-        }
-
     public void printEffect(String s, String effect) {
         if(s.equals("ON"))
             System.out.println("Your god's power started!\n" + effect );
         if(s.equals("OFF"))
             System.out.println("Your god's power finished!\n" + effect);
+    }
+
+    public void handleEnd(){
+        turnDone=true;
+        notifyEnd();
+    }
+
+    public void callFunction(String s,Integer worker){
+        switch (s) {
+            case "MOVE":
+                System.out.println(s + " POWER: " + ViewMessage.applyPowerMessage);
+                String input = scanner.nextLine();
+                if(input.toUpperCase().equals("YES")) {
+                    handleMove(worker);
+                    powerApply=true;
+                }
+                else
+                    setActionDone(true);
+                break;
+            case "BUILD":
+                System.out.println(s + " POWER: " + ViewMessage.applyPowerMessage);
+                input = scanner.nextLine();
+                if(input.toUpperCase().equals("YES")) {
+                    handleBuild(worker);
+                    powerApply = true;
+                }
+                else
+                    setActionDone(true);
+                break;
+            case "EFFECT":
+                handleEffect();
+                break;
+        }
+    }
+
+    public boolean undoOption(String warning) {
+        final boolean[] value = {true};
+        String str = "";
+        final String[] finalStr = {str};
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+            public void run() {
+                if(finalStr[0].equals("")) {
+                    System.out.println("You input nothing. No undo is done...");
+                    value[0] = false;
+                }
+            }
+        };
+        timer.schedule(task, 5000);
+        if(warning.equals("WARNING"))
+            System.out.println(ErrorMessage.PowerBlockingMessage);
+        System.out.println( "Input a YES within 5 seconds for UNDO : ");
+        //str = scanner.nextLine();
+        Scanner input = new Scanner(System.in);
+        String action = input.nextLine();
+        timer.cancel();
+        if(value[0]==false || (!action.toUpperCase().equals("YES")) || action.equals("")) {
+            System.out.println("UNDO is not applied");
+            undoDone = false;
+            return false;
+        }
+        if(action.toUpperCase().equals("YES")) {
+            System.out.println("UNDO is applied");
+            undoDone = true;
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     /**
@@ -589,40 +613,4 @@ public class ViewCLI implements ViewObservable, ModelObserver {
         System.out.println(Color.ANSI_RED + "Player 1 " + Color.ANSI_GREEN + "Player 2 " + Color.ANSI_BLUE + "Player 3 " + Color.RESET);
         System.out.println("\n");
     }
-
-    public void callFunction(String s,Integer worker){
-
-        switch (s) {
-            case "MOVE":
-                System.out.println(s + " POWER: " + ViewMessage.applyPowerMessage);
-                String input = scanner.nextLine();
-                if(input.toUpperCase().equals("YES")) {
-                    handleMove(worker);
-                    powerApply=true;
-                }
-                else
-                    setActionDone(true);
-                break;
-            case "BUILD":
-                System.out.println(s + " POWER: " + ViewMessage.applyPowerMessage);
-                input = scanner.nextLine();
-                if(input.toUpperCase().equals("YES")) {
-                    handleBuild(worker);
-                    powerApply = true;
-                }
-                else
-                    setActionDone(true);
-                break;
-            case "EFFECT":
-                handleEffect();
-                break;
-        }
-    }
-
-    public void loseMessage(String s){
-        System.out.println(s+ " " + ViewMessage.loseMessage);
-    }
-
-
-
 }
