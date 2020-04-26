@@ -3,10 +3,11 @@ package it.polimi.ingsw.PSP42.controller;
 import it.polimi.ingsw.PSP42.*;
 import it.polimi.ingsw.PSP42.model.*;
 import it.polimi.ingsw.PSP42.view.*;
-
-
 import java.util.*;
 
+/**
+ * @author Francesco Govigli
+ */
 public class ControllerCLI implements ViewObserver {
     private final GameBoard g;
     private final ViewCLI view;
@@ -23,7 +24,7 @@ public class ControllerCLI implements ViewObserver {
      */
     public void createGame(int numPlayer) {
         ArrayList<Player> players = new ArrayList<>();
-        ArrayList<UserData> data = view.getPlayerdata(pickCards(numPlayer));
+        ArrayList<UserData> data = view.getPlayerData(pickCards(numPlayer));
         for (int i = 0; i < view.getNumPlayers(); i++) {
             players.add(new Player(data.get(i).getNickname(), i + 1,data.get(i).getAge(),data.get(i).getCardChoosed()));
         }
@@ -104,7 +105,7 @@ public class ControllerCLI implements ViewObserver {
         }
         else {
             if (view.undoOption("WARNING")) {
-                doUndoPower(w, getPrecedentGamePhase());
+                doUndoPower(w, getPreviousGamePhase());
                 view.setActionDone(true);
                 GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
             }
@@ -145,7 +146,7 @@ public class ControllerCLI implements ViewObserver {
         }
         else {
             if (view.undoOption("WARNING")) {
-                doUndoPower(w, getPrecedentGamePhase());
+                doUndoPower(w, getPreviousGamePhase());
                 view.setActionDone(true);
                 GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
             }
@@ -156,31 +157,41 @@ public class ControllerCLI implements ViewObserver {
         }
     }
 
+    /**
+     * Takes the 2 workers of the player and checks if the player has lost due to the opponents.
+     * If the player has not lost the method returns his nickname. If the current player is the only one remaining
+     * on the board he directly wins the Game
+     * @return nickname of the Player
+     */
     @Override
     public String updateCurrentPlayer() {
         Worker w1 = g.getPlayers().get(g.getCurrentPlayer()).getWorker1();
         Worker w2 = g.getPlayers().get(g.getCurrentPlayer()).getWorker2();
-        boolean check1 = g.workerAvailable(w1);
-        boolean check2 = g.workerAvailable(w2);
-        if(!check1 && !check2) {
-            g.loseCondition(g.getPlayers().get(g.getCurrentPlayer()),"START");
-            if (g.getPlayers().get(g.getCurrentPlayer()).getPlayerState().equals("LOSE")) {
-                view.setGameState("END");
-                view.loseMessage(g.getPlayers().get(g.getCurrentPlayer()).getNickname());
-            }
+        //SET THE WORKER AVAILABLE IF THE WORKER CAN MOVE
+        g.workerAvailable(w1);
+        g.workerAvailable(w2);
+        g.loseCondition(g.getPlayers().get(g.getCurrentPlayer()),"START");
+        if (g.getPlayers().get(g.getCurrentPlayer()).getPlayerState().equals("LOSE")) {
+            view.setGameState("END");
+            view.loseMessage(g.getPlayers().get(g.getCurrentPlayer()).getNickname());
         }
-        int playersIngame = 0;
+
+        int playersInGame = 0;
         for (Player p:g.getPlayers()) {
             if (p.getPlayerState().equals("INGAME"))
-                playersIngame++;
+                playersInGame++;
         }
-        if(playersIngame == 1) {
+        if(playersInGame == 1) {
             view.setTurnDone(true);
             view.setGameDone(true);
         }
         return  g.getPlayers().get(g.getCurrentPlayer()).getNickname();
     }
 
+    /**
+     * Sets the new current player checking the arraylist of the gameboard.
+     * The new currentPlayer value will be the next of the new turn only if the Player has not lost yet
+     */
     @Override
     public void updateEnd() {
         int num = view.getNumPlayers();
@@ -203,6 +214,12 @@ public class ControllerCLI implements ViewObserver {
         }
     }
 
+    /**
+     * Updates the new Phase of the game.
+     * It checks if after every phase if the player has the LOSE value or if the player has won. In this cases the Phase
+     * will be set at the END of turn. If the player WIN the GameDone value of the View will be set to true.
+     * @param s
+     */
     @Override
     public void updateState(String s) {
         //Devo controllare anche che andando in move io non mi sia bloccato in seguito ad un movimento in premove e in caso
@@ -235,12 +252,21 @@ public class ControllerCLI implements ViewObserver {
         view.setGameState(s);
     }
 
+    /**
+     * Every Card know the Action that are going to happen during the Player, who has the specific Card
+     * The method gives the values to the View to know which action to call and in with phase of the turn.
+     * @return
+     */
     @Override
     public String[][] updateWhatToDo() {
         int current = g.getCurrentPlayer();
         return g.getPlayers().get(current).checkWhatTodo();
     }
 
+    /**
+     * Update method to choose the right worker only if available during the starting phase of turn
+     * @return 1 == worker1, 2==worker2;
+     */
     @Override
     public int updateStart() {
         int choice = view.getWorker();
@@ -255,6 +281,9 @@ public class ControllerCLI implements ViewObserver {
         return choice;
     }
 
+    /**
+     * Says the view to Print that effect(not explicit power) is applied
+     */
     @Override
     public void updateEffect() {
         if (g.getPlayers().get(g.getCurrentPlayer()).effect()) {
@@ -267,6 +296,11 @@ public class ControllerCLI implements ViewObserver {
         //GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
     }
 
+    /**
+     * Pick a set of cards randomly string[].length = numPlayers
+     * @param numPlayers
+     * @return randomPick
+     */
     public String[] pickCards(int numPlayers){
         Random rand = new Random();
         String[] set = DeckOfGods.possibleGods();
@@ -284,12 +318,16 @@ public class ControllerCLI implements ViewObserver {
         return randomPick;
     }
 
-
-    public void doUndoPower(Worker w, String precedentPhase){
+    /**
+     * Generic function to call all undoAction referred to the previousPhase for worker w selected.
+     * @param w worker of the current turn
+     * @param previousPhase
+     */
+    public void doUndoPower(Worker w, String previousPhase){
         int current = g.getCurrentPlayer();
         Player currentPlayer = g.getPlayers().get(current);
         String[][] whatToDo = currentPlayer.getCard().getWhatToDo();
-        switch (precedentPhase) {
+        switch (previousPhase) {
             case "PREMOVE":
                 if(whatToDo[1][0].equals("EMPTY"))
                  break;
@@ -310,7 +348,7 @@ public class ControllerCLI implements ViewObserver {
                     if(whatToDo[3][i].equals("MOVE"))
                         currentPlayer.doUndoMove(w);
                     if(whatToDo[3][i].equals("BUILD"))
-                        currentPlayer.doUndoMove(w);
+                        currentPlayer.doUndoBuild(w);
                 }
                 break;
             case "BUILD":
@@ -319,24 +357,28 @@ public class ControllerCLI implements ViewObserver {
         }
     }
 
-    public String getPrecedentGamePhase(){
-        String precedentPhase=null;
+    /**
+     * Utility method to know, which was the previous Phase of the Turn
+     * @return
+     */
+    public String getPreviousGamePhase(){
+        String previousPhase=null;
         String phase = g.getGamePhase();
         switch (phase){
             case "START":
-                precedentPhase = "END";
+                previousPhase = "END";
             case "PREMOVE":
-                precedentPhase = "START";
+                previousPhase = "START";
             case "MOVE":
-                precedentPhase = "PREMOVE";
+                previousPhase = "PREMOVE";
             case "PREBUILD":
-                precedentPhase = "MOVE";
+                previousPhase = "MOVE";
             case "BUILD":
-                precedentPhase = "PREBUILD";
+                previousPhase = "PREBUILD";
             case "END":
-                precedentPhase = "BUILD";
+                previousPhase = "BUILD";
         }
-        return precedentPhase;
+        return previousPhase;
     }
 
 }

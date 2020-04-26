@@ -1,5 +1,8 @@
 package it.polimi.ingsw.PSP42.model;
 
+/**
+ * @author Francesco Govigli
+ */
 public class Player {
     private final SimpleGod card;
     private final int id;

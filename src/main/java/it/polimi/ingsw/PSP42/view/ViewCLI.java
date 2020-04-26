@@ -6,9 +6,11 @@ import it.polimi.ingsw.PSP42.model.*;
 import javax.swing.text.*;
 import java.io.*;
 import java.util.*;
-
 import it.polimi.ingsw.PSP42.model.FakeCell;
 
+/**
+ * @author Francesco Govigli
+ */
 public class ViewCLI implements ViewObservable, ModelObserver {
     private Scanner scanner;
     private PrintStream outputStream;
@@ -22,18 +24,37 @@ public class ViewCLI implements ViewObservable, ModelObserver {
     private int numPlayers;
     private Choice c;
 
+    /**
+     * This method is used to set the boolean value turnDone, which determines
+     * the end of turn for the current player.
+     *
+     * @param value
+     */
     public void setTurnDone(boolean value){
         turnDone = value;
     }
 
+    /**
+     * This method is used to set the boolean value actionDone, which determines
+     * the end of an action choosed by the current player, so that the Gamephase can move on.
+     * @param value
+     */
     public void setActionDone(boolean value){
         actionDone = value;
     }
-
+    /**
+     * This method is used to set the boolean value GameDone, which determines
+     * the end of the game (only if a player wins).
+     * @param value
+     */
     public void setGameDone(boolean value){
         gameDone = value;
     }
 
+    /**
+     * Every choice (move or build) made by a player is saved in the Choice Class
+     * @return c
+     */
     public Choice getChoice(){
         return c;
     }
@@ -47,10 +68,17 @@ public class ViewCLI implements ViewObservable, ModelObserver {
         gameState = "START";
     }
 
+    /**
+     * The gameState is the division in phases of the Turn {Start,Premove,Move,Prebuild,Build,End}
+     * @return gameState
+     */
     public String getGameState() {
         return gameState;
     }
-
+    /**
+     * The gameState is set when a phase of the Turn ends. {Start,Premove,Move,Prebuild,Build,End}
+     * @return gameState
+     */
     public void setGameState(String s) {
         gameState = s;
     }
@@ -60,10 +88,12 @@ public class ViewCLI implements ViewObservable, ModelObserver {
     }
 
     /**
-     * This method helps the Controller to ask for the players names during the creation of game
-     * @return arraylist player names given through System.in
+     * This method helps the Controller to ask for the players data during the creation of game
+     * The method uses a utility class called Userdata which contains {Nickname,Age,GodCard}
+     * @param set is an Array of string containing the set of Gods picked randomly, set.length = number of Players
+     * @return ArrayList<UserData>  player names given through System.in
      */
-    public ArrayList<UserData> getPlayerdata(String[] set){
+    public ArrayList<UserData> getPlayerData(String[] set){
         setActionDone(false);
         List<String> setOfCards = new LinkedList<String>(Arrays.asList(set));
         setOfCards.add("NOGOD");
@@ -107,6 +137,10 @@ public class ViewCLI implements ViewObservable, ModelObserver {
         return players;
     }
 
+    /**
+     * this method is used by the controller to ask for the worker to use during the turn
+     * @return worker, 1 if its the worker1 , 2 if its the worker2 of the player
+     */
     public int getWorker(){
            Integer worker=null;
            boolean correct=false;
@@ -354,15 +388,27 @@ public class ViewCLI implements ViewObservable, ModelObserver {
         setActionDone(false);
     }
 
+    /**
+     * Has the task to ask for the current player of the new turn that is starting
+     * @return nickname of the player
+     */
     public String handleCurrentPlayer(){
         setTurnDone(false);
         return notifyCurrentPlayer();
     }
 
+    /**
+     * Says that the current player has lost the game
+     * @param s
+     */
     public void loseMessage(String s){
         System.out.println(s+ " " + ViewMessage.loseMessage);
     }
 
+    /**
+     * this method is used to ask to choose one of the 2 worker of the currentPlayer available
+     * @return 1 for worker1, 2 for worker2
+     */
     public int handleStart(){
         int x=0;
         while(!actionDone)
@@ -371,6 +417,15 @@ public class ViewCLI implements ViewObservable, ModelObserver {
         return x;
     }
 
+    /**
+     * Determines the change of the GamePhase when actions in the current Phase are performed correctly.
+     * Uses undoDone, because when an Undo action is done then if the player applied the Power (in premove or prebuild),
+     * the phase will return to the beginning of that phase and again ask if he wants to apply the Power.
+     * If the power has been applied correctly but in the next phase the worker is blocked the Player has the chance to
+     * do an Undo during Move or Build phase. If UndoDone==true then the phase will return to the beginning of the power phase,
+     * else the player will certainly lose.
+     * @param s if UndoDone==false s will be the next GamePhase for sure.
+     */
     public void handleStateChange(String s){
         if(undoDone && (getGameState().equals("PREMOVE") || getGameState().equals("PREBUILD")))
             notifyState(getGameState());
@@ -387,6 +442,10 @@ public class ViewCLI implements ViewObservable, ModelObserver {
         undoDone=false;
     }
 
+    /**
+     * It's a handle method that gives the view the information about all the action that a playerCard can perform
+     * @return array of String arrays with {START,PREMOVE,MOVE,PREBUILD,BUILD,END}
+     */
     public String[][] handleWhatToDo() {
         return notifyWhatToDo();
     }
@@ -452,10 +511,18 @@ public class ViewCLI implements ViewObservable, ModelObserver {
         }
     }
 
+    /**
+     * its a handle method to notify the observers that an effect has been applied (not a move, not a build effect)
+     */
     public void handleEffect(){
         notifyEffect();
     }
 
+    /**
+     * It's a method that tells a player that an effect(not a explicit power) is applied
+     * @param s
+     * @param effect
+     */
     public void printEffect(String s, String effect) {
         if(s.equals("ON"))
             System.out.println("Your god's power started!\n" + effect );
@@ -463,11 +530,20 @@ public class ViewCLI implements ViewObservable, ModelObserver {
             System.out.println("Your god's power finished!\n" + effect);
     }
 
+    /**
+     * only set the turn to done and will notify the controller to change to the next currentPlayer
+     */
     public void handleEnd(){
         turnDone=true;
+        powerApply=false;
         notifyEnd();
     }
 
+    /**
+     * Utility method to call the correct handle method
+     * @param s says if handle function must me of type : MOVE, BUILD OR EFFECT
+     * @param worker all the actions (not the effect) are referred to a worker that does it
+     */
     public void callFunction(String s,Integer worker){
         switch (s) {
             case "MOVE":
@@ -496,6 +572,12 @@ public class ViewCLI implements ViewObservable, ModelObserver {
         }
     }
 
+    /**
+     * Calls an internal timer and ask if the current player wants to apply Undo Option within 5 seconds
+     * @param warning its a string that can be only {"NOWARNING","WARNING"} and tells the player that if he doesn't
+     *                do the undo action he will lose the game
+     * @return true if the undo is applied
+     */
     public boolean undoOption(String warning) {
         final boolean[] value = {true};
         String str = "";
