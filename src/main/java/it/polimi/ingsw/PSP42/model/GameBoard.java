@@ -197,11 +197,21 @@ public class GameBoard implements ModelObservable {
      * @return true if worker can be used, false otherwise
      */
     public boolean workerAvailable(Worker w) {
-        Cell[] c = adjacentCellMoveAvailable(w.getCurrentX(), w.getCurrentY());
-        if (c[0] == null)
-            w.setAvailable(false);
-        else
-            w.setAvailable(true);
+        Player p= w.getPlayer();
+        SimpleGod card = p.getCard();
+        if(card instanceof NoGod) {
+            Cell[] c = adjacentCellMoveAvailable(w.getCurrentX(), w.getCurrentY());
+            if (c[0] == null)
+                w.setAvailable(false);
+            else
+                w.setAvailable(true);
+        }
+        else {
+            if (! atLeastOneMove(w))
+                w.setAvailable(false);
+            else
+                w.setAvailable(true);
+        }
         return w.getAvailable();
     }
 
@@ -249,12 +259,24 @@ public class GameBoard implements ModelObservable {
         }
     }
 
+    /**
+     * Utility method to unset worker on cells and set the PlayerState == LOSE
+     * @param p
+     */
     public void playerLose (Player p) {
         p.getWorker1().unSetPosition();
         p.getWorker2().unSetPosition();
         p.setPlayerState("LOSE");
     }
 
+    /**
+     * Method to check if a worker has at least one move available
+     * PowerMoveAvailable could set PlayerState == WIN if the Player has a move in which
+     * he could win, but its not the task of this method so if the PowerMove is available than
+     * it will simply continue to consider the PlayerState == INGAME.
+     * @param w
+     * @return
+     */
     public boolean atLeastOneMove(Worker w){
         int x = w.getCurrentX();
         int y = w.getCurrentY();
@@ -268,19 +290,26 @@ public class GameBoard implements ModelObservable {
                         (x - 1 == - 1 && i == 0) || (x + 1 == 5 && i == 2))
                     oneMove = false;
                 else if(influences != null && influences.getCard().powerMoveAvailable(x - 1 + i,y - 1 + j, w)) {
+                    w.getPlayer().setPlayerState("INGAME");
                     oneMove = true;
                     i = 3;
                     j = 3;
                 }
                 else if(influences == null && w.getPlayer().getCard().powerMoveAvailable(x - 1 + i,y - 1 + j, w)) {
+                    w.getPlayer().setPlayerState("INGAME");
                     oneMove = true;
                     i = 3;
                     j = 3;
+
                 }
             }
         return oneMove;
     }
-
+    /**
+     * Method to check if a worker has at least one build available
+     * @param w
+     * @return
+     */
     public boolean atLeastOneBuild(Worker w, int level){
         int x = w.getCurrentX();
         int y = w.getCurrentY();

@@ -3,6 +3,8 @@ package it.polimi.ingsw.PSP42.controller;
 import it.polimi.ingsw.PSP42.*;
 import it.polimi.ingsw.PSP42.model.*;
 import it.polimi.ingsw.PSP42.view.*;
+
+import javax.swing.text.*;
 import java.util.*;
 
 /**
@@ -28,19 +30,6 @@ public class ControllerCLI implements ViewObserver {
         for (int i = 0; i < view.getNumPlayers(); i++) {
             players.add(new Player(data.get(i).getNickname(), i + 1,data.get(i).getAge(),data.get(i).getCardChoosed()));
         }
-        /*Collections.sort(players, new Comparator<Player>() {
-            @Override
-            public int compare(Player o1, Player o2) {
-                int value=0;
-                if (o2.getAge() < o1.getAge())
-                    value = - 1;
-                else if (o2.getAge() == o1.getAge())
-                    value = 0;
-                else if (o2.getAge() > o1.getAge())
-                    value = 1;
-                return value;
-            }
-        });*/
         g.setPlayers(players);
         g.setGamePhase("START");
     }
@@ -62,9 +51,9 @@ public class ControllerCLI implements ViewObserver {
             Worker w = null;
             boolean check;
             //check what worker is setting initial position
-            if (view.getChoice().getW() == 1)
+            if (view.getChoice().getWorker() == 1)
                 w = (g.getPlayers()).get(view.getChoice().getIdPlayer()).getWorker1();
-            if (view.getChoice().getW() == 2)
+            if (view.getChoice().getWorker() == 2)
                 w = (g.getPlayers()).get(view.getChoice().getIdPlayer()).getWorker2();
             //handle initial position
             check = (g.getPlayers()).get(view.getChoice().getIdPlayer()).initialPosition(view.getChoice().getX(), view.getChoice().getY(), w);
@@ -84,25 +73,28 @@ public class ControllerCLI implements ViewObserver {
         Worker w = null;
         boolean check;
         //check what worker is moving
-        if (view.getChoice().getW() == 1)
+        if (view.getChoice().getWorker() == 1)
             w = (g.getPlayers()).get(g.getCurrentPlayer()).getWorker1();
-        if (view.getChoice().getW() == 2)
+
+        if (view.getChoice().getWorker() == 2)
             w = (g.getPlayers()).get(g.getCurrentPlayer()).getWorker2();
         //check if worker is able to move at least in one position
         if (g.atLeastOneMove(w)) {
             check = (g.getPlayers()).get(g.getCurrentPlayer()).move(view.getChoice().getX(), view.getChoice().getY(), w);
             if (check) {
-                if (view.undoOption("NOWARNING")) {
-                    g.getPlayers().get(g.getCurrentPlayer()).doUndoMove(w);
-                    if (g.getGamePhase().equals("PREMOVE") || g.getGamePhase().equals("PREBUILD"))
-                        view.setActionDone(true);
-                    GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
-                    return;
-                }
+                    if (view.undoOption("NOWARNING")) {
+                        g.getPlayers().get(g.getCurrentPlayer()).doUndoMove(w);
+                        if (g.getGamePhase().equals("PREMOVE") || g.getGamePhase().equals("PREBUILD"))
+                            view.setActionDone(true);
+                        GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
+                        return;
+                    }
+
                 view.setActionDone(true);
                 GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
             }
-        }
+            }
+        //THIS CASE OCCURS ONLY IF THE PLAYER LOSES IF NO UNDO IS DONE
         else {
             if (view.undoOption("WARNING")) {
                 doUndoPower(w, getPreviousGamePhase());
@@ -125,9 +117,9 @@ public class ControllerCLI implements ViewObserver {
         Worker w = null;
         boolean check;
         //check what worker is building
-        if (view.getChoice().getW() == 1)
+        if (view.getChoice().getWorker() == 1)
             w = (g.getPlayers()).get(g.getCurrentPlayer()).getWorker1();
-        if (view.getChoice().getW() == 2)
+        if (view.getChoice().getWorker() == 2)
             w = (g.getPlayers()).get(g.getCurrentPlayer()).getWorker2();
         //check if worker is able to build at least in one position
         if (g.atLeastOneBuild(w, view.getChoice().getLevel())) {
@@ -167,13 +159,13 @@ public class ControllerCLI implements ViewObserver {
     public String updateCurrentPlayer() {
         Worker w1 = g.getPlayers().get(g.getCurrentPlayer()).getWorker1();
         Worker w2 = g.getPlayers().get(g.getCurrentPlayer()).getWorker2();
-        //SET THE WORKER AVAILABLE IF THE WORKER CAN MOVE
+        //SET THE WORKER AVAILABLE IF THE WORKER CAN MOVE OR NOT AVAILABLE IF BLOCKED
         g.workerAvailable(w1);
         g.workerAvailable(w2);
         g.loseCondition(g.getPlayers().get(g.getCurrentPlayer()),"START");
         if (g.getPlayers().get(g.getCurrentPlayer()).getPlayerState().equals("LOSE")) {
             view.setGameState("END");
-            view.loseMessage(g.getPlayers().get(g.getCurrentPlayer()).getNickname());
+            ViewMessage.loseMessage(g.getPlayers().get(g.getCurrentPlayer()).getNickname());
         }
 
         int playersInGame = 0;
@@ -222,20 +214,11 @@ public class ControllerCLI implements ViewObserver {
      */
     @Override
     public void updateState(String s) {
-        //Devo controllare anche che andando in move io non mi sia bloccato in seguito ad un movimento in premove e in caso
-        //dire che il giocatore ha perso e far giocare il player successivo
-        //Devo fare perciò ad ogni mossa la worker available del worker selezionato perchè potrebbe diventare non più disponibile
-
-        /*if(s.equals("PREMOVE") || s.equals("MOVE"))
-            g.loseCondition(g.getPlayers().get(g.getCurrentPlayer()), "PREMOVE");
-
-        if(s.equals("PREBUILD") || s.equals("BUILD"))
-            g.loseCondition(g.getPlayers().get(g.getCurrentPlayer()), "PREBUILD");*/
 
         if (g.getPlayers().get(g.getCurrentPlayer()).getPlayerState().equals("LOSE")) {
             g.setGamePhase("END");
             view.setGameState("END");
-            view.loseMessage(g.getPlayers().get(g.getCurrentPlayer()).getNickname());
+            ViewMessage.loseMessage(g.getPlayers().get(g.getCurrentPlayer()).getNickname());
             GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
             return;
         }
@@ -293,7 +276,6 @@ public class ControllerCLI implements ViewObserver {
                 view.printEffect("OFF", g.getPlayers().get(g.getCurrentPlayer()).getCard().effectOFF());
         }
         view.setActionDone(true);
-        //GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
     }
 
     /**
@@ -367,16 +349,22 @@ public class ControllerCLI implements ViewObserver {
         switch (phase){
             case "START":
                 previousPhase = "END";
+                break;
             case "PREMOVE":
                 previousPhase = "START";
+                break;
             case "MOVE":
                 previousPhase = "PREMOVE";
+                break;
             case "PREBUILD":
                 previousPhase = "MOVE";
+                break;
             case "BUILD":
                 previousPhase = "PREBUILD";
+                break;
             case "END":
                 previousPhase = "BUILD";
+                break;
         }
         return previousPhase;
     }

@@ -16,7 +16,7 @@ public class Choice {
         this.level=level;
         this.idPlayer=id;
     }
-    public Integer getW(){
+    public Integer getWorker(){
         return worker;
     }
     public Integer getX() {

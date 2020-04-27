@@ -14,4 +14,12 @@ public class ViewMessage {
     public static String wrongTurnMessage = "It is not your turn!";
     public static String occupiedCellMessage = "The chosen cell is not empty!";
     public static String applyPowerMessage = "Do you want to apply your power?(YES OR NO)";
+
+    /**
+     * Says that the current player has lost the game
+     * @param s
+     */
+    public static void loseMessage(String s){
+        System.out.println(s+ " " + ViewMessage.loseMessage);
+    }
 }

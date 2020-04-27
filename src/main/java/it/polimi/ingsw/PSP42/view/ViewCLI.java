@@ -22,7 +22,8 @@ public class ViewCLI implements ViewObservable, ModelObserver {
     private ArrayList<ViewObserver> obs = new ArrayList<>();
     private String gameState;
     private int numPlayers;
-    private Choice c;
+    private Choice choice;
+
 
     /**
      * This method is used to set the boolean value turnDone, which determines
@@ -56,7 +57,7 @@ public class ViewCLI implements ViewObservable, ModelObserver {
      * @return c
      */
     public Choice getChoice(){
-        return c;
+        return choice;
     }
 
     public ViewCLI() {
@@ -354,7 +355,7 @@ public class ViewCLI implements ViewObservable, ModelObserver {
      * This method has the task to initialize the Gameboard and set the initial players position.
      */
     public void handleInit(){
-        notifyInit(c=new Choice(null,null,null,null,null));
+        notifyInit(choice=new Choice(null,null,null,null,null));
         setActionDone(false);
     }
 
@@ -371,7 +372,7 @@ public class ViewCLI implements ViewObservable, ModelObserver {
                     try{
                         String input = scanner.next();
                         s = input.split(",");
-                        notifyInit(c = new Choice(Integer.parseInt(s[0]), Integer.parseInt(s[1]), j + 1, null,i));
+                        notifyInit(choice = new Choice(Integer.parseInt(s[0]), Integer.parseInt(s[1]), j + 1, null,i));
                     }
                     catch (NumberFormatException e) {
                         System.out.println(ErrorMessage.InputMessage + "\n");
@@ -397,13 +398,7 @@ public class ViewCLI implements ViewObservable, ModelObserver {
         return notifyCurrentPlayer();
     }
 
-    /**
-     * Says that the current player has lost the game
-     * @param s
-     */
-    public void loseMessage(String s){
-        System.out.println(s+ " " + ViewMessage.loseMessage);
-    }
+
 
     /**
      * this method is used to ask to choose one of the 2 worker of the currentPlayer available
@@ -461,7 +456,7 @@ public class ViewCLI implements ViewObservable, ModelObserver {
             try{
                 String input = scanner.nextLine();
                 s = input.split(",");
-                notifyMove(c = new Choice(Integer.parseInt(s[0]), Integer.parseInt(s[1]), worker, null,null));
+                notifyMove(choice = new Choice(Integer.parseInt(s[0]), Integer.parseInt(s[1]), worker, null,null));
             }
             catch (NumberFormatException e){
 
@@ -494,9 +489,9 @@ public class ViewCLI implements ViewObservable, ModelObserver {
                     if (answer.toUpperCase().equals("YES")) {
                         outputStream.println("Insert level:" + "\n");
                         Integer level = scanner.nextInt();
-                        notifyBuild(c = new Choice(Integer.parseInt(b[0]), Integer.parseInt(b[1]), worker, level, null));
+                        notifyBuild(choice = new Choice(Integer.parseInt(b[0]), Integer.parseInt(b[1]), worker, level, null));
                     } else
-                        notifyBuild(c = new Choice(Integer.parseInt(b[0]), Integer.parseInt(b[1]), worker, 0, null));
+                        notifyBuild(choice = new Choice(Integer.parseInt(b[0]), Integer.parseInt(b[1]), worker, 0, null));
                 }
                 else
                     counter = 1;
