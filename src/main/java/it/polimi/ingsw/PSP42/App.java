@@ -8,12 +8,12 @@ import java.util.*;
 
 public class App {
     public static void main(String[] args) {
-        ViewCLI view = new ViewCLI();
+        VirtualView view = new VirtualView();
         GameBoard g = GameBoard.getInstance();
         ControllerCLI control = new ControllerCLI(g,view);
         view.attach(control);
         g.attach(view);
-        view.run();
+        control.runGame();
 
 
     }

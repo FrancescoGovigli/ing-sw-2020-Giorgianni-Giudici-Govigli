@@ -11,28 +11,32 @@ import it.polimi.ingsw.PSP42.model.FakeCell;
 /**
  * @author Francesco Govigli
  */
-public class ViewCLI implements ViewObservable, ModelObserver {
+public class VirtualView implements ViewObservable, ModelObserver {
     private Scanner scanner;
     private PrintStream outputStream;
-    private boolean gameDone;
-    private boolean turnDone;
-    private boolean actionDone;
+    private boolean actionCorrect;
     private boolean undoDone;
     private boolean powerApply;
     private ArrayList<ViewObserver> obs = new ArrayList<>();
-    private String gameState;
     private int numPlayers;
     private Choice choice;
 
 
-    /**
-     * This method is used to set the boolean value turnDone, which determines
-     * the end of turn for the current player.
-     *
-     * @param value
-     */
-    public void setTurnDone(boolean value){
-        turnDone = value;
+    public boolean isPowerApply(){
+        return powerApply;
+    }
+
+    public void setUndoDone(boolean value){
+        undoDone= value;
+    }
+
+
+    public int getNumOfPlayers(){
+        return numPlayers;
+    }
+
+    public boolean isUndoDone(){
+        return undoDone;
     }
 
     /**
@@ -40,17 +44,17 @@ public class ViewCLI implements ViewObservable, ModelObserver {
      * the end of an action choosed by the current player, so that the Gamephase can move on.
      * @param value
      */
-    public void setActionDone(boolean value){
-        actionDone = value;
+    public void setActionCorrect(boolean value){
+        actionCorrect = value;
     }
     /**
      * This method is used to set the boolean value GameDone, which determines
      * the end of the game (only if a player wins).
      * @param value
      */
-    public void setGameDone(boolean value){
-        gameDone = value;
-    }
+
+
+    public void setPowerApply(boolean value){ powerApply=value;}
 
     /**
      * Every choice (move or build) made by a player is saved in the Choice Class
@@ -60,30 +64,11 @@ public class ViewCLI implements ViewObservable, ModelObserver {
         return choice;
     }
 
-    public ViewCLI() {
+    public VirtualView() {
         scanner = new Scanner(System.in);
         outputStream = new PrintStream(System.out);
-        gameDone = false;
-        turnDone = false;
-        actionDone = false;
-        gameState = "START";
+        actionCorrect = false;
     }
-
-    /**
-     * The gameState is the division in phases of the Turn {Start,Premove,Move,Prebuild,Build,End}
-     * @return gameState
-     */
-    public String getGameState() {
-        return gameState;
-    }
-    /**
-     * The gameState is set when a phase of the Turn ends. {Start,Premove,Move,Prebuild,Build,End}
-     * @return gameState
-     */
-    public void setGameState(String s) {
-        gameState = s;
-    }
-
     public int getNumPlayers() {
         return numPlayers;
     }
@@ -95,7 +80,7 @@ public class ViewCLI implements ViewObservable, ModelObserver {
      * @return ArrayList<UserData>  player names given through System.in
      */
     public ArrayList<UserData> getPlayerData(String[] set){
-        setActionDone(false);
+        setActionCorrect(false);
         List<String> setOfCards = new LinkedList<String>(Arrays.asList(set));
         setOfCards.add("NOGOD");
         ArrayList<UserData> players = new ArrayList<>();
@@ -103,12 +88,12 @@ public class ViewCLI implements ViewObservable, ModelObserver {
         for (int i = 0; i < numPlayers ; i++) {
             outputStream.println("Insert your name player : "+(i+1) +"\n" );
             String nick = scanner.next();
-            while(!actionDone) {
+            while(!actionCorrect) {
                 outputStream.println("Insert your age player : " + (i + 1) + "\n");
 
                 try {
                     age = scanner.nextInt();
-                    setActionDone(true);
+                    setActionCorrect(true);
                 } catch (InputMismatchException e) {
                     System.out.println(ErrorMessage.InputMessage + "\n");
                     scanner.nextLine();
@@ -126,14 +111,14 @@ public class ViewCLI implements ViewObservable, ModelObserver {
 
                 if (setOfCards.contains(selectedCard.toUpperCase())) {
                     if(!selectedCard.toUpperCase().equals("NOGOD"))
-                       setOfCards.remove(selectedCard.toUpperCase());
+                        setOfCards.remove(selectedCard.toUpperCase());
                     choiceDone = true;
                 }
             }
 
             players.add(new UserData(nick,age,selectedCard.toUpperCase()));
-            setActionDone(false);
-            }
+            setActionCorrect(false);
+        }
 
         return players;
     }
@@ -143,21 +128,21 @@ public class ViewCLI implements ViewObservable, ModelObserver {
      * @return worker, 1 if its the worker1 , 2 if its the worker2 of the player
      */
     public int getWorker(){
-           Integer worker=null;
-           boolean correct=false;
-           while(!correct) {
-               outputStream.println(ViewMessage.workerMessage+"\n");
-               try {
-                   worker =scanner.nextInt();
-                   if (worker == 1 || worker == 2)
-                       correct = true;
-               }
-               catch(InputMismatchException e){
-                   System.out.println(ErrorMessage.InputMessage+"\n");
-               }
-               scanner.nextLine();//Clear del buffer
-           }
-            return worker;
+        Integer worker=null;
+        boolean correct=false;
+        while(!correct) {
+            outputStream.println(ViewMessage.workerMessage+"\n");
+            try {
+                worker =scanner.nextInt();
+                if (worker == 1 || worker == 2)
+                    correct = true;
+            }
+            catch(InputMismatchException e){
+                System.out.println(ErrorMessage.InputMessage+"\n");
+            }
+            scanner.nextLine();//Clear del buffer
+        }
+        return worker;
     }
 
     /**
@@ -181,7 +166,7 @@ public class ViewCLI implements ViewObservable, ModelObserver {
     }
 
 
-     /**
+    /**
      *notifies all observers that the view is initializing the game
      * @param o
      */
@@ -246,108 +231,15 @@ public class ViewCLI implements ViewObservable, ModelObserver {
         this.show(o);
     }
 
-    /**
-     * * The method used to start the game and handle a turn
-     */
-    public void run() {
+
+    public void handleWelcomeMessage(){
         outputStream.println(".-. . .-..----..-.    .---.  .----. .-.   .-..----.    .---.  .----.     .----.  .--.  .-. .-. .---.  .----. .----. .-..-. .-..-.\n" +
                 "| |/ \\| || {_  | |   /  ___}/  {}  \\|  `.'  || {_     {_   _}/  {}  \\   { {__   / {} \\ |  `| |{_   _}/  {}  \\| {}  }| ||  `| || |\n" +
                 "|  .'.  || {__ | `--.\\     }\\      /| |\\ /| || {__      | |  \\      /   .-._} }/  /\\  \\| |\\  |  | |  \\      /| .-. \\| || |\\  || |\n" +
                 "`-'   `-'`----'`----' `---'  `----' `-' ` `-'`----'     `-'   `----'    `----' `-'  `-'`-' `-'  `-'   `----' `-' `-'`-'`-' `-'`-'");
         outputStream.println("\nby Giorgianni-Giudici-Govigli" + " \uD83D\uDE0A \n");
-        while(!actionDone) {
-            outputStream.println(ViewMessage.numberOfPlayersMessage+"\n");
-            int numPlayer=0;
-            try {
-                numPlayer = scanner.nextInt();;
-
-            }
-            catch(InputMismatchException e){
-                System.out.println(ErrorMessage.InputMessage+"\n");
-                scanner.next();
-            }
-
-            if(numPlayer==2 || numPlayer==3) {
-                numPlayers = numPlayer;
-                setActionDone(true);
-            }
-        }
-
-        handleInit();
-        handleInitialPosition();
-
-        while (!gameDone) {
-            Integer worker=null;
-            String[][] whatToDo=null;
-            String nome = handleCurrentPlayer();
-            while(!turnDone) {
-
-                if(gameState.equals("START")) {
-                    outputStream.println("\n" + nome + " it's your turn!!!"+"\n");
-                    whatToDo = handleWhatToDo();
-                }
-
-                switch (gameState) {
-                    case "START":
-                        while(!actionDone) {
-                            if(whatToDo[0][0].equals("EMPTY"))
-                                actionDone=true;
-                            else {
-                                for (int i = 0; i < whatToDo[0].length; i++) {
-                                    String move = whatToDo[0][i];
-                                    callFunction(move, worker);
-                                }
-                            }
-                        }
-                        handleStateChange("PREMOVE");
-                        worker = handleStart();
-                        break;
-                    case "PREMOVE":
-                            if(whatToDo[1][0].equals("EMPTY"))
-                                actionDone=true;
-                            else {
-                                for (int i = 0; i < whatToDo[1].length; i++) {
-                                    String move = whatToDo[1][i];
-                                    callFunction(move, worker);
-                                }
-                            }
-                        handleStateChange("MOVE");
-                        break;
-                    case "MOVE":
-                        handleMove(worker);
-                        handleStateChange("PREBUILD");
-                        break;
-                    case "PREBUILD":
-                        if(whatToDo[3][0].equals("EMPTY"))
-                            actionDone=true;
-                        else {
-                            for (int i = 0; i < whatToDo[3].length; i++) {
-                                String move = whatToDo[3][i];
-                                callFunction(move, worker);
-                            }
-                        }
-                        handleStateChange("BUILD");
-                        break;
-                    case "BUILD":
-                        handleBuild(worker);
-                        handleStateChange("END");
-                        break;
-                    case "END":
-                        if(whatToDo[5][0].equals("EMPTY"))
-                            actionDone = true;
-                        else {
-                            for (int i = 0; i < whatToDo[5].length; i++) {
-                                String move = whatToDo[5][i];
-                                callFunction(move, worker);
-                            }
-                        }
-                        handleEnd();
-                        handleStateChange("START");
-                        break;
-                }
-            }
-        }
-        String winner = handleCurrentPlayer();
+    }
+    public void handleWinner(String winner){
         System.out.println(winner +" "+ ViewMessage.winMessage);
     }
 
@@ -356,7 +248,24 @@ public class ViewCLI implements ViewObservable, ModelObserver {
      */
     public void handleInit(){
         notifyInit(choice=new Choice(null,null,null,null,null));
-        setActionDone(false);
+    }
+
+    public int handleNumOfPlayers() {
+
+        while(!actionCorrect) {
+            outputStream.println(ViewMessage.numberOfPlayersMessage + "\n");
+
+            try {
+                numPlayers = scanner.nextInt();
+            } catch (InputMismatchException e) {
+                System.out.println(ErrorMessage.InputMessage + "\n");
+                scanner.next();
+            }
+            if(numPlayers==2 || numPlayers==3)
+                setActionCorrect(true);
+        }
+
+        return numPlayers;
     }
 
     /**
@@ -367,7 +276,7 @@ public class ViewCLI implements ViewObservable, ModelObserver {
         for (int i = 0; i <numPlayers; i++) {
             for (int j = 0; j <2; j++) {
                 String[] s = null;
-                while (! actionDone) {
+                while (!actionCorrect) {
                     outputStream.println("Player " + (i + 1) + ", "+ViewMessage.initialPositionMessage + (j + 1) + "(digit x,y)"+"\n");
                     try{
                         String input = scanner.next();
@@ -383,10 +292,10 @@ public class ViewCLI implements ViewObservable, ModelObserver {
                         scanner.nextLine();
                     }
                 }
-                setActionDone(false);
+                setActionCorrect(false);
             }
         }
-        setActionDone(false);
+        setActionCorrect(false);
     }
 
     /**
@@ -394,7 +303,6 @@ public class ViewCLI implements ViewObservable, ModelObserver {
      * @return nickname of the player
      */
     public String handleCurrentPlayer(){
-        setTurnDone(false);
         return notifyCurrentPlayer();
     }
 
@@ -406,42 +314,20 @@ public class ViewCLI implements ViewObservable, ModelObserver {
      */
     public int handleStart(){
         int x=0;
-        while(!actionDone)
+        while(!actionCorrect)
             x = notifyStart();
-        setActionDone(false);
+        setActionCorrect(false);
         return x;
     }
 
-    /**
-     * Determines the change of the GamePhase when actions in the current Phase are performed correctly.
-     * Uses undoDone, because when an Undo action is done then if the player applied the Power (in premove or prebuild),
-     * the phase will return to the beginning of that phase and again ask if he wants to apply the Power.
-     * If the power has been applied correctly but in the next phase the worker is blocked the Player has the chance to
-     * do an Undo during Move or Build phase. If UndoDone==true then the phase will return to the beginning of the power phase,
-     * else the player will certainly lose.
-     * @param s if UndoDone==false s will be the next GamePhase for sure.
-     */
-    public void handleStateChange(String s){
-        if(undoDone && (getGameState().equals("PREMOVE") || getGameState().equals("PREBUILD")))
-            notifyState(getGameState());
-        else if(undoDone && powerApply && (getGameState().equals("MOVE") || getGameState().equals("BUILD"))){
-            if(getGameState().equals("MOVE"))
-                notifyState("PREMOVE");
-            if(getGameState().equals("BUILD"))
-                notifyState("PREBUILD");
-            powerApply=false;
-        }
-        else
-            notifyState(s);
-        setActionDone(false);
-        undoDone=false;
-    }
 
     /**
      * It's a handle method that gives the view the information about all the action that a playerCard can perform
      * @return array of String arrays with {START,PREMOVE,MOVE,PREBUILD,BUILD,END}
      */
-    public String[][] handleWhatToDo() {
+    public String[][] handleWhatToDo(String s) {
+
+        outputStream.println("\n" + s + " it's your turn!!!"+"\n");
         return notifyWhatToDo();
     }
 
@@ -450,7 +336,7 @@ public class ViewCLI implements ViewObservable, ModelObserver {
      * @param worker is an integer that tells which of the two worker are selected from the user
      */
     public void handleMove(Integer worker){
-        while(!actionDone) {
+        while(!actionCorrect) {
             String[] s = null;
             outputStream.println(ViewMessage.moveMessage);
             try{
@@ -475,7 +361,7 @@ public class ViewCLI implements ViewObservable, ModelObserver {
      */
     public void handleBuild(Integer worker){
         int counter = 0;
-        while(!actionDone) {
+        while(!actionCorrect) {
             try {
                 if(counter == 0)
                     outputStream.println(ViewMessage.buildMessage + worker + "\n");
@@ -527,45 +413,13 @@ public class ViewCLI implements ViewObservable, ModelObserver {
 
     /**
      * only set the turn to done and will notify the controller to change to the next currentPlayer
-     */
+     * */
     public void handleEnd(){
-        turnDone=true;
         powerApply=false;
         notifyEnd();
     }
 
-    /**
-     * Utility method to call the correct handle method
-     * @param s says if handle function must me of type : MOVE, BUILD OR EFFECT
-     * @param worker all the actions (not the effect) are referred to a worker that does it
-     */
-    public void callFunction(String s,Integer worker){
-        switch (s) {
-            case "MOVE":
-                System.out.println(s + " POWER: " + ViewMessage.applyPowerMessage);
-                String input = scanner.nextLine();
-                if(input.toUpperCase().equals("YES")) {
-                    handleMove(worker);
-                    powerApply=true;
-                }
-                else
-                    setActionDone(true);
-                break;
-            case "BUILD":
-                System.out.println(s + " POWER: " + ViewMessage.applyPowerMessage);
-                input = scanner.nextLine();
-                if(input.toUpperCase().equals("YES")) {
-                    handleBuild(worker);
-                    powerApply = true;
-                }
-                else
-                    setActionDone(true);
-                break;
-            case "EFFECT":
-                handleEffect();
-                break;
-        }
-    }
+
 
     /**
      * Calls an internal timer and ask if the current player wants to apply Undo Option within 5 seconds
@@ -607,6 +461,39 @@ public class ViewCLI implements ViewObservable, ModelObserver {
         else {
             return false;
         }
+    }
+    /**
+     * Utility method to call the correct handle method
+     * @param s says if handle function must me of type : MOVE, BUILD OR EFFECT
+     * @param worker all the actions (not the effect) are referred to a worker that does it
+     */
+    public boolean callFunction(String s,Integer worker){
+        switch (s) {
+            case "MOVE":
+                System.out.println(s + " POWER: " + ViewMessage.applyPowerMessage);
+                String input = scanner.nextLine();
+                if(input.toUpperCase().equals("YES")) {
+                    handleMove(worker);
+                    setPowerApply(true);
+                }
+                else
+                    setActionCorrect(true);
+                break;
+            case "BUILD":
+                System.out.println(s + " POWER: " + ViewMessage.applyPowerMessage);
+                input = scanner.nextLine();
+                if(input.toUpperCase().equals("YES")) {
+                    handleBuild(worker);
+                    powerApply = true;
+                }
+                else
+                    setActionCorrect(true);
+                break;
+            case "EFFECT":
+                handleEffect();
+                break;
+        }
+        return actionCorrect;
     }
 
     /**
@@ -690,4 +577,6 @@ public class ViewCLI implements ViewObservable, ModelObserver {
         System.out.println(Color.ANSI_RED + "Player 1 " + Color.ANSI_GREEN + "Player 2 " + Color.ANSI_BLUE + "Player 3 " + Color.RESET);
         System.out.println("\n");
     }
+
+
 }

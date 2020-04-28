@@ -4,7 +4,6 @@ import it.polimi.ingsw.PSP42.*;
 import it.polimi.ingsw.PSP42.model.*;
 import it.polimi.ingsw.PSP42.view.*;
 
-import javax.swing.text.*;
 import java.util.*;
 
 /**
@@ -12,12 +11,26 @@ import java.util.*;
  */
 public class ControllerCLI implements ViewObserver {
     private final GameBoard g;
-    private final ViewCLI view;
-    private int undoCount=0;
+    private final VirtualView view;
+    private final ControllerHandler handler;
+    private  String gameState;
+    private boolean gameDone;
+    private boolean turnDone;
+    private boolean actionDone;
 
-    public ControllerCLI(GameBoard model, ViewCLI v) {
+
+    public ControllerCLI(GameBoard model, VirtualView v) {
         g = model;
         view = v;
+        handler = new ControllerHandler(g,v,this);
+    }
+
+    public void setGameState(String s){
+        gameState=s;
+    }
+
+    public String getGameState() {
+        return gameState;
     }
 
     /**
@@ -26,13 +39,112 @@ public class ControllerCLI implements ViewObserver {
      */
     public void createGame(int numPlayer) {
         ArrayList<Player> players = new ArrayList<>();
-        ArrayList<UserData> data = view.getPlayerData(pickCards(numPlayer));
+        ArrayList<UserData> data = view.getPlayerData(handler.pickCards(numPlayer));
         for (int i = 0; i < view.getNumPlayers(); i++) {
             players.add(new Player(data.get(i).getNickname(), i + 1,data.get(i).getAge(),data.get(i).getCardChoosed()));
         }
         g.setPlayers(players);
         g.setGamePhase("START");
+        gameState="START";
     }
+
+
+    /**
+     * * The method used to start the game and handle a turn
+     */
+    public void runGame() {
+        view.handleWelcomeMessage();
+        view.handleNumOfPlayers();
+        view.handleInit();
+        view.handleInitialPosition();
+
+        while (!isGameDone()) {
+            Integer worker=null;
+            String[][] whatToDo=null;
+            String nome = view.handleCurrentPlayer();
+            while(!isTurnDone()) {
+
+                if(gameState.equals("START")) {
+
+                    whatToDo = view.handleWhatToDo(nome);
+                }
+
+                switch (gameState) {
+                    case "START":
+                        while(!isActionDone()) {
+                            if(whatToDo[0][0].equals("EMPTY"))
+                                setActionDone(true);
+                            else {
+                                for (int i = 0; i < whatToDo[0].length; i++) {
+                                    String move = whatToDo[0][i];
+                                    if(view.callFunction(move, worker))
+                                        setActionDone(true);
+                                    else
+                                        setActionDone(false);
+                                }
+                            }
+                        }
+                        handler.controlNextState("PREMOVE");
+                        worker = view.handleStart();
+                        break;
+                    case "PREMOVE":
+                        if(whatToDo[1][0].equals("EMPTY"))
+                            setActionDone(true);
+                        else {
+                            for (int i = 0; i < whatToDo[1].length; i++) {
+                                String move = whatToDo[1][i];
+                                if(view.callFunction(move, worker))
+                                    setActionDone(true);
+                                else
+                                    setActionDone(false);
+                            }
+                        }
+                        handler.controlNextState("MOVE");
+                        break;
+                    case "MOVE":
+                        view.handleMove(worker);
+                        handler.controlNextState("PREBUILD");
+                        break;
+                    case "PREBUILD":
+                        if(whatToDo[3][0].equals("EMPTY"))
+                            setActionDone(true);
+                        else {
+                            for (int i = 0; i < whatToDo[3].length; i++) {
+                                String move = whatToDo[3][i];
+                                if(view.callFunction(move, worker))
+                                    setActionDone(true);
+                                else
+                                    setActionDone(false);
+                            }
+                        }
+                        handler.controlNextState("BUILD");
+                        break;
+                    case "BUILD":
+                        view.handleBuild(worker);
+                        handler.controlNextState("END");
+                        break;
+                    case "END":
+                        if(whatToDo[5][0].equals("EMPTY"))
+                            setActionDone(true);
+                        else {
+                            for (int i = 0; i < whatToDo[5].length; i++) {
+                                String move = whatToDo[5][i];
+                                if(view.callFunction(move, worker))
+                                    setActionDone(true);
+                                else
+                                    setActionDone(false);
+                            }
+                        }
+                        view.handleEnd();
+                        handler.controlNextState("START");
+                        break;
+                }
+            }
+        }
+        String winner = view.handleCurrentPlayer();
+        view.handleWinner(winner);
+    }
+
 
     /**
      * Handles the initialization of the game.
@@ -42,70 +154,11 @@ public class ControllerCLI implements ViewObserver {
      */
     @Override
     public void updateInit(Object o) {
-        if (view.getChoice().allFieldsNull()) {
-            createGame(view.getNumPlayers());
-            view.setActionDone(true);
-            GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
-        }
-        if (! view.getChoice().allFieldsNull()) {
-            Worker w = null;
-            boolean check;
-            //check what worker is setting initial position
-            if (view.getChoice().getWorker() == 1)
-                w = (g.getPlayers()).get(view.getChoice().getIdPlayer()).getWorker1();
-            if (view.getChoice().getWorker() == 2)
-                w = (g.getPlayers()).get(view.getChoice().getIdPlayer()).getWorker2();
-            //handle initial position
-            check = (g.getPlayers()).get(view.getChoice().getIdPlayer()).initialPosition(view.getChoice().getX(), view.getChoice().getY(), w);
-            if (check) {
-                view.setActionDone(true);
-                GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
-            }
-        }
+        handler.controlInit(o);
     }
-
-    /**
-     * Handles to call the method in the model to modify the state of the worker selected
-     * @param o represent always the Choice done by the user
-     */
     @Override
-    public void updateMove(Object o) {
-        Worker w = null;
-        boolean check;
-        //check what worker is moving
-        if (view.getChoice().getWorker() == 1)
-            w = (g.getPlayers()).get(g.getCurrentPlayer()).getWorker1();
-
-        if (view.getChoice().getWorker() == 2)
-            w = (g.getPlayers()).get(g.getCurrentPlayer()).getWorker2();
-        //check if worker is able to move at least in one position
-        if (g.atLeastOneMove(w)) {
-            check = (g.getPlayers()).get(g.getCurrentPlayer()).move(view.getChoice().getX(), view.getChoice().getY(), w);
-            if (check) {
-                    if (view.undoOption("NOWARNING")) {
-                        g.getPlayers().get(g.getCurrentPlayer()).doUndoMove(w);
-                        if (g.getGamePhase().equals("PREMOVE") || g.getGamePhase().equals("PREBUILD"))
-                            view.setActionDone(true);
-                        GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
-                        return;
-                    }
-
-                view.setActionDone(true);
-                GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
-            }
-            }
-        //THIS CASE OCCURS ONLY IF THE PLAYER LOSES IF NO UNDO IS DONE
-        else {
-            if (view.undoOption("WARNING")) {
-                doUndoPower(w, getPreviousGamePhase());
-                view.setActionDone(true);
-                GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
-            }
-            else {
-                g.loseCondition(g.getPlayers().get(g.getCurrentPlayer()),"MOVE");
-                view.setActionDone(true);
-            }
-        }
+    public void updateMove(Object o){
+        handler.controlMove(o);
     }
 
     /**
@@ -114,39 +167,7 @@ public class ControllerCLI implements ViewObserver {
      */
     @Override
     public void updateBuild(Object o) {
-        Worker w = null;
-        boolean check;
-        //check what worker is building
-        if (view.getChoice().getWorker() == 1)
-            w = (g.getPlayers()).get(g.getCurrentPlayer()).getWorker1();
-        if (view.getChoice().getWorker() == 2)
-            w = (g.getPlayers()).get(g.getCurrentPlayer()).getWorker2();
-        //check if worker is able to build at least in one position
-        if (g.atLeastOneBuild(w, view.getChoice().getLevel())) {
-            check = (g.getPlayers()).get(g.getCurrentPlayer()).build(view.getChoice().getX(), view.getChoice().getY(), view.getChoice().getLevel(), w);
-            if (check) {
-                if (view.undoOption("NOWARNING")) {
-                    (g.getPlayers()).get(g.getCurrentPlayer()).doUndoBuild(w);
-                    if (g.getGamePhase().equals("PREMOVE") || g.getGamePhase().equals("PREBUILD"))
-                        view.setActionDone(true);
-                    GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
-                    return;
-                }
-                view.setActionDone(true);
-                GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
-            }
-        }
-        else {
-            if (view.undoOption("WARNING")) {
-                doUndoPower(w, getPreviousGamePhase());
-                view.setActionDone(true);
-                GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
-            }
-            else {
-                g.loseCondition(g.getPlayers().get(g.getCurrentPlayer()),"BUILD");
-                view.setActionDone(true);
-            }
-        }
+        handler.controlBuild(o);
     }
 
     /**
@@ -157,27 +178,7 @@ public class ControllerCLI implements ViewObserver {
      */
     @Override
     public String updateCurrentPlayer() {
-        Worker w1 = g.getPlayers().get(g.getCurrentPlayer()).getWorker1();
-        Worker w2 = g.getPlayers().get(g.getCurrentPlayer()).getWorker2();
-        //SET THE WORKER AVAILABLE IF THE WORKER CAN MOVE OR NOT AVAILABLE IF BLOCKED
-        g.workerAvailable(w1);
-        g.workerAvailable(w2);
-        g.loseCondition(g.getPlayers().get(g.getCurrentPlayer()),"START");
-        if (g.getPlayers().get(g.getCurrentPlayer()).getPlayerState().equals("LOSE")) {
-            view.setGameState("END");
-            ViewMessage.loseMessage(g.getPlayers().get(g.getCurrentPlayer()).getNickname());
-        }
-
-        int playersInGame = 0;
-        for (Player p:g.getPlayers()) {
-            if (p.getPlayerState().equals("INGAME"))
-                playersInGame++;
-        }
-        if(playersInGame == 1) {
-            view.setTurnDone(true);
-            view.setGameDone(true);
-        }
-        return  g.getPlayers().get(g.getCurrentPlayer()).getNickname();
+        return handler.controlCurrentPlayer();
     }
 
     /**
@@ -186,24 +187,7 @@ public class ControllerCLI implements ViewObserver {
      */
     @Override
     public void updateEnd() {
-        int num = view.getNumPlayers();
-        int curr = g.getCurrentPlayer();
-        if(curr+1<num) {
-            if (g.getPlayers().get(curr + 1).getPlayerState().equals("LOSE")) {
-                if (curr + 2 < num)
-                    g.setCurrentPlayer(curr + 2);
-                else
-                    g.setCurrentPlayer(0);
-            }
-            else
-                g.setCurrentPlayer(curr+1);
-        }
-        else {
-            if (g.getPlayers().get(0).getPlayerState().equals("LOSE"))
-                g.setCurrentPlayer(1);
-            else
-                g.setCurrentPlayer(0);
-        }
+        handler.controlEnd();
     }
 
     /**
@@ -214,25 +198,7 @@ public class ControllerCLI implements ViewObserver {
      */
     @Override
     public void updateState(String s) {
-
-        if (g.getPlayers().get(g.getCurrentPlayer()).getPlayerState().equals("LOSE")) {
-            g.setGamePhase("END");
-            view.setGameState("END");
-            ViewMessage.loseMessage(g.getPlayers().get(g.getCurrentPlayer()).getNickname());
-            GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
-            return;
-        }
-
-        if((s.equals("MOVE") || s.equals("PREBUILD")) && g.getPlayers().get(g.getCurrentPlayer()).getPlayerState().equals("WIN")) {
-            g.setGamePhase("END");
-            view.setGameState("END");
-            view.setTurnDone(true);
-            view.setGameDone(true);
-            return;
-        }
-
-        g.setGamePhase(s);
-        view.setGameState(s);
+        handler.controlNextState(s);
     }
 
     /**
@@ -242,8 +208,7 @@ public class ControllerCLI implements ViewObserver {
      */
     @Override
     public String[][] updateWhatToDo() {
-        int current = g.getCurrentPlayer();
-        return g.getPlayers().get(current).checkWhatTodo();
+        return handler.controlWhatToDo();
     }
 
     /**
@@ -252,16 +217,7 @@ public class ControllerCLI implements ViewObserver {
      */
     @Override
     public int updateStart() {
-        int choice = view.getWorker();
-        Worker w=null;
-        if (choice == 1)
-            w = (g.getPlayers()).get(g.getCurrentPlayer()).getWorker1();
-        if (choice == 2)
-            w = (g.getPlayers()).get(g.getCurrentPlayer()).getWorker2();
-        boolean check = w.getAvailable();
-        if (check)
-            view.setActionDone(true);
-        return choice;
+        return handler.controlStart();
     }
 
     /**
@@ -269,105 +225,33 @@ public class ControllerCLI implements ViewObserver {
      */
     @Override
     public void updateEffect() {
-        if (g.getPlayers().get(g.getCurrentPlayer()).effect()) {
-            if(g.getGamePhase().equals("END"))
-                view.printEffect("ON", g.getPlayers().get(g.getCurrentPlayer()).getCard().effectON());
-            if(g.getGamePhase().equals("START"))
-                view.printEffect("OFF", g.getPlayers().get(g.getCurrentPlayer()).getCard().effectOFF());
-        }
-        view.setActionDone(true);
+        handler.controlEffect();
     }
 
-    /**
-     * Pick a set of cards randomly string[].length = numPlayers
-     * @param numPlayers
-     * @return randomPick
-     */
-    public String[] pickCards(int numPlayers){
-        Random rand = new Random();
-        String[] set = DeckOfGods.possibleGods();
-        String[] randomPick = new String[numPlayers];
-        ArrayList<Integer> pickedRand = new ArrayList<>();
-        for (int i = 0; i < numPlayers; i++) {
-            int randomIndex = rand.nextInt(set.length);
-            if(!pickedRand.contains(randomIndex)) {
-                pickedRand.add(randomIndex);
-                randomPick[i] = set[randomIndex];
-            }
-            else
-                i--;
-        }
-        return randomPick;
+    public boolean isGameDone() {
+        return gameDone;
     }
 
-    /**
-     * Generic function to call all undoAction referred to the previousPhase for worker w selected.
-     * @param w worker of the current turn
-     * @param previousPhase
-     */
-    public void doUndoPower(Worker w, String previousPhase){
-        int current = g.getCurrentPlayer();
-        Player currentPlayer = g.getPlayers().get(current);
-        String[][] whatToDo = currentPlayer.getCard().getWhatToDo();
-        switch (previousPhase) {
-            case "PREMOVE":
-                if(whatToDo[1][0].equals("EMPTY"))
-                 break;
-                for (int i = 0; i < whatToDo[1].length; i++) {
-                   if(whatToDo[1][i].equals("MOVE"))
-                       currentPlayer.doUndoMove(w);
-                   if(whatToDo[1][i].equals("BUILD"))
-                       currentPlayer.doUndoBuild(w);
-                }
-                break;
-            case "MOVE":
-                currentPlayer.doUndoMove(w);
-                break;
-            case "PREBUILD":
-                if(whatToDo[3][0].equals("EMPTY"))
-                    break;
-                for (int i = 0; i < whatToDo[3].length; i++) {
-                    if(whatToDo[3][i].equals("MOVE"))
-                        currentPlayer.doUndoMove(w);
-                    if(whatToDo[3][i].equals("BUILD"))
-                        currentPlayer.doUndoBuild(w);
-                }
-                break;
-            case "BUILD":
-                currentPlayer.doUndoBuild(w);
-                break;
-        }
+    public void setGameDone(boolean gameDone) {
+        this.gameDone = gameDone;
     }
 
-    /**
-     * Utility method to know, which was the previous Phase of the Turn
-     * @return
-     */
-    public String getPreviousGamePhase(){
-        String previousPhase=null;
-        String phase = g.getGamePhase();
-        switch (phase){
-            case "START":
-                previousPhase = "END";
-                break;
-            case "PREMOVE":
-                previousPhase = "START";
-                break;
-            case "MOVE":
-                previousPhase = "PREMOVE";
-                break;
-            case "PREBUILD":
-                previousPhase = "MOVE";
-                break;
-            case "BUILD":
-                previousPhase = "PREBUILD";
-                break;
-            case "END":
-                previousPhase = "BUILD";
-                break;
-        }
-        return previousPhase;
+    public boolean isTurnDone() {
+        return turnDone;
     }
+
+    public void setTurnDone(boolean turnDone) {
+        this.turnDone = turnDone;
+    }
+
+    public boolean isActionDone() {
+        return actionDone;
+    }
+
+    public void setActionDone(boolean actionDone) {
+        this.actionDone = actionDone;
+    }
+
 
 }
 
