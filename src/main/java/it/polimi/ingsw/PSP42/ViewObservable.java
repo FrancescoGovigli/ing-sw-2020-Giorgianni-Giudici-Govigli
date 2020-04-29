@@ -32,15 +32,11 @@ public interface ViewObservable {
      */
     public abstract void notifyBuild(Object o);
 
-    public abstract String notifyCurrentPlayer();
-
     public abstract void notifyEnd();
-
-    public abstract void notifyState(String s);
 
     public abstract String[][] notifyWhatToDo();
 
-    public abstract int notifyStart();
+    public abstract int notifyStart(Integer i);
 
     public abstract void notifyEffect();
 }

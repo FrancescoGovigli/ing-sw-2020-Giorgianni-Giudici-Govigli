@@ -18,15 +18,11 @@ public interface ViewObserver {
      */
     public abstract void updateBuild(Object o);
 
-    public abstract String updateCurrentPlayer();
-
     public abstract void updateEnd();
-
-    public abstract void updateState(String s);
 
     public abstract String[][] updateWhatToDo();
 
-    public abstract int updateStart();
+    public abstract int updateStart(Integer i);
 
     public abstract void updateEffect();
 }

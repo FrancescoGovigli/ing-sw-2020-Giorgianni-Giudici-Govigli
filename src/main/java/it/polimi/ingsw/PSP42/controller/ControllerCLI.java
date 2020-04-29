@@ -61,7 +61,7 @@ public class ControllerCLI implements ViewObserver {
         while (!isGameDone()) {
             Integer worker=null;
             String[][] whatToDo=null;
-            String nome = view.handleCurrentPlayer();
+            String nome = handler.controlCurrentPlayer();
             while(!isTurnDone()) {
 
                 if(gameState.equals("START")) {
@@ -77,7 +77,7 @@ public class ControllerCLI implements ViewObserver {
                             else {
                                 for (int i = 0; i < whatToDo[0].length; i++) {
                                     String move = whatToDo[0][i];
-                                    if(view.callFunction(move, worker))
+                                    if(view.callPowerFunction(move, worker))
                                         setActionDone(true);
                                     else
                                         setActionDone(false);
@@ -93,7 +93,7 @@ public class ControllerCLI implements ViewObserver {
                         else {
                             for (int i = 0; i < whatToDo[1].length; i++) {
                                 String move = whatToDo[1][i];
-                                if(view.callFunction(move, worker))
+                                if(view.callPowerFunction(move, worker))
                                     setActionDone(true);
                                 else
                                     setActionDone(false);
@@ -111,7 +111,7 @@ public class ControllerCLI implements ViewObserver {
                         else {
                             for (int i = 0; i < whatToDo[3].length; i++) {
                                 String move = whatToDo[3][i];
-                                if(view.callFunction(move, worker))
+                                if(view.callPowerFunction(move, worker))
                                     setActionDone(true);
                                 else
                                     setActionDone(false);
@@ -129,7 +129,7 @@ public class ControllerCLI implements ViewObserver {
                         else {
                             for (int i = 0; i < whatToDo[5].length; i++) {
                                 String move = whatToDo[5][i];
-                                if(view.callFunction(move, worker))
+                                if(view.callPowerFunction(move, worker))
                                     setActionDone(true);
                                 else
                                     setActionDone(false);
@@ -141,7 +141,7 @@ public class ControllerCLI implements ViewObserver {
                 }
             }
         }
-        String winner = view.handleCurrentPlayer();
+        String winner = handler.controlCurrentPlayer();
         view.handleWinner(winner);
     }
 
@@ -170,16 +170,6 @@ public class ControllerCLI implements ViewObserver {
         handler.controlBuild(o);
     }
 
-    /**
-     * Takes the 2 workers of the player and checks if the player has lost due to the opponents.
-     * If the player has not lost the method returns his nickname. If the current player is the only one remaining
-     * on the board he directly wins the Game
-     * @return nickname of the Player
-     */
-    @Override
-    public String updateCurrentPlayer() {
-        return handler.controlCurrentPlayer();
-    }
 
     /**
      * Sets the new current player checking the arraylist of the gameboard.
@@ -188,17 +178,6 @@ public class ControllerCLI implements ViewObserver {
     @Override
     public void updateEnd() {
         handler.controlEnd();
-    }
-
-    /**
-     * Updates the new Phase of the game.
-     * It checks if after every phase if the player has the LOSE value or if the player has won. In this cases the Phase
-     * will be set at the END of turn. If the player WIN the GameDone value of the View will be set to true.
-     * @param s
-     */
-    @Override
-    public void updateState(String s) {
-        handler.controlNextState(s);
     }
 
     /**
@@ -216,8 +195,8 @@ public class ControllerCLI implements ViewObserver {
      * @return 1 == worker1, 2==worker2;
      */
     @Override
-    public int updateStart() {
-        return handler.controlStart();
+    public int updateStart(Integer i) {
+        return handler.controlStart(i);
     }
 
     /**

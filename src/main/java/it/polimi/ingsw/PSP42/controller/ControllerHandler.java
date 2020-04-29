@@ -208,6 +208,7 @@ public class ControllerHandler {
         }
         else
             mainController.setGameState(s);
+
         view.setUndoDone(false);
         view.setActionCorrect(false);
 
@@ -246,8 +247,8 @@ public class ControllerHandler {
      * @return 1 == worker1, 2==worker2;
      */
 
-    public int controlStart() {
-        int choice = view.getWorker();
+    public int controlStart(Integer i) {
+        int choice = i;
         Worker w=null;
         if (choice == 1)
             w = (gameBoard.getPlayers()).get(gameBoard.getCurrentPlayer()).getWorker1();

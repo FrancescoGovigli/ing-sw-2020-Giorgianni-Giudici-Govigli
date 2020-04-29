@@ -21,6 +21,11 @@ public class VirtualView implements ViewObservable, ModelObserver {
     private int numPlayers;
     private Choice choice;
 
+    public VirtualView() {
+        scanner = new Scanner(System.in);
+        outputStream = new PrintStream(System.out);
+        actionCorrect = false;
+    }
 
     public boolean isPowerApply(){
         return powerApply;
@@ -28,11 +33,6 @@ public class VirtualView implements ViewObservable, ModelObserver {
 
     public void setUndoDone(boolean value){
         undoDone= value;
-    }
-
-
-    public int getNumOfPlayers(){
-        return numPlayers;
     }
 
     public boolean isUndoDone(){
@@ -64,11 +64,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
         return choice;
     }
 
-    public VirtualView() {
-        scanner = new Scanner(System.in);
-        outputStream = new PrintStream(System.out);
-        actionCorrect = false;
-    }
+
     public int getNumPlayers() {
         return numPlayers;
     }
@@ -129,13 +125,13 @@ public class VirtualView implements ViewObservable, ModelObserver {
      */
     public int getWorker(){
         Integer worker=null;
-        boolean correct=false;
-        while(!correct) {
+        setActionCorrect(false);
+        while(!actionCorrect) {
             outputStream.println(ViewMessage.workerMessage+"\n");
             try {
                 worker =scanner.nextInt();
                 if (worker == 1 || worker == 2)
-                    correct = true;
+                    setActionCorrect(true);
             }
             catch(InputMismatchException e){
                 System.out.println(ErrorMessage.InputMessage+"\n");
@@ -176,19 +172,10 @@ public class VirtualView implements ViewObservable, ModelObserver {
             obs.get(i).updateInit(o);
     }
 
-    @Override
-    public String notifyCurrentPlayer() {
-        return obs.get(0).updateCurrentPlayer();
-    }
 
     @Override
-    public int notifyStart() {
-        return obs.get(0).updateStart();
-    }
-
-    @Override
-    public void notifyState(String s) {
-        obs.get(0).updateState(s);
+    public int notifyStart(Integer i) {
+        return obs.get(0).updateStart(i);
     }
 
     @Override
@@ -243,12 +230,6 @@ public class VirtualView implements ViewObservable, ModelObserver {
         System.out.println(winner +" "+ ViewMessage.winMessage);
     }
 
-    /**
-     * This method has the task to initialize the Gameboard and set the initial players position.
-     */
-    public void handleInit(){
-        notifyInit(choice=new Choice(null,null,null,null,null));
-    }
 
     public int handleNumOfPlayers() {
 
@@ -267,6 +248,15 @@ public class VirtualView implements ViewObservable, ModelObserver {
 
         return numPlayers;
     }
+
+    /**
+     * This method has the task to initialize the Gameboard and set the initial players position.
+     */
+    public void handleInit(){
+        notifyInit(choice=new Choice(null,null,null,null,null));
+    }
+
+
 
     /**
      * Has the task to ask the user to insert the two coordinates for his 2 workers and notify observers
@@ -301,10 +291,10 @@ public class VirtualView implements ViewObservable, ModelObserver {
     /**
      * Has the task to ask for the current player of the new turn that is starting
      * @return nickname of the player
-     */
+     *//*
     public String handleCurrentPlayer(){
         return notifyCurrentPlayer();
-    }
+    }*/
 
 
 
@@ -313,9 +303,9 @@ public class VirtualView implements ViewObservable, ModelObserver {
      * @return 1 for worker1, 2 for worker2
      */
     public int handleStart(){
-        int x=0;
-        while(!actionCorrect)
-            x = notifyStart();
+
+        int x = getWorker();
+        notifyStart(x);
         setActionCorrect(false);
         return x;
     }
@@ -444,7 +434,6 @@ public class VirtualView implements ViewObservable, ModelObserver {
         if(warning.equals("WARNING"))
             System.out.println(ErrorMessage.PowerBlockingMessage);
         System.out.println( "Input a YES within 5 seconds for UNDO : ");
-        //str = scanner.nextLine();
         Scanner input = new Scanner(System.in);
         String action = input.nextLine();
         timer.cancel();
@@ -467,27 +456,42 @@ public class VirtualView implements ViewObservable, ModelObserver {
      * @param s says if handle function must me of type : MOVE, BUILD OR EFFECT
      * @param worker all the actions (not the effect) are referred to a worker that does it
      */
-    public boolean callFunction(String s,Integer worker){
+    public boolean callPowerFunction(String s,Integer worker){
+        boolean askUndo=false;
         switch (s) {
             case "MOVE":
-                System.out.println(s + " POWER: " + ViewMessage.applyPowerMessage);
-                String input = scanner.nextLine();
-                if(input.toUpperCase().equals("YES")) {
-                    handleMove(worker);
-                    setPowerApply(true);
+                while(!askUndo) {
+                    System.out.println(s + " POWER: " + ViewMessage.applyPowerMessage);
+                    String input = scanner.nextLine();
+                    if (input.toUpperCase().equals("YES")) {
+                        handleMove(worker);
+                        setPowerApply(true);
+                        askUndo=true;
+                    } else {
+                        if(!undoOption("NOWARNING"))
+                            askUndo=true;
+                        else
+                            setActionCorrect(false);
+                    }
+
                 }
-                else
-                    setActionCorrect(true);
                 break;
             case "BUILD":
-                System.out.println(s + " POWER: " + ViewMessage.applyPowerMessage);
-                input = scanner.nextLine();
-                if(input.toUpperCase().equals("YES")) {
-                    handleBuild(worker);
-                    powerApply = true;
+                while(!askUndo) {
+                    System.out.println(s + " POWER: " + ViewMessage.applyPowerMessage);
+                    String input = scanner.nextLine();
+                    if (input.toUpperCase().equals("YES")) {
+                        handleBuild(worker);
+                        setPowerApply(true);
+                        askUndo=true;
+                    } else {
+                        if(!undoOption("NOWARNING"))
+                            askUndo=true;
+                        else
+                            setActionCorrect(false);
+                    }
+
                 }
-                else
-                    setActionCorrect(true);
                 break;
             case "EFFECT":
                 handleEffect();
