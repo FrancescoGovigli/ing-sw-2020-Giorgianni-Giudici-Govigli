@@ -197,7 +197,7 @@ public class GameBoard implements ModelObservable {
      * @return true if worker can be used, false otherwise
      */
     public boolean workerAvailable(Worker w) {
-        Player p= w.getPlayer();
+        Player p = w.getPlayer();
         SimpleGod card = p.getCard();
         if(card instanceof NoGod) {
             Cell[] c = adjacentCellMoveAvailable(w.getCurrentX(), w.getCurrentY());
@@ -282,7 +282,7 @@ public class GameBoard implements ModelObservable {
         int y = w.getCurrentY();
         Player influences = null;
         boolean oneMove = false;
-        if(!(w.getPlayer().getCard().effectPlayers.size()==0))
+        if(w.getPlayer().getCard().effectPlayers.size() != 0)
             influences = w.getPlayer().getCard().effectPlayers.get(0);
         for (int i = 0; i < 3; i++)
             for (int j = 0; j < 3; j++) {
@@ -300,11 +300,11 @@ public class GameBoard implements ModelObservable {
                     oneMove = true;
                     i = 3;
                     j = 3;
-
                 }
             }
         return oneMove;
     }
+
     /**
      * Method to check if a worker has at least one build available
      * @param w

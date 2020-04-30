@@ -157,7 +157,7 @@ public class Player {
      *  start   preMove     Move    preBuild    Build   End
      *  [   ]   [   ]       [   ]   [       ]   [   ]   [   ]
      */
-    public String[][] checkWhatTodo(){
+    public String[][] checkWhatToDo(){
             return card.getWhatToDo();
         }
 }

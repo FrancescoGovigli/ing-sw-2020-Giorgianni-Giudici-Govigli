@@ -1,9 +1,7 @@
 package it.polimi.ingsw.PSP42.view;
 
 import it.polimi.ingsw.PSP42.*;
-import it.polimi.ingsw.PSP42.model.*;
 
-import javax.swing.text.*;
 import java.io.*;
 import java.util.*;
 import it.polimi.ingsw.PSP42.model.FakeCell;
@@ -47,13 +45,12 @@ public class VirtualView implements ViewObservable, ModelObserver {
     public void setActionCorrect(boolean value){
         actionCorrect = value;
     }
+
     /**
      * This method is used to set the boolean value GameDone, which determines
      * the end of the game (only if a player wins).
      * @param value
      */
-
-
     public void setPowerApply(boolean value){ powerApply=value;}
 
     /**
@@ -63,7 +60,6 @@ public class VirtualView implements ViewObservable, ModelObserver {
     public Choice getChoice(){
         return choice;
     }
-
 
     public int getNumPlayers() {
         return numPlayers;
@@ -82,16 +78,16 @@ public class VirtualView implements ViewObservable, ModelObserver {
         ArrayList<UserData> players = new ArrayList<>();
         int age = 0;
         for (int i = 0; i < numPlayers ; i++) {
-            outputStream.println("Insert your name player : "+(i+1) +"\n" );
+            outputStream.println("\n" + ViewMessage.namePlayer + (i + 1));
             String nick = scanner.next();
             while(!actionCorrect) {
-                outputStream.println("Insert your age player : " + (i + 1) + "\n");
+                outputStream.println(ViewMessage.agePlayer + (i + 1));
 
                 try {
                     age = scanner.nextInt();
                     setActionCorrect(true);
                 } catch (InputMismatchException e) {
-                    System.out.println(ErrorMessage.InputMessage + "\n");
+                    System.out.println(ErrorMessage.inputMessage + "\n");
                     scanner.nextLine();
                 }
             }
@@ -99,7 +95,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
             boolean choiceDone=false;
             String selectedCard = null;
             while(!choiceDone) {
-                outputStream.println("Select one of the card in the set player : " + (i + 1)+"\n");
+                outputStream.println(ViewMessage.selectCard + (i + 1));
                 for (int j = 0; j < setOfCards.size(); j++) {
                     System.out.println(setOfCards.get(j));
                 }
@@ -124,17 +120,17 @@ public class VirtualView implements ViewObservable, ModelObserver {
      * @return worker, 1 if its the worker1 , 2 if its the worker2 of the player
      */
     public int getWorker(){
-        Integer worker=null;
+        Integer worker = null;
         setActionCorrect(false);
         while(!actionCorrect) {
             outputStream.println(ViewMessage.workerMessage+"\n");
             try {
-                worker =scanner.nextInt();
+                worker = scanner.nextInt();
                 if (worker == 1 || worker == 2)
                     setActionCorrect(true);
             }
             catch(InputMismatchException e){
-                System.out.println(ErrorMessage.InputMessage+"\n");
+                System.out.println(ErrorMessage.inputMessage +"\n");
             }
             scanner.nextLine();//Clear del buffer
         }
@@ -161,17 +157,15 @@ public class VirtualView implements ViewObservable, ModelObserver {
         obs.remove(ob);
     }
 
-
     /**
      *notifies all observers that the view is initializing the game
      * @param o
      */
     @Override
     public void notifyInit(Object o) {
-        for (int i = 0; i <obs.size() ; i++)
+        for (int i = 0; i < obs.size() ; i++)
             obs.get(i).updateInit(o);
     }
-
 
     @Override
     public int notifyStart(Integer i) {
@@ -218,7 +212,6 @@ public class VirtualView implements ViewObservable, ModelObserver {
         this.show(o);
     }
 
-
     public void handleWelcomeMessage(){
         outputStream.println(".-. . .-..----..-.    .---.  .----. .-.   .-..----.    .---.  .----.     .----.  .--.  .-. .-. .---.  .----. .----. .-..-. .-..-.\n" +
                 "| |/ \\| || {_  | |   /  ___}/  {}  \\|  `.'  || {_     {_   _}/  {}  \\   { {__   / {} \\ |  `| |{_   _}/  {}  \\| {}  }| ||  `| || |\n" +
@@ -226,20 +219,20 @@ public class VirtualView implements ViewObservable, ModelObserver {
                 "`-'   `-'`----'`----' `---'  `----' `-' ` `-'`----'     `-'   `----'    `----' `-'  `-'`-' `-'  `-'   `----' `-' `-'`-'`-' `-'`-'");
         outputStream.println("\nby Giorgianni-Giudici-Govigli" + " \uD83D\uDE0A \n");
     }
-    public void handleWinner(String winner){
-        System.out.println(winner +" "+ ViewMessage.winMessage);
-    }
 
+    public void handleWinner(String winner){
+        System.out.println(winner + " " + ViewMessage.winMessage);
+    }
 
     public int handleNumOfPlayers() {
 
         while(!actionCorrect) {
-            outputStream.println(ViewMessage.numberOfPlayersMessage + "\n");
+            outputStream.println(ViewMessage.numberOfPlayersMessage);
 
             try {
                 numPlayers = scanner.nextInt();
             } catch (InputMismatchException e) {
-                System.out.println(ErrorMessage.InputMessage + "\n");
+                System.out.println(ErrorMessage.inputMessage + "\n");
                 scanner.next();
             }
             if(numPlayers==2 || numPlayers==3)
@@ -253,33 +246,31 @@ public class VirtualView implements ViewObservable, ModelObserver {
      * This method has the task to initialize the Gameboard and set the initial players position.
      */
     public void handleInit(){
-        notifyInit(choice=new Choice(null,null,null,null,null));
+        notifyInit(choice = new Choice(null,null,null,null,null));
     }
-
-
 
     /**
      * Has the task to ask the user to insert the two coordinates for his 2 workers and notify observers
      * to set this data.
      */
     public void handleInitialPosition(){
-        for (int i = 0; i <numPlayers; i++) {
+        for (int i = 0; i < numPlayers; i++) {
             for (int j = 0; j <2; j++) {
                 String[] s = null;
                 while (!actionCorrect) {
-                    outputStream.println("Player " + (i + 1) + ", "+ViewMessage.initialPositionMessage + (j + 1) + "(digit x,y)"+"\n");
+                    outputStream.println("Player " + (i + 1) + ", " + ViewMessage.initialPositionMessage + (j + 1) + " (digit x,y)"+"\n");
                     try{
                         String input = scanner.next();
                         s = input.split(",");
-                        notifyInit(choice = new Choice(Integer.parseInt(s[0]), Integer.parseInt(s[1]), j + 1, null,i));
+                        notifyInit(choice = new Choice(Integer.parseInt(s[0]), Integer.parseInt(s[1]), j + 1, null, i));
                     }
                     catch (NumberFormatException e) {
-                        System.out.println(ErrorMessage.InputMessage + "\n");
+                        System.out.println(ErrorMessage.inputMessage + "\n");
                         scanner.nextLine();
                     }
                     catch (ArrayIndexOutOfBoundsException e) {
-                        System.out.println(ErrorMessage.InputMessage + "\n");
-                        scanner.nextLine();
+                        System.out.println(ErrorMessage.inputMessage + "\n");
+                        //scanner.nextLine();
                     }
                 }
                 setActionCorrect(false);
@@ -296,27 +287,25 @@ public class VirtualView implements ViewObservable, ModelObserver {
         return notifyCurrentPlayer();
     }*/
 
-
-
     /**
      * this method is used to ask to choose one of the 2 worker of the currentPlayer available
      * @return 1 for worker1, 2 for worker2
      */
-    public int handleStart(){
-
-        int x = getWorker();
-        notifyStart(x);
+    public int handleStart() {
+        int worker = 0;
         setActionCorrect(false);
-        return x;
+        while(!actionCorrect) {
+            worker = getWorker();
+            notifyStart(worker);
+        }
+        return worker;
     }
-
 
     /**
      * It's a handle method that gives the view the information about all the action that a playerCard can perform
      * @return array of String arrays with {START,PREMOVE,MOVE,PREBUILD,BUILD,END}
      */
     public String[][] handleWhatToDo(String s) {
-
         outputStream.println("\n" + s + " it's your turn!!!"+"\n");
         return notifyWhatToDo();
     }
@@ -326,6 +315,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
      * @param worker is an integer that tells which of the two worker are selected from the user
      */
     public void handleMove(Integer worker){
+        setActionCorrect(false);
         while(!actionCorrect) {
             String[] s = null;
             outputStream.println(ViewMessage.moveMessage);
@@ -333,13 +323,9 @@ public class VirtualView implements ViewObservable, ModelObserver {
                 String input = scanner.nextLine();
                 s = input.split(",");
                 notifyMove(choice = new Choice(Integer.parseInt(s[0]), Integer.parseInt(s[1]), worker, null,null));
-            }
-            catch (NumberFormatException e){
-
-            }
-            catch (ArrayIndexOutOfBoundsException e){
-                System.out.println(ErrorMessage.InputMessage + "\n");
-                scanner.nextLine();
+            } catch (NumberFormatException | ArrayIndexOutOfBoundsException e){
+                System.out.println(ErrorMessage.inputMessage + "\n");
+                //scanner.nextLine();
             }
         }
     }
@@ -351,6 +337,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
      */
     public void handleBuild(Integer worker){
         int counter = 0;
+        setActionCorrect(false);
         while(!actionCorrect) {
             try {
                 if(counter == 0)
@@ -360,7 +347,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
                 b = build.split(",");
                 if (! build.equals("")) {
                     counter = 0;
-                    outputStream.println(ViewMessage.LevelMessage + "\n");
+                    outputStream.println(ViewMessage.levelMessage + "\n");
                     String answer = scanner.nextLine();
                     if (answer.toUpperCase().equals("YES")) {
                         outputStream.println("Insert level:" + "\n");
@@ -371,13 +358,9 @@ public class VirtualView implements ViewObservable, ModelObserver {
                 }
                 else
                     counter = 1;
-            }
-            catch (NumberFormatException e){
-                System.out.println(ErrorMessage.InputMessage + "\n");
-            }
-            catch (ArrayIndexOutOfBoundsException e){
-                System.out.println(ErrorMessage.InputMessage + "\n");
-                scanner.nextLine();
+            } catch (NumberFormatException | ArrayIndexOutOfBoundsException e){
+                System.out.println(ErrorMessage.inputMessage + "\n");
+                //scanner.nextLine();
             }
         }
     }
@@ -425,14 +408,14 @@ public class VirtualView implements ViewObservable, ModelObserver {
         TimerTask task = new TimerTask() {
             public void run() {
                 if(finalStr[0].equals("")) {
-                    System.out.println("You input nothing. No undo is done...");
+                    System.out.println("You input nothing. UNDO wasn't done...");
                     value[0] = false;
                 }
             }
         };
         timer.schedule(task, 5000);
         if(warning.equals("WARNING"))
-            System.out.println(ErrorMessage.PowerBlockingMessage);
+            System.out.println(ErrorMessage.blockingMessage);
         System.out.println( "Input a YES within 5 seconds for UNDO : ");
         Scanner input = new Scanner(System.in);
         String action = input.nextLine();
@@ -456,7 +439,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
      * @param s says if handle function must me of type : MOVE, BUILD OR EFFECT
      * @param worker all the actions (not the effect) are referred to a worker that does it
      */
-    public boolean callPowerFunction(String s,Integer worker){
+    public boolean callPowerFunction(String s, Integer worker){
         boolean askUndo=false;
         switch (s) {
             case "MOVE":

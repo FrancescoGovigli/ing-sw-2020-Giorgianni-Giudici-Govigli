@@ -44,6 +44,7 @@ public class AtlasTest {
         p1.initialPosition(0,0, p1.getWorker1());
         p1.initialPosition(4,4, p1.getWorker2());
         p1.build(1,1,4, p1.getWorker1());
+        assertEquals(4, GameBoard.getInstance().getCell(1,1).getLevel());
         p1.doUndoBuild(p1.getWorker1());
         p1.build(1,1,g.getCell(2,2).getLevel()+1, p1.getWorker1());
         assertEquals(1, GameBoard.getInstance().getCell(1,1).getLevel());

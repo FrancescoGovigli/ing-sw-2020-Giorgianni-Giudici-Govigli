@@ -4,7 +4,9 @@ public class DeckOfGods {
 
     public static String[] godAvailable = {"APOLLO", "ARTEMIS", "ATHENA", "ATLAS", "DEMETER", "HEPHAESTUS", "MINOTAUR", "PAN", "PROMETHEUS"};
 
-    public static String[] possibleGods(){return godAvailable;}
+    public static String[] possibleGods() {
+        return godAvailable;
+    }
 
     public static SimpleGod setGod(String cardName, Worker worker1, Worker worker2){
         SimpleGod cardSelected;

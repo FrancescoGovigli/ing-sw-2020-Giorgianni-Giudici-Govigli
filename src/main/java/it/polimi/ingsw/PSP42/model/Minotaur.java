@@ -12,6 +12,7 @@ public class Minotaur extends SimpleGod{
     private int minotaurY = -1;
     private int opponentPrecedentX = -1;
     private int opponentPrecedentY = -1;
+    private int moveNumber = 0;
 
     public Minotaur(Worker w1, Worker w2) {
         super(w1, w2);
@@ -55,6 +56,7 @@ public class Minotaur extends SimpleGod{
                 return false;
         }
         if(powerMoveAvailable(x, y, w)) {
+            moveNumber = 1;
             Worker opponentWorker = GameBoard.getInstance().getCell(x, y).getWorker();
             if(opponentWorker != null) {
                 minotaurX = w.getCurrentX();
@@ -65,8 +67,10 @@ public class Minotaur extends SimpleGod{
                 int deltaY = y - w.getCurrentY();
                 int newOpponentX = x + deltaX;
                 int newOpponentY = y + deltaY;
-                if (GameBoard.getInstance().getCell(newOpponentX, newOpponentY).getWorker() == null &&
-                        GameBoard.getInstance().getCell(newOpponentX, newOpponentY).getLevel() != 4) {
+                Cell newOpponentCell = getNewOpponentCell(newOpponentX, newOpponentY);
+                if (newOpponentCell != null &&
+                        newOpponentCell.getWorker() == null &&
+                            newOpponentCell.getLevel() != 4) {
                     opponentWorker.setPosition(newOpponentX, newOpponentY);
                     w.setPosition(x, y);
                     return true;
@@ -85,6 +89,23 @@ public class Minotaur extends SimpleGod{
     }
 
     /**
+     * "Standard" power build, as in "SimpleGod", plus setting of param "moveNum" for Undo functionalities.
+     * @param x position on x-axis where worker wants to build
+     * @param y position on y-axis where worker wants to build
+     * @param level block level to build
+     * @param w worker
+     * @return true if worker builds, false otherwise
+     */
+    public boolean powerBuild(int x, int y, int level, Worker w) {
+        moveNumber = 0;
+        if (powerBuildAvailable(x, y, level, w)) {
+            w.buildBlock(x, y);
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Used to know in what cells worker is able to move thanks to minotaur power.
      * @param x position on x-axis
      * @param y position on y-axis
@@ -98,17 +119,29 @@ public class Minotaur extends SimpleGod{
             for (int j = 0; j < 3; j++) {
                 if (c[i][j] != null &&                                      // c cell isn't out of map and and
                         (c[i][j].getWorker() == null ||                         // (there is no worker in the cell or
-                                c[i][j].getWorker().getPlayer() != GameBoard.getInstance().getCell(x, y).getWorker().getPlayer()) &&   // worker to be push away is not of the same player) and
-                        (c[i][j].getLevel() != 4) &&                            // is not 4th level and
-                        ((c[i][j].getLevel() - GameBoard.getInstance().getCell(x, y).getLevel() <= 1) &&    // one gap level on ascent and
-                                (c[i][j].getLevel() - GameBoard.getInstance().getCell(x, y).getLevel() >= - 3)))   // limit for the descent
-                {
+                            c[i][j].getWorker().getPlayer() != GameBoard.getInstance().getCell(x, y).getWorker().getPlayer()) &&   // worker to be push away is not of the same player) and
+                                (c[i][j].getLevel() != 4) &&                            // is not 4th level and
+                                    ((c[i][j].getLevel() - GameBoard.getInstance().getCell(x, y).getLevel() <= 1) &&    // one gap level on ascent and
+                                        (c[i][j].getLevel() - GameBoard.getInstance().getCell(x, y).getLevel() >= - 3))) {   // limit for the descent
                     adjCellMoveAvailable[index] = c[i][j];
                     index++;
                 }
             }
         }
         return adjCellMoveAvailable;
+    }
+
+    /**
+     * Used to verify if a cell is in the game board
+     * @param x position on x-axis of the cell
+     * @param y position on x-axis of the cell
+     * @return cell(x,y) if it is in the game board, null otherwise
+     */
+    public Cell getNewOpponentCell(int x, int y) {
+        if(x >= 0 && x <= 4 && y >= 0 && y <= 4)
+            return GameBoard.getInstance().getCell(x, y);
+        else
+            return null;
     }
 
     //UNDO
@@ -120,12 +153,13 @@ public class Minotaur extends SimpleGod{
         values.add(minotaurY);
         values.add(opponentPrecedentX);
         values.add(opponentPrecedentY);
+        values.add(moveNumber);
         return (ArrayList<Integer>) values.clone();
     }
 
     @Override
     public void reSetValues(ArrayList<Integer> valuesToRestore) {
-        if (minotaurX != -1 && minotaurY != -1 && opponentPrecedentX != -1 && opponentPrecedentY != -1) {
+        if (minotaurX != -1 && minotaurY != -1 && opponentPrecedentX != -1 && opponentPrecedentY != -1 && moveNumber == 1) {
             int deltaX = opponentPrecedentX - minotaurX;
             int deltaY = opponentPrecedentY - minotaurY;
             Worker opponent = GameBoard.getInstance().getCell(opponentPrecedentX + deltaX, opponentPrecedentY + deltaY).getWorker();
@@ -135,5 +169,6 @@ public class Minotaur extends SimpleGod{
         this.minotaurY = valuesToRestore.get(1);
         this.opponentPrecedentX = valuesToRestore.get(2);
         this.opponentPrecedentY = valuesToRestore.get(3);
+        this.moveNumber = valuesToRestore.get(4);
     }
 }

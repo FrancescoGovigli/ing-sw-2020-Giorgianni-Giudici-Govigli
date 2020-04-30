@@ -72,6 +72,13 @@ public class MinotaurTest {
         p1.move(1, 0, p1.getWorker1());
         assertEquals(g.getCell(1,0).getWorker(), p1.getWorker1());
         assertEquals(g.getCell(1,1).getWorker(), p2.getWorker1());
+        g.getCell(2,1).setCellLevel();
+        p1.move(1,1, p1.getWorker1());
+        p1.doUndoMove(p1.getWorker1());
+        assertEquals(g.getCell(1,0).getWorker(), p1.getWorker1());
+        p1.move(2, 0, p1.getWorker1());
+        assertEquals(g.getCell(2,0).getWorker(), p1.getWorker1());
+        assertEquals(g.getCell(1,1).getWorker(), p2.getWorker1());
     }
 
     @Test
@@ -90,6 +97,22 @@ public class MinotaurTest {
         p1.doUndoMove(p1.getWorker1());
         assertEquals(g.getCell(0,0).getWorker(), p1.getWorker1());
         p1.move(1, 1, p1.getWorker1());
+        assertEquals(g.getCell(1,1).getWorker(), p1.getWorker1());
+        assertEquals(g.getCell(2,2).getWorker(), p2.getWorker1());
+    }
+
+    @Test
+    public void undoBuild_notUndoPushOpponent_allOK() {
+        p1.initialPosition(0,0, p1.getWorker1());
+        p1.initialPosition(0,1, p1.getWorker2());
+        p2.initialPosition(1,1, p2.getWorker1());
+        p2.initialPosition(4,4, p2.getWorker2());
+        p1.move(1,1, p1.getWorker1());
+        assertEquals(g.getCell(1,1).getWorker(), p1.getWorker1());
+        assertEquals(g.getCell(2,2).getWorker(), p2.getWorker1());
+        p1.build(2,1,1, p1.getWorker1());
+        p1.doUndoBuild(p1.getWorker1());
+        assertEquals(0, g.getCell(2,2).getLevel());
         assertEquals(g.getCell(1,1).getWorker(), p1.getWorker1());
         assertEquals(g.getCell(2,2).getWorker(), p2.getWorker1());
     }

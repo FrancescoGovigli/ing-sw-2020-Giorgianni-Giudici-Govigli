@@ -1,0 +1,272 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Player</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.PSP42.model</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Player (it.polimi.ingsw.PSP42.model)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Player</td>
+<td class="coverageStat">
+  <span class="percent">
+    81,2%
+  </span>
+  <span class="absValue">
+    (13/ 16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    83,3%
+  </span>
+  <span class="absValue">
+    (40/ 48)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Player$State</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    82,4%
+  </span>
+  <span class="absValue">
+    (14/ 17)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    83,7%
+  </span>
+  <span class="absValue">
+    (41/ 49)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.PSP42.model;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;/**
+<i>4</i>&nbsp; * @author Francesco Govigli
+<i>5</i>&nbsp; */
+<i>6</i>&nbsp;public class Player {
+<i>7</i>&nbsp;    private final SimpleGod card;
+<i>8</i>&nbsp;    private final int id;
+<i>9</i>&nbsp;    private final int age;
+<i>10</i>&nbsp;    private final String nickname;
+<i>11</i>&nbsp;    private final Worker worker1;
+<i>12</i>&nbsp;    private final Worker worker2;
+<b class="fc"><i>13</i>&nbsp;    private enum State {WIN, LOSE, INGAME}</b>
+<b class="fc"><i>14</i>&nbsp;    private State playerState = State.INGAME;</b>
+<i>15</i>&nbsp;    private Undo undo;  // UNDO
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;    /**
+<i>18</i>&nbsp;     * Constructor to initialize a player object and instantiating 2 workers used by the player outside the Map cell(-1,-1)
+<i>19</i>&nbsp;     * @param nick nickname choosed from the player
+<i>20</i>&nbsp;     * @param id   id automatically given to choose the order of gameplay during constructing
+<i>21</i>&nbsp;     * @param cardName choosed from the player
+<i>22</i>&nbsp;     */
+<b class="fc"><i>23</i>&nbsp;    public Player(String nick, int id, int age, String cardName) {</b>
+<b class="fc"><i>24</i>&nbsp;        this.nickname = nick;</b>
+<b class="fc"><i>25</i>&nbsp;        this.age = age;</b>
+<b class="fc"><i>26</i>&nbsp;        this.id = id;</b>
+<b class="fc"><i>27</i>&nbsp;        this.worker1 = new Worker(- 1, - 1, this);</b>
+<b class="fc"><i>28</i>&nbsp;        this.worker2 = new Worker(- 1, - 1, this);</b>
+<b class="fc"><i>29</i>&nbsp;        this.card = DeckOfGods.setGod(cardName, worker1, worker2);</b>
+<b class="fc"><i>30</i>&nbsp;        this.undo = new Undo(); // UNDO</b>
+<b class="fc"><i>31</i>&nbsp;    }</b>
+<i>32</i>&nbsp;
+<i>33</i>&nbsp;    /**
+<i>34</i>&nbsp;     * In every move of a player it&#39;s important to get the GodCard assigned to the player
+<i>35</i>&nbsp;     * @return card
+<i>36</i>&nbsp;     */
+<i>37</i>&nbsp;    public SimpleGod getCard() {
+<b class="fc"><i>38</i>&nbsp;        return card;</b>
+<i>39</i>&nbsp;    }
+<i>40</i>&nbsp;
+<i>41</i>&nbsp;    /**
+<i>42</i>&nbsp;     * Used to get the id of a player to know the order of the gameplay
+<i>43</i>&nbsp;     * @return id (it&#39;s an integer from 1 to 3 if the game is planned for 3 player)
+<i>44</i>&nbsp;     */
+<i>45</i>&nbsp;    public int getId() {
+<b class="nc"><i>46</i>&nbsp;        return id;</b>
+<i>47</i>&nbsp;    }
+<i>48</i>&nbsp;
+<i>49</i>&nbsp;    public int getAge() {
+<b class="nc"><i>50</i>&nbsp;        return age;</b>
+<i>51</i>&nbsp;    }
+<i>52</i>&nbsp;
+<i>53</i>&nbsp;    public String getNickname() {
+<b class="fc"><i>54</i>&nbsp;        return nickname;</b>
+<i>55</i>&nbsp;    }
+<i>56</i>&nbsp;
+<i>57</i>&nbsp;    public Worker getWorker1() {
+<b class="fc"><i>58</i>&nbsp;        return worker1;</b>
+<i>59</i>&nbsp;    }
+<i>60</i>&nbsp;
+<i>61</i>&nbsp;    public Worker getWorker2() {
+<b class="fc"><i>62</i>&nbsp;        return worker2;</b>
+<i>63</i>&nbsp;    }
+<i>64</i>&nbsp;
+<i>65</i>&nbsp;    /**
+<i>66</i>&nbsp;     * It is an important getter to know the status of a player during the game
+<i>67</i>&nbsp;     * @return
+<i>68</i>&nbsp;     */
+<i>69</i>&nbsp;    public String getPlayerState() {
+<b class="fc"><i>70</i>&nbsp;        if(playerState.equals(State.INGAME))</b>
+<b class="nc"><i>71</i>&nbsp;            return &quot;INGAME&quot;;</b>
+<b class="fc"><i>72</i>&nbsp;        if(playerState.equals(State.WIN))</b>
+<b class="fc"><i>73</i>&nbsp;            return &quot;WIN&quot;;</b>
+<b class="nc"><i>74</i>&nbsp;        if(playerState.equals(State.LOSE))</b>
+<b class="nc"><i>75</i>&nbsp;            return &quot;LOSE&quot;;</b>
+<b class="nc"><i>76</i>&nbsp;        return &quot;NO_STATE&quot;;</b>
+<i>77</i>&nbsp;    }
+<i>78</i>&nbsp;
+<i>79</i>&nbsp;    /**
+<i>80</i>&nbsp;     * Enum State used to know if a player is still in game, have lost or won the game.
+<i>81</i>&nbsp;     * The gameboard has methods to change state of player looking at the whole Game State
+<i>82</i>&nbsp;     * @param s
+<i>83</i>&nbsp;     */
+<i>84</i>&nbsp;    public void setPlayerState(String s) {
+<b class="fc"><i>85</i>&nbsp;        playerState = State.valueOf(s);</b>
+<b class="fc"><i>86</i>&nbsp;    }</b>
+<i>87</i>&nbsp;
+<i>88</i>&nbsp;    /**
+<i>89</i>&nbsp;     * Method used to initialize the worker in cell (x,y)
+<i>90</i>&nbsp;     * @param x is the initialization x-coordinate
+<i>91</i>&nbsp;     * @param y is the initialization y-coordinate
+<i>92</i>&nbsp;     * @param w is the worker initialized in gameboard
+<i>93</i>&nbsp;     */
+<i>94</i>&nbsp;    public boolean initialPosition ( int x, int y, Worker w){
+<b class="fc"><i>95</i>&nbsp;        if (x &gt;= 0 &amp;&amp; x &lt;= 4 &amp;&amp; y &gt;= 0 &amp;&amp; y &lt;= 4)</b>
+<b class="fc"><i>96</i>&nbsp;            return card.powerInitialPosition(x, y, w);</b>
+<b class="nc"><i>97</i>&nbsp;        return false;</b>
+<i>98</i>&nbsp;    }
+<i>99</i>&nbsp;
+<i>100</i>&nbsp;    /**
+<i>101</i>&nbsp;     * Method used to move the worker w in (x,y) position
+<i>102</i>&nbsp;     * @param x is the x-coordinate for the move
+<i>103</i>&nbsp;     * @param y is the y-coordinate for the move
+<i>104</i>&nbsp;     * @param w is the worker who moves
+<i>105</i>&nbsp;     */
+<i>106</i>&nbsp;    public boolean move(int x, int y, Worker w) {
+<b class="fc"><i>107</i>&nbsp;        if (x &gt;= 0 &amp;&amp; x &lt;= 4 &amp;&amp; y &gt;= 0 &amp;&amp; y &lt;= 4) {</b>
+<b class="fc"><i>108</i>&nbsp;            undo.undoMoveSet(w);    // UNDO</b>
+<b class="fc"><i>109</i>&nbsp;            if (card.powerMove(x, y, w)) {   //[preV]return card.powerMove(x, y, w);</b>
+<b class="fc"><i>110</i>&nbsp;                undo.undoMovePossible();</b>
+<b class="fc"><i>111</i>&nbsp;                return true;</b>
+<i>112</i>&nbsp;            }
+<i>113</i>&nbsp;        }
+<b class="fc"><i>114</i>&nbsp;        return false;</b>
+<i>115</i>&nbsp;    }
+<i>116</i>&nbsp;
+<i>117</i>&nbsp;    // UNDO MOVE
+<i>118</i>&nbsp;    public void doUndoMove(Worker w){
+<b class="fc"><i>119</i>&nbsp;        undo.undoMoveApply(w);</b>
+<b class="fc"><i>120</i>&nbsp;        undo.undoMoveDone();</b>
+<b class="fc"><i>121</i>&nbsp;    }</b>
+<i>122</i>&nbsp;
+<i>123</i>&nbsp;    /**
+<i>124</i>&nbsp;     * Method used to build with worker w in (x,y) position
+<i>125</i>&nbsp;     * @param x is the x-coordinate for the construction
+<i>126</i>&nbsp;     * @param y is the y-coordinate for the construction
+<i>127</i>&nbsp;     * @param w is the worker who builds
+<i>128</i>&nbsp;     */
+<i>129</i>&nbsp;    public boolean build(int x, int y, int level, Worker w) {
+<b class="fc"><i>130</i>&nbsp;        if (x &gt;= 0 &amp;&amp; x &lt;= 4 &amp;&amp; y &gt;= 0 &amp;&amp; y &lt;= 4 &amp;&amp; level &gt;= 0 &amp;&amp; level &lt;= 4)</b>
+<b class="fc"><i>131</i>&nbsp;            undo.undoBuildSet(x, y, w);    // UNDO</b>
+<b class="fc"><i>132</i>&nbsp;            if (card.powerBuild(x, y, level, w)) {  //[preV]return card.powerBuild(x, y, level, w)</b>
+<b class="fc"><i>133</i>&nbsp;                undo.undoBuildPossible();</b>
+<b class="fc"><i>134</i>&nbsp;                return true;</b>
+<i>135</i>&nbsp;            }
+<b class="fc"><i>136</i>&nbsp;        return false;</b>
+<i>137</i>&nbsp;    }
+<i>138</i>&nbsp;
+<i>139</i>&nbsp;    // UNDO BUILD
+<i>140</i>&nbsp;    public void doUndoBuild(Worker w){
+<b class="fc"><i>141</i>&nbsp;        undo.undoBuildApply(w);</b>
+<b class="fc"><i>142</i>&nbsp;        undo.undoBuildDone();</b>
+<b class="fc"><i>143</i>&nbsp;    }</b>
+<i>144</i>&nbsp;
+<i>145</i>&nbsp;    /**
+<i>146</i>&nbsp;     * TODO
+<i>147</i>&nbsp;     * @return
+<i>148</i>&nbsp;     */
+<i>149</i>&nbsp;    public boolean effect(){
+<b class="fc"><i>150</i>&nbsp;        return card.powerEffect();</b>
+<i>151</i>&nbsp;    }
+<i>152</i>&nbsp;
+<i>153</i>&nbsp;    /**
+<i>154</i>&nbsp;     * Method used to know the phase sequence of a Simple God
+<i>155</i>&nbsp;     * @return an array of strings with variable size lines, initialized by the specific phases that a god has during his turn
+<i>156</i>&nbsp;     * Structured like:
+<i>157</i>&nbsp;     *  start   preMove     Move    preBuild    Build   End
+<i>158</i>&nbsp;     *  [   ]   [   ]       [   ]   [       ]   [   ]   [   ]
+<i>159</i>&nbsp;     */
+<i>160</i>&nbsp;    public String[][] checkWhatToDo(){
+<b class="nc"><i>161</i>&nbsp;            return card.getWhatToDo();</b>
+<i>162</i>&nbsp;        }
+<i>163</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-04-30 18:48</div>
+</div>
+</body>
+</html>

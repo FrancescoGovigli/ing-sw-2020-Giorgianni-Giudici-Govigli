@@ -145,7 +145,7 @@ public class Athena extends SimpleGod {
     }
 
     public String effectOFF() {
-        return "Other players now can step up!";
+        return "Other players now can step up!\n";
     }
 
     //UNDO

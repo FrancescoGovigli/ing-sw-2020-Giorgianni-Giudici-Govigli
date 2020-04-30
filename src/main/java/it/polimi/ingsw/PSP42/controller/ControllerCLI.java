@@ -13,11 +13,10 @@ public class ControllerCLI implements ViewObserver {
     private final GameBoard g;
     private final VirtualView view;
     private final ControllerHandler handler;
-    private  String gameState;
+    private String gameState;
     private boolean gameDone;
     private boolean turnDone;
     private boolean actionDone;
-
 
     public ControllerCLI(GameBoard model, VirtualView v) {
         g = model;
@@ -26,7 +25,7 @@ public class ControllerCLI implements ViewObserver {
     }
 
     public void setGameState(String s){
-        gameState=s;
+        gameState = s;
     }
 
     public String getGameState() {
@@ -41,13 +40,12 @@ public class ControllerCLI implements ViewObserver {
         ArrayList<Player> players = new ArrayList<>();
         ArrayList<UserData> data = view.getPlayerData(handler.pickCards(numPlayer));
         for (int i = 0; i < view.getNumPlayers(); i++) {
-            players.add(new Player(data.get(i).getNickname(), i + 1,data.get(i).getAge(),data.get(i).getCardChoosed()));
+            players.add(new Player(data.get(i).getNickname(), i + 1, data.get(i).getAge(), data.get(i).getCardChoosed()));
         }
         g.setPlayers(players);
         g.setGamePhase("START");
-        gameState="START";
+        gameState = "START";
     }
-
 
     /**
      * * The method used to start the game and handle a turn
@@ -59,16 +57,14 @@ public class ControllerCLI implements ViewObserver {
         view.handleInitialPosition();
 
         while (!isGameDone()) {
-            Integer worker=null;
-            String[][] whatToDo=null;
-            String nome = handler.controlCurrentPlayer();
+            Integer worker = null;
+            String[][] whatToDo = null;
+            String name = handler.controlCurrentPlayer();
+
             while(!isTurnDone()) {
-
                 if(gameState.equals("START")) {
-
-                    whatToDo = view.handleWhatToDo(nome);
+                    whatToDo = view.handleWhatToDo(name);
                 }
-
                 switch (gameState) {
                     case "START":
                         while(!isActionDone()) {
@@ -156,6 +152,7 @@ public class ControllerCLI implements ViewObserver {
     public void updateInit(Object o) {
         handler.controlInit(o);
     }
+
     @Override
     public void updateMove(Object o){
         handler.controlMove(o);

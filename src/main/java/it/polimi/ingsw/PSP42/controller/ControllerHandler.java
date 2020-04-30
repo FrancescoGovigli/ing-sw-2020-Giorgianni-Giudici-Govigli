@@ -11,11 +11,10 @@ public class ControllerHandler {
     private final VirtualView view;
     private final ControllerCLI mainController;
 
-    public ControllerHandler(GameBoard g, VirtualView v,ControllerCLI c){
-        gameBoard=g;
-        view=v;
-        mainController=c;
-
+    public ControllerHandler(GameBoard g, VirtualView v,ControllerCLI c) {
+        gameBoard = g;
+        view = v;
+        mainController = c;
     }
 
     /**
@@ -24,7 +23,7 @@ public class ControllerHandler {
      *          no choice is done and its the creationgame invoked. If there a user choice it will set
      *          the initial position of the workers
      */
-    public void controlInit(Object o){
+    public void controlInit(Object o) {
         if (view.getChoice().allFieldsNull()) {
             mainController.createGame(view.getNumPlayers());
             GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
@@ -49,13 +48,12 @@ public class ControllerHandler {
      * Handles to call the method in the model to modify the state of the worker selected
      * @param o represent always the Choice done by the user
      */
-    public void controlMove(Object o){
+    public void controlMove(Object o) {
         Worker w = null;
         boolean check;
         //check what worker is moving
         if (view.getChoice().getWorker() == 1)
             w = (gameBoard.getPlayers()).get(gameBoard.getCurrentPlayer()).getWorker1();
-
         if (view.getChoice().getWorker() == 2)
             w = (gameBoard.getPlayers()).get(gameBoard.getCurrentPlayer()).getWorker2();
         //check if worker is able to move at least in one position
@@ -69,7 +67,6 @@ public class ControllerHandler {
                     GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
                     return;
                 }
-
                 view.setActionCorrect(true);
                 GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
             }
@@ -145,8 +142,10 @@ public class ControllerHandler {
         gameBoard.workerAvailable(w2);
         gameBoard.loseCondition(gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()),"START");
         if (gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getPlayerState().equals("LOSE")) {
-            mainController.setGameState("END");
             ViewMessage.loseMessage(gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getNickname());
+            GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
+            view.handleEnd();
+            controlNextState("START");
         }
 
         int playersInGame = 0;
@@ -236,20 +235,18 @@ public class ControllerHandler {
      * The method gives the values to the View to know which action to call and in with phase of the turn.
      * @return
      */
-
     public String[][] controlWhatToDo() {
         int current = gameBoard.getCurrentPlayer();
-        return gameBoard.getPlayers().get(current).checkWhatTodo();
+        return gameBoard.getPlayers().get(current).checkWhatToDo();
     }
 
     /**
      * Update method to choose the right worker only if available during the starting phase of turn
-     * @return 1 == worker1, 2==worker2;
+     * @return 1 == worker1, 2 == worker2;
      */
-
     public int controlStart(Integer i) {
         int choice = i;
-        Worker w=null;
+        Worker w = null;
         if (choice == 1)
             w = (gameBoard.getPlayers()).get(gameBoard.getCurrentPlayer()).getWorker1();
         if (choice == 2)
@@ -257,13 +254,14 @@ public class ControllerHandler {
         boolean check = w.getAvailable();
         if (check)
             view.setActionCorrect(true);
+        else
+            view.setActionCorrect(false);
         return choice;
     }
 
     /**
-     * Says the view to Print that effect(not explicit power) is applied
+     * Says the view to Print that effect (not explicit power) is applied
      */
-
     public void controlEffect() {
         if (gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).effect()) {
             if(gameBoard.getGamePhase().equals("END"))
@@ -312,10 +310,6 @@ public class ControllerHandler {
                 break;
         }
     }
-
-
-
-
 
     /**
      * Utility method to know, which was the previous Phase of the Turn
@@ -368,11 +362,4 @@ public class ControllerHandler {
         }
         return randomPick;
     }
-
-
-
-
-
-
-
 }

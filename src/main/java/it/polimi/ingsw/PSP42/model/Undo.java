@@ -81,7 +81,7 @@ public class Undo {
         if (undoBuild) {
             GameBoard.getInstance().getCell(undoBuildX, undoBuildY).setSpecificCellLevel(undoBuildLevel);
             if (godValuesToRestore != null)
-            worker.getPlayer().getCard().reSetValues((ArrayList<Integer>) godValuesToRestore.clone());
+                worker.getPlayer().getCard().reSetValues((ArrayList<Integer>) godValuesToRestore.clone());
         }
     }
 

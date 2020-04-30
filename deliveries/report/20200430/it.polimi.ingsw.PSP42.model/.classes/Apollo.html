@@ -1,0 +1,247 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Apollo</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.PSP42.model</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Apollo (it.polimi.ingsw.PSP42.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Apollo</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/ 8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    95,2%
+  </span>
+  <span class="absValue">
+    (80/ 84)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.PSP42.model;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import java.util.ArrayList;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;/**
+<i>6</i>&nbsp; * Simple god that allowed a worker to move in a cell occupied by another worker, switching their position.
+<i>7</i>&nbsp; */
+<i>8</i>&nbsp;public class Apollo extends SimpleGod {
+<i>9</i>&nbsp;
+<b class="fc"><i>10</i>&nbsp;    private int apolloX = -1;</b>
+<b class="fc"><i>11</i>&nbsp;    private int apolloY = -1;</b>
+<b class="fc"><i>12</i>&nbsp;    private int opponentX = -1;</b>
+<b class="fc"><i>13</i>&nbsp;    private int opponentY = -1;</b>
+<b class="fc"><i>14</i>&nbsp;    private int moveNum = 0;</b>
+<i>15</i>&nbsp;
+<i>16</i>&nbsp;    public Apollo(Worker w1,Worker w2) {
+<b class="fc"><i>17</i>&nbsp;        super(w1, w2);</b>
+<b class="fc"><i>18</i>&nbsp;    }</b>
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;    @Override
+<i>21</i>&nbsp;    public String[][] setPhase() {
+<b class="fc"><i>22</i>&nbsp;        String[] start = {&quot;EMPTY&quot;};</b>
+<b class="fc"><i>23</i>&nbsp;        String[] preMove = {&quot;EMPTY&quot;};</b>
+<b class="fc"><i>24</i>&nbsp;        String[] move = {&quot;MOVE&quot;};</b>
+<b class="fc"><i>25</i>&nbsp;        String[] preBuild = {&quot;EMPTY&quot;};</b>
+<b class="fc"><i>26</i>&nbsp;        String[] build = {&quot;BUILD&quot;};</b>
+<b class="fc"><i>27</i>&nbsp;        String[] end = {&quot;EMPTY&quot;};</b>
+<b class="fc"><i>28</i>&nbsp;        String[][] phase = {start, preMove, move, preBuild, build, end};</b>
+<b class="fc"><i>29</i>&nbsp;        return phase;</b>
+<i>30</i>&nbsp;    }
+<i>31</i>&nbsp;
+<i>32</i>&nbsp;    /**
+<i>33</i>&nbsp;     * Used to verify if the worker is able to move even if there is an other worker on the other cell.
+<i>34</i>&nbsp;     * @param x position on the x-axis
+<i>35</i>&nbsp;     * @param y position on the y-axis
+<i>36</i>&nbsp;     * @param w worker who wants to move
+<i>37</i>&nbsp;     * @return true if worker is able to move, false otherwise
+<i>38</i>&nbsp;     */
+<i>39</i>&nbsp;    @Override
+<i>40</i>&nbsp;    public boolean powerMoveAvailable(int x, int y, Worker w) {
+<b class="fc"><i>41</i>&nbsp;        Cell[] adj = this.adjacentCellMovePowerAvailable(w.getCurrentX(), w.getCurrentY());</b>
+<b class="fc"><i>42</i>&nbsp;        for (int i = 0; i &lt; adj.length; i++) {</b>
+<b class="fc"><i>43</i>&nbsp;            if (GameBoard.getInstance().getCell(x, y).equals(adj[i])) {</b>
+<b class="fc"><i>44</i>&nbsp;                GameBoard.getInstance().winCondition(x, y, w);</b>
+<b class="fc"><i>45</i>&nbsp;                return true;</b>
+<i>46</i>&nbsp;            }
+<i>47</i>&nbsp;        }
+<b class="fc"><i>48</i>&nbsp;        return false;</b>
+<i>49</i>&nbsp;    }
+<i>50</i>&nbsp;
+<i>51</i>&nbsp;    /**
+<i>52</i>&nbsp;     * Used to move in a cell occupied by another worker and switch the two positions.
+<i>53</i>&nbsp;     * @param x position on the x-axis
+<i>54</i>&nbsp;     * @param y position on the y-axis
+<i>55</i>&nbsp;     * @param w worker who wants to move
+<i>56</i>&nbsp;     */
+<i>57</i>&nbsp;    @Override
+<i>58</i>&nbsp;    public boolean powerMove(int x, int y, Worker w) {
+<b class="fc"><i>59</i>&nbsp;        for (Player effectPlayer : effectPlayers) {</b>
+<b class="nc"><i>60</i>&nbsp;            if (effectPlayer != null &amp;&amp; !effectPlayer.getCard().powerMoveAvailable(x, y, w))</b>
+<b class="nc"><i>61</i>&nbsp;                return false;</b>
+<b class="nc"><i>62</i>&nbsp;        }</b>
+<b class="fc"><i>63</i>&nbsp;        if (powerMoveAvailable(x, y, w)){</b>
+<b class="fc"><i>64</i>&nbsp;            moveNum = 1;</b>
+<b class="fc"><i>65</i>&nbsp;            Worker toSwap = GameBoard.getInstance().getCell(x, y).getWorker();</b>
+<b class="fc"><i>66</i>&nbsp;            if(toSwap!=null) {</b>
+<b class="fc"><i>67</i>&nbsp;                int tempPosX = w.getCurrentX();</b>
+<b class="fc"><i>68</i>&nbsp;                int tempPosY = w.getCurrentY();</b>
+<b class="fc"><i>69</i>&nbsp;                toSwap.unSetPosition();</b>
+<b class="fc"><i>70</i>&nbsp;                w.setPosition(x, y);</b>
+<b class="fc"><i>71</i>&nbsp;                toSwap.setPosition(tempPosX, tempPosY);</b>
+<i>72</i>&nbsp;                // UNDO
+<b class="fc"><i>73</i>&nbsp;                apolloX = tempPosX; // position of the worker before the swap</b>
+<b class="fc"><i>74</i>&nbsp;                apolloY = tempPosY;</b>
+<b class="fc"><i>75</i>&nbsp;                opponentX = x;      // position of the opposing worker before the swap</b>
+<b class="fc"><i>76</i>&nbsp;                opponentY = y;</b>
+<b class="fc"><i>77</i>&nbsp;            }</b>
+<i>78</i>&nbsp;            else {
+<b class="fc"><i>79</i>&nbsp;                w.setPosition(x, y);</b>
+<i>80</i>&nbsp;                // UNDO
+<b class="fc"><i>81</i>&nbsp;                apolloX = -1;   // swap not done, then restore the variables to their default values</b>
+<b class="fc"><i>82</i>&nbsp;                apolloY = -1;</b>
+<b class="fc"><i>83</i>&nbsp;                opponentX = -1;</b>
+<b class="fc"><i>84</i>&nbsp;                opponentY = -1;</b>
+<i>85</i>&nbsp;            }
+<i>86</i>&nbsp;            // WIN CONDITION
+<b class="fc"><i>87</i>&nbsp;            return true;</b>
+<i>88</i>&nbsp;        }
+<b class="fc"><i>89</i>&nbsp;        return false;</b>
+<i>90</i>&nbsp;    }
+<i>91</i>&nbsp;
+<i>92</i>&nbsp;    /**
+<i>93</i>&nbsp;     * Used to know where the worker can move even if the cell is occupied by another worker.
+<i>94</i>&nbsp;     * @param x starting position on the x-axis
+<i>95</i>&nbsp;     * @param y starting position on the y-axis
+<i>96</i>&nbsp;     * @return a position&#39;s array of all the possible moves
+<i>97</i>&nbsp;     */
+<i>98</i>&nbsp;    public Cell[] adjacentCellMovePowerAvailable(int x, int y){
+<b class="fc"><i>99</i>&nbsp;        int index = 0;</b>
+<b class="fc"><i>100</i>&nbsp;        Cell[] adjCellMoveAvailable = new Cell[8];  // 8 is the maximum number of possible adjacent cell where move</b>
+<b class="fc"><i>101</i>&nbsp;        Cell[][] c = GameBoard.getInstance().submatrixGenerator(x, y);</b>
+<b class="fc"><i>102</i>&nbsp;        for (int i = 0; i &lt; 3; i++) {   //searching around the cell(x,y)</b>
+<b class="fc"><i>103</i>&nbsp;            for (int j = 0; j &lt; 3; j++) {</b>
+<b class="fc"><i>104</i>&nbsp;                if (c[i][j] != null &amp;&amp;                                      // c cell isn&#39;t out of map and and</b>
+<b class="fc"><i>105</i>&nbsp;                        (c[i][j].getWorker() == null ||                         // (there is no worker in the cell or</b>
+<b class="fc"><i>106</i>&nbsp;                                c[i][j].getWorker().getPlayer() != GameBoard.getInstance().getCell(x, y).getWorker().getPlayer()) &amp;&amp;   // worker to be exchanged is not of the same player) and</b>
+<b class="fc"><i>107</i>&nbsp;                        (c[i][j].getLevel() != 4) &amp;&amp;                            // is not 4th level and</b>
+<b class="fc"><i>108</i>&nbsp;                        ((c[i][j].getLevel() - GameBoard.getInstance().getCell(x, y).getLevel() &lt;= 1) &amp;&amp;    // one gap level on ascent and</b>
+<b class="fc"><i>109</i>&nbsp;                                (c[i][j].getLevel() - GameBoard.getInstance().getCell(x, y).getLevel() &gt;= - 3)))   // limit for the descent</b>
+<i>110</i>&nbsp;                {
+<b class="fc"><i>111</i>&nbsp;                    adjCellMoveAvailable[index] = c[i][j];</b>
+<b class="fc"><i>112</i>&nbsp;                    index++;</b>
+<i>113</i>&nbsp;                }
+<i>114</i>&nbsp;            }
+<i>115</i>&nbsp;        }
+<b class="fc"><i>116</i>&nbsp;        return adjCellMoveAvailable;</b>
+<i>117</i>&nbsp;    }
+<i>118</i>&nbsp;
+<i>119</i>&nbsp;    /**
+<i>120</i>&nbsp;     * &quot;Standard&quot; power build, as in &quot;SimpleGod&quot;, plus setting of param &quot;moveNum&quot; for Undo functionalities.
+<i>121</i>&nbsp;     * @param x position on x-axis where worker wants to build
+<i>122</i>&nbsp;     * @param y position on y-axis where worker wants to build
+<i>123</i>&nbsp;     * @param level block level to build
+<i>124</i>&nbsp;     * @param w worker
+<i>125</i>&nbsp;     * @return true if worker builds, false otherwise
+<i>126</i>&nbsp;     */
+<i>127</i>&nbsp;    public boolean powerBuild(int x, int y, int level, Worker w) {
+<b class="fc"><i>128</i>&nbsp;        moveNum = 0;</b>
+<b class="fc"><i>129</i>&nbsp;        if (powerBuildAvailable(x, y, level, w)) {</b>
+<b class="fc"><i>130</i>&nbsp;            w.buildBlock(x, y);</b>
+<b class="fc"><i>131</i>&nbsp;            return true;</b>
+<i>132</i>&nbsp;        }
+<b class="nc"><i>133</i>&nbsp;        return false;</b>
+<i>134</i>&nbsp;    }
+<i>135</i>&nbsp;
+<i>136</i>&nbsp;    @Override
+<i>137</i>&nbsp;    public ArrayList&lt;Integer&gt; getCurrentValues() {
+<b class="fc"><i>138</i>&nbsp;        ArrayList&lt;Integer&gt; values = new ArrayList&lt;Integer&gt;();</b>
+<b class="fc"><i>139</i>&nbsp;        values.add(apolloX);</b>
+<b class="fc"><i>140</i>&nbsp;        values.add(apolloY);</b>
+<b class="fc"><i>141</i>&nbsp;        values.add(opponentX);</b>
+<b class="fc"><i>142</i>&nbsp;        values.add(opponentY);</b>
+<b class="fc"><i>143</i>&nbsp;        values.add(moveNum);</b>
+<b class="fc"><i>144</i>&nbsp;        return (ArrayList&lt;Integer&gt;) values.clone();</b>
+<i>145</i>&nbsp;    }
+<i>146</i>&nbsp;
+<i>147</i>&nbsp;    @Override
+<i>148</i>&nbsp;    public void reSetValues(ArrayList&lt;Integer&gt; valuesToRestore) {
+<b class="fc"><i>149</i>&nbsp;        if (apolloX != -1 &amp;&amp; apolloY != -1 &amp;&amp; opponentX != -1 &amp;&amp; opponentY != -1 &amp;&amp; moveNum == 1){  // if swap was done</b>
+<i>150</i>&nbsp;            // it is necessary execute the swap undo as follows, because the default method is not able to to that
+<i>151</i>&nbsp;            // (the previous cell of Apollo is not free, but it is occupied by the opponent worker (toSwap))
+<b class="fc"><i>152</i>&nbsp;            Worker opponent = GameBoard.getInstance().getCell(apolloX, apolloY).getWorker();</b>
+<b class="fc"><i>153</i>&nbsp;            Worker apollo = GameBoard.getInstance().getCell(opponentX, opponentY).getWorker();</b>
+<b class="fc"><i>154</i>&nbsp;            opponent.unSetPosition();</b>
+<b class="fc"><i>155</i>&nbsp;            apollo.setPosition(apolloX, apolloY);</b>
+<b class="fc"><i>156</i>&nbsp;            opponent.setPosition(opponentX, opponentY);</b>
+<i>157</i>&nbsp;        }
+<b class="fc"><i>158</i>&nbsp;        this.apolloX = valuesToRestore.get(0);</b>
+<b class="fc"><i>159</i>&nbsp;        this.apolloY = valuesToRestore.get(1);</b>
+<b class="fc"><i>160</i>&nbsp;        this.opponentX = valuesToRestore.get(2);</b>
+<b class="fc"><i>161</i>&nbsp;        this.opponentY = valuesToRestore.get(3);</b>
+<b class="fc"><i>162</i>&nbsp;        this.moveNum = valuesToRestore.get(4);</b>
+<b class="fc"><i>163</i>&nbsp;    }</b>
+<i>164</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-04-30 18:48</div>
+</div>
+</body>
+</html>

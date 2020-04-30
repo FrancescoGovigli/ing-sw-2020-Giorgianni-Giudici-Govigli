@@ -36,7 +36,7 @@ public class Artemis extends SimpleGod {
      */
     @Override
     public boolean powerMoveAvailable(int x, int y, Worker w) {
-        if (moveNum == 0){
+        if (moveNum == 0) {
             startX = w.getCurrentX();
             startY = w.getCurrentY();
         }

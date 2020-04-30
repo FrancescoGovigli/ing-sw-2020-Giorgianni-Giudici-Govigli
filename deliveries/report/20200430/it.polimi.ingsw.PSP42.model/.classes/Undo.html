@@ -1,0 +1,174 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Undo</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.PSP42.model</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Undo (it.polimi.ingsw.PSP42.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Undo</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (9/ 9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (34/ 34)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.PSP42.model;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import java.util.ArrayList;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;public class Undo {
+<i>6</i>&nbsp;    private boolean undoMove;    // used to check if is possible do an undo_move
+<i>7</i>&nbsp;    private boolean undoBuild;   // used to check if is possible do an undo_build
+<i>8</i>&nbsp;    private int undoMoveX;       // the x value for the step_back
+<i>9</i>&nbsp;    private int undoMoveY;       // the y value for the step_back
+<i>10</i>&nbsp;    private int undoBuildX;      // the x value for the build_back
+<i>11</i>&nbsp;    private int undoBuildY;      // the y value for the build_back
+<i>12</i>&nbsp;    private int undoBuildLevel;  // the level to reset in cell (x,y)
+<i>13</i>&nbsp;    private ArrayList &lt;Integer&gt; godValuesToRestore;  // used to contains possible specific SimpleGod&#39;s values
+<i>14</i>&nbsp;
+<b class="fc"><i>15</i>&nbsp;    public Undo() {</b>
+<b class="fc"><i>16</i>&nbsp;        this.undoMove = false;</b>
+<b class="fc"><i>17</i>&nbsp;        this.undoBuild = false;</b>
+<b class="fc"><i>18</i>&nbsp;        this.godValuesToRestore = null;</b>
+<b class="fc"><i>19</i>&nbsp;    }</b>
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;    // UNDO MOVE
+<i>22</i>&nbsp;
+<i>23</i>&nbsp;    /**
+<i>24</i>&nbsp;     * Method for acquiring the position of the worker before he moves
+<i>25</i>&nbsp;     * @param worker
+<i>26</i>&nbsp;     */
+<i>27</i>&nbsp;    public void undoMoveSet(Worker worker){
+<b class="fc"><i>28</i>&nbsp;        this.undoMoveX = worker.getCurrentX();</b>
+<b class="fc"><i>29</i>&nbsp;        this.undoMoveY = worker.getCurrentY();</b>
+<b class="fc"><i>30</i>&nbsp;        if (worker.getPlayer().getCard().getCurrentValues() != null)</b>
+<b class="fc"><i>31</i>&nbsp;            this.godValuesToRestore = worker.getPlayer().getCard().getCurrentValues();</b>
+<b class="fc"><i>32</i>&nbsp;    }</b>
+<i>33</i>&nbsp;
+<i>34</i>&nbsp;    public void undoMovePossible(){
+<b class="fc"><i>35</i>&nbsp;        this.undoMove = true;</b>
+<b class="fc"><i>36</i>&nbsp;    }</b>
+<i>37</i>&nbsp;
+<i>38</i>&nbsp;    /**
+<i>39</i>&nbsp;     * Method for restoring worker position before his move
+<i>40</i>&nbsp;     * @param worker
+<i>41</i>&nbsp;     */
+<i>42</i>&nbsp;    public void undoMoveApply(Worker worker){
+<i>43</i>&nbsp;        //int toFreeX = worker.getCurrentX(); // useless if setPosition() in worker do unSetPosition()
+<i>44</i>&nbsp;        //int toFreeY = worker.getCurrentY();
+<b class="fc"><i>45</i>&nbsp;        if (undoMove) {</b>
+<b class="fc"><i>46</i>&nbsp;            worker.setPosition(undoMoveX, undoMoveY);</b>
+<b class="fc"><i>47</i>&nbsp;            if (godValuesToRestore != null)</b>
+<b class="fc"><i>48</i>&nbsp;                worker.getPlayer().getCard().reSetValues((ArrayList&lt;Integer&gt;) godValuesToRestore.clone());</b>
+<i>49</i>&nbsp;        }
+<b class="fc"><i>50</i>&nbsp;    }</b>
+<i>51</i>&nbsp;
+<i>52</i>&nbsp;    public void undoMoveDone(){
+<b class="fc"><i>53</i>&nbsp;        this.undoMove = false;</b>
+<b class="fc"><i>54</i>&nbsp;    }</b>
+<i>55</i>&nbsp;
+<i>56</i>&nbsp;    // UNDO BUILD
+<i>57</i>&nbsp;
+<i>58</i>&nbsp;    /**
+<i>59</i>&nbsp;     * Method for acquiring cell values before it is built on it
+<i>60</i>&nbsp;     * @param x
+<i>61</i>&nbsp;     * @param y
+<i>62</i>&nbsp;     * @param worker
+<i>63</i>&nbsp;     */
+<i>64</i>&nbsp;    public void undoBuildSet(int x, int y, Worker worker){
+<b class="fc"><i>65</i>&nbsp;        this.undoBuildX = x;</b>
+<b class="fc"><i>66</i>&nbsp;        this.undoBuildY = y;</b>
+<b class="fc"><i>67</i>&nbsp;        this.undoBuildLevel = GameBoard.getInstance().getCell(x, y).getLevel();</b>
+<b class="fc"><i>68</i>&nbsp;        if (worker.getPlayer().getCard().getCurrentValues() != null)</b>
+<b class="fc"><i>69</i>&nbsp;            this.godValuesToRestore = worker.getPlayer().getCard().getCurrentValues();</b>
+<b class="fc"><i>70</i>&nbsp;    }</b>
+<i>71</i>&nbsp;
+<i>72</i>&nbsp;    public void undoBuildPossible(){
+<b class="fc"><i>73</i>&nbsp;        this.undoBuild = true;</b>
+<b class="fc"><i>74</i>&nbsp;    }</b>
+<i>75</i>&nbsp;
+<i>76</i>&nbsp;    /**
+<i>77</i>&nbsp;     * Method for restoring cell state before construction
+<i>78</i>&nbsp;     * @param worker
+<i>79</i>&nbsp;     */
+<i>80</i>&nbsp;    public void undoBuildApply(Worker worker){
+<b class="fc"><i>81</i>&nbsp;        if (undoBuild) {</b>
+<b class="fc"><i>82</i>&nbsp;            GameBoard.getInstance().getCell(undoBuildX, undoBuildY).setSpecificCellLevel(undoBuildLevel);</b>
+<b class="fc"><i>83</i>&nbsp;            if (godValuesToRestore != null)</b>
+<b class="fc"><i>84</i>&nbsp;                worker.getPlayer().getCard().reSetValues((ArrayList&lt;Integer&gt;) godValuesToRestore.clone());</b>
+<i>85</i>&nbsp;        }
+<b class="fc"><i>86</i>&nbsp;    }</b>
+<i>87</i>&nbsp;
+<i>88</i>&nbsp;    public void undoBuildDone(){
+<b class="fc"><i>89</i>&nbsp;        this.undoBuild = false;</b>
+<b class="fc"><i>90</i>&nbsp;    }</b>
+<i>91</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-04-30 18:48</div>
+</div>
+</body>
+</html>

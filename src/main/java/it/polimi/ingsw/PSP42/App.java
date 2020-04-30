@@ -14,7 +14,5 @@ public class App {
         view.attach(control);
         g.attach(view);
         control.runGame();
-
-
     }
 }
