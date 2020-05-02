@@ -1,22 +1,18 @@
-package it.polimi.ingsw.PSP42.server;
+package it.polimi.ingsw.PSP42.Server;
 
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.io.*;
+import java.net.*;
+import java.util.*;
 
 public class Server {
-    private static final int SOCKET_PORT = 4040;
+    private static final int SOCKET_PORT = 4000;
     private static ServerSocket serverSocket;
     private ArrayList<PlayerHandler> waitingClients = new ArrayList<>();
-    private ExecutorService executor = Executors.newFixedThreadPool(128);
     private int numberOfPlayer;
     private boolean numberOfPlayerSet;
     private boolean startedGame;
     private boolean firstConnected;
+    private int count;
 
     public Server(){
         try {
@@ -28,6 +24,7 @@ public class Server {
             this.numberOfPlayerSet = false;
             this.startedGame = false;
             this.firstConnected = false;
+            this.count=0;
         } catch (IOException e) {
             System.out.println("Cannot open Server serverSocket");
             System.exit(1);
@@ -47,22 +44,19 @@ public class Server {
                     }
                     else {
                         int i = 0;
-                        while (!isNumberOfPlayerSet()) {
+                        /*while (!isNumberOfPlayerSet()) {
                             try {
                                 TimeUnit.SECONDS.sleep(5);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
+                            NetworkVirtualView.sendToClient(client, "Waiting number of player setting... ");
                             System.out.println("Waiting number of player setting... " + i*5 + " sec");
                             i++;
-                        }
-                        if (waitingClients.size() != numberOfPlayer) {
-                            NetworkVirtualView.sendToClient(client, ServerMessage.ableToPlay);
-                            initNewClient(client);
-                        } else {
-                            NetworkVirtualView.sendToClient(client, ServerMessage.extraClient);
-                            client.close();
-                        }
+                        }*/
+                        NetworkVirtualView.sendToClient(client, ServerMessage.ableToPlay);
+                        initNewClient(client);
+
                     }
                 }
                 else {
@@ -80,29 +74,41 @@ public class Server {
         return numberOfPlayerSet;
     }
 
-    public synchronized void initNewClient(Socket client){
-        PlayerHandler playerConnection = new PlayerHandler(client, waitingClients.size() + 1, this);
-        waitingClients.add(playerConnection);
-        executor.submit(playerConnection);
+    public synchronized void initNewClient(Socket client) {
+        count++;
+        PlayerHandler playerConnection = new PlayerHandler(client, count, this);
+        Thread t = new Thread(playerConnection);
+        t.start();
     }
 
     public synchronized void setNumberOfPlayer(int i){
         this.numberOfPlayer = i;
         numberOfPlayerSet = true;
-        notifyAll();
     }
 
-    public synchronized void waitingRoom(){
-        if (waitingClients.size() < numberOfPlayer) {
+    public synchronized void waitingRoom(PlayerHandler p){
+
+        if(p.getClientID()<=numberOfPlayer) {
+            waitingClients.add(p);
+            System.out.println("Added player: " + p.getNickName());
+
+            if (waitingClients.size() == numberOfPlayer && allPlayersAreReady()){
+                initNewGame();
+            }
+        }
+        else {
+            NetworkVirtualView.sendToClient(p.getClient(), ServerMessage.extraClient);
+            p.closeConnection();
+
+        }
+        /*if (waitingClients.size() < numberOfPlayer) {
             try {
                 wait();
             } catch (InterruptedException e) {
                 System.out.println("Impossible waiting thread " + e.getMessage());
             }
-        }
-        else if (waitingClients.size() == numberOfPlayer && allPlayersAreReady()){
-            initNewGame();
-        }
+        }*/
+
     }
 
     public synchronized boolean allPlayersAreReady(){
@@ -116,15 +122,16 @@ public class Server {
     public synchronized void initNewGame(){
         this.startedGame = true;
         System.out.println("Let's start!");
-        GameThread gameThread = new GameThread(waitingClients);
+        GameThread gameThread = new GameThread(waitingClients,numberOfPlayer);
         Thread gameT = new Thread(gameThread, "GameThread");
         gameT.start();
 
-        try {
+
+        /*try {
             wait();
         } catch (InterruptedException e) {
             System.out.println("Impossible setting in wait the last client connected to Server for playing " + e.getMessage());
-        }
+        }*/
 
         // notifyAll();
         // send all values to Controller

@@ -4,6 +4,9 @@ import it.polimi.ingsw.PSP42.*;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.*;
+
+import it.polimi.ingsw.PSP42.Server.*;
 import it.polimi.ingsw.PSP42.model.FakeCell;
 
 /**
@@ -16,13 +19,18 @@ public class VirtualView implements ViewObservable, ModelObserver {
     private boolean undoDone;
     private boolean powerApply;
     private ArrayList<ViewObserver> obs = new ArrayList<>();
+    private ArrayList<PlayerHandler> playingClients;
+    private ExecutorService executor;
     private int numPlayers;
     private Choice choice;
 
-    public VirtualView() {
-        scanner = new Scanner(System.in);
-        outputStream = new PrintStream(System.out);
+    public VirtualView(ArrayList<PlayerHandler> playingClients,int numberOfPlayers) {
+        //scanner = new Scanner(System.in);
+        //outputStream = new PrintStream(System.out);
+        numPlayers = numberOfPlayers;
         actionCorrect = false;
+        this.executor = Executors.newFixedThreadPool(128);
+        this.playingClients = playingClients;
     }
 
     public boolean isPowerApply(){
@@ -77,60 +85,62 @@ public class VirtualView implements ViewObservable, ModelObserver {
         setOfCards.add("NOGOD");
         ArrayList<UserData> players = new ArrayList<>();
         int age = 0;
-        for (int i = 0; i < numPlayers ; i++) {
-            outputStream.println("\n" + ViewMessage.namePlayer + (i + 1));
+        for (int i = 0; i < playingClients.size() ; i++) {
+
+            /*
+            outputStream.println("Insert your name player : "+(i+1) +"\n" );
             String nick = scanner.next();
             while(!actionCorrect) {
-                outputStream.println(ViewMessage.agePlayer + (i + 1));
+                outputStream.println("Insert your age player : " + (i + 1) + "\n");
 
                 try {
                     age = scanner.nextInt();
                     setActionCorrect(true);
                 } catch (InputMismatchException e) {
-                    System.out.println(ErrorMessage.inputMessage + "\n");
+                    System.out.println(ErrorMessage.InputMessage + "\n");
                     scanner.nextLine();
                 }
-            }
+            }*/
 
             boolean choiceDone=false;
             String selectedCard = null;
             while(!choiceDone) {
-                outputStream.println(ViewMessage.selectCard + (i + 1));
-                for (int j = 0; j < setOfCards.size(); j++) {
+                playingClients.get(i).asyncSend("Select one of the card in the set player : " + (i + 1)+"\n");
+                //outputStream.println("Select one of the card in the set player : " + (i + 1)+"\n");
+                /*for (int j = 0; j < setOfCards.size(); j++) {
                     System.out.println(setOfCards.get(j));
                 }
                 selectedCard = scanner.next();
 
                 if (setOfCards.contains(selectedCard.toUpperCase())) {
                     if(!selectedCard.toUpperCase().equals("NOGOD"))
-                        setOfCards.remove(selectedCard.toUpperCase());
+                       setOfCards.remove(selectedCard.toUpperCase());
                     choiceDone = true;
-                }
+                }*/
             }
 
-            players.add(new UserData(nick,age,selectedCard.toUpperCase()));
+            //players.add(new UserData(nick,age,selectedCard.toUpperCase()));
             setActionCorrect(false);
         }
 
         return players;
     }
-
     /**
      * this method is used by the controller to ask for the worker to use during the turn
      * @return worker, 1 if its the worker1 , 2 if its the worker2 of the player
      */
     public int getWorker(){
-        Integer worker = null;
-        setActionCorrect(false);
-        while(!actionCorrect) {
+        Integer worker=null;
+        boolean correct=false;
+        while(!correct) {
             outputStream.println(ViewMessage.workerMessage+"\n");
             try {
-                worker = scanner.nextInt();
+                worker =scanner.nextInt();
                 if (worker == 1 || worker == 2)
-                    setActionCorrect(true);
+                    correct = true;
             }
             catch(InputMismatchException e){
-                System.out.println(ErrorMessage.inputMessage +"\n");
+                System.out.println(ErrorMessage.inputMessage+"\n");
             }
             scanner.nextLine();//Clear del buffer
         }
@@ -212,12 +222,17 @@ public class VirtualView implements ViewObservable, ModelObserver {
         this.show(o);
     }
 
-    public void handleWelcomeMessage(){
-        outputStream.println(".-. . .-..----..-.    .---.  .----. .-.   .-..----.    .---.  .----.     .----.  .--.  .-. .-. .---.  .----. .----. .-..-. .-..-.\n" +
-                "| |/ \\| || {_  | |   /  ___}/  {}  \\|  `.'  || {_     {_   _}/  {}  \\   { {__   / {} \\ |  `| |{_   _}/  {}  \\| {}  }| ||  `| || |\n" +
-                "|  .'.  || {__ | `--.\\     }\\      /| |\\ /| || {__      | |  \\      /   .-._} }/  /\\  \\| |\\  |  | |  \\      /| .-. \\| || |\\  || |\n" +
-                "`-'   `-'`----'`----' `---'  `----' `-' ` `-'`----'     `-'   `----'    `----' `-'  `-'`-' `-'  `-'   `----' `-' `-'`-'`-' `-'`-'");
-        outputStream.println("\nby Giorgianni-Giudici-Govigli" + " \uD83D\uDE0A \n");
+    public void handleWelcomeMessage() {
+        for (int i = 0; i < playingClients.size(); i++) {
+
+
+            String message = ("\n.-. . .-..----..-.    .---.  .----. .-.   .-..----.    .---.  .----.     .----.  .--.  .-. .-. .---.  .----. .----. .-..-. .-..-.\n" +
+                    "| |/ \\| || {_  | |   /  ___}/  {}  \\|  `.'  || {_     {_   _}/  {}  \\   { {__   / {} \\ |  `| |{_   _}/  {}  \\| {}  }| ||  `| || |\n" +
+                    "|  .'.  || {__ | `--.\\     }\\      /| |\\ /| || {__      | |  \\      /   .-._} }/  /\\  \\| |\\  |  | |  \\      /| .-. \\| || |\\  || |\n" +
+                    "`-'   `-'`----'`----' `---'  `----' `-' ` `-'`----'     `-'   `----'    `----' `-'  `-'`-' `-'  `-'   `----' `-' `-'`-'`-' `-'`-'");
+            //outputStream.println("\nby Giorgianni-Giudici-Govigli" + " \uD83D\uDE0A \n");
+            playingClients.get(i).asyncSend(message);
+        }
     }
 
     public void handleWinner(String winner){
@@ -564,6 +579,4 @@ public class VirtualView implements ViewObservable, ModelObserver {
         System.out.println(Color.ANSI_RED + "Player 1 " + Color.ANSI_GREEN + "Player 2 " + Color.ANSI_BLUE + "Player 3 " + Color.RESET);
         System.out.println("\n");
     }
-
-
 }

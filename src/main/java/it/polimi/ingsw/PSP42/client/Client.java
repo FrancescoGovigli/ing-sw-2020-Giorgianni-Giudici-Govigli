@@ -1,10 +1,11 @@
-package it.polimi.ingsw.PSP42.client;
+package it.polimi.ingsw.PSP42.Client;
 
-import it.polimi.ingsw.PSP42.server.ServerMessage;
+import it.polimi.ingsw.PSP42.Server.*;
+import it.polimi.ingsw.PSP42.model.*;
 
-import java.io.IOException;
-import java.net.Socket;
-import java.util.Scanner;
+import java.io.*;
+import java.net.*;
+import java.util.*;
 
 public class Client implements Runnable{
 
@@ -16,16 +17,17 @@ public class Client implements Runnable{
         String ip = scanner.nextLine();
         Socket server;
         try {
-            server = new Socket(ip, 4040);
+            server = new Socket(ip, 4000);
         } catch (IOException e) {
             System.out.println("Server unreachable");
             return;
         }
         String string = (String) NetworkHandler.receiveFromServer(server);
-        System.out.println("From Server: " + string);   //connected
-        string = (String) NetworkHandler.receiveFromServer(server);
+        System.out.println("[FROM SERVER] : " + string);   //connected
+        string = (String) NetworkHandler.receiveFromServer(server); //Wait to be admitted to the Game
         if (string.equals(ServerMessage.ableToPlay)) {
-            System.out.println(string);
+            System.out.println("[FROM SERVER] : " +string);
+            //PER INIZIALIZZARE IL NOME
             loopReceiveAndSend(server);
         }
         else
@@ -40,13 +42,21 @@ public class Client implements Runnable{
         boolean done = false;
         Scanner scanner = new Scanner(System.in);
         while(!done){
-            String string = (String) NetworkHandler.receiveFromServer(server);
-            if(!string.equals(ServerMessage.endGame)){
-                System.out.println("You have receive: " + string);
-                NetworkHandler.sendToServer(server, scanner.next());
+            Object obj = NetworkHandler.receiveFromServer(server);
+            String string= null;
+            if(obj instanceof String) {
+                string = (String) obj;
+                if((!string.equals(ServerMessage.endGame)) && (!string.equals(ServerMessage.extraClient)) ){
+                    System.out.println("[FROM SERVER] : " + string);
+                    NetworkHandler.sendToServer(server, scanner.next());
+                }
+                else {
+                    System.out.println("[FROM SERVER] : " + string);
+                    done = true;
+                }
             }
-            else
-                done = true;
+
+
         }
     }
 }

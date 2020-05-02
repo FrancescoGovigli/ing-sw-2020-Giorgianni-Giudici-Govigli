@@ -36,7 +36,7 @@ public interface ViewObservable {
 
     public abstract String[][] notifyWhatToDo();
 
-    public abstract int notifyStart(Integer i);
+    public int notifyStart(Integer i);
 
     public abstract void notifyEffect();
 }

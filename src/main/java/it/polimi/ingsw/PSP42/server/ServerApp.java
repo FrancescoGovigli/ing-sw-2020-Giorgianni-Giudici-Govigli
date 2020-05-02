@@ -1,4 +1,4 @@
-package it.polimi.ingsw.PSP42.server;
+package it.polimi.ingsw.PSP42.Server;
 
 public class ServerApp {
     public static void main( String[] args ) {

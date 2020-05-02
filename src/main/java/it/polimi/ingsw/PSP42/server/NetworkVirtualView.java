@@ -1,13 +1,11 @@
-package it.polimi.ingsw.PSP42.server;
+package it.polimi.ingsw.PSP42.Server;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
+import java.io.*;
+import java.net.*;
 
 public class NetworkVirtualView {
 
-    public synchronized static void sendToClient(Socket client, Object object){
+    public static void sendToClient(Socket client, Object object){
         try {
             ObjectOutputStream output = new ObjectOutputStream(client.getOutputStream());
             output.writeObject(object);
@@ -17,7 +15,7 @@ public class NetworkVirtualView {
         }
     }
 
-    public synchronized static Object receiveFromClient(Socket client){
+    public static Object receiveFromClient(Socket client){
         try {
             ObjectInputStream input = new ObjectInputStream(client.getInputStream());
             return input.readObject();
