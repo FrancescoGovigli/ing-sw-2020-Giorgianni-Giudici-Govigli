@@ -6,7 +6,6 @@ import it.polimi.ingsw.PSP42.view.*;
 import java.util.*;
 
 public class ControllerHandler {
-
     private final GameBoard gameBoard;
     private final VirtualView view;
     private final ControllerCLI mainController;
@@ -89,7 +88,6 @@ public class ControllerHandler {
      * Handles to call the method in the model to modify the building state of the GameBoard
      * @param o represent always the Choice done by the user
      */
-
     public void controlBuild(Object o) {
         Worker w = null;
         boolean check;
@@ -132,7 +130,6 @@ public class ControllerHandler {
      * on the board he directly wins the Game
      * @return nickname of the Player
      */
-
     public String controlCurrentPlayer() {
         mainController.setTurnDone(false);
         Worker w1 = gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getWorker1();
@@ -164,7 +161,6 @@ public class ControllerHandler {
      * Sets the new current player checking the arraylist of the gameboard.
      * The new currentPlayer value will be the next of the new turn only if the Player has not lost yet
      */
-
     public void controlEnd() {
         mainController.setTurnDone(true);
         int num = view.getNumPlayers();
@@ -194,7 +190,6 @@ public class ControllerHandler {
      * @param s
      */
     public void controlNextState(String s) {
-
         mainController.setActionDone(false);
         if(view.isUndoDone() && (mainController.getGameState().equals("PREMOVE") || (mainController.getGameState().equals("PREBUILD"))))
             mainController.setGameState(mainController.getGameState());
@@ -207,10 +202,8 @@ public class ControllerHandler {
         }
         else
             mainController.setGameState(s);
-
         view.setUndoDone(false);
         view.setActionCorrect(false);
-
         if (gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getPlayerState().equals("LOSE")) {
             gameBoard.setGamePhase("END");
             mainController.setGameState("END");
@@ -218,7 +211,6 @@ public class ControllerHandler {
             GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
             return;
         }
-
         if((s.equals("MOVE") || s.equals("PREBUILD")) && gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getPlayerState().equals("WIN")) {
             gameBoard.setGamePhase("END");
             mainController.setGameState("END");
@@ -226,7 +218,6 @@ public class ControllerHandler {
             mainController.setGameDone(true);
             return;
         }
-
         gameBoard.setGamePhase(s);
     }
 

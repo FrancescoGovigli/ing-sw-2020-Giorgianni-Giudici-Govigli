@@ -1,4 +1,4 @@
-package it.polimi.ingsw.PSP42.Server;
+package it.polimi.ingsw.PSP42.server;
 
 import java.io.*;
 import java.net.*;

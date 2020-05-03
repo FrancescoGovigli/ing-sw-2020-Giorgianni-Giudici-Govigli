@@ -6,8 +6,8 @@ import java.io.*;
 import java.util.*;
 import java.util.concurrent.*;
 
-import it.polimi.ingsw.PSP42.Server.*;
 import it.polimi.ingsw.PSP42.model.FakeCell;
+import it.polimi.ingsw.PSP42.server.PlayerHandler;
 
 /**
  * @author Francesco Govigli

@@ -1,4 +1,4 @@
-package it.polimi.ingsw.PSP42.Server;
+package it.polimi.ingsw.PSP42.server;
 
 import java.io.*;
 import java.net.*;
@@ -14,8 +14,6 @@ public class PlayerHandler implements Runnable{
     public String getNickName() {
         return nickName;
     }
-
-
 
     PlayerHandler(Socket client, int clientID, Server server){
         this.client = client;

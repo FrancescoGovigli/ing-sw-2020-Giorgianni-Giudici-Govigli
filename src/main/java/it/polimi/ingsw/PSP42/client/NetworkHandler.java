@@ -1,9 +1,10 @@
-package it.polimi.ingsw.PSP42.Client;
+package it.polimi.ingsw.PSP42.client;
 
 import java.io.*;
 import java.net.*;
 
 public class NetworkHandler {
+
     public  static void sendToServer(Socket server, Object object){
         try {
             ObjectOutputStream output = new ObjectOutputStream(server.getOutputStream());

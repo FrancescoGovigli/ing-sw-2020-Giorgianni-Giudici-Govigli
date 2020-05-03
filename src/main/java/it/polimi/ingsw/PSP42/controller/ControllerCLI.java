@@ -167,7 +167,6 @@ public class ControllerCLI implements ViewObserver {
         handler.controlBuild(o);
     }
 
-
     /**
      * Sets the new current player checking the arraylist of the gameboard.
      * The new currentPlayer value will be the next of the new turn only if the Player has not lost yet
@@ -227,7 +226,5 @@ public class ControllerCLI implements ViewObserver {
     public void setActionDone(boolean actionDone) {
         this.actionDone = actionDone;
     }
-
-
 }
 

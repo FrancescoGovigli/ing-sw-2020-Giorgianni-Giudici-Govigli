@@ -1,14 +1,11 @@
-package it.polimi.ingsw.PSP42.Client;
+package it.polimi.ingsw.PSP42.client;
 
-import it.polimi.ingsw.PSP42.Server.*;
-import it.polimi.ingsw.PSP42.model.*;
-
+import it.polimi.ingsw.PSP42.server.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
 
 public class Client implements Runnable{
-
 
     @Override
     public void run() {
@@ -55,8 +52,6 @@ public class Client implements Runnable{
                     done = true;
                 }
             }
-
-
         }
     }
 }

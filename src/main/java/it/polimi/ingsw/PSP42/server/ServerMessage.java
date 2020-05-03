@@ -1,4 +1,4 @@
-package it.polimi.ingsw.PSP42.Server;
+package it.polimi.ingsw.PSP42.server;
 
 public class ServerMessage {
     public static String connectionDone = ("Connected");

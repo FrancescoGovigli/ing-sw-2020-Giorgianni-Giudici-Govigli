@@ -10,14 +10,15 @@ public enum Color
     ANSI_REVERSE("\u001B[7m"),
     ANSI_BLUE("\u001B[34m"),
     ANSI_PURPLE("\u001B[35m");
-    static final String RESET = "\u001B[0m"; // resetta il valore a un default
-    //In questo modo il metodo values() (che Java genera in
-    //automatico e restituisce un array di tutti gli elementi della
-    //enum) non lo restituisce
-    //In fondo,
-    //“RESET” non è un colore!
+    static final String RESET = "\u001B[0m"; // reset to default value
+    //In this case "values()" method
+    // (automatically generate in Java),
+    // that returns an array of all elements contains in this Enum,
+    // doesn't return the elements.
+    // At the end,
+    // “RESET” isn't a color!
 
-    private String escape; // contiene il codice testo che modifica il colore
+    private String escape; // contains text code to modify the color
     Color(String escape)
     {
         this.escape = escape;
@@ -28,10 +29,8 @@ public enum Color
     }
 
     /**
-     * Il metodo toString() è speciale perché viene
-     * chiamato da Java implicitamente quando serve
-     * convertire un oggetto in stringa
-     * @return
+     * Used, implicitly, to return an object in String.
+     * @return a string
      */
     @Override
     public String toString()
