@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.concurrent.*;
 
 import it.polimi.ingsw.PSP42.model.FakeCell;
-import it.polimi.ingsw.PSP42.server.PlayerHandler;
+import it.polimi.ingsw.PSP42.server.*;
 
 /**
  * @author Francesco Govigli
@@ -105,21 +105,32 @@ public class VirtualView implements ViewObservable, ModelObserver {
             boolean choiceDone=false;
             String selectedCard = null;
             while(!choiceDone) {
-                playingClients.get(i).asyncSend("Select one of the card in the set player : " + (i + 1)+"\n");
-                //outputStream.println("Select one of the card in the set player : " + (i + 1)+"\n");
-                /*for (int j = 0; j < setOfCards.size(); j++) {
-                    System.out.println(setOfCards.get(j));
+                Thread t0=null;
+                t0 = playingClients.get(i).asyncSend("Select one of the card in the set player : " + (i + 1)+"\n");
+                try {
+                    t0.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-                selectedCard = scanner.next();
+                for (int j = 0; j < setOfCards.size(); j++) {
+                    t0 = playingClients.get(i).asyncSend(setOfCards.get(j));
+                    try {
+                        t0.join();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                selectedCard = (String) NetworkVirtualView.receiveFromClient(playingClients.get(i).getInput());
 
                 if (setOfCards.contains(selectedCard.toUpperCase())) {
                     if(!selectedCard.toUpperCase().equals("NOGOD"))
                        setOfCards.remove(selectedCard.toUpperCase());
                     choiceDone = true;
-                }*/
+                }
             }
 
-            //players.add(new UserData(nick,age,selectedCard.toUpperCase()));
+            players.add(new UserData(playingClients.get(i).getNickName(),21,selectedCard.toUpperCase()));
             setActionCorrect(false);
         }
 
@@ -229,8 +240,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
             String message = ("\n.-. . .-..----..-.    .---.  .----. .-.   .-..----.    .---.  .----.     .----.  .--.  .-. .-. .---.  .----. .----. .-..-. .-..-.\n" +
                     "| |/ \\| || {_  | |   /  ___}/  {}  \\|  `.'  || {_     {_   _}/  {}  \\   { {__   / {} \\ |  `| |{_   _}/  {}  \\| {}  }| ||  `| || |\n" +
                     "|  .'.  || {__ | `--.\\     }\\      /| |\\ /| || {__      | |  \\      /   .-._} }/  /\\  \\| |\\  |  | |  \\      /| .-. \\| || |\\  || |\n" +
-                    "`-'   `-'`----'`----' `---'  `----' `-' ` `-'`----'     `-'   `----'    `----' `-'  `-'`-' `-'  `-'   `----' `-' `-'`-'`-' `-'`-'");
-            //outputStream.println("\nby Giorgianni-Giudici-Govigli" + " \uD83D\uDE0A \n");
+                    "`-'   `-'`----'`----' `---'  `----' `-' ` `-'`----'     `-'   `----'    `----' `-'  `-'`-' `-'  `-'   `----' `-' `-'`-'`-' `-'`-'\nby Giorgianni-Giudici-Govigli \n");
             playingClients.get(i).asyncSend(message);
         }
     }
@@ -321,6 +331,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
      * @return array of String arrays with {START,PREMOVE,MOVE,PREBUILD,BUILD,END}
      */
     public String[][] handleWhatToDo(String s) {
+        setActionCorrect(false);
         outputStream.println("\n" + s + " it's your turn!!!"+"\n");
         return notifyWhatToDo();
     }
@@ -403,6 +414,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
      * only set the turn to done and will notify the controller to change to the next currentPlayer
      * */
     public void handleEnd(){
+        setActionCorrect(false);
         powerApply=false;
         notifyEnd();
     }

@@ -40,7 +40,7 @@ public class ControllerCLI implements ViewObserver {
         ArrayList<Player> players = new ArrayList<>();
         ArrayList<UserData> data = view.getPlayerData(handler.pickCards(numPlayer));
         for (int i = 0; i < view.getNumPlayers(); i++) {
-            players.add(new Player(data.get(i).getNickname(), i + 1, data.get(i).getAge(), data.get(i).getCardChoosed()));
+            players.add(new Player(data.get(i).getNickname(), i + 1, 21, data.get(i).getCardChoosed()));
         }
         g.setPlayers(players);
         g.setGamePhase("START");
@@ -52,7 +52,7 @@ public class ControllerCLI implements ViewObserver {
      */
     public void runGame() {
         view.handleWelcomeMessage();
-        view.handleNumOfPlayers();
+        //view.handleNumOfPlayers();
         view.handleInit();
         view.handleInitialPosition();
 

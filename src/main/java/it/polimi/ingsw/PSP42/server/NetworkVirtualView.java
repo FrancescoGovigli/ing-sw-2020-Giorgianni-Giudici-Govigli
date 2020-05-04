@@ -5,7 +5,15 @@ import java.net.*;
 
 public class NetworkVirtualView {
 
-    public static void sendToClient(Socket client, Object object){
+    public static void sendToClient(ObjectOutputStream toClient, Object object){
+        try {
+            toClient.writeObject(object);
+            toClient.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public static void send(Socket client, Object object){
         try {
             ObjectOutputStream output = new ObjectOutputStream(client.getOutputStream());
             output.writeObject(object);
@@ -15,13 +23,13 @@ public class NetworkVirtualView {
         }
     }
 
-    public static Object receiveFromClient(Socket client){
+    public static Object receiveFromClient(BufferedReader input){
+        Object obj=null;
         try {
-            ObjectInputStream input = new ObjectInputStream(client.getInputStream());
-            return input.readObject();
-        } catch (IOException | ClassNotFoundException e) {
+            obj =  input.readLine();
+        } catch (IOException e) {
             e.printStackTrace();
-            return ("NetworkVirtualView.receiveFromClient(): IOException | ClassNotFoundException e");
         }
+        return obj;
     }
 }

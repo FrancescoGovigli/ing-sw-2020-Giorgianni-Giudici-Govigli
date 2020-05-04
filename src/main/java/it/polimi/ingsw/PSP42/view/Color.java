@@ -10,7 +10,7 @@ public enum Color
     ANSI_REVERSE("\u001B[7m"),
     ANSI_BLUE("\u001B[34m"),
     ANSI_PURPLE("\u001B[35m");
-    static final String RESET = "\u001B[0m"; // reset to default value
+    public static final String RESET = "\u001B[0m"; // reset to default value
     //In this case "values()" method
     // (automatically generate in Java),
     // that returns an array of all elements contains in this Enum,

@@ -2,18 +2,42 @@ package it.polimi.ingsw.PSP42.server;
 
 import java.io.*;
 import java.net.*;
+import java.util.*;
 
 public class PlayerHandler implements Runnable{
     private Socket client;
     private int clientID;
     private Server server;
     private boolean readyToPlay;
-    private boolean active;
+    private ObjectOutputStream out;
+
+    public BufferedReader getInput() {
+        return input;
+    }
+
+    private BufferedReader input;
+
+    public ObjectOutputStream getOut() {
+        return out;
+    }
+
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    private boolean active=true;
     private String nickName;
 
     public String getNickName() {
         return nickName;
     }
+
+
 
     PlayerHandler(Socket client, int clientID, Server server){
         this.client = client;
@@ -21,6 +45,14 @@ public class PlayerHandler implements Runnable{
         this.server = server;
         this.readyToPlay = false;
         this.active = true;
+        try {
+            input = new BufferedReader(new InputStreamReader(client.getInputStream()));
+            out = new ObjectOutputStream(client.getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     public Socket getClient() {
@@ -38,38 +70,47 @@ public class PlayerHandler implements Runnable{
     @Override
     public void run() {
         System.out.println("Connected to " + client.getInetAddress());
-        settingClient();
-        while(active) {
+        try {
+            //NetworkVirtualView.sendToClient(this, "Welcome!\nWhat is your name?");
+            settingClient();
+            //String read = input.next();
+            //nickName = read;
+            //server.waitingRoom(this);
+            while (isActive()) {
+                if(!server.isStartedGame()) {
+                    try {
+                        input.readLine();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                //notify(read);
+            }
+        } catch (NoSuchElementException e) {
+            System.err.println("Error!" + e.getMessage());
+        } finally {
             try {
-                Thread.sleep(1);
-            } catch (InterruptedException e) {
+                client.close();
+            } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-        // Restarting point after notifyAll() in playNewGame()
-        try {
-            NetworkVirtualView.sendToClient(client, ServerMessage.connectionClosed);
-            System.out.println("Connection dropped " + client.getInetAddress());
-            client.close();
-        } catch (IOException e) {
-            System.out.println("run() in PlayerClient: IOException e");
-            e.printStackTrace();
         }
     }
 
     private int chooseNumberOfPlayer(String name){
         String initial = (name + ", please enter the number of players: ");
-        NetworkVirtualView.sendToClient(client, initial);
-        return Integer.parseInt(NetworkVirtualView.receiveFromClient(client).toString());
+        NetworkVirtualView.sendToClient(getOut(), initial);
+        return Integer.parseInt(NetworkVirtualView.receiveFromClient(input).toString());
     }
 
     private void settingClient(){
 
         if(clientID==1)
-            NetworkVirtualView.sendToClient(client, "Welcome player " + clientID + " insert your name: ");
+            NetworkVirtualView.sendToClient(getOut(), "Welcome player " + clientID + " insert your name: ");
         else
-            NetworkVirtualView.sendToClient(client, "Welcome player " + clientID +" you are waiting the FIRST PLAYER to set the number of players, insert your name: ");
-        nickName = (String) NetworkVirtualView.receiveFromClient(client);
+            NetworkVirtualView.sendToClient(getOut(), "Welcome player " + clientID +" you are waiting the FIRST PLAYER to set the number of players, insert your name: ");
+        nickName = (String) NetworkVirtualView.receiveFromClient(input);
+
         if (clientID == 1){
             int i = chooseNumberOfPlayer(nickName);
             System.out.println("Number of players received is: " + i);
@@ -87,15 +128,28 @@ public class PlayerHandler implements Runnable{
     }
 
     public void closeConnection(){
-            active = false;
+        active = false;
     }
 
-    public void asyncSend(Object message){
+    public Thread asyncSend(Object message){
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                NetworkVirtualView.sendToClient(getOut(),message);
+            }
+        });
+        t.start();
+        return t;
+    }
+
+    public Object asyncRead(){
+        final Object[] o = {null};
         new Thread(new Runnable() {
             @Override
             public void run() {
-                NetworkVirtualView.sendToClient(getClient(),message);
+                o[0] = NetworkVirtualView.receiveFromClient(getInput());
             }
         }).start();
+        return o[0];
     }
 }

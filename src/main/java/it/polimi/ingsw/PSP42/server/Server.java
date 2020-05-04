@@ -10,6 +10,11 @@ public class Server {
     private ArrayList<PlayerHandler> waitingClients = new ArrayList<>();
     private int numberOfPlayer;
     private boolean numberOfPlayerSet;
+
+    public boolean isStartedGame() {
+        return startedGame;
+    }
+
     private boolean startedGame;
     private boolean firstConnected;
     private int count;
@@ -35,33 +40,11 @@ public class Server {
         while (true){
             try{
                 Socket client = serverSocket.accept();
-                NetworkVirtualView.sendToClient(client, ServerMessage.connectionDone);
-                if (!startedGame) {
-                    if (!firstConnected){
-                        this.firstConnected = true;
-                        NetworkVirtualView.sendToClient(client, ServerMessage.ableToPlay);
-                        initNewClient(client);
-                    }
-                    else {
-                        int i = 0;
-                        /*while (!isNumberOfPlayerSet()) {
-                            try {
-                                TimeUnit.SECONDS.sleep(5);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            NetworkVirtualView.sendToClient(client, "Waiting number of player setting... ");
-                            System.out.println("Waiting number of player setting... " + i*5 + " sec");
-                            i++;
-                        }*/
-                        NetworkVirtualView.sendToClient(client, ServerMessage.ableToPlay);
-                        initNewClient(client);
-
-                    }
-                }
+                if (!startedGame)
+                    initNewClient(client);
                 else {
                     String string = (ServerMessage.gameInProgress);
-                    NetworkVirtualView.sendToClient(client, string);
+                    NetworkVirtualView.send(client,string);
                     client.close();
                 }
             } catch (IOException e) {
@@ -74,7 +57,7 @@ public class Server {
         return numberOfPlayerSet;
     }
 
-    public synchronized void initNewClient(Socket client) {
+    public synchronized void initNewClient(Socket client) throws IOException {
         count++;
         PlayerHandler playerConnection = new PlayerHandler(client, count, this);
         Thread t = new Thread(playerConnection);
@@ -86,18 +69,19 @@ public class Server {
         numberOfPlayerSet = true;
     }
 
-    public synchronized void waitingRoom(PlayerHandler p){
+    public synchronized void waitingRoom(PlayerHandler p)  {
 
         if(p.getClientID()<=numberOfPlayer) {
             waitingClients.add(p);
             System.out.println("Added player: " + p.getNickName());
 
             if (waitingClients.size() == numberOfPlayer && allPlayersAreReady()){
+                System.out.println("Dentro init di " + p.getClientID());
                 initNewGame();
             }
         }
         else {
-            NetworkVirtualView.sendToClient(p.getClient(), ServerMessage.extraClient);
+            NetworkVirtualView.sendToClient(p.getOut(), ServerMessage.extraClient);
             p.closeConnection();
 
         }
