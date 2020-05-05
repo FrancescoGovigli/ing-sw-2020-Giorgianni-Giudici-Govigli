@@ -1,6 +1,8 @@
 package it.polimi.ingsw.PSP42.view;
 
-public class UserData {
+import java.io.*;
+
+public class UserData implements Serializable {
     private int age;
     private String nickname;
     private String cardName;

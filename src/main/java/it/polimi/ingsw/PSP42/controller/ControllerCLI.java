@@ -52,7 +52,6 @@ public class ControllerCLI implements ViewObserver {
      */
     public void runGame() {
         view.handleWelcomeMessage();
-        //view.handleNumOfPlayers();
         view.handleInit();
         view.handleInitialPosition();
 

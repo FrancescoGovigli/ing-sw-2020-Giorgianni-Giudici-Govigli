@@ -13,6 +13,7 @@ public class NetworkVirtualView {
             e.printStackTrace();
         }
     }
+
     public static void send(Socket client, Object object){
         try {
             ObjectOutputStream output = new ObjectOutputStream(client.getOutputStream());

@@ -10,12 +10,11 @@ public class PlayerHandler implements Runnable{
     private Server server;
     private boolean readyToPlay;
     private ObjectOutputStream out;
+    private BufferedReader input;
 
     public BufferedReader getInput() {
         return input;
     }
-
-    private BufferedReader input;
 
     public ObjectOutputStream getOut() {
         return out;
@@ -55,10 +54,6 @@ public class PlayerHandler implements Runnable{
 
     }
 
-    public Socket getClient() {
-        return client;
-    }
-
     public int getClientID() {
         return clientID;
     }
@@ -67,33 +62,21 @@ public class PlayerHandler implements Runnable{
         return readyToPlay;
     }
 
+    /*CHIAMA SETTING CLIENT() CHE RICHIEDE IL NOME E IL NUMERO DI GIOCATORI SE
+      CLIENT ID = 1 (IL PRIMO CONNESSO) E IL THREAD RIMANE ATTIVO FINO A CHE IL CLIENT E' CONNESSO
+     */
     @Override
     public void run() {
         System.out.println("Connected to " + client.getInetAddress());
         try {
-            //NetworkVirtualView.sendToClient(this, "Welcome!\nWhat is your name?");
             settingClient();
-            //String read = input.next();
-            //nickName = read;
-            //server.waitingRoom(this);
             while (isActive()) {
-                if(!server.isStartedGame()) {
-                    try {
-                        input.readLine();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                //notify(read);
+                //NOTHING (SLEEP??)
             }
         } catch (NoSuchElementException e) {
             System.err.println("Error!" + e.getMessage());
         } finally {
-            try {
-                client.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            closeConnection();
         }
     }
 
@@ -117,14 +100,16 @@ public class PlayerHandler implements Runnable{
             server.setNumberOfPlayer(i);
         }
         this.readyToPlay = true;
+
         while (!server.isNumberOfPlayerSet()) {
             try {
-                Thread.sleep(1);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 System.out.println("Waiting error! " + e.getMessage());
             }
         }
         server.waitingRoom(this);
+
     }
 
     public void closeConnection(){
@@ -141,15 +126,5 @@ public class PlayerHandler implements Runnable{
         t.start();
         return t;
     }
-
-    public Object asyncRead(){
-        final Object[] o = {null};
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                o[0] = NetworkVirtualView.receiveFromClient(getInput());
-            }
-        }).start();
-        return o[0];
-    }
+    
 }

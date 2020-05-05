@@ -25,7 +25,7 @@ public class ControllerHandler {
     public void controlInit(Object o) {
         if (view.getChoice().allFieldsNull()) {
             mainController.createGame(view.getNumPlayers());
-            GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
+            GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(),"INIT");
         }
         if (! view.getChoice().allFieldsNull()) {
             Worker w = null;
@@ -39,7 +39,7 @@ public class ControllerHandler {
             check = (gameBoard.getPlayers()).get(view.getChoice().getIdPlayer()).initialPosition(view.getChoice().getX(), view.getChoice().getY(), w);
             if (check) {
                 view.setActionCorrect(true);
-                GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
+                GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(),"INIT");
             }
         }
     }
@@ -63,11 +63,11 @@ public class ControllerHandler {
                     gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).doUndoMove(w);
                     if (gameBoard.getGamePhase().equals("PREMOVE") || gameBoard.getGamePhase().equals("PREBUILD"))
                         view.setActionCorrect(true);
-                    GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
+                    GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(),"NOINIT");
                     return;
                 }
                 view.setActionCorrect(true);
-                GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
+                GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(),"NOINIT");
             }
         }
         //THIS CASE OCCURS ONLY IF THE PLAYER LOSES IF NO UNDO IS DONE
@@ -75,7 +75,7 @@ public class ControllerHandler {
             if (view.undoOption("WARNING")) {
                 controlUndoPower(w, getPreviousGamePhase());
                 view.setActionCorrect(true);
-                GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
+                GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(),"NOINIT");
             }
             else {
                 gameBoard.loseCondition(gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()),"MOVE");
@@ -104,18 +104,18 @@ public class ControllerHandler {
                     (gameBoard.getPlayers()).get(gameBoard.getCurrentPlayer()).doUndoBuild(w);
                     if (gameBoard.getGamePhase().equals("PREMOVE") || gameBoard.getGamePhase().equals("PREBUILD"))
                         view.setActionCorrect(true);
-                    GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
+                    GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(),"NOINIT");
                     return;
                 }
                 view.setActionCorrect(true);
-                GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
+                GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(),"NOINIT");
             }
         }
         else {
             if (view.undoOption("WARNING")) {
                 controlUndoPower(w, getPreviousGamePhase());
                 view.setActionCorrect(true);
-                GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
+                GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(),"NOINIT");
             }
             else {
                 gameBoard.loseCondition(gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()),"BUILD");
@@ -139,8 +139,8 @@ public class ControllerHandler {
         gameBoard.workerAvailable(w2);
         gameBoard.loseCondition(gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()),"START");
         if (gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getPlayerState().equals("LOSE")) {
-            ViewMessage.loseMessage(gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getNickname());
-            GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
+            view.sendToClient(gameBoard.getCurrentPlayer(),gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getNickname()+" "+ViewMessage.loseMessage);
+            GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(),"INIT");
             view.handleEnd();
             controlNextState("START");
         }
@@ -154,6 +154,7 @@ public class ControllerHandler {
             mainController.setTurnDone(true);
             mainController.setGameDone(true);
         }
+        view.setCurrentPlayerID(gameBoard.getCurrentPlayer());
         return  gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getNickname();
     }
 
@@ -207,8 +208,8 @@ public class ControllerHandler {
         if (gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getPlayerState().equals("LOSE")) {
             gameBoard.setGamePhase("END");
             mainController.setGameState("END");
-            ViewMessage.loseMessage(gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getNickname());
-            GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy());
+            view.sendToClient(gameBoard.getCurrentPlayer(),gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getNickname()+" "+ViewMessage.loseMessage);
+            GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(),"INIT");
             return;
         }
         if((s.equals("MOVE") || s.equals("PREBUILD")) && gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getPlayerState().equals("WIN")) {

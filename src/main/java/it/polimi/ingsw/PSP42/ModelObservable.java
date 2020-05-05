@@ -16,7 +16,7 @@ public interface ModelObservable {
     /**
      * notifies the observers who need update
      */
-    public abstract void notifyObservers(Object o);
+    public abstract void notifyObservers(Object o,String s);
 
 
 }

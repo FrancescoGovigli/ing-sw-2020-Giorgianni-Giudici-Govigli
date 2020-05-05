@@ -1,15 +1,16 @@
 package it.polimi.ingsw.PSP42.model;
 import it.polimi.ingsw.PSP42.*;
 
+import java.io.*;
 import java.util.ArrayList;
 
 public class GameBoard implements ModelObservable {
     private static GameBoard instance = null;
     private Cell[][] board = new Cell[5][5];
     private ArrayList<Player> players;
-    private int currentPlayer = 0;
     private Turn gamePhase = null;
     private ArrayList<ModelObserver> obs = new ArrayList<ModelObserver>();
+    private int currentPlayer;
 
     /**
      * Constructor to initialize the board of dimension 5x5
@@ -366,9 +367,12 @@ public class GameBoard implements ModelObservable {
      * Notifies the observers who need update
      */
     @Override
-    public void notifyObservers(Object o) {
+    public void notifyObservers(Object o,String s) {
         for (int i = 0; i <obs.size(); i++) {
-            obs.get(i).updateBoard(o);
+            if(getGamePhase().equals("START"))
+             obs.get(i).updateBoard(o,"INIT");
+            else
+                obs.get(i).updateBoard(o,"NOINIT");
         }
     }
 }

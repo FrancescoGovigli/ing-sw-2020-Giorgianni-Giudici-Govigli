@@ -17,7 +17,7 @@ public class GameThread implements Runnable{
 
         @Override
         public void run() {
-            System.out.println("Hi, i'm GameThread!");
+            System.out.println("The Game is started");
             GameBoard model = GameBoard.getInstance();
             VirtualView view = new VirtualView(playingClients,numberOfPlayers);
             ControllerCLI controller = new ControllerCLI(model,view);

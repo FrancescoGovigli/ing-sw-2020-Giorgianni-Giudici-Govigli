@@ -13,24 +13,26 @@ import it.polimi.ingsw.PSP42.server.*;
  * @author Francesco Govigli
  */
 public class VirtualView implements ViewObservable, ModelObserver {
-    private Scanner scanner;
-    private PrintStream outputStream;
     private boolean actionCorrect;
     private boolean undoDone;
     private boolean powerApply;
     private ArrayList<ViewObserver> obs = new ArrayList<>();
     private ArrayList<PlayerHandler> playingClients;
-    private ExecutorService executor;
     private int numPlayers;
     private Choice choice;
+    private int currentPlayerID;
+
+    public void setCurrentPlayerID(int currentPlayerID) {
+        this.currentPlayerID = currentPlayerID;
+    }
+
+
 
     public VirtualView(ArrayList<PlayerHandler> playingClients,int numberOfPlayers) {
-        //scanner = new Scanner(System.in);
-        //outputStream = new PrintStream(System.out);
         numPlayers = numberOfPlayers;
         actionCorrect = false;
-        this.executor = Executors.newFixedThreadPool(128);
         this.playingClients = playingClients;
+        this.currentPlayerID=0;
     }
 
     public boolean isPowerApply(){
@@ -84,43 +86,17 @@ public class VirtualView implements ViewObservable, ModelObserver {
         List<String> setOfCards = new LinkedList<String>(Arrays.asList(set));
         setOfCards.add("NOGOD");
         ArrayList<UserData> players = new ArrayList<>();
-        int age = 0;
         for (int i = 0; i < playingClients.size() ; i++) {
-
-            /*
-            outputStream.println("Insert your name player : "+(i+1) +"\n" );
-            String nick = scanner.next();
-            while(!actionCorrect) {
-                outputStream.println("Insert your age player : " + (i + 1) + "\n");
-
-                try {
-                    age = scanner.nextInt();
-                    setActionCorrect(true);
-                } catch (InputMismatchException e) {
-                    System.out.println(ErrorMessage.InputMessage + "\n");
-                    scanner.nextLine();
-                }
-            }*/
-
             boolean choiceDone=false;
             String selectedCard = null;
             while(!choiceDone) {
-                Thread t0=null;
-                t0 = playingClients.get(i).asyncSend("Select one of the card in the set player : " + (i + 1)+"\n");
-                try {
-                    t0.join();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                for (int j = 0; j < setOfCards.size(); j++) {
-                    t0 = playingClients.get(i).asyncSend(setOfCards.get(j));
-                    try {
-                        t0.join();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                sendToClient(i,"Select one of the card in the set player : " + (i + 1)+"\n");
 
-                }
+                for (int j = 0; j < setOfCards.size(); j++)
+                    sendToClient(i,setOfCards.get(j));
+
+
+
                 selectedCard = (String) NetworkVirtualView.receiveFromClient(playingClients.get(i).getInput());
 
                 if (setOfCards.contains(selectedCard.toUpperCase())) {
@@ -130,9 +106,12 @@ public class VirtualView implements ViewObservable, ModelObserver {
                 }
             }
 
+
             players.add(new UserData(playingClients.get(i).getNickName(),21,selectedCard.toUpperCase()));
+            sendUserDataToClients(new UserData(playingClients.get(i).getNickName(),21,selectedCard.toUpperCase()));
             setActionCorrect(false);
         }
+
 
         return players;
     }
@@ -144,16 +123,15 @@ public class VirtualView implements ViewObservable, ModelObserver {
         Integer worker=null;
         boolean correct=false;
         while(!correct) {
-            outputStream.println(ViewMessage.workerMessage+"\n");
+            sendToClient(currentPlayerID,ViewMessage.workerMessage+"\n");
             try {
-                worker =scanner.nextInt();
+                worker =  Integer.parseInt(NetworkVirtualView.receiveFromClient(playingClients.get(currentPlayerID).getInput()).toString());
                 if (worker == 1 || worker == 2)
                     correct = true;
             }
-            catch(InputMismatchException e){
-                System.out.println(ErrorMessage.inputMessage+"\n");
+            catch(InputMismatchException | NumberFormatException e){
+                sendToClient(currentPlayerID,ErrorMessage.inputMessage+"\n");
             }
-            scanner.nextLine();//Clear del buffer
         }
         return worker;
     }
@@ -229,8 +207,14 @@ public class VirtualView implements ViewObservable, ModelObserver {
     }
 
     @Override
-    public void updateBoard(Object o) {
-        this.show(o);
+    public void updateBoard(Object o,String s) {
+        for (int i = 0; i <playingClients.size(); i++) {
+            if(!s.equals("INIT")) {
+                if (i != currentPlayerID)
+                    sendToClient(i," "+playingClients.get(currentPlayerID).getNickName().toUpperCase() + " did his move");
+            }
+            sendToClient(i,o);
+        }
     }
 
     public void handleWelcomeMessage() {
@@ -241,30 +225,16 @@ public class VirtualView implements ViewObservable, ModelObserver {
                     "| |/ \\| || {_  | |   /  ___}/  {}  \\|  `.'  || {_     {_   _}/  {}  \\   { {__   / {} \\ |  `| |{_   _}/  {}  \\| {}  }| ||  `| || |\n" +
                     "|  .'.  || {__ | `--.\\     }\\      /| |\\ /| || {__      | |  \\      /   .-._} }/  /\\  \\| |\\  |  | |  \\      /| .-. \\| || |\\  || |\n" +
                     "`-'   `-'`----'`----' `---'  `----' `-' ` `-'`----'     `-'   `----'    `----' `-'  `-'`-' `-'  `-'   `----' `-' `-'`-'`-' `-'`-'\nby Giorgianni-Giudici-Govigli \n");
-            playingClients.get(i).asyncSend(message);
+            sendToClient(i,message);
+
+
+
         }
+
     }
 
     public void handleWinner(String winner){
-        System.out.println(winner + " " + ViewMessage.winMessage);
-    }
-
-    public int handleNumOfPlayers() {
-
-        while(!actionCorrect) {
-            outputStream.println(ViewMessage.numberOfPlayersMessage);
-
-            try {
-                numPlayers = scanner.nextInt();
-            } catch (InputMismatchException e) {
-                System.out.println(ErrorMessage.inputMessage + "\n");
-                scanner.next();
-            }
-            if(numPlayers==2 || numPlayers==3)
-                setActionCorrect(true);
-        }
-
-        return numPlayers;
+        sendToClient(currentPlayerID,winner +" "+ ViewMessage.winMessage);
     }
 
     /**
@@ -283,20 +253,19 @@ public class VirtualView implements ViewObservable, ModelObserver {
             for (int j = 0; j <2; j++) {
                 String[] s = null;
                 while (!actionCorrect) {
-                    outputStream.println("Player " + (i + 1) + ", " + ViewMessage.initialPositionMessage + (j + 1) + " (digit x,y)"+"\n");
+                    sendToClient(i,"Player " + (i + 1) + ", " + ViewMessage.initialPositionMessage + (j + 1) + " (digit x,y)"+"\n");
                     try{
-                        String input = scanner.next();
+                        String input = (String) NetworkVirtualView.receiveFromClient(playingClients.get(i).getInput());
                         s = input.split(",");
                         notifyInit(choice = new Choice(Integer.parseInt(s[0]), Integer.parseInt(s[1]), j + 1, null, i));
                     }
                     catch (NumberFormatException e) {
-                        System.out.println(ErrorMessage.inputMessage + "\n");
-                        scanner.nextLine();
+                        sendToClient(i,ErrorMessage.inputMessage + "\n");
                     }
                     catch (ArrayIndexOutOfBoundsException e) {
-                        System.out.println(ErrorMessage.inputMessage + "\n");
-                        //scanner.nextLine();
+                        sendToClient(i,ErrorMessage.inputMessage + "\n");
                     }
+
                 }
                 setActionCorrect(false);
             }
@@ -332,7 +301,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
      */
     public String[][] handleWhatToDo(String s) {
         setActionCorrect(false);
-        outputStream.println("\n" + s + " it's your turn!!!"+"\n");
+        sendToClient(currentPlayerID,"\n" + s + " it's your turn!!!"+"\n");
         return notifyWhatToDo();
     }
 
@@ -344,14 +313,13 @@ public class VirtualView implements ViewObservable, ModelObserver {
         setActionCorrect(false);
         while(!actionCorrect) {
             String[] s = null;
-            outputStream.println(ViewMessage.moveMessage);
+            sendToClient(currentPlayerID,ViewMessage.moveMessage);
             try{
-                String input = scanner.nextLine();
+                String input = (String)NetworkVirtualView.receiveFromClient(playingClients.get(currentPlayerID).getInput());
                 s = input.split(",");
                 notifyMove(choice = new Choice(Integer.parseInt(s[0]), Integer.parseInt(s[1]), worker, null,null));
             } catch (NumberFormatException | ArrayIndexOutOfBoundsException e){
-                System.out.println(ErrorMessage.inputMessage + "\n");
-                //scanner.nextLine();
+               sendToClient(currentPlayerID,ErrorMessage.inputMessage + "\n");
             }
         }
     }
@@ -367,17 +335,18 @@ public class VirtualView implements ViewObservable, ModelObserver {
         while(!actionCorrect) {
             try {
                 if(counter == 0)
-                    outputStream.println(ViewMessage.buildMessage + worker + "\n");
+                    sendToClient(currentPlayerID,ViewMessage.buildMessage + worker + "\n");
+
                 String[] b = null;
-                String build = scanner.nextLine();
+                String build = (String)NetworkVirtualView.receiveFromClient(playingClients.get(currentPlayerID).getInput());
                 b = build.split(",");
                 if (! build.equals("")) {
                     counter = 0;
-                    outputStream.println(ViewMessage.levelMessage + "\n");
-                    String answer = scanner.nextLine();
+                    sendToClient(currentPlayerID,ViewMessage.levelMessage + "\n");
+                    String answer = (String)NetworkVirtualView.receiveFromClient(playingClients.get(currentPlayerID).getInput());
                     if (answer.toUpperCase().equals("YES")) {
-                        outputStream.println("Insert level:" + "\n");
-                        Integer level = scanner.nextInt();
+                        sendToClient(currentPlayerID,"Insert level:" + "\n");
+                        Integer level =  Integer.parseInt(NetworkVirtualView.receiveFromClient(playingClients.get(currentPlayerID).getInput()).toString());
                         notifyBuild(choice = new Choice(Integer.parseInt(b[0]), Integer.parseInt(b[1]), worker, level, null));
                     } else
                         notifyBuild(choice = new Choice(Integer.parseInt(b[0]), Integer.parseInt(b[1]), worker, 0, null));
@@ -385,8 +354,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
                 else
                     counter = 1;
             } catch (NumberFormatException | ArrayIndexOutOfBoundsException e){
-                System.out.println(ErrorMessage.inputMessage + "\n");
-                //scanner.nextLine();
+                sendToClient(currentPlayerID,ErrorMessage.inputMessage + "\n");
             }
         }
     }
@@ -405,9 +373,9 @@ public class VirtualView implements ViewObservable, ModelObserver {
      */
     public void printEffect(String s, String effect) {
         if(s.equals("ON"))
-            System.out.println("Your god's power started!\n" + effect );
+            sendToClient(currentPlayerID,"Your god's power started!\n" + effect);
         if(s.equals("OFF"))
-            System.out.println("Your god's power finished!\n" + effect);
+            sendToClient(currentPlayerID,"Your god's power finished!\n" + effect);
     }
 
     /**
@@ -435,25 +403,24 @@ public class VirtualView implements ViewObservable, ModelObserver {
         TimerTask task = new TimerTask() {
             public void run() {
                 if(finalStr[0].equals("")) {
-                    System.out.println("You input nothing. UNDO wasn't done...");
+                    sendToClient(currentPlayerID,"You input nothing. UNDO wasn't done...");
                     value[0] = false;
                 }
             }
         };
         timer.schedule(task, 5000);
         if(warning.equals("WARNING"))
-            System.out.println(ErrorMessage.blockingMessage);
-        System.out.println( "Input a YES within 5 seconds for UNDO : ");
-        Scanner input = new Scanner(System.in);
-        String action = input.nextLine();
+            sendToClient(currentPlayerID,ErrorMessage.blockingMessage);
+        sendToClient(currentPlayerID, "Input a YES within 5 seconds for UNDO : ");
+        String action = (String)NetworkVirtualView.receiveFromClient(playingClients.get(currentPlayerID).getInput());
         timer.cancel();
         if(value[0]==false || (!action.toUpperCase().equals("YES")) || action.equals("")) {
-            System.out.println("UNDO is not applied");
+            sendToClient(currentPlayerID,"UNDO is not applied");
             undoDone = false;
             return false;
         }
         if(action.toUpperCase().equals("YES")) {
-            System.out.println("UNDO is applied");
+            sendToClient(currentPlayerID,"UNDO is applied");
             undoDone = true;
             return true;
         }
@@ -471,8 +438,8 @@ public class VirtualView implements ViewObservable, ModelObserver {
         switch (s) {
             case "MOVE":
                 while(!askUndo) {
-                    System.out.println(s + " POWER: " + ViewMessage.applyPowerMessage);
-                    String input = scanner.nextLine();
+                    sendToClient(currentPlayerID,s + " POWER: " + ViewMessage.applyPowerMessage);
+                    String input = (String)NetworkVirtualView.receiveFromClient(playingClients.get(currentPlayerID).getInput());
                     if (input.toUpperCase().equals("YES")) {
                         handleMove(worker);
                         setPowerApply(true);
@@ -488,8 +455,8 @@ public class VirtualView implements ViewObservable, ModelObserver {
                 break;
             case "BUILD":
                 while(!askUndo) {
-                    System.out.println(s + " POWER: " + ViewMessage.applyPowerMessage);
-                    String input = scanner.nextLine();
+                   sendToClient(currentPlayerID,s + " POWER: " + ViewMessage.applyPowerMessage);
+                    String input = (String)NetworkVirtualView.receiveFromClient(playingClients.get(currentPlayerID).getInput());
                     if (input.toUpperCase().equals("YES")) {
                         handleBuild(worker);
                         setPowerApply(true);
@@ -510,85 +477,20 @@ public class VirtualView implements ViewObservable, ModelObserver {
         return actionCorrect;
     }
 
-    /**
-     * Method to print the current GameBoard situation on the screen
-     */
-    public void show(Object o){
-        FakeCell[][] gCopy = (FakeCell[][]) o;
-        int rowIndex = 0;
-        int colIndex = 0;
-        int x = 0;
-        int y = 0;
-        System.out.println();
-        for (int i = 0; i < 16; i++) {
-            boolean row1 = (i == 1 || i == 4 || i == 7 || i == 10 || i == 13);
-            boolean row2 = (i == 2 || i == 5 || i == 8 || i == 11 || i == 14);
-            boolean rowBoardIndex = (i == 3 || i == 6 || i == 9 || i == 12);
-            for (int j = 0; j < 41; j++) {
-                boolean col1 = (j == 3 || j == 11 || j == 19 || j == 27 || j == 35);
-                boolean col2 = (j == 5 || j == 13 || j == 21 || j == 29 || j == 37);
-                boolean colBoardIndex = (j == 9 || j == 17 || j == 25 || j == 33);
-                if (i % 3 == 0)
-                    if (j % 8 == 0)
-                        System.out.print(Color.ANSI_REVERSE + "+" + Color.RESET);
-                    else
-                        System.out.print(Color.ANSI_REVERSE + "-" + Color.RESET);
-                else if (j % 8 == 0)
-                    System.out.print(Color.ANSI_REVERSE + "|" + Color.RESET);
-                else if (col1 && row1)  // possible worker
-                    if (gCopy[x][y].getPlayerName() != null)    // if a player has a worker set
-                        switch (gCopy[x][y].getId()){   // color (RGB) his "W" according to his id
-                            case 1:
-                                System.out.print(Color.ANSI_RED + "W" + Color.RESET);
-                                break;
-                            case 2:
-                                System.out.print(Color.ANSI_GREEN + "W" + Color.RESET);
-                                break;
-                            case 3:
-                                System.out.print(Color.ANSI_BLUE + "W" + Color.RESET);
-                                break;
-                            default:
-                                System.out.print("W");
-                                break;
-                        }
-                    else
-                        System.out.print(" ");
-                else if (col2 && row1)  // worker's number
-                    if (gCopy[x][y].getWorkerNum() == 1)
-                        System.out.print("1");
-                    else if (gCopy[x][y].getWorkerNum() == 2)
-                        System.out.print("2");
-                    else
-                        System.out.print(" ");
-                else if (col1 && row2)  // level
-                    System.out.print("L");
-                else if (col2 && row2)  // level's level
-                    System.out.print(gCopy[x][y].getLevel());
-                else
-                    System.out.print(" ");
-                if (j == 40 && row1)
-                    System.out.print(" ROW");
-                else if (j == 40 && row2) {     // to print the row index out of the map
-                    System.out.print(" " + rowIndex);
-                    rowIndex++;
-                }
-                if (colBoardIndex && (row1 || row2))  // increase column index for gCopy if you are in the worker or level row
-                    y++;
-            }
-            if (row1)   y = 0;  // reset column index for gCopy if you are in the level row
-            if (rowBoardIndex) {    // reset column index  and increase row index for gCopy if you are in the "―" line
-                y = 0;
-                x++;
-            }
-            System.out.println();
+
+    public void sendToClient(Integer clientToSend,Object message){
+        Thread t0 = playingClients.get(clientToSend).asyncSend(message);
+        try {
+            t0.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-        for (int j = 0; j < 5; j++){    // to print the column index off the map
-            System.out.print("  COL " + colIndex + " ");
-            colIndex++;
-        }
-        System.out.println();
-        System.out.println("Color matching to the letter 'W':");
-        System.out.println(Color.ANSI_RED + "Player 1 " + Color.ANSI_GREEN + "Player 2 " + Color.ANSI_BLUE + "Player 3 " + Color.RESET);
-        System.out.println("\n");
     }
+
+    public void sendUserDataToClients(UserData data){
+        for (int i = 0; i <playingClients.size(); i++) {
+            sendToClient(i,data);
+        }
+    }
+
 }
