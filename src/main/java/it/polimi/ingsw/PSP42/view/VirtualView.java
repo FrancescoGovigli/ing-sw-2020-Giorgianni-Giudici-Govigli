@@ -9,6 +9,8 @@ import java.util.concurrent.*;
 import it.polimi.ingsw.PSP42.model.FakeCell;
 import it.polimi.ingsw.PSP42.server.*;
 
+import javax.swing.text.*;
+
 /**
  * @author Francesco Govigli
  */
@@ -90,7 +92,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
             boolean choiceDone=false;
             String selectedCard = null;
             while(!choiceDone) {
-                sendToClient(i,"Select one of the card in the set player : " + (i + 1)+"\n");
+                sendToClient(i,ViewMessage.selectCard + (i + 1)+"\n");
 
                 for (int j = 0; j < setOfCards.size(); j++)
                     sendToClient(i,setOfCards.get(j));
@@ -99,13 +101,18 @@ public class VirtualView implements ViewObservable, ModelObserver {
 
                 selectedCard = (String) NetworkVirtualView.receiveFromClient(playingClients.get(i).getInput());
 
+
+
                 if (setOfCards.contains(selectedCard.toUpperCase())) {
                     if(!selectedCard.toUpperCase().equals("NOGOD"))
                        setOfCards.remove(selectedCard.toUpperCase());
                     choiceDone = true;
                 }
             }
-
+            for (int j = 0; j <playingClients.size() ; j++) {
+                if(j!=i)
+                    sendToClient(j,playingClients.get(i).getNickName()+ " picked "+selectedCard.toUpperCase()+"\n");
+            }
 
             players.add(new UserData(playingClients.get(i).getNickName(),21,selectedCard.toUpperCase()));
             sendUserDataToClients(new UserData(playingClients.get(i).getNickName(),21,selectedCard.toUpperCase()));
@@ -218,19 +225,8 @@ public class VirtualView implements ViewObservable, ModelObserver {
     }
 
     public void handleWelcomeMessage() {
-        for (int i = 0; i < playingClients.size(); i++) {
-
-
-            String message = ("\n.-. . .-..----..-.    .---.  .----. .-.   .-..----.    .---.  .----.     .----.  .--.  .-. .-. .---.  .----. .----. .-..-. .-..-.\n" +
-                    "| |/ \\| || {_  | |   /  ___}/  {}  \\|  `.'  || {_     {_   _}/  {}  \\   { {__   / {} \\ |  `| |{_   _}/  {}  \\| {}  }| ||  `| || |\n" +
-                    "|  .'.  || {__ | `--.\\     }\\      /| |\\ /| || {__      | |  \\      /   .-._} }/  /\\  \\| |\\  |  | |  \\      /| .-. \\| || |\\  || |\n" +
-                    "`-'   `-'`----'`----' `---'  `----' `-' ` `-'`----'     `-'   `----'    `----' `-'  `-'`-' `-'  `-'   `----' `-' `-'`-'`-' `-'`-'\nby Giorgianni-Giudici-Govigli \n");
-            sendToClient(i,message);
-
-
-
-        }
-
+        for (int i = 0; i < playingClients.size(); i++)
+            sendToClient(i, ViewMessage.welcome);
     }
 
     public void handleWinner(String winner){
@@ -274,14 +270,6 @@ public class VirtualView implements ViewObservable, ModelObserver {
     }
 
     /**
-     * Has the task to ask for the current player of the new turn that is starting
-     * @return nickname of the player
-     *//*
-    public String handleCurrentPlayer(){
-        return notifyCurrentPlayer();
-    }*/
-
-    /**
      * this method is used to ask to choose one of the 2 worker of the currentPlayer available
      * @return 1 for worker1, 2 for worker2
      */
@@ -301,7 +289,11 @@ public class VirtualView implements ViewObservable, ModelObserver {
      */
     public String[][] handleWhatToDo(String s) {
         setActionCorrect(false);
-        sendToClient(currentPlayerID,"\n" + s + " it's your turn!!!"+"\n");
+        sendToClient(currentPlayerID,"\n" + s+", " + ViewMessage.yourTurnMessage+"\n");
+        for (int i = 0; i <playingClients.size() ; i++) {
+            if(i!=currentPlayerID)
+                sendToClient(i,ViewMessage.waitingYourTurn);
+        }
         return notifyWhatToDo();
     }
 
@@ -312,7 +304,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
     public void handleMove(Integer worker){
         setActionCorrect(false);
         while(!actionCorrect) {
-            String[] s = null;
+            String[] s;
             sendToClient(currentPlayerID,ViewMessage.moveMessage);
             try{
                 String input = (String)NetworkVirtualView.receiveFromClient(playingClients.get(currentPlayerID).getInput());
@@ -345,7 +337,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
                     sendToClient(currentPlayerID,ViewMessage.levelMessage + "\n");
                     String answer = (String)NetworkVirtualView.receiveFromClient(playingClients.get(currentPlayerID).getInput());
                     if (answer.toUpperCase().equals("YES")) {
-                        sendToClient(currentPlayerID,"Insert level:" + "\n");
+                        sendToClient(currentPlayerID,ViewMessage.insertLevel + "\n");
                         Integer level =  Integer.parseInt(NetworkVirtualView.receiveFromClient(playingClients.get(currentPlayerID).getInput()).toString());
                         notifyBuild(choice = new Choice(Integer.parseInt(b[0]), Integer.parseInt(b[1]), worker, level, null));
                     } else
@@ -373,9 +365,9 @@ public class VirtualView implements ViewObservable, ModelObserver {
      */
     public void printEffect(String s, String effect) {
         if(s.equals("ON"))
-            sendToClient(currentPlayerID,"Your god's power started!\n" + effect);
+            sendToClient(currentPlayerID,ViewMessage.godPowerStart + effect);
         if(s.equals("OFF"))
-            sendToClient(currentPlayerID,"Your god's power finished!\n" + effect);
+            sendToClient(currentPlayerID,ViewMessage.godPowerEnd + effect);
     }
 
     /**
@@ -484,7 +476,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
             t0.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        };
     }
 
     public void sendUserDataToClients(UserData data){

@@ -65,13 +65,19 @@ public class PlayerHandler implements Runnable{
     /*CHIAMA SETTING CLIENT() CHE RICHIEDE IL NOME E IL NUMERO DI GIOCATORI SE
       CLIENT ID = 1 (IL PRIMO CONNESSO) E IL THREAD RIMANE ATTIVO FINO A CHE IL CLIENT E' CONNESSO
      */
+
+    //TODO SE E' IN GIOCO FINCHE NON PERDE ACTIVE = TRUE E FIN TANTO CHE NON VIENE INILIZIALIZZATA
+    //TODO LA PARTITA. CREO UN THREAD DI SOLA LETTURA CHE RIMANE IN WHILE. SETTING CLIENT() VA NEL SERVER
+    //TODO CHOOSENUM() NEL SERVER ANCHE CLOSE CONNECTION().
+
     @Override
     public void run() {
         System.out.println("Connected to " + client.getInetAddress());
         try {
             settingClient();
+            //t0.join()
             while (isActive()) {
-                //NOTHING (SLEEP??)
+                //read();
             }
         } catch (NoSuchElementException e) {
             System.err.println("Error!" + e.getMessage());
@@ -81,17 +87,30 @@ public class PlayerHandler implements Runnable{
     }
 
     private int chooseNumberOfPlayer(String name){
+        boolean correctChoice = false;
+        Integer choice=null;
         String initial = (name + ", please enter the number of players: ");
         NetworkVirtualView.sendToClient(getOut(), initial);
-        return Integer.parseInt(NetworkVirtualView.receiveFromClient(input).toString());
+        while(!correctChoice) {
+            if(choice!=null){
+                initial = (name + ", please enter a correct value of players (2 or 3): ");
+                NetworkVirtualView.sendToClient(getOut(), initial);
+            }
+            choice = Integer.parseInt(NetworkVirtualView.receiveFromClient(input).toString());
+            if (choice == 2 || choice == 3)
+                correctChoice = true;
+        }
+        return choice;
+
     }
 
     private void settingClient(){
-
+        NetworkVirtualView.sendToClient(getOut(),"You entered the Game!"+ " \uD83D\uDE0A \n");
         if(clientID==1)
             NetworkVirtualView.sendToClient(getOut(), "Welcome player " + clientID + " insert your name: ");
         else
             NetworkVirtualView.sendToClient(getOut(), "Welcome player " + clientID +" you are waiting the FIRST PLAYER to set the number of players, insert your name: ");
+        //Devo garantire univocità nickname perciò se esiste gia dovrò mandare una nuova richiesta
         nickName = (String) NetworkVirtualView.receiveFromClient(input);
 
         if (clientID == 1){
@@ -126,5 +145,5 @@ public class PlayerHandler implements Runnable{
         t.start();
         return t;
     }
-    
+
 }

@@ -56,6 +56,7 @@ public class Server {
     public boolean isNumberOfPlayerSet() {
         return numberOfPlayerSet;
     }
+
     /* ASSOCIAMO UN ID IN ORDINE DI CONNESSIONE AD OGNI CLIENT e
        PASSIAMO L'OGGETTO SERVER A CUI IL PLAYERHANDLER FA RIFERIMENTO
        IN MODO DA POTER GESTIRE LA CHIUSURA DELLA CONNESSIONE
@@ -120,6 +121,7 @@ public class Server {
                 return -1;
             return 0;
         });
+        
         GameThread gameThread = new GameThread(waitingClients,numberOfPlayer);
         Thread gameT = new Thread(gameThread, "GameThread");
         gameT.start();
