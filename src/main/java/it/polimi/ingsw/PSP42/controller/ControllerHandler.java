@@ -155,6 +155,7 @@ public class ControllerHandler {
             mainController.setGameDone(true);
         }
         view.setCurrentPlayerID(gameBoard.getCurrentPlayer());
+        view.noWriteForNotCurrentPlayers(gameBoard.getCurrentPlayer());
         return  gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getNickname();
     }
 
@@ -355,3 +356,4 @@ public class ControllerHandler {
         return randomPick;
     }
 }
+

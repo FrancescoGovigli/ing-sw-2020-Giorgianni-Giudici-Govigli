@@ -12,6 +12,7 @@ public class Client implements Runnable{
 
     private NetworkHandler net;
     private boolean active=true;
+    private boolean writeActive=true;
     private ObjectOutputStream output;
     private ArrayList<UserData> playersData = new ArrayList<>();
 
@@ -39,6 +40,9 @@ public class Client implements Runnable{
 
                             }
                         }
+                        else if(inputObject instanceof Boolean)
+                            writeActive=(Boolean)inputObject;
+
                         else if(inputObject instanceof UserData)
                             playersData.add(((UserData) inputObject));
 
@@ -61,8 +65,10 @@ public class Client implements Runnable{
                 try {
                     while (isActive()) {
                         String inputLine = stdin.readLine();
-                        socketOut.println(inputLine);
-                        socketOut.flush();
+                        if(writeActive) {
+                            socketOut.println(inputLine);
+                            socketOut.flush();
+                        }
                     }
                 }catch(Exception e){
                     System.out.println("You disconnected");
@@ -202,9 +208,10 @@ public class Client implements Runnable{
         System.out.println();
         System.out.println("Color matching to the letter 'W':");
         if(playersData.size()==3)
-         System.out.println("PLAYERS: " + Color.ANSI_RED + "Player 1: " + playersData.get(0).getNickname()+" with "+playersData.get(0).getCardChoosed().toUpperCase() +" "+ Color.ANSI_GREEN + "Player 2: " + playersData.get(1).getNickname() +" with "+playersData.get(1).getCardChoosed().toUpperCase() +" "+ Color.ANSI_BLUE + "Player 3: "+ playersData.get(2).getNickname()+" with "+playersData.get(2).getCardChoosed().toUpperCase()+ Color.RESET);
+            System.out.println("PLAYERS: " + Color.ANSI_RED + "Player 1: " + playersData.get(0).getNickname()+" with "+playersData.get(0).getCardChoosed().toUpperCase() +" "+ Color.ANSI_GREEN + "Player 2: " + playersData.get(1).getNickname() +" with "+playersData.get(1).getCardChoosed().toUpperCase() +" "+ Color.ANSI_BLUE + "Player 3: "+ playersData.get(2).getNickname()+" with "+playersData.get(2).getCardChoosed().toUpperCase()+ Color.RESET);
         if(playersData.size()==2)
-         System.out.println("PLAYERS: " + Color.ANSI_RED + "Player 1: " + playersData.get(0).getNickname()+" with "+playersData.get(0).getCardChoosed().toUpperCase() +" "+ Color.ANSI_GREEN + "Player 2: " + playersData.get(1).getNickname() +" with "+playersData.get(1).getCardChoosed().toUpperCase() + Color.RESET);
+            System.out.println("PLAYERS: " + Color.ANSI_RED + "Player 1: " + playersData.get(0).getNickname()+" with "+playersData.get(0).getCardChoosed().toUpperCase() +" "+ Color.ANSI_GREEN + "Player 2: " + playersData.get(1).getNickname() +" with "+playersData.get(1).getCardChoosed().toUpperCase() + Color.RESET);
         System.out.println("\n");
     }
 }
+

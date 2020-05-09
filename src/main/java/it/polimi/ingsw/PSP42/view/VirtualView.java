@@ -89,6 +89,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
         setOfCards.add("NOGOD");
         ArrayList<UserData> players = new ArrayList<>();
         for (int i = 0; i < playingClients.size() ; i++) {
+            noWriteForNotCurrentPlayers(i);
             boolean choiceDone=false;
             String selectedCard = null;
             while(!choiceDone) {
@@ -99,13 +100,13 @@ public class VirtualView implements ViewObservable, ModelObserver {
 
 
 
-                selectedCard = (String) NetworkVirtualView.receiveFromClient(playingClients.get(i).getInput());
+                selectedCard = (String) NetworkVirtualView.receiveFromClient(playingClients.get(i));
 
 
 
                 if (setOfCards.contains(selectedCard.toUpperCase())) {
                     if(!selectedCard.toUpperCase().equals("NOGOD"))
-                       setOfCards.remove(selectedCard.toUpperCase());
+                        setOfCards.remove(selectedCard.toUpperCase());
                     choiceDone = true;
                 }
             }
@@ -117,6 +118,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
             players.add(new UserData(playingClients.get(i).getNickName(),21,selectedCard.toUpperCase()));
             sendUserDataToClients(new UserData(playingClients.get(i).getNickName(),21,selectedCard.toUpperCase()));
             setActionCorrect(false);
+
         }
 
 
@@ -132,7 +134,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
         while(!correct) {
             sendToClient(currentPlayerID,ViewMessage.workerMessage+"\n");
             try {
-                worker =  Integer.parseInt(NetworkVirtualView.receiveFromClient(playingClients.get(currentPlayerID).getInput()).toString());
+                worker =  Integer.parseInt(NetworkVirtualView.receiveFromClient(playingClients.get(currentPlayerID)).toString());
                 if (worker == 1 || worker == 2)
                     correct = true;
             }
@@ -218,15 +220,18 @@ public class VirtualView implements ViewObservable, ModelObserver {
         for (int i = 0; i <playingClients.size(); i++) {
             if(!s.equals("INIT")) {
                 if (i != currentPlayerID)
-                    sendToClient(i," "+playingClients.get(currentPlayerID).getNickName().toUpperCase() + " did his move");
+                    sendToClient(i," "+playingClients.get(currentPlayerID).getNickName() + " did his move");
             }
             sendToClient(i,o);
         }
     }
 
     public void handleWelcomeMessage() {
+        noWriteForNotCurrentPlayers(currentPlayerID);
         for (int i = 0; i < playingClients.size(); i++)
             sendToClient(i, ViewMessage.welcome);
+
+
     }
 
     public void handleWinner(String winner){
@@ -246,12 +251,13 @@ public class VirtualView implements ViewObservable, ModelObserver {
      */
     public void handleInitialPosition(){
         for (int i = 0; i < numPlayers; i++) {
+            noWriteForNotCurrentPlayers(i);
             for (int j = 0; j <2; j++) {
                 String[] s = null;
                 while (!actionCorrect) {
                     sendToClient(i,"Player " + (i + 1) + ", " + ViewMessage.initialPositionMessage + (j + 1) + " (digit x,y)"+"\n");
                     try{
-                        String input = (String) NetworkVirtualView.receiveFromClient(playingClients.get(i).getInput());
+                        String input = (String) NetworkVirtualView.receiveFromClient(playingClients.get(i));
                         s = input.split(",");
                         notifyInit(choice = new Choice(Integer.parseInt(s[0]), Integer.parseInt(s[1]), j + 1, null, i));
                     }
@@ -289,6 +295,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
      */
     public String[][] handleWhatToDo(String s) {
         setActionCorrect(false);
+
         sendToClient(currentPlayerID,"\n" + s+", " + ViewMessage.yourTurnMessage+"\n");
         for (int i = 0; i <playingClients.size() ; i++) {
             if(i!=currentPlayerID)
@@ -307,11 +314,11 @@ public class VirtualView implements ViewObservable, ModelObserver {
             String[] s;
             sendToClient(currentPlayerID,ViewMessage.moveMessage);
             try{
-                String input = (String)NetworkVirtualView.receiveFromClient(playingClients.get(currentPlayerID).getInput());
+                String input = (String)NetworkVirtualView.receiveFromClient(playingClients.get(currentPlayerID));
                 s = input.split(",");
                 notifyMove(choice = new Choice(Integer.parseInt(s[0]), Integer.parseInt(s[1]), worker, null,null));
             } catch (NumberFormatException | ArrayIndexOutOfBoundsException e){
-               sendToClient(currentPlayerID,ErrorMessage.inputMessage + "\n");
+                sendToClient(currentPlayerID,ErrorMessage.inputMessage + "\n");
             }
         }
     }
@@ -330,15 +337,15 @@ public class VirtualView implements ViewObservable, ModelObserver {
                     sendToClient(currentPlayerID,ViewMessage.buildMessage + worker + "\n");
 
                 String[] b = null;
-                String build = (String)NetworkVirtualView.receiveFromClient(playingClients.get(currentPlayerID).getInput());
+                String build = (String)NetworkVirtualView.receiveFromClient(playingClients.get(currentPlayerID));
                 b = build.split(",");
                 if (! build.equals("")) {
                     counter = 0;
                     sendToClient(currentPlayerID,ViewMessage.levelMessage + "\n");
-                    String answer = (String)NetworkVirtualView.receiveFromClient(playingClients.get(currentPlayerID).getInput());
+                    String answer = (String)NetworkVirtualView.receiveFromClient(playingClients.get(currentPlayerID));
                     if (answer.toUpperCase().equals("YES")) {
                         sendToClient(currentPlayerID,ViewMessage.insertLevel + "\n");
-                        Integer level =  Integer.parseInt(NetworkVirtualView.receiveFromClient(playingClients.get(currentPlayerID).getInput()).toString());
+                        Integer level =  Integer.parseInt(NetworkVirtualView.receiveFromClient(playingClients.get(currentPlayerID)).toString());
                         notifyBuild(choice = new Choice(Integer.parseInt(b[0]), Integer.parseInt(b[1]), worker, level, null));
                     } else
                         notifyBuild(choice = new Choice(Integer.parseInt(b[0]), Integer.parseInt(b[1]), worker, 0, null));
@@ -404,7 +411,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
         if(warning.equals("WARNING"))
             sendToClient(currentPlayerID,ErrorMessage.blockingMessage);
         sendToClient(currentPlayerID, "Input a YES within 5 seconds for UNDO : ");
-        String action = (String)NetworkVirtualView.receiveFromClient(playingClients.get(currentPlayerID).getInput());
+        String action = (String)NetworkVirtualView.receiveFromClient(playingClients.get(currentPlayerID));
         timer.cancel();
         if(value[0]==false || (!action.toUpperCase().equals("YES")) || action.equals("")) {
             sendToClient(currentPlayerID,"UNDO is not applied");
@@ -431,7 +438,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
             case "MOVE":
                 while(!askUndo) {
                     sendToClient(currentPlayerID,s + " POWER: " + ViewMessage.applyPowerMessage);
-                    String input = (String)NetworkVirtualView.receiveFromClient(playingClients.get(currentPlayerID).getInput());
+                    String input = (String)NetworkVirtualView.receiveFromClient(playingClients.get(currentPlayerID));
                     if (input.toUpperCase().equals("YES")) {
                         handleMove(worker);
                         setPowerApply(true);
@@ -447,8 +454,8 @@ public class VirtualView implements ViewObservable, ModelObserver {
                 break;
             case "BUILD":
                 while(!askUndo) {
-                   sendToClient(currentPlayerID,s + " POWER: " + ViewMessage.applyPowerMessage);
-                    String input = (String)NetworkVirtualView.receiveFromClient(playingClients.get(currentPlayerID).getInput());
+                    sendToClient(currentPlayerID,s + " POWER: " + ViewMessage.applyPowerMessage);
+                    String input = (String)NetworkVirtualView.receiveFromClient(playingClients.get(currentPlayerID));
                     if (input.toUpperCase().equals("YES")) {
                         handleBuild(worker);
                         setPowerApply(true);
@@ -471,18 +478,23 @@ public class VirtualView implements ViewObservable, ModelObserver {
 
 
     public void sendToClient(Integer clientToSend,Object message){
-        Thread t0 = playingClients.get(clientToSend).asyncSend(message);
-        try {
-            t0.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        };
+        NetworkVirtualView.sendToClient(playingClients.get(clientToSend),message);
     }
 
-    public void sendUserDataToClients(UserData data){
-        for (int i = 0; i <playingClients.size(); i++) {
-            sendToClient(i,data);
+    public void sendUserDataToClients(UserData data) {
+        for (int i = 0; i < playingClients.size(); i++) {
+            sendToClient(i, data);
         }
     }
+
+    public void noWriteForNotCurrentPlayers(Integer currentPlayer){
+        for (int i = 0; i <playingClients.size() ; i++) {
+            if(i!=currentPlayer)
+                sendToClient(i,false);
+            else
+                sendToClient(i,true);
+        }
+    }
+
 
 }

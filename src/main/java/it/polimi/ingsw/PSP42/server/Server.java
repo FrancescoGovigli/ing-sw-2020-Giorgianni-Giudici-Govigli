@@ -10,11 +10,6 @@ public class Server {
     private ArrayList<PlayerHandler> waitingClients = new ArrayList<>();
     private int numberOfPlayer;
     private boolean numberOfPlayerSet;
-
-    public boolean isStartedGame() {
-        return startedGame;
-    }
-
     private boolean startedGame;
     private int count;
 
@@ -34,17 +29,26 @@ public class Server {
         }
     }
 
+
     //GESTISCE SOLO LE NUOVE CONNESSIONI (vedi commento sopra metodo waitingRoom())
 
     public void run(){
         while (true){
             try{
                 Socket client = serverSocket.accept();
-                if (!startedGame) //SE IL GIOCO NON E' INIZIATO CREO THREAD PER IL NUOVO CLIENT
+                if (!startedGame) {
+                    //SE IL GIOCO NON E' INIZIATO CREO THREAD PER IL NUOVO CLIENT
                     initNewClient(client);
+                }
                 else { //ALTRIMENTI RIFIUTO
-                    String string = (ServerMessage.gameInProgress);
-                    NetworkVirtualView.send(client,string);
+                    try {
+                        ObjectOutputStream output = new ObjectOutputStream(client.getOutputStream());
+                        output.writeObject(ServerMessage.gameInProgress);
+                        output.flush();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    //NetworkVirtualView.send(client,string);
                     client.close();
                 }
             } catch (IOException e) {
@@ -53,8 +57,17 @@ public class Server {
         }
     }
 
+    public int getNumberOfPlayer() {
+        return numberOfPlayer;
+    }
+
     public boolean isNumberOfPlayerSet() {
         return numberOfPlayerSet;
+    }
+
+    public synchronized void setNumberOfPlayer(int i){
+        this.numberOfPlayer = i;
+        numberOfPlayerSet = true;
     }
 
     /* ASSOCIAMO UN ID IN ORDINE DI CONNESSIONE AD OGNI CLIENT e
@@ -63,14 +76,10 @@ public class Server {
      */
     public synchronized void initNewClient(Socket client){
         count++;
-        PlayerHandler playerConnection = new PlayerHandler(client, count, this);
-        Thread t = new Thread(playerConnection);
+        System.out.println("Connected to " + client.getInetAddress());
+        ServerGameThread server = new ServerGameThread(this,client,count);
+        Thread t = new Thread(server);
         t.start();
-    }
-
-    public synchronized void setNumberOfPlayer(int i){
-        this.numberOfPlayer = i;
-        numberOfPlayerSet = true;
     }
 
     /*
@@ -80,31 +89,29 @@ public class Server {
       E IL GIOCO COMINCIA (startgame = true) e CREIAMO UN GAMETHREAD PER RUNNARE LA PARTITA.
      */
 
-    public synchronized void waitingRoom(PlayerHandler p)  {
+    public synchronized void waitingRoom(ServerGameThread sgt)  {
         //Devo dire che il giocatore che si disconnette con CLientid = 3 quello con Clientid a 4 va a 3.
-        if (p.getClientID()<=numberOfPlayer) {
-            waitingClients.add(p);
-            System.out.println("Added player: " + p.getNickName());
+        if (sgt.getOrderOfConnection()<=numberOfPlayer) {
+            waitingClients.add(sgt.getPlayerConnection());
+            System.out.println("Added player: " + sgt.getClientNickname());
 
             if (waitingClients.size() == numberOfPlayer && allPlayersAreReady())
                 initNewGame();
 
-
-
             else if(allPlayersAreReady() && waitingClients.size()!=numberOfPlayer)
-                NetworkVirtualView.sendToClient(p.getOut(),ServerMessage.waiting);
+                sgt.asyncClientSend(ServerMessage.waiting);
         }
         else {
-            NetworkVirtualView.sendToClient(p.getOut(), ServerMessage.extraClient);
-            p.closeConnection();
+            sgt.asyncClientSend(ServerMessage.extraClient);
+            sgt.getPlayerConnection().closeConnection();
 
         }
 
     }
 
     public synchronized boolean allPlayersAreReady(){
-        for (PlayerHandler p : waitingClients){
-            if (!p.isReadyToPlay())
+        for (PlayerHandler playerHandler : waitingClients){
+            if (!playerHandler.isReadyToPlay())
                 return false;
         }
         return true;
@@ -113,19 +120,9 @@ public class Server {
     public synchronized void initNewGame(){
         this.startedGame = true;
         System.out.println("Let's start!");
-
-        waitingClients.sort((PlayerHandler z1, PlayerHandler z2) -> {
-            if (z1.getClientID() > z2.getClientID())
-                return 1;
-            if (z1.getClientID() < z2.getClientID())
-                return -1;
-            return 0;
-        });
-        
-        GameThread gameThread = new GameThread(waitingClients,numberOfPlayer);
-        Thread gameT = new Thread(gameThread, "GameThread");
-        gameT.start();
-
+        ServerGameThread game = new ServerGameThread(waitingClients,this);
+        game.startGame();
 
     }
+
 }

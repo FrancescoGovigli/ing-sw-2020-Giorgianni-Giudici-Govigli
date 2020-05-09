@@ -4,10 +4,10 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-public class PlayerHandler implements Runnable{
+public class PlayerHandler{
+
     private Socket client;
     private int clientID;
-    private Server server;
     private boolean readyToPlay;
     private ObjectOutputStream out;
     private BufferedReader input;
@@ -30,6 +30,11 @@ public class PlayerHandler implements Runnable{
     }
 
     private boolean active=true;
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
     private String nickName;
 
     public String getNickName() {
@@ -37,11 +42,13 @@ public class PlayerHandler implements Runnable{
     }
 
 
+    public void setReadyToPlay(boolean readyToPlay) {
+        this.readyToPlay = readyToPlay;
+    }
 
-    PlayerHandler(Socket client, int clientID, Server server){
+    PlayerHandler(Socket client, int clientID){
         this.client = client;
         this.clientID = clientID;
-        this.server = server;
         this.readyToPlay = false;
         this.active = true;
         try {
@@ -70,80 +77,60 @@ public class PlayerHandler implements Runnable{
     //TODO LA PARTITA. CREO UN THREAD DI SOLA LETTURA CHE RIMANE IN WHILE. SETTING CLIENT() VA NEL SERVER
     //TODO CHOOSENUM() NEL SERVER ANCHE CLOSE CONNECTION().
 
-    @Override
-    public void run() {
-        System.out.println("Connected to " + client.getInetAddress());
-        try {
-            settingClient();
-            //t0.join()
-            while (isActive()) {
-                //read();
-            }
-        } catch (NoSuchElementException e) {
-            System.err.println("Error!" + e.getMessage());
-        } finally {
-            closeConnection();
-        }
-    }
 
-    private int chooseNumberOfPlayer(String name){
-        boolean correctChoice = false;
-        Integer choice=null;
-        String initial = (name + ", please enter the number of players: ");
-        NetworkVirtualView.sendToClient(getOut(), initial);
-        while(!correctChoice) {
-            if(choice!=null){
-                initial = (name + ", please enter a correct value of players (2 or 3): ");
-                NetworkVirtualView.sendToClient(getOut(), initial);
-            }
-            choice = Integer.parseInt(NetworkVirtualView.receiveFromClient(input).toString());
-            if (choice == 2 || choice == 3)
-                correctChoice = true;
-        }
-        return choice;
 
-    }
-
-    private void settingClient(){
-        NetworkVirtualView.sendToClient(getOut(),"You entered the Game!"+ " \uD83D\uDE0A \n");
-        if(clientID==1)
-            NetworkVirtualView.sendToClient(getOut(), "Welcome player " + clientID + " insert your name: ");
-        else
-            NetworkVirtualView.sendToClient(getOut(), "Welcome player " + clientID +" you are waiting the FIRST PLAYER to set the number of players, insert your name: ");
-        //Devo garantire univocità nickname perciò se esiste gia dovrò mandare una nuova richiesta
-        nickName = (String) NetworkVirtualView.receiveFromClient(input);
-
-        if (clientID == 1){
-            int i = chooseNumberOfPlayer(nickName);
-            System.out.println("Number of players received is: " + i);
-            server.setNumberOfPlayer(i);
-        }
-        this.readyToPlay = true;
-
-        while (!server.isNumberOfPlayerSet()) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                System.out.println("Waiting error! " + e.getMessage());
-            }
-        }
-        server.waitingRoom(this);
-
-    }
 
     public void closeConnection(){
         active = false;
     }
 
     public Thread asyncSend(Object message){
+
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
-                NetworkVirtualView.sendToClient(getOut(),message);
+                try {
+                    out.writeObject(message);
+                    out.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
         t.start();
+        try {
+            t.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return t;
     }
 
+    public Object asyncRead(){
+        final String[] str = new String[1];
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    str[0] = input.readLine();
+                    System.out.println("[FROM CLIENT] :" + str[0]);
+
+
+                } catch (Exception e){
+                    setActive(false);
+                }
+            }
+        });
+        t.start();
+        try {
+            t.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return str[0];
+    }
+
+
+
 }
+
