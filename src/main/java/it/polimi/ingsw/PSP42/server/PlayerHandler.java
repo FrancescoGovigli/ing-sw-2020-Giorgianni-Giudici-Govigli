@@ -2,15 +2,28 @@ package it.polimi.ingsw.PSP42.server;
 
 import java.io.*;
 import java.net.*;
-import java.util.*;
 
-public class PlayerHandler{
+public class PlayerHandler {
 
     private Socket client;
     private int clientID;
     private boolean readyToPlay;
     private ObjectOutputStream out;
     private BufferedReader input;
+    private boolean active = true;
+    private String nickName;
+
+    public int getClientID() {
+        return clientID;
+    }
+
+    public void setReadyToPlay(boolean readyToPlay) {
+        this.readyToPlay = readyToPlay;
+    }
+
+    public boolean isReadyToPlay() {
+        return readyToPlay;
+    }
 
     public BufferedReader getInput() {
         return input;
@@ -20,32 +33,29 @@ public class PlayerHandler{
         return out;
     }
 
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 
     public boolean isActive() {
         return active;
     }
 
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    private boolean active=true;
-
     public void setNickName(String nickName) {
         this.nickName = nickName;
     }
-
-    private String nickName;
 
     public String getNickName() {
         return nickName;
     }
 
-
-    public void setReadyToPlay(boolean readyToPlay) {
-        this.readyToPlay = readyToPlay;
-    }
-
+    /**
+     * Constructor for the following object which will be managed by the ServerGameThread
+     * (PlayerHandler contains all the information necessary for the server and the SGT
+     * to correctly manage the interactions with the client (connection closure included))
+     * @param client
+     * @param clientID
+     */
     PlayerHandler(Socket client, int clientID){
         this.client = client;
         this.clientID = clientID;
@@ -57,16 +67,6 @@ public class PlayerHandler{
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-    }
-
-    public int getClientID() {
-        return clientID;
-    }
-
-    public boolean isReadyToPlay() {
-        return readyToPlay;
     }
 
     /*CHIAMA SETTING CLIENT() CHE RICHIEDE IL NOME E IL NUMERO DI GIOCATORI SE
@@ -77,15 +77,15 @@ public class PlayerHandler{
     //TODO LA PARTITA. CREO UN THREAD DI SOLA LETTURA CHE RIMANE IN WHILE. SETTING CLIENT() VA NEL SERVER
     //TODO CHOOSENUM() NEL SERVER ANCHE CLOSE CONNECTION().
 
-
-
-
     public void closeConnection(){
         active = false;
     }
 
-    public Thread asyncSend(Object message){
-
+    /**
+     * Method to send an object to the client
+     * @param message (object to send)
+     */
+    public void asyncSend(Object message){
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -103,9 +103,12 @@ public class PlayerHandler{
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return t;
     }
 
+    /**
+     * Method to receive an object from the client
+     * @return
+     */
     public Object asyncRead(){
         final String[] str = new String[1];
         Thread t = new Thread(new Runnable() {
@@ -114,8 +117,6 @@ public class PlayerHandler{
                 try {
                     str[0] = input.readLine();
                     System.out.println("[FROM CLIENT] :" + str[0]);
-
-
                 } catch (Exception e){
                     setActive(false);
                 }
@@ -129,8 +130,4 @@ public class PlayerHandler{
         }
         return str[0];
     }
-
-
-
 }
-

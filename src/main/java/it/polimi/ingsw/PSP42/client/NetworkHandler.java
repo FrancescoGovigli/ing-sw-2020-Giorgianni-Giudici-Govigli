@@ -5,7 +5,7 @@ import java.net.*;
 
 public class NetworkHandler {
 
-    public  static void sendToServer(Socket server, Object object){
+    public static void sendToServer(Socket server, Object object) {
         try {
             ObjectOutputStream output = new ObjectOutputStream(server.getOutputStream());
             output.writeObject(object);
@@ -15,7 +15,7 @@ public class NetworkHandler {
         }
     }
 
-    public  static Object receiveFromServer(Socket server){
+    public static Object receiveFromServer(Socket server) {
         try {
             ObjectInputStream input = new ObjectInputStream(server.getInputStream());
             return input.readObject();

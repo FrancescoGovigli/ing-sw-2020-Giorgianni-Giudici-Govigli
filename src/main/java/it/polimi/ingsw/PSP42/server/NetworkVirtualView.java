@@ -1,15 +1,21 @@
 package it.polimi.ingsw.PSP42.server;
 
-import java.io.*;
-import java.net.*;
-
 public class NetworkVirtualView {
 
-    public static void sendToClient(PlayerHandler p,Object message){
+    /**
+     * Method used by VirtualView to send a message to the client
+     * @param p (interested client)
+     * @param message (object to send)
+     */
+    public static void sendToClient(PlayerHandler p, Object message){
         p.asyncSend(message);
     }
 
-
+    /**
+     * Method used by VirtualView to receive a message to the client
+     * @param p (interested client)
+     * @return
+     */
     public static Object receiveFromClient(PlayerHandler p) {
         return p.asyncRead();
     }
