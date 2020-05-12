@@ -1,7 +1,5 @@
 package it.polimi.ingsw.PSP42;
 
-import javax.swing.text.*;
-
 public interface ViewObservable {
     /**
      * Add an observer to the View's observer list

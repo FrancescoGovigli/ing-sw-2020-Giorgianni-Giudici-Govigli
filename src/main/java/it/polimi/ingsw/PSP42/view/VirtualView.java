@@ -9,8 +9,6 @@ import java.util.concurrent.*;
 import it.polimi.ingsw.PSP42.model.FakeCell;
 import it.polimi.ingsw.PSP42.server.*;
 
-import javax.swing.text.*;
-
 /**
  * @author Francesco Govigli
  */
@@ -276,7 +274,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
         }
 
     }
-
+    
     /**
      * This method has the task to initialize the Gameboard and set the initial players position.
      */

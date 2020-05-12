@@ -1,0 +1,29 @@
+root {
+    display: block;
+}
+
+.root {
+    -fx-background-image: url("../images/GameBoard2000.png");
+    -fx-background-size: stretch;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-border-width: 200%;
+}
+
+#worker1 {
+    -fx-background-image: url("../images/Atlas.png");
+    -fx-background-size: stretch;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+#text-field {
+    -fx-background-image: url("../images/text-field.png");
+    -fx-background-size: stretch;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-font-size: 15px;
+    -fx-font-family: Arial;
+    -fx-border-width: 200%;
+    -fx-border-color: #000000;
+}

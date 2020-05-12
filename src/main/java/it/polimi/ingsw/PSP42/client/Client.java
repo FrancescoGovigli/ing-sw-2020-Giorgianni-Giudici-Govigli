@@ -46,7 +46,6 @@ public class Client implements Runnable{
                                 socketIn.close();
                                 setActive(false);
                                 System.out.println("[FROM SERVER] : PRESS [ENTER] TO QUIT ");
-
                             }
                         }
                         else if(inputObject instanceof Boolean)

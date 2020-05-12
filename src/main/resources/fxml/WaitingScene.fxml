@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+<?import javafx.scene.text.Text?>
+
+<GridPane prefHeight="600" prefWidth="400" alignment="CENTER" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.PSP42.view.ControllerWaitingScene">
+
+    <GridPane
+            id="grid-pane"
+            alignment="CENTER"
+            GridPane.columnIndex="1"
+            GridPane.halignment="CENTER"
+            GridPane.hgrow="ALWAYS"
+            GridPane.rowIndex="1"
+            GridPane.valignment="CENTER"
+            GridPane.vgrow="ALWAYS">
+
+        <!--<gridLinesVisible>true</gridLinesVisible>-->
+
+        <Text id="welcome-text" text="SANTORINI" textAlignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+
+        <HBox alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="2">
+            <Label text="Welcome in Santorini" />
+        </HBox>
+
+        <HBox alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="3">
+            <Label alignment="CENTER" fx:id="labelUsername" />
+        </HBox>
+
+        <HBox alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="4">
+            <Button id="play-button" onAction="#goToGameBoardScene" prefHeight="200" prefWidth="200" />
+        </HBox>
+
+        <HBox alignment="BOTTOM_RIGHT" GridPane.columnIndex="0" GridPane.rowIndex="6">
+            <Button onAction="#backToWelcomeScene" text="Back to 'Welcome Scene'" />
+        </HBox>
+
+        <columnConstraints>
+            <ColumnConstraints minWidth="10.0" percentWidth="100.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="10" percentHeight="10" prefHeight="50" /> <!-- Row 0 -->
+            <RowConstraints minHeight="10" percentHeight="10" prefHeight="50" /> <!-- Row 1 welcome-text -->
+            <RowConstraints minHeight="10" percentHeight="10" prefHeight="50" /> <!-- Row 2 label welcome santorini-->
+            <RowConstraints minHeight="10" percentHeight="10" prefHeight="50" /> <!-- Row 3 label Name-->
+            <RowConstraints minHeight="10" percentHeight="18" prefHeight="50" /> <!-- Row 4 button play -->
+            <RowConstraints minHeight="10" percentHeight="2" prefHeight="50" /> <!-- Row 5  -->
+            <RowConstraints minHeight="10" percentHeight="10" prefHeight="50" /> <!-- Row 6 button useless-->
+            <RowConstraints minHeight="10" percentHeight="10" prefHeight="50" /> <!-- Row 7 -->
+            <RowConstraints minHeight="10" percentHeight="10" prefHeight="50" /> <!-- Row 8 -->
+            <RowConstraints minHeight="10" percentHeight="10" prefHeight="50" /> <!-- Row 9 -->
+        </rowConstraints>
+    </GridPane>
+
+
+
+    <columnConstraints>
+        <ColumnConstraints minWidth="10.0" percentWidth="12.0" prefWidth="100.0" />
+        <ColumnConstraints minWidth="10.0" percentWidth="78.0" prefWidth="100.0" />
+        <ColumnConstraints minWidth="10.0" percentWidth="10.0" prefWidth="100.0" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints minHeight="10" percentHeight="13" prefHeight="100" />
+        <RowConstraints minHeight="10" percentHeight="74" prefHeight="0.0" />
+        <RowConstraints minHeight="10" percentHeight="13" prefHeight="100" />
+    </rowConstraints>
+
+    <stylesheets>
+        <URL value="@../css/WelcomeScene.css" />
+    </stylesheets>
+
+</GridPane>
