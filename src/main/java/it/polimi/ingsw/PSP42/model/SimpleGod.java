@@ -105,4 +105,5 @@ public abstract class SimpleGod {
     public String[][] getWhatToDo() {
         return phase;
     }
+
 }

@@ -22,7 +22,9 @@ public interface ViewObserver {
 
     public abstract String[][] updateWhatToDo();
 
-    public abstract int updateStart(Integer i);
+    public abstract Integer updateStart(Integer i);
 
     public abstract void updateEffect();
+
+    public abstract void updateInterrupt();
 }

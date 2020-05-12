@@ -39,10 +39,12 @@ public class ControllerCLI implements ViewObserver {
     public void createGame(int numPlayer) {
         ArrayList<Player> players = new ArrayList<>();
         ArrayList<UserData> data = view.getPlayerData(handler.pickCards(numPlayer));
-        for (int i = 0; i < view.getNumPlayers(); i++) {
-            players.add(new Player(data.get(i).getNickname(), i + 1, 21, data.get(i).getCardChoosed()));
+        if(data!=null) {
+            for (int i = 0; i < view.getNumPlayers(); i++) {
+                players.add(new Player(data.get(i).getNickname(), i + 1, 21, data.get(i).getCardChoosed()));
+            }
+            g.setPlayers(players);
         }
-        g.setPlayers(players);
         g.setGamePhase("START");
         gameState = "START";
     }
@@ -59,7 +61,6 @@ public class ControllerCLI implements ViewObserver {
             Integer worker = null;
             String[][] whatToDo = null;
             String name = handler.controlCurrentPlayer();
-
             while(!isTurnDone()) {
                 if(gameState.equals("START")) {
                     whatToDo = view.handleWhatToDo(name);
@@ -136,8 +137,11 @@ public class ControllerCLI implements ViewObserver {
                 }
             }
         }
-        String winner = handler.controlCurrentPlayer();
-        view.handleWinner(winner);
+        if(!view.isInterrupted()) {
+            String winner = handler.controlCurrentPlayer();
+            view.handleWinner(winner);
+
+        }
     }
 
 
@@ -190,9 +194,11 @@ public class ControllerCLI implements ViewObserver {
      * @return 1 == worker1, 2==worker2;
      */
     @Override
-    public int updateStart(Integer i) {
+    public Integer updateStart(Integer i) {
         return handler.controlStart(i);
     }
+
+
 
     /**
      * Says the view to Print that effect(not explicit power) is applied
@@ -200,6 +206,12 @@ public class ControllerCLI implements ViewObserver {
     @Override
     public void updateEffect() {
         handler.controlEffect();
+    }
+
+    @Override
+    public void updateInterrupt() {
+        gameDone=true;
+        turnDone=true;
     }
 
     public boolean isGameDone() {
@@ -225,6 +237,8 @@ public class ControllerCLI implements ViewObserver {
     public void setActionDone(boolean actionDone) {
         this.actionDone = actionDone;
     }
+
+
 }
 
 

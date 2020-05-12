@@ -139,7 +139,7 @@ public class ControllerHandler {
         gameBoard.workerAvailable(w2);
         gameBoard.loseCondition(gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()),"START");
         if (gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getPlayerState().equals("LOSE")) {
-            view.sendToClient(gameBoard.getCurrentPlayer(),gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getNickname()+" "+ViewMessage.loseMessage);
+            view.handleLoser(gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getNickname());
             GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(),"INIT");
             view.handleEnd();
             controlNextState("START");
@@ -209,7 +209,7 @@ public class ControllerHandler {
         if (gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getPlayerState().equals("LOSE")) {
             gameBoard.setGamePhase("END");
             mainController.setGameState("END");
-            view.sendToClient(gameBoard.getCurrentPlayer(),gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getNickname()+" "+ViewMessage.loseMessage);
+            view.handleLoser(gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getNickname());
             GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(),"INIT");
             return;
         }
@@ -237,14 +237,20 @@ public class ControllerHandler {
      * Update method to choose the right worker only if available during the starting phase of turn
      * @return 1 == worker1, 2 == worker2;
      */
-    public int controlStart(Integer i) {
-        int choice = i;
+    public Integer controlStart(Integer i) {
+        Integer choice = i;
         Worker w = null;
-        if (choice == 1)
+        Boolean check;
+        if(choice == null){
+            return null;
+        }
+        else if (choice == 1)
             w = (gameBoard.getPlayers()).get(gameBoard.getCurrentPlayer()).getWorker1();
-        if (choice == 2)
+        else if (choice == 2)
             w = (gameBoard.getPlayers()).get(gameBoard.getCurrentPlayer()).getWorker2();
-        boolean check = w.getAvailable();
+
+        check = w.getAvailable();
+
         if (check)
             view.setActionCorrect(true);
         else
