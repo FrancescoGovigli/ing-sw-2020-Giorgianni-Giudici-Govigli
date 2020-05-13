@@ -11,8 +11,8 @@ import java.util.*;
 public class Client implements Runnable{
 
     private NetworkHandler net;
-    private boolean active=true;
-    private boolean writeActive=true;
+    private boolean active = true;
+    private boolean writeActive = true;
     private ObjectOutputStream output;
     private ArrayList<UserData> playersData = new ArrayList<>();
 
@@ -24,34 +24,86 @@ public class Client implements Runnable{
         this.active = active;
     }
 
-    public Thread asyncReadFromSocket(final ObjectInputStream socketIn){
+    /**
+     * Method to run the client thread, after establishing the connection with the server will only receive and send
+     */
+    public void run() {
+        BufferedReader scanner= new BufferedReader(new InputStreamReader(System.in));
+        System.out.println("IP address of server? or press Enter to skip this step");
+        String ip = null;
+        try {
+            ip = scanner.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Socket server;
+        try {
+            server = new Socket(ip, 4000);
+            System.out.println("Connection established\n");
+        } catch (IOException e) {
+            System.out.println("Server unreachable");
+            return;
+        }
+        ObjectInputStream socketIn = null;
+        PrintWriter socketOut = null;
+        try {
+            socketIn = new ObjectInputStream(server.getInputStream());
+            socketOut = new PrintWriter(server.getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            Thread t0 = asyncReadFromSocket(socketIn);
+            Thread t1 = asyncWriteToSocket(scanner, socketOut);
+            t0.join();
+            t1.join();
+        } catch(InterruptedException | NoSuchElementException e){
+            System.out.println("Connection closed from the client side");
+        } finally {
+            try {
+                scanner.close();
+                socketIn.close();
+                socketOut.close();
+                server.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Method to receive an object from the server
+     * @param socketIn
+     * @return t (thread that must wait for the operation to complete)
+     */
+    public Thread asyncReadFromSocket(final ObjectInputStream socketIn) {
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     while (isActive()) {
                         Object inputObject = socketIn.readObject();
-                        if(inputObject instanceof String){
-                            if(((String) inputObject).contains(ViewMessage.personalLoseMessage)) {
+                        if (inputObject instanceof String) {
+                            if (((String) inputObject).contains(ViewMessage.personalLoseMessage)) {
                                 System.out.println("[FROM SERVER] : " + inputObject);
                                 System.out.println("Game closed, PRESS [ENTER] TO QUIT...");
                                 socketIn.close();
                                 setActive(false);
                             }
-                            else if(!inputObject.equals(ServerMessage.extraClient) && !inputObject.equals(ServerMessage.gameInProgress) && !inputObject.equals(ServerMessage.endGame) && !inputObject.equals(ServerMessage.inactivityEnd))
-                                System.out.println("[FROM SERVER] : "+inputObject);
+                            else if (!inputObject.equals(ServerMessage.extraClient) && !inputObject.equals(ServerMessage.gameInProgress) && !inputObject.equals(ServerMessage.endGame) && !inputObject.equals(ServerMessage.inactivityEnd))
+                                System.out.println("[FROM SERVER] : " + inputObject);
 
                             else {
-                                System.out.println("[FROM SERVER] : "+inputObject);
+                                System.out.println("[FROM SERVER] : " + inputObject);
                                 socketIn.close();
                                 setActive(false);
                                 System.out.println("[FROM SERVER] : PRESS [ENTER] TO QUIT ");
                             }
                         }
-                        else if(inputObject instanceof Boolean)
+                        else if (inputObject instanceof Boolean)
                             writeActive=(Boolean)inputObject;
 
-                        else if(inputObject instanceof UserData)
+                        else if (inputObject instanceof UserData)
                             playersData.add(((UserData) inputObject));
 
                         else
@@ -66,7 +118,13 @@ public class Client implements Runnable{
         return t;
     }
 
-    public Thread asyncWriteToSocket(final BufferedReader stdin, final PrintWriter socketOut){
+    /**
+     * Method to send an object to the server
+     * @param stdin
+     * @param socketOut
+     * @return t t (thread that must wait for the operation to complete)
+     */
+    public Thread asyncWriteToSocket(final BufferedReader stdin, final PrintWriter socketOut) {
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -88,59 +146,10 @@ public class Client implements Runnable{
         return t;
     }
 
-    public void run() {
-        BufferedReader scanner= new BufferedReader(new InputStreamReader(System.in));
-        System.out.println("IP address of server? or press Enter to skip this step");
-        String ip = null;
-        try {
-            ip = scanner.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Socket server;
-        try {
-            server = new Socket(ip, 4000);
-            System.out.println("Connection established\n");
-        } catch (IOException e) {
-            System.out.println("Server unreachable");
-            return;
-        }
-
-        ObjectInputStream socketIn = null;
-        PrintWriter socketOut = null;
-        try {
-            socketIn = new ObjectInputStream(server.getInputStream());
-            socketOut = new PrintWriter(server.getOutputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-        try{
-            Thread t0 = asyncReadFromSocket(socketIn);
-            Thread t1 = asyncWriteToSocket(scanner, socketOut);
-            t0.join();
-            t1.join();
-        } catch(InterruptedException | NoSuchElementException e){
-            System.out.println("Connection closed from the client side");
-        } finally {
-
-            try {
-                scanner.close();
-                socketIn.close();
-                socketOut.close();
-                server.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-
-        }
-    }
     /**
      * Method to print the current GameBoard situation on the screen
      */
-    public void show(Object o){
+    public void show(Object o) {
         FakeCell[][] gCopy = (FakeCell[][]) o;
         int rowIndex = 0;
         int colIndex = 0;
@@ -215,10 +224,10 @@ public class Client implements Runnable{
         }
         System.out.println();
         System.out.println("Color matching to the letter 'W':");
-        if(playersData.size()==3)
-            System.out.println("PLAYERS: " + Color.ANSI_RED + "Player 1: " + playersData.get(0).getNickname()+" with "+playersData.get(0).getCardChoosed().toUpperCase() +" "+ Color.ANSI_GREEN + "Player 2: " + playersData.get(1).getNickname() +" with "+playersData.get(1).getCardChoosed().toUpperCase() +" "+ Color.ANSI_BLUE + "Player 3: "+ playersData.get(2).getNickname()+" with "+playersData.get(2).getCardChoosed().toUpperCase()+ Color.RESET);
-        if(playersData.size()==2)
-            System.out.println("PLAYERS: " + Color.ANSI_RED + "Player 1: " + playersData.get(0).getNickname()+" with "+playersData.get(0).getCardChoosed().toUpperCase() +" "+ Color.ANSI_GREEN + "Player 2: " + playersData.get(1).getNickname() +" with "+playersData.get(1).getCardChoosed().toUpperCase() + Color.RESET);
+        if(playersData.size() == 3)
+            System.out.println("PLAYERS: " + Color.ANSI_RED + "Player 1: " + playersData.get(0).getNickname() + " with " + playersData.get(0).getCardChoosed().toUpperCase() + " " + Color.ANSI_GREEN + "Player 2: " + playersData.get(1).getNickname() + " with "+playersData.get(1).getCardChoosed().toUpperCase() + " " + Color.ANSI_BLUE + "Player 3: " + playersData.get(2).getNickname() + " with " + playersData.get(2).getCardChoosed().toUpperCase() + Color.RESET);
+        if(playersData.size() == 2)
+            System.out.println("PLAYERS: " + Color.ANSI_RED + "Player 1: " + playersData.get(0).getNickname() + " with " + playersData.get(0).getCardChoosed().toUpperCase() + " " + Color.ANSI_GREEN + "Player 2: " + playersData.get(1).getNickname() + " with "+playersData.get(1).getCardChoosed().toUpperCase() + Color.RESET);
         System.out.println("\n");
     }
 }

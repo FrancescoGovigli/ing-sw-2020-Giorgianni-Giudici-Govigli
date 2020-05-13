@@ -1,6 +1,7 @@
 package it.polimi.ingsw.PSP42.server;
 
 public class ServerMessage {
+
     public static String connectionDone = ("Connected");
     public static String ableToPlay =("Wait to be admitted to the Game...");
     public static String endGame = ("End of Game");
