@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * Thanks this simple god a worker is able to move in a cell occupied by an opponent worker,
  * if the opponent worker can be pushed away in a free cell in same direction of the movement.
  */
-public class Minotaur extends SimpleGod{
+public class Minotaur extends SimpleGod {
 
     private int minotaurX = -1;
     private int minotaurY = -1;
@@ -55,10 +55,10 @@ public class Minotaur extends SimpleGod{
             if (effectPlayer != null && !effectPlayer.getCard().powerMoveAvailable(x, y, w))
                 return false;
         }
-        if(powerMoveAvailable(x, y, w)) {
+        if (powerMoveAvailable(x, y, w)) {
             moveNumber = 1;
             Worker opponentWorker = GameBoard.getInstance().getCell(x, y).getWorker();
-            if(opponentWorker != null) {
+            if (opponentWorker != null) {
                 minotaurX = w.getCurrentX();
                 minotaurY = w.getCurrentY();
                 opponentPrecedentX = x;
@@ -138,13 +138,11 @@ public class Minotaur extends SimpleGod{
      * @return cell(x,y) if it is in the game board, null otherwise
      */
     public Cell getNewOpponentCell(int x, int y) {
-        if(x >= 0 && x <= 4 && y >= 0 && y <= 4)
+        if (x >= 0 && x <= 4 && y >= 0 && y <= 4)
             return GameBoard.getInstance().getCell(x, y);
         else
             return null;
     }
-
-    //UNDO
 
     @Override
     public ArrayList<Integer> getCurrentValues() {
@@ -170,5 +168,10 @@ public class Minotaur extends SimpleGod{
         this.opponentPrecedentX = valuesToRestore.get(2);
         this.opponentPrecedentY = valuesToRestore.get(3);
         this.moveNumber = valuesToRestore.get(4);
+    }
+
+    @Override
+    public String getPowerDescription() {
+        return "[POWER] Your Move: Your Worker may move into an opponent Worker’s space, if their Worker can be forced one space straight backwards to an unoccupied space at any level.";
     }
 }

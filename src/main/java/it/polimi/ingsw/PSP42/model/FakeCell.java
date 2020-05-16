@@ -1,16 +1,15 @@
 package it.polimi.ingsw.PSP42.model;
 
-import it.polimi.ingsw.PSP42.view.*;
-
 import java.io.*;
 
 public class FakeCell implements Serializable {
+
     public String playerName;
     public int workerNum;
     public int level;
     public int id;
 
-    public FakeCell(String playerName, int workerNum, int level, int id){
+    public FakeCell(String playerName, int workerNum, int level, int id) {
         this.playerName = playerName;
         this.workerNum = workerNum;
         this.level = level;
@@ -37,7 +36,7 @@ public class FakeCell implements Serializable {
      * Method that creates the copy of the game board at the call state
      * @return gCopy (FakeCell matrix containing only player name, worker 1 or 2 and construction level)
      */
-    public static FakeCell[][] getGameBoardCopy(){
+    public static FakeCell[][] getGameBoardCopy() {
         FakeCell[][] gCopy = new FakeCell[5][5];
         GameBoard g = GameBoard.getInstance();
         String playerName = null;

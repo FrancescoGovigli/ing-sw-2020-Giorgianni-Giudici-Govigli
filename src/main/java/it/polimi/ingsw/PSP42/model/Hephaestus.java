@@ -73,9 +73,9 @@ public class Hephaestus extends SimpleGod {
      */
     @Override
     public boolean powerBuildAvailable(int x, int y, int level, Worker w) {
-        if(buildNum == 0 && GameBoard.getInstance().buildAvailable(x, y, w))
+        if (buildNum == 0 && GameBoard.getInstance().buildAvailable(x, y, w))
             return true;
-        if(buildNum == 1 &&
+        if (buildNum == 1 &&
                 GameBoard.getInstance().buildAvailable(x, y, w) &&
                     GameBoard.getInstance().getCell(x, y).equals(getPrecedentCell()) &&
                         GameBoard.getInstance().getCell(x, y).getLevel() != 3)
@@ -98,14 +98,12 @@ public class Hephaestus extends SimpleGod {
             setPrecedentCell(GameBoard.getInstance().getCell(x, y));
             return true;
         }
-        if(buildNum == 1 && powerBuildAvailable(x, y, level, w)) {
+        if (buildNum == 1 && powerBuildAvailable(x, y, level, w)) {
             w.buildBlock(x, y);
             return true;
         }
         return false;
     }
-
-    // UNDO
 
     /**
      * Method to obtain the current state of the Simple God's variables
@@ -126,5 +124,9 @@ public class Hephaestus extends SimpleGod {
     public void reSetValues(ArrayList<Integer> valuesToRestore) {
         this.buildNum = valuesToRestore.get(0);
     }
-}
 
+    @Override
+    public String getPowerDescription() {
+        return "[POWER] Your Build: Your Worker may build one additional block (not dome) on top of your first block.";
+    }
+}

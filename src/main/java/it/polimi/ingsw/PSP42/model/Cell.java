@@ -1,13 +1,14 @@
 package it.polimi.ingsw.PSP42.model;
 
 public class Cell {
+
     private boolean[] cellLevel;
     private Worker worker;
 
     /**
      * Constructor to create a map's cell which has set level 0 (the ground) to true and no worker above it self.
      */
-    public Cell(){
+    public Cell() {
         this.cellLevel = new boolean[]{true, false, false, false, false};
         this.worker = null;
     }
@@ -27,7 +28,7 @@ public class Cell {
      * Method to obtain the current level of a cell.
      * @return level (level constructed)
      */
-    public int getLevel(){
+    public int getLevel() {
         int level = 0;
         for (int i = 0; i < 5; i++)
             if (cellLevel[i])
@@ -51,7 +52,7 @@ public class Cell {
      * Used to set a specific level instead of set the successive level.
      * @param level the level that the worker want to build.
      */
-    public void setSpecificCellLevel(int level){
+    public void setSpecificCellLevel(int level) {
         if (level >= 0 && level <= 4) {
             this.cellLevel[level] = true;
             if (level < this.getLevel())

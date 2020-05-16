@@ -8,9 +8,7 @@ public abstract class SimpleGod {
     protected String[][] phase;
     protected Worker w1;
     protected Worker w2;
-
-    // UNDO
-    private ArrayList<Integer> values = null;
+    private ArrayList<Integer> values = null;   // UNDO
 
     /**
      * Method to obtain the current state of the Simple God's variables
@@ -36,7 +34,6 @@ public abstract class SimpleGod {
         values = null;
     }
 
-    // CURRENT CODE
     public SimpleGod(Worker w1, Worker w2) {
         this.w1 = w1;
         this.w2 = w2;
@@ -45,12 +42,26 @@ public abstract class SimpleGod {
 
     public abstract String[][] setPhase();
 
+    /**
+     * Method to check if worker can move to cell (x,y)
+     * @param x (x position of where he wants to go)
+     * @param y (y position of where he wants to go)
+     * @param w (concerned worker)
+     * @return true if the cell is available for the move, false otherwise
+     */
     public boolean powerMoveAvailable(int x, int y, Worker w) {
         if (GameBoard.getInstance().moveAvailable(x, y, w))
             return true;
         return false;
     }
 
+    /**
+     * Method used to apply the move
+     * @param x (x position of the destination)
+     * @param y (y position of the destination)
+     * @param w (concerned worker)
+     * @return true if the move was successful, false otherwise
+     */
     public boolean powerMove(int x, int y, Worker w) {
         for (Player player: effectPlayers)
             if (player != null && !player.getCard().powerMoveAvailable(x, y, w))
@@ -62,12 +73,28 @@ public abstract class SimpleGod {
         return false;
     }
 
+    /**
+     * Method to check if worker can build in cell (x,y)
+     * @param x (x position of where he wants to build)
+     * @param y (y position of where he wants to build)
+     * @param level (level he wants to build)
+     * @param w (concerned worker)
+     * @return true if the cell is available for the build, false otherwise
+     */
     public boolean powerBuildAvailable(int x, int y, int level, Worker w) {
         if (GameBoard.getInstance().buildAvailable(x, y, w))
             return true;
         return false;
     }
 
+    /**
+     * Method used to apply the build
+     * @param x (x position of the building)
+     * @param y (y position of the building)
+     * @param level (level to build)
+     * @param w (concerned worker)
+     * @return true if the construction was successful, false otherwise
+     */
     public boolean powerBuild(int x, int y, int level, Worker w) {
         if (powerBuildAvailable(x, y, level, w)) {
             w.buildBlock(x, y);
@@ -92,6 +119,13 @@ public abstract class SimpleGod {
         return null;
     }
 
+    /**
+     * Method used to set the starting position of the worker
+     * @param x (starting position x)
+     * @param y (starting position y)
+     * @param w (concerned worker)
+     * @return true if the position is available, false otherwise
+     */
     public boolean powerInitialPosition(int x, int y, Worker w) {
         if (w.getCurrentX() == -1 && w.getCurrentY() == -1 &&   // if w is out of map and
             GameBoard.getInstance().getCell(x, y).getWorker() == null &&    // the initial cell is free and
@@ -102,8 +136,21 @@ public abstract class SimpleGod {
         return false;
     }
 
+    /**
+     * Method used to obtain how the god behaves during his turn
+     * @return phase (matrix of strings where the first column indicates the phase of the turn and each row,
+     *                starting from the second column, indicates the moves available in the phase indicated
+     *                by the first column)
+     */
     public String[][] getWhatToDo() {
         return phase;
     }
 
+    /**
+     * Method for obtaining the description of the power that the god has
+     * @return descriptive string
+     */
+    public String getPowerDescription() {
+        return "[POWER] No power";
+    }
 }

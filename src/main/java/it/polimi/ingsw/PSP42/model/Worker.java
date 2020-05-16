@@ -56,7 +56,7 @@ public class Worker {
      * Used to unset worker on the cell and to set currentX and currentY out of map
      */
     public void unSetPosition() {
-        if(this.currentX != -1 && this.currentY != -1) {
+        if (this.currentX != -1 && this.currentY != -1) {
             GameBoard.getInstance().getCell(this.currentX, this.currentY).unSetWorker();
             this.currentX = -1;
             this.currentY = -1;

@@ -3,18 +3,12 @@ package it.polimi.ingsw.PSP42.view;
 import java.io.*;
 
 public class UserData implements Serializable {
-    private int age;
     private String nickname;
     private String cardName;
 
-    public UserData(String nickname, int age, String cardName){
+    public UserData(String nickname, String cardName) {
         this.nickname = nickname;
-        this.age = age;
         this.cardName = cardName;
-    }
-
-    public int getAge() {
-        return age;
     }
 
     public String getNickname() {

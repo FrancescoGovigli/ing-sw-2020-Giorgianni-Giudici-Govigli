@@ -107,8 +107,6 @@ public class Demeter extends SimpleGod {
         return false;
     }
 
-    // UNDO
-
     /**
      * Method to obtain the current state of the Simple God's variables
      * @return values.clone() (a clone of the ArrayList of Integer containing these variables)
@@ -127,5 +125,10 @@ public class Demeter extends SimpleGod {
     @Override
     public void reSetValues(ArrayList<Integer> valuesToRestore) {
         this.buildNum = valuesToRestore.get(0);
+    }
+
+    @Override
+    public String getPowerDescription() {
+        return "[POWER] Your Build: Your Worker may build one additional time, but not on the same space.";
     }
 }

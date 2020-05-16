@@ -60,7 +60,6 @@ public class Prometheus extends SimpleGod{
         }
         if (powerMoveAvailable(x, y, w)) {
             w.setPosition(x, y);
-            //buildNum = 0;
             moveNum = 1;
             return true;
         }
@@ -89,8 +88,6 @@ public class Prometheus extends SimpleGod{
         return false;
     }
 
-    // UNDO
-
     /**
      * Method to obtain the current state of the Simple God's variables
      * @return values.clone() (a clone of the ArrayList of Integer containing these variables)
@@ -111,5 +108,10 @@ public class Prometheus extends SimpleGod{
     public void reSetValues(ArrayList<Integer> valuesToRestore) {
         this.buildNum = valuesToRestore.get(0);
         this.moveNum = valuesToRestore.get(1);
+    }
+
+    @Override
+    public String getPowerDescription() {
+        return "[POWER] Your Turn: If your Worker does not move up, it may build both before and after moving.";
     }
 }

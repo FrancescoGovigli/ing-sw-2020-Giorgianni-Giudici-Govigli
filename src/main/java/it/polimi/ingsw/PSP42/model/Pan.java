@@ -3,7 +3,7 @@ package it.polimi.ingsw.PSP42.model;
 /**
  * Simple god that wins if it drops by at least 2 levels
  */
-public class Pan extends SimpleGod{
+public class Pan extends SimpleGod {
 
     public Pan(Worker w1, Worker w2) {
         super(w1, w2);
@@ -42,5 +42,10 @@ public class Pan extends SimpleGod{
             return true;
         }
         return false;
+    }
+
+    @Override
+    public String getPowerDescription() {
+        return "[POWER] God of the Wild Win Condition: You also win if your Worker moves down two or more levels.";
     }
 }

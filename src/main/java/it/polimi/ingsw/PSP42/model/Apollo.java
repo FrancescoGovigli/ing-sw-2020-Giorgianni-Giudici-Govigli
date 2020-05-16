@@ -13,7 +13,7 @@ public class Apollo extends SimpleGod {
     private int opponentY = -1;
     private int moveNum = 0;
 
-    public Apollo(Worker w1,Worker w2) {
+    public Apollo(Worker w1, Worker w2) {
         super(w1, w2);
     }
 
@@ -63,7 +63,7 @@ public class Apollo extends SimpleGod {
         if (powerMoveAvailable(x, y, w)){
             moveNum = 1;
             Worker toSwap = GameBoard.getInstance().getCell(x, y).getWorker();
-            if(toSwap!=null) {
+            if (toSwap != null) {
                 int tempPosX = w.getCurrentX();
                 int tempPosY = w.getCurrentY();
                 toSwap.unSetPosition();
@@ -83,7 +83,6 @@ public class Apollo extends SimpleGod {
                 opponentX = -1;
                 opponentY = -1;
             }
-            // WIN CONDITION
             return true;
         }
         return false;
@@ -160,5 +159,10 @@ public class Apollo extends SimpleGod {
         this.opponentX = valuesToRestore.get(2);
         this.opponentY = valuesToRestore.get(3);
         this.moveNum = valuesToRestore.get(4);
+    }
+
+    @Override
+    public String getPowerDescription() {
+        return "[POWER] Your Move: Your Worker may move into an opponent Worker’s space by forcing their Worker to the space yours just vacated.";
     }
 }

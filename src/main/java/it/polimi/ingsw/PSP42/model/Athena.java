@@ -36,7 +36,7 @@ public class Athena extends SimpleGod {
      */
     @Override
     public boolean powerMoveAvailable(int x, int y, Worker w) {
-        if(!(w.getPlayer().getCard() instanceof Athena) && blockOpponentsStepUp == 1)
+        if (!(w.getPlayer().getCard() instanceof Athena) && blockOpponentsStepUp == 1)
             return powerMoveBlockedStepUpAvailable(x, y, w);
         return GameBoard.getInstance().moveAvailable(x, y, w);
     }
@@ -69,7 +69,7 @@ public class Athena extends SimpleGod {
             if (effectPlayer != null && !effectPlayer.getCard().powerMoveAvailable(x, y, w))
                 return false;
         }
-        if(powerMoveAvailable(x, y, w)) {
+        if (powerMoveAvailable(x, y, w)) {
             counterPhase = 1;
             if (workerStepUp(x, y, w))
                 blockOpponentsStepUp = 1;
@@ -100,7 +100,7 @@ public class Athena extends SimpleGod {
      */
     @Override
     public boolean powerEffectAvailable() {
-        if(blockOpponentsStepUp == 1)
+        if (blockOpponentsStepUp == 1)
             return true;
         return false;
     }
@@ -115,7 +115,7 @@ public class Athena extends SimpleGod {
     @Override
     public boolean powerEffect() {
         if (counterPhase == 0) {
-            if(powerEffectAvailable()) {
+            if (powerEffectAvailable()) {
                 for (Player player : GameBoard.getInstance().getPlayers()) {
                     player.getCard().effectPlayers.remove(this.w1.getPlayer());
                 }
@@ -148,8 +148,6 @@ public class Athena extends SimpleGod {
         return "Other players now can step up!\n";
     }
 
-    //UNDO
-
     /**
      * Method to obtain the current state of the Simple God's variables
      * @return values.clone() (a clone of the ArrayList of Integer containing these variables)
@@ -170,5 +168,10 @@ public class Athena extends SimpleGod {
     public void reSetValues(ArrayList<Integer> valuesToRestore) {
         this.blockOpponentsStepUp = valuesToRestore.get(0);
         this.counterPhase = valuesToRestore.get(1);
+    }
+
+    @Override
+    public String getPowerDescription() {
+        return "[POWER] Opponent’s Turn: If one of your Workers moved up on your last turn, opponent Workers cannot move up this turn.";
     }
 }

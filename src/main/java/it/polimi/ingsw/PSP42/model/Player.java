@@ -4,9 +4,9 @@ package it.polimi.ingsw.PSP42.model;
  * @author Francesco Govigli
  */
 public class Player {
+
     private final SimpleGod card;
     private final int id;
-    private final int age;
     private final String nickname;
     private final Worker worker1;
     private final Worker worker2;
@@ -20,9 +20,8 @@ public class Player {
      * @param id   id automatically given to choose the order of gameplay during constructing
      * @param cardName choosed from the player
      */
-    public Player(String nick, int id, int age, String cardName) {
+    public Player(String nick, int id, String cardName) {
         this.nickname = nick;
-        this.age = age;
         this.id = id;
         this.worker1 = new Worker(- 1, - 1, this);
         this.worker2 = new Worker(- 1, - 1, this);
@@ -46,10 +45,6 @@ public class Player {
         return id;
     }
 
-    public int getAge() {
-        return age;
-    }
-
     public String getNickname() {
         return nickname;
     }
@@ -67,11 +62,11 @@ public class Player {
      * @return
      */
     public String getPlayerState() {
-        if(playerState.equals(State.INGAME))
+        if (playerState.equals(State.INGAME))
             return "INGAME";
-        if(playerState.equals(State.WIN))
+        if (playerState.equals(State.WIN))
             return "WIN";
-        if(playerState.equals(State.LOSE))
+        if (playerState.equals(State.LOSE))
             return "LOSE";
         return "NO_STATE";
     }
@@ -91,7 +86,7 @@ public class Player {
      * @param y is the initialization y-coordinate
      * @param w is the worker initialized in gameboard
      */
-    public boolean initialPosition ( int x, int y, Worker w){
+    public boolean initialPosition( int x, int y, Worker w) {
         if (x >= 0 && x <= 4 && y >= 0 && y <= 4)
             return card.powerInitialPosition(x, y, w);
         return false;
@@ -114,8 +109,11 @@ public class Player {
         return false;
     }
 
-    // UNDO MOVE
-    public void doUndoMove(Worker w){
+    /**
+     * Method to cancel the move made by the worker
+     * @param w
+     */
+    public void doUndoMove(Worker w) {
         undo.undoMoveApply(w);
         undo.undoMoveDone();
     }
@@ -136,15 +134,18 @@ public class Player {
         return false;
     }
 
-    // UNDO BUILD
-    public void doUndoBuild(Worker w){
+    /**
+     * Method to cancel the build made by the worker
+     * @param w
+     */
+    public void doUndoBuild(Worker w) {
         undo.undoBuildApply(w);
         undo.undoBuildDone();
     }
 
     /**
-     * TODO
-     * @return
+     * Method used to obtain the effect of a god
+     * @return false if the god does not have an effect, true otherwise (this value depends on how the god implements the method)
      */
     public boolean effect(){
         return card.powerEffect();

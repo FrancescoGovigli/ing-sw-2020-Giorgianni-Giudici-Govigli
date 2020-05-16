@@ -1,8 +1,8 @@
 package it.polimi.ingsw.PSP42.view;
 
-import it.polimi.ingsw.PSP42.model.*;
 
 public class Choice {
+
     private Integer idPlayer;
     private final Integer x;
     private final Integer y;
@@ -37,7 +37,7 @@ public class Choice {
         return idPlayer;
     }
 
-    public boolean allFieldsNull(){
-        return x==null && y==null && worker==null && level==null && idPlayer==null;
+    public boolean allFieldsNull() {
+        return x == null && y == null && worker == null && level == null && idPlayer == null;
     }
 }

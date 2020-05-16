@@ -10,6 +10,7 @@ import java.util.*;
  * @author Francesco Govigli
  */
 public class ControllerCLI implements ViewObserver {
+    
     private final GameBoard g;
     private final VirtualView view;
     private final ControllerHandler handler;
@@ -21,7 +22,7 @@ public class ControllerCLI implements ViewObserver {
     public ControllerCLI(GameBoard model, VirtualView v) {
         g = model;
         view = v;
-        handler = new ControllerHandler(g,v,this);
+        handler = new ControllerHandler(g, v, this);
     }
 
     public void setGameState(String s){
@@ -39,9 +40,9 @@ public class ControllerCLI implements ViewObserver {
     public void createGame(int numPlayer) {
         ArrayList<Player> players = new ArrayList<>();
         ArrayList<UserData> data = view.getPlayerData(handler.pickCards(numPlayer));
-        if(data!=null) {
+        if (data!=null) {
             for (int i = 0; i < view.getNumPlayers(); i++) {
-                players.add(new Player(data.get(i).getNickname(), i + 1, 21, data.get(i).getCardChoosed()));
+                players.add(new Player(data.get(i).getNickname(), i + 1, data.get(i).getCardChoosed()));
             }
             g.setPlayers(players);
         }
@@ -61,14 +62,14 @@ public class ControllerCLI implements ViewObserver {
             Integer worker = null;
             String[][] whatToDo = null;
             String name = handler.controlCurrentPlayer();
-            while(!isTurnDone()) {
-                if(gameState.equals("START")) {
+            while (!isTurnDone()) {
+                if (gameState.equals("START")) {
                     whatToDo = view.handleWhatToDo(name);
                 }
                 switch (gameState) {
                     case "START":
-                        while(!isActionDone()) {
-                            if(whatToDo[0][0].equals("EMPTY"))
+                        while (!isActionDone()) {
+                            if (whatToDo[0][0].equals("EMPTY"))
                                 setActionDone(true);
                             else {
                                 for (int i = 0; i < whatToDo[0].length; i++) {
@@ -84,7 +85,7 @@ public class ControllerCLI implements ViewObserver {
                         worker = view.handleStart();
                         break;
                     case "PREMOVE":
-                        if(whatToDo[1][0].equals("EMPTY"))
+                        if (whatToDo[1][0].equals("EMPTY"))
                             setActionDone(true);
                         else {
                             for (int i = 0; i < whatToDo[1].length; i++) {
@@ -102,12 +103,12 @@ public class ControllerCLI implements ViewObserver {
                         handler.controlNextState("PREBUILD");
                         break;
                     case "PREBUILD":
-                        if(whatToDo[3][0].equals("EMPTY"))
+                        if (whatToDo[3][0].equals("EMPTY"))
                             setActionDone(true);
                         else {
                             for (int i = 0; i < whatToDo[3].length; i++) {
                                 String move = whatToDo[3][i];
-                                if(view.callPowerFunction(move, worker))
+                                if (view.callPowerFunction(move, worker))
                                     setActionDone(true);
                                 else
                                     setActionDone(false);
@@ -120,7 +121,7 @@ public class ControllerCLI implements ViewObserver {
                         handler.controlNextState("END");
                         break;
                     case "END":
-                        if(whatToDo[5][0].equals("EMPTY"))
+                        if (whatToDo[5][0].equals("EMPTY"))
                             setActionDone(true);
                         else {
                             for (int i = 0; i < whatToDo[5].length; i++) {
@@ -137,13 +138,11 @@ public class ControllerCLI implements ViewObserver {
                 }
             }
         }
-        if(!view.isInterrupted()) {
+        if (!view.isInterrupted()) {
             String winner = handler.controlCurrentPlayer();
             view.handleWinner(winner);
-
         }
     }
-
 
     /**
      * Handles the initialization of the game.
@@ -198,8 +197,6 @@ public class ControllerCLI implements ViewObserver {
         return handler.controlStart(i);
     }
 
-
-
     /**
      * Says the view to Print that effect(not explicit power) is applied
      */
@@ -210,8 +207,8 @@ public class ControllerCLI implements ViewObserver {
 
     @Override
     public void updateInterrupt() {
-        gameDone=true;
-        turnDone=true;
+        gameDone = true;
+        turnDone = true;
     }
 
     public boolean isGameDone() {
@@ -237,8 +234,4 @@ public class ControllerCLI implements ViewObserver {
     public void setActionDone(boolean actionDone) {
         this.actionDone = actionDone;
     }
-
-
 }
-
-

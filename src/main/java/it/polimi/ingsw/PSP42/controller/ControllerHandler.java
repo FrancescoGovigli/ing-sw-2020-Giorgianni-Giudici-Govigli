@@ -6,11 +6,12 @@ import it.polimi.ingsw.PSP42.view.*;
 import java.util.*;
 
 public class ControllerHandler {
+
     private final GameBoard gameBoard;
     private final VirtualView view;
     private final ControllerCLI mainController;
 
-    public ControllerHandler(GameBoard g, VirtualView v,ControllerCLI c) {
+    public ControllerHandler(GameBoard g, VirtualView v, ControllerCLI c) {
         gameBoard = g;
         view = v;
         mainController = c;
@@ -25,9 +26,9 @@ public class ControllerHandler {
     public void controlInit(Object o) {
         if (view.getChoice().allFieldsNull()) {
             mainController.createGame(view.getNumPlayers());
-            GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(),"INIT");
+            GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(), "INIT");
         }
-        if (! view.getChoice().allFieldsNull()) {
+        if (!view.getChoice().allFieldsNull()) {
             Worker w = null;
             boolean check;
             //check what worker is setting initial position
@@ -39,7 +40,7 @@ public class ControllerHandler {
             check = (gameBoard.getPlayers()).get(view.getChoice().getIdPlayer()).initialPosition(view.getChoice().getX(), view.getChoice().getY(), w);
             if (check) {
                 view.setActionCorrect(true);
-                GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(),"INIT");
+                GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(), "INIT");
             }
         }
     }
@@ -63,11 +64,11 @@ public class ControllerHandler {
                     gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).doUndoMove(w);
                     if (gameBoard.getGamePhase().equals("PREMOVE") || gameBoard.getGamePhase().equals("PREBUILD"))
                         view.setActionCorrect(true);
-                    GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(),"NOINIT");
+                    GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(), "NOINIT");
                     return;
                 }
                 view.setActionCorrect(true);
-                GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(),"NOINIT");
+                GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(), "NOINIT");
             }
         }
         //THIS CASE OCCURS ONLY IF THE PLAYER LOSES IF NO UNDO IS DONE
@@ -75,10 +76,10 @@ public class ControllerHandler {
             if (view.undoOption("WARNING")) {
                 controlUndoPower(w, getPreviousGamePhase());
                 view.setActionCorrect(true);
-                GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(),"NOINIT");
+                GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(), "NOINIT");
             }
             else {
-                gameBoard.loseCondition(gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()),"MOVE");
+                gameBoard.loseCondition(gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()), "MOVE");
                 view.setActionCorrect(true);
             }
         }
@@ -104,21 +105,21 @@ public class ControllerHandler {
                     (gameBoard.getPlayers()).get(gameBoard.getCurrentPlayer()).doUndoBuild(w);
                     if (gameBoard.getGamePhase().equals("PREMOVE") || gameBoard.getGamePhase().equals("PREBUILD"))
                         view.setActionCorrect(true);
-                    GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(),"NOINIT");
+                    GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(), "NOINIT");
                     return;
                 }
                 view.setActionCorrect(true);
-                GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(),"NOINIT");
+                GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(), "NOINIT");
             }
         }
         else {
             if (view.undoOption("WARNING")) {
                 controlUndoPower(w, getPreviousGamePhase());
                 view.setActionCorrect(true);
-                GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(),"NOINIT");
+                GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(), "NOINIT");
             }
             else {
-                gameBoard.loseCondition(gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()),"BUILD");
+                gameBoard.loseCondition(gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()), "BUILD");
                 view.setActionCorrect(true);
             }
         }
@@ -137,10 +138,10 @@ public class ControllerHandler {
         //SET THE WORKER AVAILABLE IF THE WORKER CAN MOVE OR NOT AVAILABLE IF BLOCKED
         gameBoard.workerAvailable(w1);
         gameBoard.workerAvailable(w2);
-        gameBoard.loseCondition(gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()),"START");
+        gameBoard.loseCondition(gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()), "START");
         if (gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getPlayerState().equals("LOSE")) {
             view.handleLoser(gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getNickname());
-            GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(),"INIT");
+            GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(), "INIT");
             view.handleEnd();
             controlNextState("START");
         }
@@ -156,7 +157,7 @@ public class ControllerHandler {
         }
         view.setCurrentPlayerID(gameBoard.getCurrentPlayer());
         view.noWriteForNotCurrentPlayers(gameBoard.getCurrentPlayer());
-        return  gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getNickname();
+        return gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getNickname();
     }
 
     /**
@@ -167,7 +168,7 @@ public class ControllerHandler {
         mainController.setTurnDone(true);
         int num = view.getNumPlayers();
         int curr = gameBoard.getCurrentPlayer();
-        if(curr+1<num) {
+        if (curr + 1 < num) {
             if (gameBoard.getPlayers().get(curr + 1).getPlayerState().equals("LOSE")) {
                 if (curr + 2 < num)
                     gameBoard.setCurrentPlayer(curr + 2);
@@ -175,7 +176,7 @@ public class ControllerHandler {
                     gameBoard.setCurrentPlayer(0);
             }
             else
-                gameBoard.setCurrentPlayer(curr+1);
+                gameBoard.setCurrentPlayer(curr + 1);
         }
         else {
             if (gameBoard.getPlayers().get(0).getPlayerState().equals("LOSE"))
@@ -193,27 +194,28 @@ public class ControllerHandler {
      */
     public void controlNextState(String s) {
         mainController.setActionDone(false);
-        if(view.isUndoDone() && (mainController.getGameState().equals("PREMOVE") || (mainController.getGameState().equals("PREBUILD"))))
+        if (view.isUndoDone() && (mainController.getGameState().equals("PREMOVE") || (mainController.getGameState().equals("PREBUILD"))))
             mainController.setGameState(mainController.getGameState());
-        else if(view.isUndoDone() && view.isPowerApply() && (mainController.getGameState().equals("MOVE") || mainController.getGameState().equals("BUILD"))){
-            if(mainController.getGameState().equals("MOVE"))
-                mainController.setGameState("PREMOVE");
-            if(mainController.getGameState().equals("BUILD"))
-                mainController.setGameState("PREBUILD");
-            view.setPowerApply(false);
-        }
         else
-            mainController.setGameState(s);
+            if(view.isUndoDone() && view.isPowerApply() && (mainController.getGameState().equals("MOVE") || mainController.getGameState().equals("BUILD"))){
+                if(mainController.getGameState().equals("MOVE"))
+                    mainController.setGameState("PREMOVE");
+                if(mainController.getGameState().equals("BUILD"))
+                    mainController.setGameState("PREBUILD");
+                view.setPowerApply(false);
+            }
+            else
+                mainController.setGameState(s);
         view.setUndoDone(false);
         view.setActionCorrect(false);
         if (gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getPlayerState().equals("LOSE")) {
             gameBoard.setGamePhase("END");
             mainController.setGameState("END");
             view.handleLoser(gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getNickname());
-            GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(),"INIT");
+            GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(), "INIT");
             return;
         }
-        if((s.equals("MOVE") || s.equals("PREBUILD")) && gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getPlayerState().equals("WIN")) {
+        if ((s.equals("MOVE") || s.equals("PREBUILD")) && gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getPlayerState().equals("WIN")) {
             gameBoard.setGamePhase("END");
             mainController.setGameState("END");
             mainController.setTurnDone(true);
@@ -276,18 +278,18 @@ public class ControllerHandler {
      * @param w worker of the current turn
      * @param previousPhase
      */
-    public void controlUndoPower(Worker w, String previousPhase){
+    public void controlUndoPower(Worker w, String previousPhase) {
         int current = gameBoard.getCurrentPlayer();
         Player currentPlayer = gameBoard.getPlayers().get(current);
         String[][] whatToDo = currentPlayer.getCard().getWhatToDo();
         switch (previousPhase) {
             case "PREMOVE":
-                if(whatToDo[1][0].equals("EMPTY"))
+                if (whatToDo[1][0].equals("EMPTY"))
                     break;
                 for (int i = 0; i < whatToDo[1].length; i++) {
-                    if(whatToDo[1][i].equals("MOVE"))
+                    if (whatToDo[1][i].equals("MOVE"))
                         currentPlayer.doUndoMove(w);
-                    if(whatToDo[1][i].equals("BUILD"))
+                    if (whatToDo[1][i].equals("BUILD"))
                         currentPlayer.doUndoBuild(w);
                 }
                 break;
@@ -298,9 +300,9 @@ public class ControllerHandler {
                 if(whatToDo[3][0].equals("EMPTY"))
                     break;
                 for (int i = 0; i < whatToDo[3].length; i++) {
-                    if(whatToDo[3][i].equals("MOVE"))
+                    if (whatToDo[3][i].equals("MOVE"))
                         currentPlayer.doUndoMove(w);
-                    if(whatToDo[3][i].equals("BUILD"))
+                    if (whatToDo[3][i].equals("BUILD"))
                         currentPlayer.doUndoBuild(w);
                 }
                 break;
@@ -312,10 +314,10 @@ public class ControllerHandler {
 
     /**
      * Utility method to know, which was the previous Phase of the Turn
-     * @return
+     * @return previousPhase
      */
-    public String getPreviousGamePhase(){
-        String previousPhase=null;
+    public String getPreviousGamePhase() {
+        String previousPhase = null;
         String phase = gameBoard.getGamePhase();
         switch (phase){
             case "START":
@@ -345,7 +347,7 @@ public class ControllerHandler {
      * @param numPlayers
      * @return randomPick
      */
-    public String[] pickCards(int numPlayers){
+    public String[] pickCards(int numPlayers) {
         Random rand = new Random();
         String[] set = DeckOfGods.possibleGods();
         String[] randomPick = new String[numPlayers];
@@ -362,4 +364,3 @@ public class ControllerHandler {
         return randomPick;
     }
 }
-

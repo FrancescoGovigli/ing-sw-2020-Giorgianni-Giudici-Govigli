@@ -8,7 +8,14 @@ public class DeckOfGods {
         return godAvailable;
     }
 
-    public static SimpleGod setGod(String cardName, Worker worker1, Worker worker2){
+    /**
+     * Method to assign to player's workers the powers of the chosen card
+     * @param cardName (God chosen)
+     * @param worker1
+     * @param worker2
+     * @return cardSelected
+     */
+    public static SimpleGod setGod(String cardName, Worker worker1, Worker worker2) {
         SimpleGod cardSelected;
         switch(cardName){
             case "APOLLO":

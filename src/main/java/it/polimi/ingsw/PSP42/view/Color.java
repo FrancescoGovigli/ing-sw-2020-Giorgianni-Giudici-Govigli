@@ -1,7 +1,7 @@
 package it.polimi.ingsw.PSP42.view;
 
-public enum Color
-{
+public enum Color {
+
     ANSI_SMILE("\u1F60"),
     ANSI_RED("\u001B[31m"),
     ANSI_GREEN("\u001B[38;5;70m"),
@@ -11,18 +11,14 @@ public enum Color
     ANSI_BLUE("\u001B[34m"),
     ANSI_PURPLE("\u001B[35m");
     public static final String RESET = "\u001B[0m"; // reset to default value
-    //In this case "values()" method
-    // (automatically generate in Java),
-    // that returns an array of all elements contains in this Enum,
-    // doesn't return the elements.
-    // At the end,
-    // “RESET” isn't a color!
 
     private String escape; // contains text code to modify the color
+
     Color(String escape)
     {
         this.escape = escape;
     }
+
     public String getEscape()
     {
         return escape;

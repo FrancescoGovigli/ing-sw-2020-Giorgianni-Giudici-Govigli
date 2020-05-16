@@ -1,18 +1,14 @@
 package it.polimi.ingsw.PSP42.view;
 
 import it.polimi.ingsw.PSP42.*;
-
-import java.io.*;
 import java.util.*;
-import java.util.concurrent.*;
-
-import it.polimi.ingsw.PSP42.model.FakeCell;
 import it.polimi.ingsw.PSP42.server.*;
 
 /**
  * @author Francesco Govigli
  */
 public class VirtualView implements ViewObservable, ModelObserver {
+
     private boolean actionCorrect;
     private boolean undoDone;
     private boolean powerApply;
@@ -27,19 +23,15 @@ public class VirtualView implements ViewObservable, ModelObserver {
         return interrupted;
     }
 
-
-
     public void setCurrentPlayerID(int currentPlayerID) {
         this.currentPlayerID = currentPlayerID;
     }
 
-
-
-    public VirtualView(ArrayList<PlayerHandler> playingClients,int numberOfPlayers) {
+    public VirtualView(ArrayList<PlayerHandler> playingClients, int numberOfPlayers) {
         numPlayers = numberOfPlayers;
         actionCorrect = false;
         this.playingClients = playingClients;
-        this.currentPlayerID=0;
+        this.currentPlayerID = 0;
     }
 
     public boolean isPowerApply(){
@@ -47,7 +39,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
     }
 
     public void setUndoDone(boolean value){
-        undoDone= value;
+        undoDone = value;
     }
 
     public boolean isUndoDone(){
@@ -68,7 +60,9 @@ public class VirtualView implements ViewObservable, ModelObserver {
      * the end of the game (only if a player wins).
      * @param value
      */
-    public void setPowerApply(boolean value){ powerApply=value;}
+    public void setPowerApply(boolean value) {
+        powerApply = value;
+    }
 
     /**
      * Every choice (move or build) made by a player is saved in the Choice Class
@@ -84,70 +78,65 @@ public class VirtualView implements ViewObservable, ModelObserver {
 
     /**
      * This method helps the Controller to ask for the players data during the creation of game
-     * The method uses a utility class called Userdata which contains {Nickname,Age,GodCard}
+     * The method uses a utility class called Userdata which contains {Nickname, GodCard}
      * @param set is an Array of string containing the set of Gods picked randomly, set.length = number of Players
      * @return ArrayList<UserData>  player names given through System.in
      */
-    public ArrayList<UserData> getPlayerData(String[] set){
+    public ArrayList<UserData> getPlayerData(String[] set) {
         setActionCorrect(false);
         List<String> setOfCards = new LinkedList<String>(Arrays.asList(set));
         setOfCards.add("NOGOD");
         ArrayList<UserData> players = new ArrayList<>();
-        for (int i = 0; i < playingClients.size() ; i++) {
+        for (int i = 0; i < playingClients.size(); i++) {
             noWriteForNotCurrentPlayers(i);
-            boolean choiceDone=false;
+            boolean choiceDone = false;
             String selectedCard = null;
-            while(!choiceDone && !interrupted) {
-                sendToPlayer(i,ViewMessage.selectCard + (i + 1)+"\n");
+            while (!choiceDone && !interrupted) {
+                sendToPlayer(i, ViewMessage.selectCard + (i + 1) + "\n");
 
-                for (int j = 0; j < playingClients.size() ; j++)
-                    if(j!=i)
-                        sendToPlayer(j,ViewMessage.waitingOpponentPick);
-
+                for (int j = 0; j < playingClients.size(); j++)
+                    if (j != i)
+                        sendToPlayer(j, ViewMessage.waitingOpponentPick);
 
                 for (int j = 0; j < setOfCards.size(); j++)
-                    sendToPlayer(i,setOfCards.get(j));
-
+                    sendToPlayer(i, setOfCards.get(j));
 
                 selectedCard = (String) receiveFromPlayer(playingClients.get(i));
-                if(selectedCard == null) {
+                if (selectedCard == null) {
                     return null;
                 }
 
-
                 if (setOfCards.contains(selectedCard.toUpperCase())) {
-                    if(!selectedCard.toUpperCase().equals("NOGOD"))
+                    if (!selectedCard.toUpperCase().equals("NOGOD"))
                         setOfCards.remove(selectedCard.toUpperCase());
 
                     choiceDone = true;
                 }
             }
-            for (int j = 0; j <playingClients.size() ; j++) {
-                if(j!=i)
-                    sendToPlayer(j,playingClients.get(i).getNickName()+ " picked "+selectedCard.toUpperCase()+"\n");
+            for (int j = 0; j <playingClients.size(); j++) {
+                if (j != i)
+                    sendToPlayer(j, playingClients.get(i).getNickName() + " picked " + selectedCard.toUpperCase() + "\n");
             }
 
-            players.add(new UserData(playingClients.get(i).getNickName(),21,selectedCard.toUpperCase()));
-            sendUserDataToClients(new UserData(playingClients.get(i).getNickName(),21,selectedCard.toUpperCase()));
+            players.add(new UserData(playingClients.get(i).getNickName(), selectedCard.toUpperCase()));
+            sendUserDataToClients(new UserData(playingClients.get(i).getNickName(), selectedCard.toUpperCase()));
             setActionCorrect(false);
-
         }
-
-
         return players;
     }
+
     /**
      * this method is used by the controller to ask for the worker to use during the turn
      * @return worker, 1 if its the worker1 , 2 if its the worker2 of the player
      */
-    public Integer getWorker(){
-        Integer worker=null;
-        boolean correct=false;
-        while(!correct && !interrupted) {
-            sendToPlayer(currentPlayerID,ViewMessage.workerMessage+"\n");
+    public Integer getWorker() {
+        Integer worker = null;
+        boolean correct = false;
+        while (!correct && !interrupted) {
+            sendToPlayer(currentPlayerID,ViewMessage.workerMessage + "\n");
             try {
                 String input = (String)receiveFromPlayer(playingClients.get(currentPlayerID));
-                if(input == null)
+                if (input == null)
                     return null;
 
                 worker =  Integer.parseInt(input);
@@ -155,7 +144,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
                     correct = true;
             }
             catch(InputMismatchException | NumberFormatException e){
-                sendToPlayer(currentPlayerID,ErrorMessage.inputMessage+"\n");
+                sendToPlayer(currentPlayerID, ErrorMessage.inputMessage + "\n");
             }
         }
         return worker;
@@ -163,7 +152,6 @@ public class VirtualView implements ViewObservable, ModelObserver {
 
     /**
      * Add an observer to the View's observer list
-     *
      * @param ob
      */
     @Override
@@ -173,7 +161,6 @@ public class VirtualView implements ViewObservable, ModelObserver {
 
     /**
      * Removes an observer to the View's observer list
-     *
      * @param ob
      */
     @Override
@@ -182,12 +169,12 @@ public class VirtualView implements ViewObservable, ModelObserver {
     }
 
     /**
-     *notifies all observers that the view is initializing the game
+     * Notifies all observers that the view is initializing the game
      * @param o
      */
     @Override
     public void notifyInit(Object o) {
-        for (int i = 0; i < obs.size() ; i++)
+        for (int i = 0; i < obs.size(); i++)
             obs.get(i).updateInit(o);
     }
 
@@ -207,7 +194,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
      */
     @Override
     public void notifyMove(Object o) {
-        for (int i = 0; i <obs.size() ; i++)
+        for (int i = 0; i <obs.size(); i++)
             obs.get(i).updateMove(o);
     }
 
@@ -217,7 +204,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
      */
     @Override
     public void notifyBuild(Object o) {
-        for (int i = 0; i <obs.size() ; i++)
+        for (int i = 0; i <obs.size(); i++)
             obs.get(i).updateBuild(o);
     }
 
@@ -237,13 +224,13 @@ public class VirtualView implements ViewObservable, ModelObserver {
     }
 
     @Override
-    public void updateBoard(Object o,String s) {
+    public void updateBoard(Object o, String s) {
         for (int i = 0; i <playingClients.size(); i++) {
-            if(!s.equals("INIT")) {
+            if (!s.equals("INIT")) {
                 if (i != currentPlayerID)
-                    sendToPlayer(i," "+playingClients.get(currentPlayerID).getNickName() + " did his move");
+                    sendToPlayer(i, " "+playingClients.get(currentPlayerID).getNickName() + " did his move");
             }
-            sendToPlayer(i,o);
+            sendToPlayer(i, o);
         }
     }
 
@@ -251,70 +238,65 @@ public class VirtualView implements ViewObservable, ModelObserver {
         noWriteForNotCurrentPlayers(currentPlayerID);
         for (int i = 0; i < playingClients.size(); i++)
             sendToPlayer(i, ViewMessage.welcome);
-
-
     }
 
-    public void handleWinner(String winner){
-        for (int i = 0; i <playingClients.size() ; i++) {
-            if(i!=currentPlayerID)
-                sendToPlayer(i,winner + " "+ViewMessage.winMessage);
+    public void handleWinner(String winner) {
+        for (int i = 0; i <playingClients.size(); i++) {
+            if (i != currentPlayerID)
+                sendToPlayer(i, winner + " " + ViewMessage.winMessage);
             else
-                sendToPlayer(currentPlayerID,winner +" "+ ViewMessage.personalWinMessage);
+                sendToPlayer(currentPlayerID,winner + " " + ViewMessage.personalWinMessage);
         }
-
     }
 
-    public void handleLoser(String loser){
-        for (int i = 0; i <playingClients.size() ; i++) {
-            if(i!=currentPlayerID)
-                sendToPlayer(i,loser + " "+ViewMessage.loseMessage);
+    public void handleLoser(String loser) {
+        for (int i = 0; i <playingClients.size(); i++) {
+            if (i != currentPlayerID)
+                sendToPlayer(i, loser + " " + ViewMessage.loseMessage);
             else
-                sendToPlayer(currentPlayerID,loser +" "+ ViewMessage.personalLoseMessage);
+                sendToPlayer(currentPlayerID, loser + " " + ViewMessage.personalLoseMessage);
         }
-
     }
     
     /**
      * This method has the task to initialize the Gameboard and set the initial players position.
      */
-    public void handleInit(){
-        if(!interrupted)
-            notifyInit(choice = new Choice(null,null,null,null,null));
+    public void handleInit() {
+        if (!interrupted)
+            notifyInit(choice = new Choice(null, null, null, null, null));
     }
 
     /**
      * Has the task to ask the user to insert the two coordinates for his 2 workers and notify observers
      * to set this data.
      */
-    public void handleInitialPosition(){
+    public void handleInitialPosition() {
         for (int i = 0; i < numPlayers; i++) {
             noWriteForNotCurrentPlayers(i);
             for (int j = 0; j <2; j++) {
                 String[] s = null;
 
-                for(int k = 0; k < playingClients.size() ; k++)
-                    if(k!=i)
-                        sendToPlayer(k,ViewMessage.waitingPositioning);
+                for (int k = 0; k < playingClients.size(); k++)
+                    if (k != i)
+                        sendToPlayer(k, ViewMessage.waitingPositioning);
 
                 while (!actionCorrect && !interrupted) {
 
-                    sendToPlayer(i,"Player " + (i + 1) + ", " + ViewMessage.initialPositionMessage + (j + 1) + " (digit x,y)"+"\n");
+                    sendToPlayer(i, "Player " + (i + 1) + ", " + ViewMessage.initialPositionMessage + (j + 1) + " (digit x,y)" + "\n");
                     try{
                         String input = (String) receiveFromPlayer(playingClients.get(i));
-                        if(input == null)
+                        if (input == null)
                             break;
 
                         s = input.split(",");
                         notifyInit(choice = new Choice(Integer.parseInt(s[0]), Integer.parseInt(s[1]), j + 1, null, i));
                     }
                     catch (NumberFormatException e) {
-                        sendToPlayer(i,ErrorMessage.inputMessage + "\n");
+                        sendToPlayer(i, ErrorMessage.inputMessage + "\n");
                     }
                     catch (ArrayIndexOutOfBoundsException e) {
-                        sendToPlayer(i,ErrorMessage.inputMessage + "\n");
+                        sendToPlayer(i, ErrorMessage.inputMessage + "\n");
                     }
-
                 }
                 setActionCorrect(false);
             }
@@ -323,13 +305,13 @@ public class VirtualView implements ViewObservable, ModelObserver {
     }
 
     /**
-     * this method is used to ask to choose one of the 2 worker of the currentPlayer available
+     * This method is used to ask to choose one of the 2 worker of the currentPlayer available
      * @return 1 for worker1, 2 for worker2
      */
     public Integer handleStart() {
-        Integer worker=null;
+        Integer worker = null;
         setActionCorrect(false);
-        while(!actionCorrect && !interrupted) {
+        while (!actionCorrect && !interrupted) {
             worker = getWorker();
             notifyStart(worker);
         }
@@ -343,10 +325,10 @@ public class VirtualView implements ViewObservable, ModelObserver {
     public String[][] handleWhatToDo(String s) {
         setActionCorrect(false);
 
-        sendToPlayer(currentPlayerID,"\n" + s+", " + ViewMessage.yourTurnMessage+"\n");
-        for (int i = 0; i <playingClients.size() ; i++) {
-            if(i!=currentPlayerID)
-                sendToPlayer(i,ViewMessage.waitingYourTurn);
+        sendToPlayer(currentPlayerID, "\n" + s + ", " + ViewMessage.yourTurnMessage + "\n");
+        for (int i = 0; i <playingClients.size(); i++) {
+            if (i != currentPlayerID)
+                sendToPlayer(i, ViewMessage.waitingYourTurn);
         }
         return notifyWhatToDo();
     }
@@ -355,20 +337,20 @@ public class VirtualView implements ViewObservable, ModelObserver {
      * It's a handle method to notify observer that have to handle a move action from the user.
      * @param worker is an integer that tells which of the two worker are selected from the user
      */
-    public void handleMove(Integer worker){
+    public void handleMove(Integer worker) {
         setActionCorrect(false);
-        while(!actionCorrect && !interrupted) {
+        while (!actionCorrect && !interrupted) {
             String[] s;
-            sendToPlayer(currentPlayerID,ViewMessage.moveMessage);
+            sendToPlayer(currentPlayerID, ViewMessage.moveMessage);
             try{
                 String input = (String)receiveFromPlayer(playingClients.get(currentPlayerID));
-                if(input == null)
+                if (input == null)
                     break;
 
                 s = input.split(",");
-                notifyMove(choice = new Choice(Integer.parseInt(s[0]), Integer.parseInt(s[1]), worker, null,null));
+                notifyMove(choice = new Choice(Integer.parseInt(s[0]), Integer.parseInt(s[1]), worker, null, null));
             } catch (NumberFormatException | ArrayIndexOutOfBoundsException e){
-                sendToPlayer(currentPlayerID,ErrorMessage.inputMessage + "\n");
+                sendToPlayer(currentPlayerID, ErrorMessage.inputMessage + "\n");
             }
         }
     }
@@ -378,30 +360,30 @@ public class VirtualView implements ViewObservable, ModelObserver {
      * @param worker is an integer that tells which of the two worker are selected from the user
      *               its the same one called from the move action
      */
-    public void handleBuild(Integer worker){
+    public void handleBuild(Integer worker) {
         int counter = 0;
         setActionCorrect(false);
-        while(!actionCorrect && !interrupted) {
+        while (!actionCorrect && !interrupted) {
             try {
-                if(counter == 0)
-                    sendToPlayer(currentPlayerID,ViewMessage.buildMessage + worker + "\n");
+                if (counter == 0)
+                    sendToPlayer(currentPlayerID, ViewMessage.buildMessage + worker + "\n");
 
                 String[] b;
                 String build = (String)receiveFromPlayer(playingClients.get(currentPlayerID));
-                if(build == null)
+                if (build == null)
                     break;
 
                 b = build.split(",");
                 if (!build.equals("")) {
                     counter = 0;
-                    sendToPlayer(currentPlayerID,ViewMessage.levelMessage + "\n");
+                    sendToPlayer(currentPlayerID, ViewMessage.levelMessage + "\n");
                     String answer = (String)receiveFromPlayer(playingClients.get(currentPlayerID));
-                    if(answer == null)
+                    if (answer == null)
                         break;
                     if (answer.toUpperCase().equals("YES")) {
-                        sendToPlayer(currentPlayerID,ViewMessage.insertLevel + "\n");
+                        sendToPlayer(currentPlayerID, ViewMessage.insertLevel + "\n");
                         String input =  (String)receiveFromPlayer(playingClients.get(currentPlayerID));
-                        if(input == null)
+                        if (input == null)
                             break;
                         Integer level =  Integer.parseInt(input);
 
@@ -412,7 +394,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
                 else
                     counter = 1;
             } catch (NumberFormatException | ArrayIndexOutOfBoundsException e){
-                sendToPlayer(currentPlayerID,ErrorMessage.inputMessage + "\n");
+                sendToPlayer(currentPlayerID, ErrorMessage.inputMessage + "\n");
             }
         }
     }
@@ -430,22 +412,20 @@ public class VirtualView implements ViewObservable, ModelObserver {
      * @param effect
      */
     public void printEffect(String s, String effect) {
-        if(s.equals("ON"))
-            sendToPlayer(currentPlayerID,ViewMessage.godPowerStart + effect);
-        if(s.equals("OFF"))
-            sendToPlayer(currentPlayerID,ViewMessage.godPowerEnd + effect);
+        if (s.equals("ON"))
+            sendToPlayer(currentPlayerID, ViewMessage.godPowerStart + effect);
+        if (s.equals("OFF"))
+            sendToPlayer(currentPlayerID, ViewMessage.godPowerEnd + effect);
     }
 
     /**
      * only set the turn to done and will notify the controller to change to the next currentPlayer
      * */
-    public void handleEnd(){
+    public void handleEnd() {
         setActionCorrect(false);
-        powerApply=false;
+        powerApply = false;
         notifyEnd();
     }
-
-
 
     /**
      * Calls an internal timer and ask if the current player wants to apply Undo Option within 5 seconds
@@ -460,28 +440,28 @@ public class VirtualView implements ViewObservable, ModelObserver {
         Timer timer = new Timer();
         TimerTask task = new TimerTask() {
             public void run() {
-                if(finalStr[0].equals("")) {
-                    sendToPlayer(currentPlayerID,"You input nothing. UNDO wasn't done...");
+                if (finalStr[0].equals("")) {
+                    sendToPlayer(currentPlayerID, "You input nothing. UNDO wasn't done...");
                     value[0] = false;
                 }
             }
         };
         timer.schedule(task, 5000);
-        if(warning.equals("WARNING"))
-            sendToPlayer(currentPlayerID,ErrorMessage.blockingMessage);
+        if (warning.equals("WARNING"))
+            sendToPlayer(currentPlayerID, ErrorMessage.blockingMessage);
         sendToPlayer(currentPlayerID, "Input a YES within 5 seconds for UNDO : ");
         String action = (String)receiveFromPlayer(playingClients.get(currentPlayerID));
-        if(action == null)
+        if (action == null)
             return false;
 
         timer.cancel();
-        if(value[0]==false || (!action.toUpperCase().equals("YES")) || action.equals("")) {
-            sendToPlayer(currentPlayerID,"UNDO is not applied");
+        if (value[0] == false || (!action.toUpperCase().equals("YES")) || action.equals("")) {
+            sendToPlayer(currentPlayerID, "UNDO is not applied");
             undoDone = false;
             return false;
         }
-        if(action.toUpperCase().equals("YES")) {
-            sendToPlayer(currentPlayerID,"UNDO is applied");
+        if (action.toUpperCase().equals("YES")) {
+            sendToPlayer(currentPlayerID, "UNDO is applied");
             undoDone = true;
             return true;
         }
@@ -489,28 +469,29 @@ public class VirtualView implements ViewObservable, ModelObserver {
             return false;
         }
     }
+
     /**
      * Utility method to call the correct handle method
      * @param s says if handle function must me of type : MOVE, BUILD OR EFFECT
      * @param worker all the actions (not the effect) are referred to a worker that does it
      */
-    public boolean callPowerFunction(String s, Integer worker){
-        boolean askUndo=false;
+    public boolean callPowerFunction(String s, Integer worker) {
+        boolean askUndo = false;
         switch (s) {
             case "MOVE":
-                while(!askUndo && !interrupted) {
-                    sendToPlayer(currentPlayerID,s + " POWER: " + ViewMessage.applyPowerMessage);
+                while (!askUndo && !interrupted) {
+                    sendToPlayer(currentPlayerID, s + " POWER: " + ViewMessage.applyPowerMessage);
                     String input = (String)receiveFromPlayer(playingClients.get(currentPlayerID));
-                    if(input == null)
+                    if (input == null)
                         break;
 
                     if (input.toUpperCase().equals("YES")) {
                         handleMove(worker);
                         setPowerApply(true);
-                        askUndo=true;
+                        askUndo = true;
                     } else {
-                        if(!undoOption("NOWARNING"))
-                            askUndo=true;
+                        if (!undoOption("NOWARNING"))
+                            askUndo = true;
                         else
                             setActionCorrect(false);
                     }
@@ -518,23 +499,22 @@ public class VirtualView implements ViewObservable, ModelObserver {
                 }
                 break;
             case "BUILD":
-                while(!askUndo && !interrupted) {
-                    sendToPlayer(currentPlayerID,s + " POWER: " + ViewMessage.applyPowerMessage);
+                while (!askUndo && !interrupted) {
+                    sendToPlayer(currentPlayerID, s + " POWER: " + ViewMessage.applyPowerMessage);
                     String input = (String)receiveFromPlayer(playingClients.get(currentPlayerID));
-                    if(input == null)
+                    if (input == null)
                         break;
 
                     if (input.toUpperCase().equals("YES")) {
                         handleBuild(worker);
                         setPowerApply(true);
-                        askUndo=true;
+                        askUndo = true;
                     } else {
-                        if(!undoOption("NOWARNING"))
-                            askUndo=true;
+                        if (!undoOption("NOWARNING"))
+                            askUndo = true;
                         else
                             setActionCorrect(false);
                     }
-
                 }
                 break;
             case "EFFECT":
@@ -544,28 +524,26 @@ public class VirtualView implements ViewObservable, ModelObserver {
         return actionCorrect;
     }
 
-
-    public void sendToPlayer(Integer clientToSend,Object message){
-        if(!interrupted)
-            NetworkVirtualView.sendToClient(playingClients.get(clientToSend),message);
+    public void sendToPlayer(Integer clientToSend, Object message) {
+        if (!interrupted)
+            NetworkVirtualView.sendToClient(playingClients.get(clientToSend), message);
     }
 
-    public Object receiveFromPlayer(PlayerHandler player){
+    public Object receiveFromPlayer(PlayerHandler player) {
         Object fromPlayer = NetworkVirtualView.receiveFromClient(player);
         return fromPlayer;
-
     }
 
     public void sendUserDataToClients(UserData data) {
-        if(!interrupted) {
+        if (!interrupted) {
             for (int i = 0; i < playingClients.size(); i++)
                 sendToPlayer(i, data);
         }
     }
 
-    public void noWriteForNotCurrentPlayers(Integer currentPlayer){
-        for (int i = 0; i <playingClients.size() ; i++) {
-            if (! interrupted) {
+    public void noWriteForNotCurrentPlayers(Integer currentPlayer) {
+        for (int i = 0; i <playingClients.size(); i++) {
+            if (!interrupted) {
                 if (i != currentPlayer)
                     sendToPlayer(i, false);
                 else
@@ -574,9 +552,8 @@ public class VirtualView implements ViewObservable, ModelObserver {
         }
     }
 
-    public void handleInterrupt(){
-        interrupted=true;
+    public void handleInterrupt() {
+        interrupted = true;
         notifyInterrupt();
     }
-
 }

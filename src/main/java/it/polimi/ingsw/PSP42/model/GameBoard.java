@@ -1,10 +1,11 @@
 package it.polimi.ingsw.PSP42.model;
+
 import it.polimi.ingsw.PSP42.*;
 
-import java.io.*;
 import java.util.ArrayList;
 
 public class GameBoard implements ModelObservable {
+
     private static GameBoard instance = null;
     private Cell[][] board = new Cell[5][5];
     private ArrayList<Player> players;
@@ -61,7 +62,7 @@ public class GameBoard implements ModelObservable {
      * @param players
      */
     public void setPlayers(ArrayList<Player> players) {
-        if(this.players ==null)
+        if (this.players == null)
             this.players = players;
     }
 
@@ -85,7 +86,7 @@ public class GameBoard implements ModelObservable {
      * Method to obtain a minimal copy of the gameboard, useful in printing on CLI
      * @return gCopy (FakeCell matrix containing only player name, worker 1 or 2 and construction level)
      */
-    public FakeCell[][] gameBoardCopy(){
+    public FakeCell[][] gameBoardCopy() {
         FakeCell[][] gCopy = FakeCell.getGameBoardCopy();
         return gCopy;
     }
@@ -200,7 +201,7 @@ public class GameBoard implements ModelObservable {
     public boolean workerAvailable(Worker w) {
         Player p = w.getPlayer();
         SimpleGod card = p.getCard();
-        if(card instanceof NoGod) {
+        if (card instanceof NoGod) {
             Cell[] c = adjacentCellMoveAvailable(w.getCurrentX(), w.getCurrentY());
             if (c[0] == null)
                 w.setAvailable(false);
@@ -208,7 +209,7 @@ public class GameBoard implements ModelObservable {
                 w.setAvailable(true);
         }
         else {
-            if (! atLeastOneMove(w))
+            if (!atLeastOneMove(w))
                 w.setAvailable(false);
             else
                 w.setAvailable(true);
@@ -221,7 +222,7 @@ public class GameBoard implements ModelObservable {
      * if both of his workers are not available the player's status will be changed to "LOSE"
      * @param p (player to be verified)
      */
-    public void loseCondition (Player p, String phase) {
+    public void loseCondition(Player p, String phase) {
         switch (phase) {
             case "START": {
                 if (!p.getWorker1().getAvailable() && !p.getWorker2().getAvailable()) {
@@ -264,7 +265,7 @@ public class GameBoard implements ModelObservable {
      * Utility method to unset worker on cells and set the PlayerState == LOSE
      * @param p
      */
-    public void playerLose (Player p) {
+    public void playerLose(Player p) {
         p.getWorker1().unSetPosition();
         p.getWorker2().unSetPosition();
         p.setPlayerState("LOSE");
@@ -278,25 +279,25 @@ public class GameBoard implements ModelObservable {
      * @param w
      * @return
      */
-    public boolean atLeastOneMove(Worker w){
+    public boolean atLeastOneMove(Worker w) {
         int x = w.getCurrentX();
         int y = w.getCurrentY();
         Player influences = null;
         boolean oneMove = false;
-        if(w.getPlayer().getCard().effectPlayers.size() != 0)
+        if (w.getPlayer().getCard().effectPlayers.size() != 0)
             influences = w.getPlayer().getCard().effectPlayers.get(0);
         for (int i = 0; i < 3; i++)
             for (int j = 0; j < 3; j++) {
                 if ((y - 1 == - 1 && j == 0) || (y + 1 == 5 && j == 2) ||
                         (x - 1 == - 1 && i == 0) || (x + 1 == 5 && i == 2))
                     oneMove = false;
-                else if(influences != null && influences.getCard().powerMoveAvailable(x - 1 + i,y - 1 + j, w)) {
+                else if (influences != null && influences.getCard().powerMoveAvailable(x - 1 + i,y - 1 + j, w)) {
                     w.getPlayer().setPlayerState("INGAME");
                     oneMove = true;
                     i = 3;
                     j = 3;
                 }
-                else if(influences == null && w.getPlayer().getCard().powerMoveAvailable(x - 1 + i,y - 1 + j, w)) {
+                else if (influences == null && w.getPlayer().getCard().powerMoveAvailable(x - 1 + i,y - 1 + j, w)) {
                     w.getPlayer().setPlayerState("INGAME");
                     oneMove = true;
                     i = 3;
@@ -311,7 +312,7 @@ public class GameBoard implements ModelObservable {
      * @param w
      * @return
      */
-    public boolean atLeastOneBuild(Worker w, int level){
+    public boolean atLeastOneBuild(Worker w, int level) {
         int x = w.getCurrentX();
         int y = w.getCurrentY();
         boolean oneBuild = false;
@@ -320,7 +321,7 @@ public class GameBoard implements ModelObservable {
                 if ((y - 1 == - 1 && j == 0) || (y + 1 == 5 && j == 2) ||
                         (x - 1 == - 1 && i == 0) || (x + 1 == 5 && i == 2))
                     oneBuild = false;
-                else if(w.getPlayer().getCard().powerBuildAvailable(x - 1 + i,y - 1 + j, level, w)) {
+                else if (w.getPlayer().getCard().powerBuildAvailable(x - 1 + i,y - 1 + j, level, w)) {
                     oneBuild = true;
                     i = 3;
                     j = 3;
@@ -335,15 +336,12 @@ public class GameBoard implements ModelObservable {
      * @param y (y coordinate of the future position of the worker)
      * @param w (worker on moving)
      */
-    public void winCondition(int x, int y, Worker w){
+    public void winCondition(int x, int y, Worker w) {
         if (getCell(w.getCurrentX(), w.getCurrentY()).getLevel() == 2 &&    // worker w on level 2
                 getCell(x, y).getLevel() == 3) {                                // next position on level 3
             w.getPlayer().setPlayerState("WIN");
         }
     }
-
-
-    //PATTER OBSERVER
 
     /**
      * Add an observer to the Model's observer list
@@ -367,12 +365,12 @@ public class GameBoard implements ModelObservable {
      * Notifies the observers who need update
      */
     @Override
-    public void notifyObservers(Object o,String s) {
+    public void notifyObservers(Object o, String s) {
         for (int i = 0; i <obs.size(); i++) {
-            if(getGamePhase().equals("START"))
-             obs.get(i).updateBoard(o,"INIT");
+            if (getGamePhase().equals("START"))
+             obs.get(i).updateBoard(o, "INIT");
             else
-                obs.get(i).updateBoard(o,"NOINIT");
+                obs.get(i).updateBoard(o, "NOINIT");
         }
     }
 }

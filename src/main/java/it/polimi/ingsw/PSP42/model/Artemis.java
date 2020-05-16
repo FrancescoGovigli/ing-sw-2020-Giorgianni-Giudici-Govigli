@@ -1,6 +1,6 @@
 package it.polimi.ingsw.PSP42.model;
 
-import java.util.ArrayList; // UNDO
+import java.util.ArrayList;
 
 /**
  * Simple god able to move 2 times (the starting position cannot be the same as the arrival)
@@ -66,8 +66,6 @@ public class Artemis extends SimpleGod {
         return false;
     }
 
-    // UNDO
-
     /**
      * Method to obtain the current state of the Simple God's variables
      * @return values.clone() (a clone of the ArrayList of Integer containing these variables)
@@ -90,5 +88,10 @@ public class Artemis extends SimpleGod {
         this.moveNum = valuesToRestore.get(0);
         this.startX = valuesToRestore.get(1);
         this.startY = valuesToRestore.get(2);
+    }
+
+    @Override
+    public String getPowerDescription() {
+        return "[POWER] Your Move: Your Worker may move one additional time, but not back to its initial space.";
     }
 }

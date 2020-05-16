@@ -29,13 +29,18 @@ public class Atlas extends SimpleGod {
      */
     @Override
     public boolean powerBuild(int x, int y, int level, Worker w) {
-        if(powerBuildAvailable(x, y, level, w)) {
-            if(level == 4)
+        if (powerBuildAvailable(x, y, level, w)) {
+            if (level == 4)
                 GameBoard.getInstance().getCell(x, y).setSpecificCellLevel(level);
             else
                 GameBoard.getInstance().getCell(x, y).setCellLevel();
             return true;
         }
         return false;
+    }
+
+    @Override
+    public String getPowerDescription() {
+        return "[POWER] Your Build: Your Worker may build a dome at any level.";
     }
 }
