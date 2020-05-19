@@ -83,15 +83,6 @@ public class GameBoard implements ModelObservable {
     }
 
     /**
-     * Method to obtain a minimal copy of the gameboard, useful in printing on CLI
-     * @return gCopy (FakeCell matrix containing only player name, worker 1 or 2 and construction level)
-     */
-    public FakeCell[][] gameBoardCopy() {
-        FakeCell[][] gCopy = FakeCell.getGameBoardCopy();
-        return gCopy;
-    }
-
-    /**
      * Method to obtain a sub-matrix with cells surrounded the specified cell
      * @param x (x coordinate of the specified cell)
      * @param y (y coordinate of the specified cell)

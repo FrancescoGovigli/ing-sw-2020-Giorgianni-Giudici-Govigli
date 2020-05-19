@@ -10,8 +10,8 @@ public class PanTest {
 
     @Before
     public void setUp() {
-        p1 = new Player("BOB", 1,21, "PAN");
-        p2 = new Player("FRA", 1,21, "PAN");
+        p1 = new Player("BOB", 1, "PAN");
+        p2 = new Player("FRA", 1, "PAN");
     }
 
     @After

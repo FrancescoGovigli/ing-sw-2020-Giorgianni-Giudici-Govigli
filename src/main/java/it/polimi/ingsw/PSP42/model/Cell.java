@@ -14,17 +14,6 @@ public class Cell {
     }
 
     /**
-     * Method to obtain which level are build on the cell under form of array.
-     * @return cellLevelCopy (array where the position indicates the constructed level)
-     */
-    public boolean[] getCellLevel() {
-        boolean[] cellLevelCopy = new boolean[5];
-        for (int i = 0; i < 5; i++)
-            cellLevelCopy[i] = cellLevel[i];
-        return cellLevelCopy;
-    }
-
-    /**
      * Method to obtain the current level of a cell.
      * @return level (level constructed)
      */

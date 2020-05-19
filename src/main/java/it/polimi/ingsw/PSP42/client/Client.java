@@ -10,10 +10,8 @@ import java.util.*;
 
 public class Client implements Runnable{
 
-    private NetworkHandler net;
     private boolean active = true;
     private boolean writeActive = true;
-    private ObjectOutputStream output;
     private ArrayList<UserData> playersData = new ArrayList<>();
 
     public synchronized boolean isActive(){

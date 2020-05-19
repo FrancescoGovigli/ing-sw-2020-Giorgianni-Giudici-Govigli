@@ -1,5 +1,7 @@
 package it.polimi.ingsw.PSP42.model;
 
+import java.io.*;
+
 /**
  * @author Francesco Govigli
  */

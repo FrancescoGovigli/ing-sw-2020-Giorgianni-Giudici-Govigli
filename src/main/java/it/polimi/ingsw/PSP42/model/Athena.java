@@ -14,6 +14,7 @@ public class Athena extends SimpleGod {
         super(w1, w2);
     }
 
+
     @Override
     public String[][] setPhase() {
         String[] START = {"EFFECT"};
