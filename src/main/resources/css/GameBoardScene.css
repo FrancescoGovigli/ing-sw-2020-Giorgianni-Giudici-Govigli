@@ -1,0 +1,65 @@
+root {
+    display: block;
+}
+
+.root {
+    -fx-background-image: url("../images/GameBoardNoPanel.png");
+    -fx-pref-width: 1200px;
+    -fx-pref-height: 672px;
+    -fx-background-size: stretch;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+#text-field {
+    -fx-background-image: url("../images/text-field.png");
+    -fx-background-size: stretch;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-font-size: 15px;
+    -fx-font-family: Arial;
+    -fx-border-width: 200%;
+    -fx-border-color: #000000;
+}
+
+#level1 {
+    -fx-background-image: url("../images/lvl1.png");
+    -fx-background-size: stretch;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+#level2 {
+    -fx-background-image: url("../images/lvl2.png");
+    -fx-background-size: stretch;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+#level3 {
+    -fx-background-image: url("../images/lvl3.png");
+    -fx-background-size: stretch;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+#level3:hover {
+    -fx-background-image: url("../images/PrometheusToken.png");
+    -fx-background-size: stretch;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+#prometheus {
+    -fx-background-image: url("../images/PrometheusToken.png");
+    -fx-background-size: stretch;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+#santoriniLogo{
+    -fx-background-size: stretch;
+    -fx-background-image: url("../images/santorini-logo.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}

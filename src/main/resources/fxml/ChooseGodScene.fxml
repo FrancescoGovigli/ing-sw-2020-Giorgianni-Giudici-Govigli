@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import java.net.URL?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+
+<AnchorPane id="background" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="672.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.PSP42.view.ControllerChooseGodScene">
+    <children>
+        <Pane id="cardBackground" layoutX="344.0" layoutY="265.0" prefHeight="223.0" prefWidth="168.0">
+            <children>
+                <Button id="cardImage" alignment="CENTER" mnemonicParsing="false" prefHeight="223.0" prefWidth="168.0" />
+            </children>
+        </Pane>
+        <Pane id="cardBackground" layoutX="532.0" layoutY="265.0" prefHeight="223.0" prefWidth="168.0">
+            <children>
+                <Button fx:id="card2" onMouseEntered="#description" onMouseExited="#image" onAction="#goToGameBoardScene" alignment="CENTER" mnemonicParsing="false" prefHeight="223.0" prefWidth="168.0" />
+            </children>
+        </Pane>
+        <Pane id="cardBackground" layoutX="734.0" layoutY="265.0" prefHeight="223.0" prefWidth="168.0">
+            <children>
+                <Button opacity="-Infinity" alignment="CENTER" mnemonicParsing="false" prefHeight="223.0" prefWidth="168.0" />
+            </children>
+        </Pane>
+    </children>
+    <stylesheets>
+        <URL value="@../css/ChooseGodScene.css" />
+    </stylesheets>
+</AnchorPane>

@@ -1,0 +1,31 @@
+#background {
+    -fx-background-image: url("../images/welcome_background.png");
+    -fx-background-size: stretch;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-pref-height: 672px;
+    -fx-pref-width: 1200px;
+}
+
+#cardBackground {
+    -fx-background-image: url("../images/glassBackground.png");
+    -fx-background-size: stretch;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+#cardImage {
+    -fx-background-image: url("../images/Prometheus.png");
+    -fx-background-size: stretch;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-color: transparent;
+}
+
+#cardImage:hover {
+    -fx-background-image: url("../images/PrometheusDesc.png");
+    -fx-background-size: stretch;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-color: transparent;
+}

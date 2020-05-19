@@ -1,0 +1,73 @@
+
+#playButton{
+    -fx-background-image: url("../images/btn_blue.png");
+    -fx-background-size: stretch;
+    -fx-font-size: 30;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-font-family: "Segoe Script";
+    -fx-text-alignment: center;
+
+
+}
+
+#chooseButton{
+    -fx-background-image: url("../images/btn_blue.png");
+    -fx-background-size: stretch;
+    -fx-font-size: 20;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-font-family: "Segoe Script";
+    -fx-text-alignment: "center";
+}
+
+#labelPlayers{
+    -fx-text-fill: white;
+
+    -fx-font-size: 15;
+    -fx-font-family: "Segoe Script";
+    -fx-background-size: stretch;
+    -fx-alignment: "center";
+}
+
+#chooseField{
+    -fx-background-image:url("../images/choose_Player_Field.png") ;
+    -fx-background-size: stretch;
+    -fx-alignment: "center";
+}
+
+#playButton:pressed{
+    -fx-background-image: url("../images/btn_blue_pressed.png");
+    -fx-background-size: stretch;
+    -fx-font-size: 25;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-font-family: "Segoe Script";
+    -fx-text-alignment: center;
+}
+
+#chooseButton:pressed{
+    -fx-background-image: url("../images/btn_blue_pressed.png");
+    -fx-background-size: stretch;
+    -fx-font-size: 20;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-font-style: italic;
+    -fx-text-alignment: "center";
+}
+
+#textField.text-area{
+    -fx-opacity: 0.5;
+}
+
+#progressIndicator{
+    -fx-progress-color: white;
+}
+
+#progressLabel{
+    -fx-font-weight: bold;
+    -fx-font-size: 15;
+    -fx-font-style: italic;
+}
+
+
