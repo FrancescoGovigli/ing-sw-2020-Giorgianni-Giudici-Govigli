@@ -12,8 +12,9 @@
 
     <GridPane id="grid-pane" fx:id="board" alignment="CENTER" onDragDropped="#handleDragDropped" onDragOver="#handleDragOver" prefHeight="443.0" prefWidth="586.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
 
-        <Pane id="level3" fx:id="cell00" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-        <Pane id="level2" fx:id="cell01" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        <Pane id="level3" fx:id="Cell00" GridPane.columnIndex="0" GridPane.rowIndex="0" >
+        </Pane>
+        <Pane id="level2" GridPane.columnIndex="1" GridPane.rowIndex="0" />
         <Pane id="level3" GridPane.columnIndex="2" GridPane.rowIndex="0" />
         <Pane id="level2" GridPane.columnIndex="3" GridPane.rowIndex="0" />
         <Pane id="level3" GridPane.columnIndex="4" GridPane.rowIndex="0" />

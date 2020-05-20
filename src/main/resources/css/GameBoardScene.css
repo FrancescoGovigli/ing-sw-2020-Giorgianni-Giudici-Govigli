@@ -37,21 +37,22 @@ root {
 }
 
 #level3 {
-    -fx-background-image: url("../images/lvl3.png");
+    -fx-background-image: url("../images/lvl3.png"), url("../images/Prometheus/PrometheusToken.png");
     -fx-background-size: stretch;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
 }
 
+/*
 #level3:hover {
     -fx-background-image: url("../images/PrometheusToken.png");
     -fx-background-size: stretch;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
-}
+}*/
 
 #prometheus {
-    -fx-background-image: url("../images/PrometheusToken.png");
+    -fx-background-image: url("../images/Prometheus/PrometheusToken.png");
     -fx-background-size: stretch;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
