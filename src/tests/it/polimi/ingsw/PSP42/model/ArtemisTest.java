@@ -12,8 +12,7 @@ public class ArtemisTest {
 
     @Before
     public void setUp() throws Exception {
-        p1 = new Player("BOB", 1,21,"ARTEMIS");
-
+        p1 = new Player("BOB", 1,"ARTEMIS");
     }
 
     @After
@@ -58,7 +57,7 @@ public class ArtemisTest {
     }
 
     @Test
-    public void setPower_KO_2Level_Gap(){
+    public void setPower_KO_2Level_Gap() {
         p1.initialPosition(2, 2, p1.getWorker1());
         p1.build(1, 2,g.getCell(1,2).getLevel()+1, p1.getWorker1());
         p1.build(1, 2,g.getCell(1,2).getLevel()+1, p1.getWorker1());
@@ -71,7 +70,7 @@ public class ArtemisTest {
     }
 
     @Test
-    public void setPower_OK_Step_Up_And_Down(){
+    public void setPower_OK_Step_Up_And_Down() {
         p1.initialPosition(2, 2, p1.getWorker1());
         p1.initialPosition(0, 0, p1.getWorker2());
         p1.move(1, 1, p1.getWorker1());
@@ -143,7 +142,7 @@ public class ArtemisTest {
     }
 
     @Test
-    public void undoMove_And_undoBuild(){
+    public void undoMove_And_undoBuild() {
         p1.initialPosition(2, 2, p1.getWorker1());
         p1.initialPosition(4, 4, p1.getWorker2());
         p1.move(1, 1, p1.getWorker1());

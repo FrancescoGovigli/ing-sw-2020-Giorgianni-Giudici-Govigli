@@ -8,7 +8,7 @@ public class Server {
 
     private static final int SOCKET_PORT = 4000;
     private static ServerSocket serverSocket;
-    private ArrayList<PlayerHandler> waitingClients = new ArrayList<>();
+    private ArrayList<ClientHandler> waitingClients = new ArrayList<>();
     private int numberOfPlayer;
     private boolean numberOfPlayerSet;
     private boolean startedGame;
@@ -93,10 +93,10 @@ public class Server {
             if (waitingClients.size() == numberOfPlayer && allPlayersAreReady())
                 initNewGame();
             else if (allPlayersAreReady() && waitingClients.size() != numberOfPlayer)
-                sgt.asyncClientSend(ServerMessage.waiting);
+                sgt.sendToWaitingClient(ServerMessage.waiting);
         }
         else {
-            sgt.asyncClientSend(ServerMessage.extraClient);
+            sgt.sendToWaitingClient(ServerMessage.extraClient);
             sgt.getPlayerConnection().closeConnection();
         }
     }
@@ -106,8 +106,8 @@ public class Server {
      * @return true if they are ready, false otherwise
      */
     public synchronized boolean allPlayersAreReady() {
-        for (PlayerHandler playerHandler : waitingClients){
-            if (!playerHandler.isReadyToPlay())
+        for (ClientHandler clientHandler : waitingClients){
+            if (! clientHandler.isReadyToPlay())
                 return false;
         }
         return true;

@@ -1,13 +1,12 @@
 package it.polimi.ingsw.PSP42.model;
 
 import org.junit.*;
-
 import static org.junit.Assert.*;
 
 public class WorkerTest {
 
     private GameBoard board = GameBoard.getInstance();
-    private Player p = new Player("CIPO", 1,21,"APOLLO");
+    private Player p = new Player("CIPO", 1,"APOLLO");
     private Worker w = new Worker(-1,-1, p);
 
     @Test

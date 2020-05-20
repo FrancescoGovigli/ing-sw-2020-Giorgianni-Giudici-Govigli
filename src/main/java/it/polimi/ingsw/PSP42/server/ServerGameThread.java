@@ -10,13 +10,13 @@ import java.util.*;
 
 public class ServerGameThread implements Runnable {
 
-    private ArrayList<PlayerHandler> playingClients = new ArrayList<>();
+    private ArrayList<ClientHandler> playingClients = new ArrayList<>();
     private Server server;
     private GameBoard model;
     private ControllerCLI controller;
-    private PlayerHandler playerConnection;
+    private ClientHandler playerConnection;
 
-    public PlayerHandler getPlayerConnection() {
+    public ClientHandler getPlayerConnection() {
         return playerConnection;
     }
 
@@ -36,7 +36,7 @@ public class ServerGameThread implements Runnable {
      */
     public ServerGameThread(Server server, Socket client, Integer orderOfConnection) {
         this.server = server;
-        this.playerConnection = new PlayerHandler(client, orderOfConnection);
+        this.playerConnection = new ClientHandler(client, orderOfConnection);
     }
 
     /**
@@ -44,7 +44,7 @@ public class ServerGameThread implements Runnable {
      * @param playingClients
      * @param server
      */
-    public ServerGameThread(ArrayList<PlayerHandler> playingClients, Server server) {
+    public ServerGameThread(ArrayList<ClientHandler> playingClients, Server server) {
         this.playingClients = playingClients;
         this.server = server;
     }
@@ -53,7 +53,7 @@ public class ServerGameThread implements Runnable {
      * Method to create all the components necessary to play and finally launch the game
      */
     public void startGame() {
-        playingClients.sort((PlayerHandler z1, PlayerHandler z2) -> {
+        playingClients.sort((ClientHandler z1, ClientHandler z2) -> {
             if (z1.getClientID() > z2.getClientID())
                 return 1;
             if (z1.getClientID() < z2.getClientID())
@@ -80,8 +80,8 @@ public class ServerGameThread implements Runnable {
     public void resetGame(String s) {
         model.reset();
         if (s.equals("END")) {
-            for (PlayerHandler p : playingClients) {
-                p.asyncSend(ServerMessage.endGame);
+            for (ClientHandler p : playingClients) {
+                p.sendToClient(ServerMessage.endGame);
                 try {
                     p.getClient().close();
                 } catch (IOException e) {
@@ -91,8 +91,8 @@ public class ServerGameThread implements Runnable {
             server.reset("END");
         }
         else if (s.equals("INTERRUPT")) {
-            for (PlayerHandler p : playingClients) {
-                p.asyncSend(ServerMessage.inactivityEnd);
+            for (ClientHandler p : playingClients) {
+                p.sendToClient(ServerMessage.inactivityEnd);
                 try {
                     p.getClient().close();
                 } catch (IOException e) {
@@ -117,13 +117,13 @@ public class ServerGameThread implements Runnable {
      * make him ready to play and put him on hold until the server has reached the number of players needed to play
      */
     public void settingClient() {
-        playerConnection.asyncSend("You entered the Game!" + " \uD83D\uDE0A \n");
+        playerConnection.sendToClient("You entered the Game!" + " \uD83D\uDE0A \n");
         if (playerConnection.getClientID() == 1)
-            playerConnection.asyncSend("Welcome player " + playerConnection.getClientID() + " insert your name: ");
+            playerConnection.sendToClient("Welcome player " + playerConnection.getClientID() + " insert your name: ");
         else
-            playerConnection.asyncSend("Welcome player " + playerConnection.getClientID() + " you are waiting the FIRST PLAYER to set the number of players, insert your name: ");
+            playerConnection.sendToClient("Welcome player " + playerConnection.getClientID() + " you are waiting the FIRST PLAYER to set the number of players, insert your name: ");
         //TODO guarantee uniqueness of the name
-        String nick = (String) playerConnection.asyncRead();
+        String nick = (String) playerConnection.readFromClient();
         playerConnection.setNickName(nick);
 
         if (playerConnection.getClientID() == 1) {
@@ -152,13 +152,13 @@ public class ServerGameThread implements Runnable {
         boolean correctChoice = false;
         Integer choice = null;
         String initial = (name + ", please enter the number of players: ");
-        playerConnection.asyncSend(initial);
+        playerConnection.sendToClient(initial);
         while (!correctChoice) {
             if (choice != null) {
                 initial = (name + ", please enter a correct value of players (2 or 3): ");
-                playerConnection.asyncSend(initial);
+                playerConnection.sendToClient(initial);
             }
-            choice = Integer.parseInt(playerConnection.asyncRead().toString());
+            choice = Integer.parseInt(playerConnection.readFromClient().toString());
             if (choice == 2 || choice == 3)
                 correctChoice = true;
         }
@@ -166,10 +166,10 @@ public class ServerGameThread implements Runnable {
     }
 
     /**
-     * Method to send an object to the player
+     * Method to send an object to a possible future player, that is in waiting to play
      * @param message (object to send)
      */
-    public void asyncClientSend(Object message){
-        playerConnection.asyncSend(message);
+    public void sendToWaitingClient(Object message){
+        playerConnection.sendToClient(message);
     }
 }

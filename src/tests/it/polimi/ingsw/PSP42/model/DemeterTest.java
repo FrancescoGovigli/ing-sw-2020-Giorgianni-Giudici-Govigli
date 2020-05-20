@@ -13,7 +13,7 @@ public class DemeterTest {
 
     @Before
     public void setUp() {
-        p1 = new Player("Fra",1,21,"DEMETER");
+        p1 = new Player("Fra",1,"DEMETER");
     }
 
     @After

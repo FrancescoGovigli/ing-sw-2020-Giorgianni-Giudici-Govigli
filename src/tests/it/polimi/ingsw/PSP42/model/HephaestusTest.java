@@ -13,7 +13,7 @@ public class HephaestusTest {
 
     @Before
     public void setUp() {
-        p1 = new Player("Fra",1,21,"HEPHAESTUS");
+        p1 = new Player("Fra",1,"HEPHAESTUS");
     }
 
     @After

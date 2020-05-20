@@ -13,7 +13,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
     private boolean undoDone;
     private boolean powerApply;
     private ArrayList<ViewObserver> obs = new ArrayList<>();
-    private ArrayList<PlayerHandler> playingClients;
+    private ArrayList<ClientHandler> playingClients;
     private int numPlayers;
     private Choice choice;
     private int currentPlayerID;
@@ -27,7 +27,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
         this.currentPlayerID = currentPlayerID;
     }
 
-    public VirtualView(ArrayList<PlayerHandler> playingClients, int numberOfPlayers) {
+    public VirtualView(ArrayList<ClientHandler> playingClients, int numberOfPlayers) {
         numPlayers = numberOfPlayers;
         actionCorrect = false;
         this.playingClients = playingClients;
@@ -92,16 +92,16 @@ public class VirtualView implements ViewObservable, ModelObserver {
             boolean choiceDone = false;
             String selectedCard = null;
             while (!choiceDone && !interrupted) {
-                sendToPlayer(i, ViewMessage.selectCard + (i + 1) + "\n");
+                sendToPlayerInGame(i, ViewMessage.selectCard + (i + 1) + "\n");
 
                 for (int j = 0; j < playingClients.size(); j++)
                     if (j != i)
-                        sendToPlayer(j, ViewMessage.waitingOpponentPick);
+                        sendToPlayerInGame(j, ViewMessage.waitingOpponentPick);
 
                 for (int j = 0; j < setOfCards.size(); j++)
-                    sendToPlayer(i, setOfCards.get(j));
+                    sendToPlayerInGame(i, setOfCards.get(j));
 
-                selectedCard = (String) receiveFromPlayer(playingClients.get(i));
+                selectedCard = (String) readFromPlayerInGame(playingClients.get(i));
                 if (selectedCard == null) {
                     return null;
                 }
@@ -115,11 +115,11 @@ public class VirtualView implements ViewObservable, ModelObserver {
             }
             for (int j = 0; j <playingClients.size(); j++) {
                 if (j != i)
-                    sendToPlayer(j, playingClients.get(i).getNickName() + " picked " + selectedCard.toUpperCase() + "\n");
+                    sendToPlayerInGame(j, playingClients.get(i).getNickName() + " picked " + selectedCard.toUpperCase() + "\n");
             }
 
             players.add(new UserData(playingClients.get(i).getNickName(), selectedCard.toUpperCase()));
-            sendUserDataToClients(new UserData(playingClients.get(i).getNickName(), selectedCard.toUpperCase()));
+            sendUserDataToPlayerInGame(new UserData(playingClients.get(i).getNickName(), selectedCard.toUpperCase()));
             setActionCorrect(false);
         }
         return players;
@@ -133,9 +133,9 @@ public class VirtualView implements ViewObservable, ModelObserver {
         Integer worker = null;
         boolean correct = false;
         while (!correct && !interrupted) {
-            sendToPlayer(currentPlayerID,ViewMessage.workerMessage + "\n");
+            sendToPlayerInGame(currentPlayerID, ViewMessage.workerMessage + "\n");
             try {
-                String input = (String)receiveFromPlayer(playingClients.get(currentPlayerID));
+                String input = (String) readFromPlayerInGame(playingClients.get(currentPlayerID));
                 if (input == null)
                     return null;
 
@@ -144,7 +144,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
                     correct = true;
             }
             catch(InputMismatchException | NumberFormatException e){
-                sendToPlayer(currentPlayerID, ErrorMessage.inputMessage + "\n");
+                sendToPlayerInGame(currentPlayerID, ErrorMessage.inputMessage + "\n");
             }
         }
         return worker;
@@ -228,33 +228,33 @@ public class VirtualView implements ViewObservable, ModelObserver {
         for (int i = 0; i <playingClients.size(); i++) {
             if (!s.equals("INIT")) {
                 if (i != currentPlayerID)
-                    sendToPlayer(i, " "+playingClients.get(currentPlayerID).getNickName() + " did his move");
+                    sendToPlayerInGame(i, " " + playingClients.get(currentPlayerID).getNickName() + " did his move");
             }
-            sendToPlayer(i, o);
+            sendToPlayerInGame(i, o);
         }
     }
 
     public void handleWelcomeMessage() {
         noWriteForNotCurrentPlayers(currentPlayerID);
         for (int i = 0; i < playingClients.size(); i++)
-            sendToPlayer(i, ViewMessage.welcome);
+            sendToPlayerInGame(i, ViewMessage.welcome);
     }
 
     public void handleWinner(String winner) {
         for (int i = 0; i <playingClients.size(); i++) {
             if (i != currentPlayerID)
-                sendToPlayer(i, winner + " " + ViewMessage.winMessage);
+                sendToPlayerInGame(i, winner + " " + ViewMessage.winMessage);
             else
-                sendToPlayer(currentPlayerID,winner + " " + ViewMessage.personalWinMessage);
+                sendToPlayerInGame(currentPlayerID, winner + " " + ViewMessage.personalWinMessage);
         }
     }
 
     public void handleLoser(String loser) {
         for (int i = 0; i <playingClients.size(); i++) {
             if (i != currentPlayerID)
-                sendToPlayer(i, loser + " " + ViewMessage.loseMessage);
+                sendToPlayerInGame(i, loser + " " + ViewMessage.loseMessage);
             else
-                sendToPlayer(currentPlayerID, loser + " " + ViewMessage.personalLoseMessage);
+                sendToPlayerInGame(currentPlayerID, loser + " " + ViewMessage.personalLoseMessage);
         }
     }
     
@@ -278,13 +278,13 @@ public class VirtualView implements ViewObservable, ModelObserver {
 
                 for (int k = 0; k < playingClients.size(); k++)
                     if (k != i)
-                        sendToPlayer(k, ViewMessage.waitingPositioning);
+                        sendToPlayerInGame(k, ViewMessage.waitingPositioning);
 
                 while (!actionCorrect && !interrupted) {
 
-                    sendToPlayer(i, "Player " + (i + 1) + ", " + ViewMessage.initialPositionMessage + (j + 1) + " (digit x,y)" + "\n");
+                    sendToPlayerInGame(i, "Player " + (i + 1) + ", " + ViewMessage.initialPositionMessage + (j + 1) + " (digit x,y)" + "\n");
                     try{
-                        String input = (String) receiveFromPlayer(playingClients.get(i));
+                        String input = (String) readFromPlayerInGame(playingClients.get(i));
                         if (input == null)
                             break;
 
@@ -292,10 +292,10 @@ public class VirtualView implements ViewObservable, ModelObserver {
                         notifyInit(choice = new Choice(Integer.parseInt(s[0]), Integer.parseInt(s[1]), j + 1, null, i));
                     }
                     catch (NumberFormatException e) {
-                        sendToPlayer(i, ErrorMessage.inputMessage + "\n");
+                        sendToPlayerInGame(i, ErrorMessage.inputMessage + "\n");
                     }
                     catch (ArrayIndexOutOfBoundsException e) {
-                        sendToPlayer(i, ErrorMessage.inputMessage + "\n");
+                        sendToPlayerInGame(i, ErrorMessage.inputMessage + "\n");
                     }
                 }
                 setActionCorrect(false);
@@ -325,10 +325,10 @@ public class VirtualView implements ViewObservable, ModelObserver {
     public String[][] handleWhatToDo(String s) {
         setActionCorrect(false);
 
-        sendToPlayer(currentPlayerID, "\n" + s + ", " + ViewMessage.yourTurnMessage + "\n");
+        sendToPlayerInGame(currentPlayerID, "\n" + s + ", " + ViewMessage.yourTurnMessage + "\n");
         for (int i = 0; i <playingClients.size(); i++) {
             if (i != currentPlayerID)
-                sendToPlayer(i, ViewMessage.waitingYourTurn);
+                sendToPlayerInGame(i, ViewMessage.waitingYourTurn);
         }
         return notifyWhatToDo();
     }
@@ -341,16 +341,16 @@ public class VirtualView implements ViewObservable, ModelObserver {
         setActionCorrect(false);
         while (!actionCorrect && !interrupted) {
             String[] s;
-            sendToPlayer(currentPlayerID, ViewMessage.moveMessage);
+            sendToPlayerInGame(currentPlayerID, ViewMessage.moveMessage);
             try{
-                String input = (String)receiveFromPlayer(playingClients.get(currentPlayerID));
+                String input = (String) readFromPlayerInGame(playingClients.get(currentPlayerID));
                 if (input == null)
                     break;
 
                 s = input.split(",");
                 notifyMove(choice = new Choice(Integer.parseInt(s[0]), Integer.parseInt(s[1]), worker, null, null));
             } catch (NumberFormatException | ArrayIndexOutOfBoundsException e){
-                sendToPlayer(currentPlayerID, ErrorMessage.inputMessage + "\n");
+                sendToPlayerInGame(currentPlayerID, ErrorMessage.inputMessage + "\n");
             }
         }
     }
@@ -366,23 +366,23 @@ public class VirtualView implements ViewObservable, ModelObserver {
         while (!actionCorrect && !interrupted) {
             try {
                 if (counter == 0)
-                    sendToPlayer(currentPlayerID, ViewMessage.buildMessage + worker + "\n");
+                    sendToPlayerInGame(currentPlayerID, ViewMessage.buildMessage + worker + "\n");
 
                 String[] b;
-                String build = (String)receiveFromPlayer(playingClients.get(currentPlayerID));
+                String build = (String) readFromPlayerInGame(playingClients.get(currentPlayerID));
                 if (build == null)
                     break;
 
                 b = build.split(",");
                 if (!build.equals("")) {
                     counter = 0;
-                    sendToPlayer(currentPlayerID, ViewMessage.levelMessage + "\n");
-                    String answer = (String)receiveFromPlayer(playingClients.get(currentPlayerID));
+                    sendToPlayerInGame(currentPlayerID, ViewMessage.levelMessage + "\n");
+                    String answer = (String) readFromPlayerInGame(playingClients.get(currentPlayerID));
                     if (answer == null)
                         break;
                     if (answer.toUpperCase().equals("YES")) {
-                        sendToPlayer(currentPlayerID, ViewMessage.insertLevel + "\n");
-                        String input =  (String)receiveFromPlayer(playingClients.get(currentPlayerID));
+                        sendToPlayerInGame(currentPlayerID, ViewMessage.insertLevel + "\n");
+                        String input =  (String) readFromPlayerInGame(playingClients.get(currentPlayerID));
                         if (input == null)
                             break;
                         Integer level =  Integer.parseInt(input);
@@ -394,7 +394,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
                 else
                     counter = 1;
             } catch (NumberFormatException | ArrayIndexOutOfBoundsException e){
-                sendToPlayer(currentPlayerID, ErrorMessage.inputMessage + "\n");
+                sendToPlayerInGame(currentPlayerID, ErrorMessage.inputMessage + "\n");
             }
         }
     }
@@ -413,9 +413,9 @@ public class VirtualView implements ViewObservable, ModelObserver {
      */
     public void printEffect(String s, String effect) {
         if (s.equals("ON"))
-            sendToPlayer(currentPlayerID, ViewMessage.godPowerStart + effect);
+            sendToPlayerInGame(currentPlayerID, ViewMessage.godPowerStart + effect);
         if (s.equals("OFF"))
-            sendToPlayer(currentPlayerID, ViewMessage.godPowerEnd + effect);
+            sendToPlayerInGame(currentPlayerID, ViewMessage.godPowerEnd + effect);
     }
 
     /**
@@ -441,27 +441,27 @@ public class VirtualView implements ViewObservable, ModelObserver {
         TimerTask task = new TimerTask() {
             public void run() {
                 if (finalStr[0].equals("")) {
-                    sendToPlayer(currentPlayerID, "You input nothing. UNDO wasn't done...");
+                    sendToPlayerInGame(currentPlayerID, "You input nothing. UNDO wasn't done...");
                     value[0] = false;
                 }
             }
         };
         timer.schedule(task, 5000);
         if (warning.equals("WARNING"))
-            sendToPlayer(currentPlayerID, ErrorMessage.blockingMessage);
-        sendToPlayer(currentPlayerID, "Input a YES within 5 seconds for UNDO : ");
-        String action = (String)receiveFromPlayer(playingClients.get(currentPlayerID));
+            sendToPlayerInGame(currentPlayerID, ErrorMessage.blockingMessage);
+        sendToPlayerInGame(currentPlayerID, "Input a YES within 5 seconds for UNDO : ");
+        String action = (String) readFromPlayerInGame(playingClients.get(currentPlayerID));
         if (action == null)
             return false;
 
         timer.cancel();
         if (value[0] == false || (!action.toUpperCase().equals("YES")) || action.equals("")) {
-            sendToPlayer(currentPlayerID, "UNDO is not applied");
+            sendToPlayerInGame(currentPlayerID, "UNDO is not applied");
             undoDone = false;
             return false;
         }
         if (action.toUpperCase().equals("YES")) {
-            sendToPlayer(currentPlayerID, "UNDO is applied");
+            sendToPlayerInGame(currentPlayerID, "UNDO is applied");
             undoDone = true;
             return true;
         }
@@ -480,8 +480,8 @@ public class VirtualView implements ViewObservable, ModelObserver {
         switch (s) {
             case "MOVE":
                 while (!askUndo && !interrupted) {
-                    sendToPlayer(currentPlayerID, s + " POWER: " + ViewMessage.applyPowerMessage);
-                    String input = (String)receiveFromPlayer(playingClients.get(currentPlayerID));
+                    sendToPlayerInGame(currentPlayerID, s + " POWER: " + ViewMessage.applyPowerMessage);
+                    String input = (String) readFromPlayerInGame(playingClients.get(currentPlayerID));
                     if (input == null)
                         break;
 
@@ -500,8 +500,8 @@ public class VirtualView implements ViewObservable, ModelObserver {
                 break;
             case "BUILD":
                 while (!askUndo && !interrupted) {
-                    sendToPlayer(currentPlayerID, s + " POWER: " + ViewMessage.applyPowerMessage);
-                    String input = (String)receiveFromPlayer(playingClients.get(currentPlayerID));
+                    sendToPlayerInGame(currentPlayerID, s + " POWER: " + ViewMessage.applyPowerMessage);
+                    String input = (String) readFromPlayerInGame(playingClients.get(currentPlayerID));
                     if (input == null)
                         break;
 
@@ -524,20 +524,30 @@ public class VirtualView implements ViewObservable, ModelObserver {
         return actionCorrect;
     }
 
-    public void sendToPlayer(Integer clientToSend, Object message) {
+    /**
+     * Method used to inform the player in game
+     * @param clientToSend
+     * @param message
+     */
+    public void sendToPlayerInGame(Integer clientToSend, Object message) {
         if (!interrupted)
-            NetworkVirtualView.sendToClient(playingClients.get(clientToSend), message);
+            NetworkVirtualView.sendToPlayer(playingClients.get(clientToSend), message);
     }
 
-    public Object receiveFromPlayer(PlayerHandler player) {
-        Object fromPlayer = NetworkVirtualView.receiveFromClient(player);
+    /**
+     * Method used to receive from the player in game
+     * @param player
+     * @return fromPlayer (what current player sent)
+     */
+    public Object readFromPlayerInGame(ClientHandler player) {
+        Object fromPlayer = NetworkVirtualView.readFromPlayer(player);
         return fromPlayer;
     }
 
-    public void sendUserDataToClients(UserData data) {
+    public void sendUserDataToPlayerInGame(UserData data) {
         if (!interrupted) {
             for (int i = 0; i < playingClients.size(); i++)
-                sendToPlayer(i, data);
+                sendToPlayerInGame(i, data);
         }
     }
 
@@ -545,9 +555,9 @@ public class VirtualView implements ViewObservable, ModelObserver {
         for (int i = 0; i <playingClients.size(); i++) {
             if (!interrupted) {
                 if (i != currentPlayer)
-                    sendToPlayer(i, false);
+                    sendToPlayerInGame(i, false);
                 else
-                    sendToPlayer(i, true);
+                    sendToPlayerInGame(i, true);
             }
         }
     }

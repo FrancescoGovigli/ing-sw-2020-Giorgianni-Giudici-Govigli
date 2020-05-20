@@ -12,7 +12,7 @@ public class AtlasTest {
 
     @Before
     public void setUp() {
-        p1 = new Player("Dan", 1, 21, "ATLAS");
+        p1 = new Player("Dan", 1, "ATLAS");
     }
 
     @After

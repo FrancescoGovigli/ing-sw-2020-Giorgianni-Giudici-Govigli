@@ -10,12 +10,12 @@ public class PlayerTest<excepted> {
 
     private Player p1;
     private Player p2;
-    private GameBoard g=GameBoard.getInstance();
+    private GameBoard g = GameBoard.getInstance();
 
     @Before
     public void setUp() throws Exception {
-        p1 = new Player("DG",1,21,"NOGOD");
-        p2 = new Player("CIPO",2,22,"NOGOD");
+        p1 = new Player("DG",1,"NOGOD");
+        p2 = new Player("CIPO",2,"NOGOD");
     }
 
     @After

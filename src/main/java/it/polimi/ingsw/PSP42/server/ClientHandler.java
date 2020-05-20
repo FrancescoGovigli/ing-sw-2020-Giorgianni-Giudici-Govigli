@@ -3,7 +3,7 @@ package it.polimi.ingsw.PSP42.server;
 import java.io.*;
 import java.net.*;
 
-public class PlayerHandler {
+public class ClientHandler {
 
     private Socket client;
     private int clientID;
@@ -60,7 +60,7 @@ public class PlayerHandler {
      * @param client
      * @param clientID
      */
-    public PlayerHandler(Socket client, int clientID) {
+    public ClientHandler(Socket client, int clientID) {
         this.client = client;
         this.clientID = clientID;
         this.readyToPlay = false;
@@ -74,10 +74,12 @@ public class PlayerHandler {
     }
 
     /**
-     * Method to send an object to the client
+     * Method to send an object to client
+     * It returns a thread because in the initialization phase it is invoked by every client that passes the accept(),
+     * while in the course of the game it will be called only for the player in turn
      * @param message (object to send)
      */
-    public Thread asyncSend(Object message) {
+    public Thread sendToClient(Object message) {
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -99,10 +101,10 @@ public class PlayerHandler {
     }
 
     /**
-     * Method to receive an object from the client
+     * Method to receive an object from client
      * @return (received object)
      */
-    public Object asyncRead() {
+    public Object readFromClient() {
         final String[] str = new String[1];
         Thread t = new Thread(new Runnable() {
             @Override

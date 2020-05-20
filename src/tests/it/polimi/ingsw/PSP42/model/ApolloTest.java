@@ -6,12 +6,12 @@ import static org.junit.Assert.*;
 public class ApolloTest {
     private Player p1;
     private Player p2;
-    private GameBoard g=GameBoard.getInstance();
+    private GameBoard g = GameBoard.getInstance();
 
     @Before
     public void setUp() {
-        p1 = new Player("DG",1,21,"APOLLO");
-        p2 = new Player("CIPO",2,21,"APOLLO");
+        p1 = new Player("DG",1,"APOLLO");
+        p2 = new Player("CIPO",2,"APOLLO");
     }
 
     @After
