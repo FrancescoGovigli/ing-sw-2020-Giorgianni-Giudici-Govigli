@@ -17,6 +17,4 @@ public interface ClientObserver {
     public abstract void updateShow(Object o);
 
     public abstract void updateGameMessage(Object message);
-
-
 }

@@ -35,12 +35,6 @@ public class ControllerChooseGodScene {
         this.godCard3 = godCard3;
     }
 
-    private Button card;
-
-    private int counter = 0;
-
-
-
     public void goToGameBoardScene(ActionEvent event) throws IOException {
         Parent waitingSceneParent = FXMLLoader.load(getClass().getResource("/fxml/GameBoardScene.fxml"));
         Scene waitingScene = new Scene(waitingSceneParent);
@@ -49,180 +43,93 @@ public class ControllerChooseGodScene {
         window.show();
     }
 
+    public void goToWaitingScene(ActionEvent event) throws IOException {
+        Parent waitingSceneParent = FXMLLoader.load(getClass().getResource("/fxml/WaitingScene.fxml"));
+        Scene waitingScene = new Scene(waitingSceneParent);
+        Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        window.setScene(waitingScene);
+        window.show();
+    }
+
     public void setGods(Object listOfGods) {
-        System.out.println("qua ci entra? setGods");
         List gods = (List)listOfGods;
+        int counter = 0;
         for (int i = 0; i <gods.size(); i++) {
+            counter++;
             setImageGodCard(gods.get(i).toString(), i);
         }
+        if (counter==1) {
+            setImageGodCard("NONE", 2);
+            setImageGodCard("NONE", 3);
+        }
+        else if (counter==2)
+            setImageGodCard("NONE", 3);
     }
 
-    /*public void setGods(Object message) {
-        setImageGodCard(message.toString(), counter);
-        counter++;
-    }*/
-
-    public void setImageGodCard(String nameGod, int i) {
-        card = chooseCard(nameGod, i);
-        switch (nameGod) {
-            case "APOLLO": {
-                card.setStyle(GodsPath.APOLLO);
-                break;
-            }
-            case "ARTEMIS": {
-                card.setStyle(GodsPath.ARTEMIS);
-                break;
-            }
-            case "ATHENA": {
-                card.setStyle(GodsPath.ATHENA);
-                break;
-            }
-            case "ATLAS": {
-                card.setStyle(GodsPath.ATLAS);
-                break;
-            }
-            case "DEMETER": {
-                card.setStyle(GodsPath.DEMETER);
-                break;
-            }
-            case "HEPHAESTUS": {
-                card.setStyle(GodsPath.HEPHAESTUS);
-                break;
-            }
-            case "MINOTAUR": {
-                card.setStyle(GodsPath.MINOTAUR);
-                break;
-            }
-            case "PAN": {
-                card.setStyle(GodsPath.PAN);
-                break;
-            }
-            case "PROMETHEUS": {
-                card.setStyle(GodsPath.PROMETHEUS);
-                break;
-            }
+    /**
+     * Used to set image for god's cards
+     * @param godName name for the linked image
+     * @param cardNum number of the card to set
+     */
+    public void setImageGodCard(String godName, int cardNum) {
+        if (cardNum == 0) {
+            setGodCard1(godName);
+            card1.setStyle(GodsPath.getPath(godName));
+        }
+        else if (cardNum == 1) {
+            setGodCard2(godName);
+            card2.setStyle(GodsPath.getPath(godName));
+        }
+        else if (cardNum == 2) {
+            setGodCard3(godName);
+            card3.setStyle(GodsPath.getPath(godName));
         }
     }
 
-    //Serve per quando passi sopra la carta
+    /**
+     * Used to see card's description when event is verified
+     * @param event mouse entered
+     */
     public void description(MouseEvent event) {
-        Button card = (Button) event.getSource();
-        String cardToString = (String) event.getSource().toString();
-        String nameGod;
+        String cardToString = event.getSource().toString();
         if (cardToString.contains("card1"))
-            nameGod = godCard1;
+            setChangingGodCard(godCard1, 0, "description");
         else if (cardToString.contains("card2"))
-            nameGod = godCard2;
+            setChangingGodCard(godCard2, 1, "description");
         else if (cardToString.contains("card3"))
-            nameGod = godCard3;
-        else
-            return;
-        switch (nameGod) {
-            case "APOLLO": {
-                card.setStyle(GodsPath.APOLLO_DESC);
-                break;
-            }
-            case "ARTEMIS": {
-                card.setStyle(GodsPath.ARTEMIS_DESC);
-                break;
-            }
-            case "ATHENA": {
-                card.setStyle(GodsPath.ATHENA_DESC);
-                break;
-            }
-            case "ATLAS": {
-                card.setStyle(GodsPath.ATLAS_DESC);
-                break;
-            }
-            case "DEMETER": {
-                card.setStyle(GodsPath.DEMETER_DESC);
-                break;
-            }
-            case "HEPHAESTUS": {
-                card.setStyle(GodsPath.HEPHAESTUS_DESC);
-                break;
-            }
-            case "MINOTAUR": {
-                card.setStyle(GodsPath.MINOTAUR_DESC);
-                break;
-            }
-            case "PAN": {
-                card.setStyle(GodsPath.PAN_DESC);
-                break;
-            }
-            case "PROMETHEUS": {
-                card.setStyle(GodsPath.PROMETHEUS_DESC);
-                break;
-            }
-        }
+            setChangingGodCard(godCard3, 2, "description");
     }
 
+    /**
+     * Used to see card when event is verified
+     * @param event mouse exited
+     */
     public void image(MouseEvent event) {
-        Button card = (Button) event.getSource();
-        String cardToString = (String) event.getSource().toString();
-        String nameGod;
+        String cardToString = event.getSource().toString();
         if (cardToString.contains("card1"))
-            nameGod = godCard1;
+            setChangingGodCard(godCard1, 0, "image");
         else if (cardToString.contains("card2"))
-            nameGod = godCard2;
+            setChangingGodCard(godCard2, 1, "image");
         else if (cardToString.contains("card3"))
-            nameGod = godCard3;
-        else
-            return;
-        switch (nameGod) {
-            case "APOLLO": {
-                card.setStyle(GodsPath.APOLLO);
-                break;
-            }
-            case "ARTEMIS": {
-                card.setStyle(GodsPath.ARTEMIS);
-                break;
-            }
-            case "ATHENA": {
-                card.setStyle(GodsPath.ATHENA);
-                break;
-            }
-            case "ATLAS": {
-                card.setStyle(GodsPath.ATLAS);
-                break;
-            }
-            case "DEMETER": {
-                card.setStyle(GodsPath.DEMETER);
-                break;
-            }
-            case "HEPHAESTUS": {
-                card.setStyle(GodsPath.HEPHAESTUS);
-                break;
-            }
-            case "MINOTAUR": {
-                card.setStyle(GodsPath.MINOTAUR);
-                break;
-            }
-            case "PAN": {
-                card.setStyle(GodsPath.PAN);
-                break;
-            }
-            case "PROMETHEUS": {
-                card.setStyle(GodsPath.PROMETHEUS);
-                break;
-            }
-        }
+            setChangingGodCard(godCard3, 2, "image");
     }
 
-    public Button chooseCard(String nameGod, int i) {
-        if (i==0) {
-            setGodCard1(nameGod);
-            return card1;
+    public void setChangingGodCard(String godName, int cardNum, String action) {
+        if (action.equals("image")) {
+            if (cardNum == 0)
+                card1.setStyle(GodsPath.getPath(godName));
+            else if (cardNum == 1)
+                card2.setStyle(GodsPath.getPath(godName));
+            else if (cardNum == 2)
+                card3.setStyle(GodsPath.getPath(godName));
         }
-        if (i==1) {
-            setGodCard2(nameGod);
-            return card2;
+        else if (action.equals("description")) {
+            if (cardNum == 0)
+                card1.setStyle(GodsPath.getPath(godName+"_DESC"));
+            else if (cardNum == 1)
+                card2.setStyle(GodsPath.getPath(godName+"_DESC"));
+            else if (cardNum == 2)
+                card3.setStyle(GodsPath.getPath(godName+"_DESC"));
         }
-        if (i==2) {
-            setGodCard3(nameGod);
-            return card3;
-        }
-        else
-            return null;
     }
 }

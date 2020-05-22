@@ -30,7 +30,7 @@ public class ControllerWelcomeScene implements GuiObservable {
     private Button playButton;
 
     /*TODO (ABBELLIMENTO) metterei nella welcomeScene uno Status Connected oppure status: Insert Your name to continue*/
-    public void goToWaitingScene(ActionEvent event){
+    public void goToWaitingScene(ActionEvent event) {
         ViewManager.setPlayPushed(true);
         /*FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/fxml/WaitingScene.fxml"));
@@ -39,13 +39,10 @@ public class ControllerWelcomeScene implements GuiObservable {
         window.setRoot(waitingSceneParent);*/
     }
 
-
-
     public void deleteText(MouseEvent mouseEvent) {
         TextField text = (TextField) mouseEvent.getSource();
         text.setText("");
         text.setEditable(true);
-
     }
 
     public void twoPlayerChoose(MouseEvent mouseEvent) {
@@ -81,7 +78,5 @@ public class ControllerWelcomeScene implements GuiObservable {
         nickName = textfield.getText();
         ableToClickPlayers = true;
         informManagerNickname(nickName);
-
     }
-
 }

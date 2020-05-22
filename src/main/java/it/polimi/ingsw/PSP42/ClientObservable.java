@@ -22,5 +22,4 @@ public interface ClientObservable {
     public abstract void notifyShow(Object o);
 
     public abstract void notifyGameMessage(Object message);
-
 }

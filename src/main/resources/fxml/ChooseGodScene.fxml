@@ -24,6 +24,7 @@
             <Button fx:id="card1"
                     onMouseEntered="#description"
                     onMouseExited="#image"
+                    onAction="#goToGameBoardScene"
                     alignment="CENTER"
                     prefHeight="223.0"
                     prefWidth="168.0"
@@ -69,7 +70,9 @@
                   GridPane.valignment="CENTER"
                   GridPane.halignment="CENTER">
             <Button fx:id="card3"
-                    opacity="-Infinity"
+                    onMouseEntered="#description"
+                    onMouseExited="#image"
+                    onAction="#goToGameBoardScene"
                     alignment="CENTER"
                     prefHeight="223.0"
                     prefWidth="168.0"

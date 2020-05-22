@@ -1,7 +1,6 @@
 package it.polimi.ingsw.PSP42.client;
 
 import it.polimi.ingsw.PSP42.*;
-import it.polimi.ingsw.PSP42.model.*;
 import it.polimi.ingsw.PSP42.server.*;
 import it.polimi.ingsw.PSP42.view.*;
 
@@ -49,9 +48,7 @@ public class ClientGUI implements Runnable, ClientObservable {
                             else if(!inputObject.equals(ServerMessage.extraClient) && !inputObject.equals(ServerMessage.gameInProgress) && !inputObject.equals(ServerMessage.endGame) && !inputObject.equals(ServerMessage.inactivityEnd)) {
                                 System.out.println("[FROM SERVER] : " + inputObject);
                                 elaborateMessage(inputObject);
-
                             }
-
                             else {
                                 System.out.println("[FROM SERVER] : "+inputObject);
                                 socketIn.close();
@@ -61,14 +58,12 @@ public class ClientGUI implements Runnable, ClientObservable {
                         }
                         else if(inputObject instanceof Boolean)
                             writeActive=(Boolean)inputObject;
-
                         else if(inputObject instanceof UserData)
                             playersData.add(((UserData) inputObject));
                         else if(inputObject instanceof List) {
                             showGods(inputObject);
                             elaborateMessage(inputObject);
                         }
-
                     }
                 } catch (Exception e){
                     setActive(false);
@@ -85,15 +80,13 @@ public class ClientGUI implements Runnable, ClientObservable {
             public void run() {
                 try {
                     while (isActive()) {
-
                         if(writeActive && input!=null) {
                             socketOut.println(input);
                             socketOut.flush();
                             input=null;
                         }
-
                     }
-                }catch(Exception e){
+                } catch(Exception e){
                     System.out.println("You disconnected");
                     setActive(false);
                 }
@@ -123,17 +116,14 @@ public class ClientGUI implements Runnable, ClientObservable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-        try{
+        try {
             Thread t0 = asyncReadFromSocket(socketIn);
             Thread t1 = asyncWriteToSocket(scanner, socketOut);
             t0.join();
             t1.join();
-        } catch(InterruptedException | NoSuchElementException e){
+        } catch(InterruptedException | NoSuchElementException e) {
             System.out.println("Connection closed from the client side");
         } finally {
-
             try {
                 scanner.close();
                 socketIn.close();
@@ -142,12 +132,10 @@ public class ClientGUI implements Runnable, ClientObservable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-
         }
     }
 
-    public void elaborateMessage(Object message){
+    public void elaborateMessage(Object message) {
         if(message instanceof String) {
             if (message.equals("Welcome player 1 insert your name: "))
                 notifyWelcomeFirstPlayer();
@@ -159,12 +147,10 @@ public class ClientGUI implements Runnable, ClientObservable {
                 notifyExistingNickName();
             else
                 notifyGameMessage(message);
-
         }
         else if(message instanceof List)
             notifyGodSelection(message);
     }
-
 
     /**
      * Add an observer to the Model's observer list
@@ -216,20 +202,13 @@ public class ClientGUI implements Runnable, ClientObservable {
         clientObserver.updateGameMessage(message);
     }
 
-
-
     public void saveInput(String input){
         this.input=input;
     }
 
-
-
-    public void showGods(Object listOfGods){
+    public void showGods(Object listOfGods) {
         for (int i = 0; i <((List<String>)listOfGods).size() ; i++) {
             System.out.println(((List<String>)listOfGods).get(i));
         }
     }
-
-
-
 }

@@ -16,6 +16,7 @@ public class ViewManager implements ClientObserver,GuiObserver {
     private static ClientGUI client;
     private static ControllerWaitingScene controllerWaitingScene;
     private static ControllerGameBoardScene controllerGameBoardScene;
+    private static ControllerChooseGodScene controllerChooseGodScene;
     private static boolean playPushed = false;
     private static String CURRENT_SCENE_PATH;
     private static String WELCOME_FIRST_PLAYER_SCENE_PATH = "/fxml/WelcomeFirstPlayerScene3.fxml";
@@ -36,12 +37,9 @@ public class ViewManager implements ClientObserver,GuiObserver {
         ViewManager.playPushed = playPushed;
     }
 
-
-
     public static void setStage(Stage st) {
         stage = st;
     }
-
 
     public static Stage getStage(){
         return stage;
@@ -54,6 +52,8 @@ public class ViewManager implements ClientObserver,GuiObserver {
             Parent root = loader.load();
             if(path.equals(WELCOME_OTHER_PLAYERS_SCENE_PATH))
                 controllerWaitingScene = loader.getController();
+            else if (path.equals(CHOOSE_GOD_SCENE_PATH))
+                controllerChooseGodScene = loader.getController();
             else if(path.equals(GAMEBOARD_SCENE_PATH))
                 controllerGameBoardScene = loader.getController();
 
@@ -66,10 +66,7 @@ public class ViewManager implements ClientObserver,GuiObserver {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
-
 
     @Override
     public  void updateWelcomeFirstPlayer() {
@@ -78,7 +75,6 @@ public class ViewManager implements ClientObserver,GuiObserver {
 
     @Override
     public void updateWelcomeOtherPlayers() {
-
         setLayout(stage.getScene(), WELCOME_OTHER_PLAYERS_SCENE_PATH);
     }
 
@@ -95,14 +91,13 @@ public class ViewManager implements ClientObserver,GuiObserver {
 
     @Override
     public void updateGodSelection(Object listOfGods) {
-
-        ControllerChooseGodScene controller = loadScene(CHOOSE_GOD_SCENE_PATH).getController();
-        controller.setGods(listOfGods);
+        setLayout(getStage().getScene(), CHOOSE_GOD_SCENE_PATH);
+        controllerChooseGodScene.setGods(listOfGods);
     }
 
     @Override
     public void updateWaiting() {
-        setLayout(getStage().getScene(),WAITING_SCENE_PATH);
+        setLayout(getStage().getScene(), WAITING_SCENE_PATH);
     }
 
     @Override
@@ -128,7 +123,7 @@ public class ViewManager implements ClientObserver,GuiObserver {
         return client;
     }
 
-    public FXMLLoader loadScene(String path){
+    public FXMLLoader loadScene(String path) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
         try {
             loader.load();
@@ -157,9 +152,8 @@ public class ViewManager implements ClientObserver,GuiObserver {
 
     @Override
     public void updateGameMessage(Object message) {
-
+        //TODO
     }
-
 
     private void insertSpecificPlayer(int i, int j, UserData playerData) {
         Platform.runLater(()->controllerGameBoardScene.setSpecificPlayer(i,j,playerData));
@@ -167,7 +161,5 @@ public class ViewManager implements ClientObserver,GuiObserver {
 
     private void insertSpecificLevel(int i, int j, int level) {
         Platform.runLater(()->controllerGameBoardScene.setSpecificLevel(i,j,level));
-
     }
-
 }

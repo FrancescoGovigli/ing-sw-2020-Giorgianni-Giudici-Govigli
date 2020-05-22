@@ -84,7 +84,6 @@ public class ClientHandler {
             @Override
             public void run() {
                 try {
-                    System.out.println("scrivo al client: " + clientID);
                     out.writeObject(message);
                     out.flush();
                 } catch (IOException e) {

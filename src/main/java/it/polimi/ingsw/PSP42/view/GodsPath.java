@@ -20,5 +20,66 @@ public class GodsPath {
     public static String PAN_DESC = "-fx-background-image: url('/images/Pan/PanDesc.png'); -fx-background-position: center; -fx-background-size: stretch; -fx-background-color: transparent";
     public static String PROMETHEUS = "-fx-background-image: url('/images/Prometheus/Prometheus.png'); -fx-background-position: center; -fx-background-size: stretch; -fx-background-color: transparent";
     public static String PROMETHEUS_DESC = "-fx-background-image: url('/images/Prometheus/PrometheusDesc.png'); -fx-background-position: center; -fx-background-size: stretch; -fx-background-color: transparent";
+    public static String NONE = "-fx-opacity: 0;";
 
+    public static String getPath(String nameGod) {
+        switch (nameGod) {
+            case "APOLLO": {
+                return APOLLO;
+            }
+            case "APOLLO_DESC": {
+                return APOLLO_DESC;
+            }
+            case "ARTEMIS": {
+                return ARTEMIS;
+            }
+            case "ARTEMIS_DESC": {
+                return ARTEMIS_DESC;
+            }
+            case "ATHENA": {
+                return ATHENA;
+            }
+            case "ATHENA_DESC": {
+                return ATHENA_DESC;
+            }
+            case "ATLAS": {
+                return ATLAS;
+            }
+            case "ATLAS_DESC": {
+                return ATLAS_DESC;
+            }
+            case "DEMETER": {
+                return DEMETER;
+            }
+            case "DEMETER_DESC": {
+                return DEMETER_DESC;
+            }
+            case "HEPHAESTUS": {
+                return HEPHAESTUS;
+            }
+            case "HEPHAESTUS_DESC": {
+                return HEPHAESTUS_DESC;
+            }
+            case "MINOTAUR": {
+                return MINOTAUR;
+            }
+            case "MINOTAUR_DESC": {
+                return MINOTAUR_DESC;
+            }
+            case "PAN": {
+                return PAN;
+            }
+            case "PAN_DESC": {
+                return PAN_DESC;
+            }
+            case "PROMETHEUS": {
+                return PROMETHEUS;
+            }
+            case "PROMETHEUS_DESC": {
+                return PROMETHEUS_DESC;
+            }
+            default:
+                return NONE;
+        }
+    }
 }
