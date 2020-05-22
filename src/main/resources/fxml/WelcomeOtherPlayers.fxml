@@ -18,7 +18,7 @@
                 <Rectangle2D />
             </viewport>
         </ImageView>
-        <TextField id ="textfield" layoutX="500.0" layoutY="536.0" prefHeight="52.0" prefWidth="193.0" stylesheets="@../css/WelcomeScene.css" text="Insert your Nickname" onAction="#saveNickname" onMouseClicked="#deleteText" AnchorPane.leftAnchor="500.0" AnchorPane.rightAnchor="500.0" editable="false">
+        <TextField id="textfield" editable="false" layoutX="500.0" layoutY="536.0" onAction="#saveNickname" onMouseClicked="#deleteText" prefHeight="52.0" prefWidth="193.0" stylesheets="@../css/WelcomeScene.css" text="Insert your Nickname" AnchorPane.leftAnchor="500.0" AnchorPane.rightAnchor="500.0">
             <padding>
                 <Insets left="40.0" />
             </padding>
@@ -29,8 +29,9 @@
                 <InnerShadow color="#978686" />
             </effect>
         </TextField>
-        <ProgressIndicator id = "progressIndicator" layoutX="718.0" layoutY="536.0" minHeight="50.0" minWidth="50.0" prefHeight="30.0" prefWidth="20.0" style="pr: white;"/>
-        <Label id = "progressLabel" layoutX="780.0" layoutY="553.0" text="Waiting Game Initialisation..." textFill="WHITE"/>
+        <ProgressIndicator id="progressIndicator" layoutX="718.0" layoutY="536.0" minHeight="50.0" minWidth="50.0" prefHeight="30.0" prefWidth="20.0" style="pr: white;" />
+        <Label id="progressLabel" layoutX="780.0" layoutY="553.0" text="Waiting Game Initialisation..." textFill="WHITE" />
+        <Label id="statusLabel" fx:id="statusLabel" layoutX="490.0" layoutY="513.0" opacity="-Infinity" prefHeight="22.0" prefWidth="220.0" text="Status: Nickname already taken" />
     </children>
 
     <stylesheets>

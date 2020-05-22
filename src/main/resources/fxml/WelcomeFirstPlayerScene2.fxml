@@ -27,7 +27,7 @@
                        GridPane.rowIndex="0"
                        GridPane.columnIndex="1"
                        alignment="CENTER"
-                       text="Type your NickName then press Enter" >
+                       text="Insert your name" >
             </TextField>
             <rowConstraints>
                 <RowConstraints percentHeight="100"/>

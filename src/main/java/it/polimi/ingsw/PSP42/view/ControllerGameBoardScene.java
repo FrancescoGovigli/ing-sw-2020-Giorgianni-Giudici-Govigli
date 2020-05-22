@@ -69,7 +69,7 @@ public class ControllerGameBoardScene {
     public void handleDragDropped(DragEvent event) {
         Dragboard db = event.getDragboard();
         Node node = event.getPickResult().getIntersectedNode();
-        if (/*node != target && */db.hasImage()) {
+        if(/*node != target && */db.hasImage()){
             Integer cIndex = GridPane.getColumnIndex(node);
             Integer rIndex = GridPane.getRowIndex(node);
             int x = cIndex == null ? 0 : cIndex;
@@ -79,11 +79,10 @@ public class ControllerGameBoardScene {
         event.consume();
     }
 
-    public void moveAction(MouseEvent event) {
-        //a seconda della cella setterò il css a runtime per la casella corrispondente con la pedina
+    public void setSpecificLevel(int i, int j, int level) {
+
     }
 
-    public void buildAction(MouseEvent event) {
-        //a seconda della cella setterà il css a runtime per la casella corrispondente con il livello
+    public void setSpecificPlayer(int i, int j, UserData playerData) {
     }
 }

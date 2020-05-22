@@ -138,4 +138,11 @@ public class Server {
         else
             System.out.println("GAME has been interrupted");
     }
+
+    public boolean isNickNameUnique(String nick){
+        for (int i = 0; i <waitingClients.size() ; i++)
+            if(waitingClients.get(i).getNickName().equals(nick))
+                return false;
+        return true;
+    }
 }

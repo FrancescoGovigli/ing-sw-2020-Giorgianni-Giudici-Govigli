@@ -10,7 +10,9 @@ import javafx.stage.*;
 
 import java.io.*;
 
-public class ControllerWaitingScene implements GuiObservable {
+public class ControllerWaitingScene  implements GuiObservable  {
+    @FXML
+    public Label statusLabel;
     private GuiObserver guiObserver = new ViewManager(ViewManager.getInstance());
     @FXML
     private Label labelUsername;
@@ -48,5 +50,10 @@ public class ControllerWaitingScene implements GuiObservable {
 
     @Override
     public void informManagerNumberOfPlayers(String number) {
+    }
+
+    public void setExistingLabel(){
+        statusLabel.setOpacity(1);
+
     }
 }
