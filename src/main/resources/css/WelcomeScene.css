@@ -36,7 +36,7 @@
     -fx-background-image: url("../images/btn_blue.png");
     -fx-background-size: stretch;
     -fx-font-family: "Dalek Pinpoint";
-    -fx-font-size: 20;
+    -fx-font-size: 12;
     -fx-text-fill: white;
     -fx-text-alignment: center;
     -fx-background-color: transparent;
@@ -55,8 +55,7 @@
 
 #chooseField {
     /*-fx-background-image:url("../images/choose_Player_Field.png");*/
-    -fx-background-image:url("../images/blueField.png") ;
-    -fx-opacity: 0.9;
+    -fx-background-image:url("../images/blueField.png");
     -fx-background-size: stretch;
     -fx-alignment: center;
 }
@@ -65,7 +64,7 @@
     -fx-background-image: url("../images/btn_blue_pressed.png");
     -fx-background-size: stretch;
     -fx-font-family: "Dalek Pinpoint";
-    -fx-font-size: 20;
+    -fx-font-size: 12;
     -fx-text-fill: white;
     -fx-text-alignment: center;
 }
@@ -73,6 +72,7 @@
 #textField {
     -fx-pref-height: 50px;
     -fx-pref-width: 100px;
+    -fx-font-style: italic;
     -fx-text-alignment: center;
     -fx-opacity: 0.5;
 }
@@ -83,7 +83,16 @@
 
 #progressLabel {
     -fx-font-family: "Dalek Pinpoint";
-    -fx-font-size: 15;
+
+    -fx-font-size: 20;
     -fx-text-fill: white;
+    -fx-font-weight: bold;
     -fx-text-alignment: center;
+}
+
+#statusLabel{
+    -fx-text-fill: white;
+    -fx-font-size: 14;
+    -fx-font-weight: bold;
+
 }

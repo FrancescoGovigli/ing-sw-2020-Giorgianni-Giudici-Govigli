@@ -117,13 +117,28 @@ public class ServerGameThread implements Runnable {
      * make him ready to play and put him on hold until the server has reached the number of players needed to play
      */
     public void settingClient() {
+        String nick=null;
         playerConnection.sendToClient("You entered the Game!" + " \uD83D\uDE0A \n");
         if (playerConnection.getClientID() == 1)
             playerConnection.sendToClient("Welcome player " + playerConnection.getClientID() + " insert your name: ");
         else
             playerConnection.sendToClient("Welcome player " + playerConnection.getClientID() + " you are waiting the FIRST PLAYER to set the number of players, insert your name: ");
-        //TODO guarantee uniqueness of the name
-        String nick = (String) playerConnection.readFromClient();
+        if(playerConnection.getClientID()!=1) {
+            do {
+                if (nick != null)
+                    playerConnection.sendToClient("Name already taken choose another nickname");
+                nick = (String) playerConnection.readFromClient();
+                while (!server.isNumberOfPlayerSet()) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        System.out.println("Waiting error! " + e.getMessage());
+                    }
+                }
+            } while (! server.isNickNameUnique(nick));
+        }
+        else if(playerConnection.getClientID()==1)
+            nick = (String) playerConnection.readFromClient();
         playerConnection.setNickName(nick);
 
         if (playerConnection.getClientID() == 1) {
@@ -133,13 +148,7 @@ public class ServerGameThread implements Runnable {
         }
         playerConnection.setReadyToPlay(true);
 
-        while (!server.isNumberOfPlayerSet()) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                System.out.println("Waiting error! " + e.getMessage());
-            }
-        }
+
         server.waitingRoom(this);
     }
 

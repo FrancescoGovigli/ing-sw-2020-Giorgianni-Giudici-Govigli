@@ -78,4 +78,11 @@ public class ControllerGameBoardScene {
         }
         event.consume();
     }
+
+    public void setSpecificLevel(int i, int j, int level) {
+
+    }
+
+    public void setSpecificPlayer(int i, int j, UserData playerData) {
+    }
 }

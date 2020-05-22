@@ -91,6 +91,7 @@ public class Client implements Runnable{
                             else if (!inputObject.equals(ServerMessage.extraClient) && !inputObject.equals(ServerMessage.gameInProgress) && !inputObject.equals(ServerMessage.endGame) && !inputObject.equals(ServerMessage.inactivityEnd))
                                 System.out.println("[FROM SERVER] : " + inputObject);
 
+
                             else {
                                 System.out.println("[FROM SERVER] : " + inputObject);
                                 socketIn.close();
@@ -98,6 +99,8 @@ public class Client implements Runnable{
                                 System.out.println("[FROM SERVER] : PRESS [ENTER] TO QUIT ");
                             }
                         }
+                        else if(inputObject instanceof List)
+                            showGods(inputObject);
                         else if (inputObject instanceof Boolean)
                             writeActive=(Boolean)inputObject;
 
@@ -227,5 +230,12 @@ public class Client implements Runnable{
         if(playersData.size() == 2)
             System.out.println("PLAYERS: " + Color.ANSI_RED + "Player 1: " + playersData.get(0).getNickname() + " with " + playersData.get(0).getCardChoosed().toUpperCase() + " " + Color.ANSI_GREEN + "Player 2: " + playersData.get(1).getNickname() + " with "+playersData.get(1).getCardChoosed().toUpperCase() + Color.RESET);
         System.out.println("\n");
+    }
+
+
+    public void showGods(Object listOfGods){
+        for (int i = 0; i <((List<String>)listOfGods).size() ; i++) {
+            System.out.println(((List<String>)listOfGods).get(i));
+        }
     }
 }

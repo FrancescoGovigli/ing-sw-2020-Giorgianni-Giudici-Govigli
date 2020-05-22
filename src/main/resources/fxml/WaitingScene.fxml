@@ -3,10 +3,8 @@
 <?import java.net.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.effect.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 
 <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="30.0" prefHeight="672.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.PSP42.view.ControllerWaitingScene">
     <children>
@@ -18,19 +16,8 @@
                 <Rectangle2D />
             </viewport>
         </ImageView>
-        <TextField id ="textfield" layoutX="500.0" layoutY="536.0" prefHeight="52.0" prefWidth="193.0" stylesheets="@../css/WelcomeScene.css" text="Insert your Nickname" onAction="#saveNickname" onMouseClicked="#deleteText" AnchorPane.leftAnchor="500.0" AnchorPane.rightAnchor="500.0" editable="false">
-            <padding>
-                <Insets left="40.0" />
-            </padding>
-            <font>
-                <Font name="System Italic" size="12.0" />
-            </font>
-            <effect>
-                <InnerShadow color="#978686" />
-            </effect>
-        </TextField>
-        <ProgressIndicator id = "progressIndicator" layoutX="718.0" layoutY="536.0" minHeight="50.0" minWidth="50.0" prefHeight="30.0" prefWidth="20.0" style="pr: white;"/>
-        <Label id = "progressLabel" layoutX="780.0" layoutY="553.0" text="Waiting Game Initialisation..." textFill="WHITE"/>
+        <ProgressIndicator id="progressIndicator" layoutX="574.0" layoutY="555.0" minHeight="50.0" minWidth="50.0" prefHeight="30.0" prefWidth="20.0" style="pr: white;" />
+        <Label id="progressLabel" layoutX="468.0" layoutY="420.0" prefHeight="125.0" prefWidth="262.0" text="WAITING OTHER PLAYERS..." textFill="WHITE" />
     </children>
 
     <stylesheets>

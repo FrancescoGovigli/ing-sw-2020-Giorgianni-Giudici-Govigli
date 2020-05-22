@@ -1,6 +1,7 @@
 package it.polimi.ingsw.PSP42.client;
 
 import it.polimi.ingsw.PSP42.*;
+import it.polimi.ingsw.PSP42.model.*;
 import it.polimi.ingsw.PSP42.server.*;
 import it.polimi.ingsw.PSP42.view.*;
 
@@ -15,6 +16,13 @@ public class ClientGUI implements Runnable, ClientObservable {
     private ClientObserver clientObserver;
     String input;
 
+    public UserData getPlayerData(String nickname){
+        for (UserData u:playersData) {
+            if(u.getNickname().equals(nickname))
+                return u;
+        }
+        return null;
+    }
 
     public synchronized boolean isActive(){
         return active;
@@ -40,7 +48,7 @@ public class ClientGUI implements Runnable, ClientObservable {
                             }
                             else if(!inputObject.equals(ServerMessage.extraClient) && !inputObject.equals(ServerMessage.gameInProgress) && !inputObject.equals(ServerMessage.endGame) && !inputObject.equals(ServerMessage.inactivityEnd)) {
                                 System.out.println("[FROM SERVER] : " + inputObject);
-                                elaborateMessage((String)inputObject);
+                                elaborateMessage(inputObject);
 
                             }
 
@@ -56,8 +64,10 @@ public class ClientGUI implements Runnable, ClientObservable {
 
                         else if(inputObject instanceof UserData)
                             playersData.add(((UserData) inputObject));
-                        else if(inputObject instanceof List)
+                        else if(inputObject instanceof List) {
+                            showGods(inputObject);
                             elaborateMessage(inputObject);
+                        }
 
                     }
                 } catch (Exception e){
@@ -138,12 +148,19 @@ public class ClientGUI implements Runnable, ClientObservable {
     }
 
     public void elaborateMessage(Object message){
+        if(message instanceof String) {
+            if (message.equals("Welcome player 1 insert your name: "))
+                notifyWelcomeFirstPlayer();
+            else if (((String) message).contains("you are waiting the FIRST PLAYER to set the number of players, insert your name: "))
+                notifyWelcomeOtherPlayers();
+            else if (message.equals("You are waiting other Players to connect..."))
+                notifyWaiting();
+            else if (message.equals("Name already taken choose another nickname"))
+                notifyExistingNickName();
+            else
+                notifyGameMessage(message);
 
-        if(message.equals("Welcome player 1 insert your name: "))
-            notifyWelcomeFirstPlayer();
-
-        else if(message.equals("Welcome player 2 you are waiting the FIRST PLAYER to set the number of players, insert your name: "))
-            notifyWelcomeOtherPlayers();
+        }
         else if(message instanceof List)
             notifyGodSelection(message);
     }
@@ -175,14 +192,44 @@ public class ClientGUI implements Runnable, ClientObservable {
     }
 
     @Override
+    public void notifyWaiting() {
+        clientObserver.updateWaiting();
+    }
+
+    @Override
     public void notifyGodSelection(Object listOfGods) {
-        System.out.println("ARRIVATI I GOD");
         clientObserver.updateGodSelection(listOfGods);
     }
+
+    @Override
+    public void notifyExistingNickName() {
+        clientObserver.updateExistingNickName();
+    }
+
+    @Override
+    public void notifyShow(Object o) {
+        clientObserver.updateShow(o);
+    }
+
+    @Override
+    public void notifyGameMessage(Object message) {
+        clientObserver.updateGameMessage(message);
+    }
+
+
 
     public void saveInput(String input){
         this.input=input;
     }
+
+
+
+    public void showGods(Object listOfGods){
+        for (int i = 0; i <((List<String>)listOfGods).size() ; i++) {
+            System.out.println(((List<String>)listOfGods).get(i));
+        }
+    }
+
 
 
 }
