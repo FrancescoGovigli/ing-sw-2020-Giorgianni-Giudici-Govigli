@@ -98,8 +98,12 @@ public class VirtualView implements ViewObservable, ModelObserver {
                     if (j != i)
                         sendToPlayerInGame(j, ViewMessage.waitingOpponentPick);
 
-                for (int j = 0; j < setOfCards.size(); j++)
-                    sendToPlayerInGame(i, setOfCards.get(j));
+                    //Used to print god in CLI
+                /*for (int j = 0; j < setOfCards.size(); j++)
+                    sendToPlayerInGame(i, setOfCards.get(j));*/
+
+                //Used to send list to GUI
+                sendToPlayerInGame(i, setOfCards);
 
                 selectedCard = (String) readFromPlayerInGame(playingClients.get(i));
                 if (selectedCard == null) {

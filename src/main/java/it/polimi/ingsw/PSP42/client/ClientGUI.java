@@ -15,7 +15,6 @@ public class ClientGUI implements Runnable, ClientObservable {
     private ClientObserver clientObserver;
     String input;
 
-
     public synchronized boolean isActive(){
         return active;
     }
@@ -41,9 +40,7 @@ public class ClientGUI implements Runnable, ClientObservable {
                             else if(!inputObject.equals(ServerMessage.extraClient) && !inputObject.equals(ServerMessage.gameInProgress) && !inputObject.equals(ServerMessage.endGame) && !inputObject.equals(ServerMessage.inactivityEnd)) {
                                 System.out.println("[FROM SERVER] : " + inputObject);
                                 elaborateMessage((String)inputObject);
-
                             }
-
                             else {
                                 System.out.println("[FROM SERVER] : "+inputObject);
                                 socketIn.close();
@@ -58,7 +55,6 @@ public class ClientGUI implements Runnable, ClientObservable {
                             playersData.add(((UserData) inputObject));
                         else if(inputObject instanceof List)
                             elaborateMessage(inputObject);
-
                     }
                 } catch (Exception e){
                     setActive(false);
@@ -81,9 +77,8 @@ public class ClientGUI implements Runnable, ClientObservable {
                             socketOut.flush();
                             input=null;
                         }
-
                     }
-                }catch(Exception e){
+                } catch(Exception e){
                     System.out.println("You disconnected");
                     setActive(false);
                 }
@@ -114,7 +109,6 @@ public class ClientGUI implements Runnable, ClientObservable {
             e.printStackTrace();
         }
 
-
         try{
             Thread t0 = asyncReadFromSocket(socketIn);
             Thread t1 = asyncWriteToSocket(scanner, socketOut);
@@ -123,7 +117,6 @@ public class ClientGUI implements Runnable, ClientObservable {
         } catch(InterruptedException | NoSuchElementException e){
             System.out.println("Connection closed from the client side");
         } finally {
-
             try {
                 scanner.close();
                 socketIn.close();
@@ -132,20 +125,22 @@ public class ClientGUI implements Runnable, ClientObservable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-
         }
     }
 
     public void elaborateMessage(Object message){
-
-        if(message.equals("Welcome player 1 insert your name: "))
-            notifyWelcomeFirstPlayer();
-
-        else if(message.equals("Welcome player 2 you are waiting the FIRST PLAYER to set the number of players, insert your name: "))
-            notifyWelcomeOtherPlayers();
-        else if(message instanceof List)
+        if (message instanceof String) {
+            if (message.equals("Welcome player 1 insert your name: "))
+                notifyWelcomeFirstPlayer();
+            else if (message.equals("Welcome player 2 you are waiting the FIRST PLAYER to set the number of players, insert your name: "))
+                notifyWelcomeOtherPlayers();
+            else if (message instanceof UserData)
+                notifyGodSelection(message);
+        }
+        else if(message instanceof List) {
+            System.out.println("ho ricevuto una lista");
             notifyGodSelection(message);
+        }
     }
 
 
@@ -183,6 +178,4 @@ public class ClientGUI implements Runnable, ClientObservable {
     public void saveInput(String input){
         this.input=input;
     }
-
-
 }

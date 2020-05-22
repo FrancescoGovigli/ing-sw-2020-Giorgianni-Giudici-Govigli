@@ -12,11 +12,12 @@ import java.io.*;
 public class ControllerWelcomeScene implements GuiObservable {
     private boolean ableToClickPlayers = false;
     private GuiObserver guiObserver = new ViewManager(ViewManager.getInstance());
+
     @FXML
     public Button choose1;
+
     @FXML
     public Button choose2;
-
 
     @FXML
     private Button playButton;

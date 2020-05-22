@@ -8,24 +8,17 @@ public class ViewGUI extends Application {
 
     public static void main(String[] args) {
         launch(args);
-
     }
 
     @Override
     public void start(Stage stage) {
-            stage.setResizable(false);
+            //stage.setResizable(false);
             ViewManager.setStage(stage);
-            ViewManager.setLayout(stage.getScene(), "/fxml/GameBoardScene.fxml");
+            ViewManager.setLayout(stage.getScene(), "/fxml/WelcomeScene.fxml");
             stage.show();
             ClientGUI c = new ClientGUI();
             c.attach(new ViewManager(c));
             Thread t = new Thread(c);
             t.start();
-
-
-
     }
-
-
 }
-

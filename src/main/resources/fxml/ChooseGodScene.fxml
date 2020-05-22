@@ -2,13 +2,10 @@
 
 <?import java.net.URL?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.GridPane?>
-
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+
 <GridPane id="background"
           xmlns="http://javafx.com/javafx/11.0.1"
           xmlns:fx="http://javafx.com/fxml/1"
@@ -25,14 +22,15 @@
                   GridPane.valignment="CENTER"
                   GridPane.halignment="CENTER">
             <Button fx:id="card1"
-                    id="cardImage"
+                    onMouseEntered="#description"
+                    onMouseExited="#image"
                     alignment="CENTER"
                     prefHeight="223.0"
                     prefWidth="168.0"
                     GridPane.rowIndex="0"
                     GridPane.columnIndex="0"
                     GridPane.valignment="CENTER"
-                    GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+                    GridPane.halignment="CENTER"/>
             <rowConstraints>
                 <RowConstraints percentHeight="100"/>
             </rowConstraints>

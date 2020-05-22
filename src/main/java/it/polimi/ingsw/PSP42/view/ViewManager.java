@@ -7,14 +7,17 @@ import javafx.scene.*;
 import javafx.stage.*;
 
 import java.io.*;
+import java.util.List;
 
-public class ViewManager implements ClientObserver,GuiObserver {
+public class ViewManager implements ClientObserver, GuiObserver {
     private static Stage stage;
     private static ClientGUI client;
     private static boolean playPushed = false;
+
     public ViewManager(ClientGUI client){
         this.client = client;
     }
+
     public static boolean isPlayPushed() {
         return playPushed;
     }
@@ -23,12 +26,9 @@ public class ViewManager implements ClientObserver,GuiObserver {
         ViewManager.playPushed = playPushed;
     }
 
-
-
     public static void setStage(Stage st) {
         stage = st;
     }
-
 
     public static Stage getStage(){
         return stage;
@@ -46,20 +46,16 @@ public class ViewManager implements ClientObserver,GuiObserver {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
-
 
     @Override
     public  void updateWelcomeFirstPlayer() {
-        ViewManager.setLayout(ViewManager.getStage().getScene(),"/fxml/WelcomeFirstPlayerScene.fxml");
+        ViewManager.setLayout(ViewManager.getStage().getScene(),"/fxml/WelcomeFirstPlayerScene2.fxml");
     }
 
     @Override
     public void updateWelcomeOtherPlayers() {
-
-        ViewManager.setLayout(ViewManager.getStage().getScene(),"/fxml/WaitingScene.fxml");
+        ViewManager.setLayout(ViewManager.getStage().getScene(), "/fxml/WelcomeNotFirstPlayerScene.fxml");
     }
 
     @Override
@@ -74,13 +70,24 @@ public class ViewManager implements ClientObserver,GuiObserver {
     }
 
     @Override
-    public void updateGodSelection(Object listOfGods) {
+    public void updateGodSelection(Object gods) {
+        List list = null;
+        if (gods instanceof List)
+            list = (List) gods;
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/fxml/ChooseGodScene.fxml"));
         ControllerChooseGodScene controller = loader.getController();
-        controller.setGods(listOfGods);
 
-        System.out.println("Sono in manager ho ricevuto i god");
+        /*System.out.println("update god");
+        if (list!=null) {
+            System.out.println("God's list size is: " + list.size());
+            for (int i = 0; i < list.size(); i++)
+                System.out.println("God: " + list.get(i).toString());
+        }*/
+
+        controller.setGods(list);
+        System.out.println("setta i god? Speriamo");
+        ViewManager.setLayout(ViewManager.getStage().getScene(), "/fxml/ChooseGodScene.fxml");
     }
 
     @Override
@@ -100,5 +107,4 @@ public class ViewManager implements ClientObserver,GuiObserver {
     public static ClientGUI getInstance(){
         return client;
     }
-
 }
