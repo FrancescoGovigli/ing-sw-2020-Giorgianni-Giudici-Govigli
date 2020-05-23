@@ -18,7 +18,7 @@
                 <Rectangle2D />
             </viewport>
         </ImageView>
-        <TextField id="textfield" layoutX="500.0" layoutY="336.0" onAction="#saveNickname" onMouseClicked="#deleteText" prefHeight="52.0" prefWidth="193.0" stylesheets="@../css/WelcomeScene.css" text="Insert your NickName" AnchorPane.leftAnchor="500.0" AnchorPane.rightAnchor="500.0" editable="false">
+        <TextField id="textfield" fx:id="textfieldFirstPlayer" layoutX="500.0" layoutY="336.0" onAction="#saveNickname" onMouseClicked="#deleteText" prefHeight="52.0" prefWidth="193.0" stylesheets="@../css/WelcomeScene.css" text="Insert your NickName" AnchorPane.leftAnchor="500.0" AnchorPane.rightAnchor="500.0" editable="false">
             <padding>
                 <Insets left="40.0" />
             </padding>

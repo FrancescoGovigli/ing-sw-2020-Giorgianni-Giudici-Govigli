@@ -9,7 +9,7 @@
     <!--Grid Pane for Nickname-->
     <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1">
         <GridPane GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER">
-            <TextField fx:id="textfield" id="textfield" alignment="CENTER"  onMouseClicked="#deleteText" prefHeight="52.0" prefWidth="193.0" text="Insert your name" GridPane.columnIndex="1" GridPane.rowIndex="0" editable="false">
+            <TextField fx:id="textfieldFirstPlayer" id="textfield" alignment="CENTER" onMouseClicked="#deleteText" prefHeight="52.0" prefWidth="193.0" text="Insert your name" GridPane.columnIndex="1" GridPane.rowIndex="0" editable="false">
             </TextField>
          <Button id="chooseButton"  mnemonicParsing="false" onMouseClicked="#submitChoice" prefHeight="41.0" prefWidth="55.0" text="Submit" translateX="15.0" GridPane.columnIndex="2" />
             <rowConstraints>

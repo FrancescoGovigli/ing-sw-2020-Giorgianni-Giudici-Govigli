@@ -1,20 +1,23 @@
 package it.polimi.ingsw.PSP42.view;
 
 import it.polimi.ingsw.PSP42.*;
+import it.polimi.ingsw.PSP42.server.*;
 import javafx.event.*;
 import javafx.fxml.*;
-import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 
-import java.io.*;
-
 public class ControllerWelcomeScene implements GuiObservable {
     @FXML
-    public TextField textfield;
+    public TextField textfieldFirstPlayer;
     @FXML
     public GridPane chooseField;
+    @FXML
+    public Label statusLabel;
+    @FXML
+    public TextField textfieldOtherPlayers;
+
     private boolean ableToClickPlayers = false;
     private String numberOfPlayers;
     private String nickName;
@@ -32,11 +35,6 @@ public class ControllerWelcomeScene implements GuiObservable {
     /*TODO (ABBELLIMENTO) metterei nella welcomeScene uno Status Connected oppure status: Insert Your name to continue*/
     public void goToWaitingScene(ActionEvent event) {
         ViewManager.setPlayPushed(true);
-        /*FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/fxml/WaitingScene.fxml"));
-        Parent waitingSceneParent = loader.load();
-        Scene window = ((Node)event.getSource()).getScene();
-        window.setRoot(waitingSceneParent);*/
     }
 
     public void deleteText(MouseEvent mouseEvent) {
@@ -49,7 +47,7 @@ public class ControllerWelcomeScene implements GuiObservable {
         if(ableToClickPlayers) {
             System.out.println("2");
             numberOfPlayers = "2";
-            informManagerNumberOfPlayers(numberOfPlayers);
+            informManagerInput(numberOfPlayers);
        }
     }
 
@@ -57,26 +55,44 @@ public class ControllerWelcomeScene implements GuiObservable {
         if(ableToClickPlayers) {
             System.out.println("3");
             numberOfPlayers = "3";
-            informManagerNumberOfPlayers(numberOfPlayers);
+            informManagerInput(numberOfPlayers);
         }
     }
 
     @Override
-    public void informManagerNickname(String nick) {
-        guiObserver.fromGuiNickName(nick);
+    public void informManagerInput(String input) {
+        guiObserver.fromGuiInput(input);
     }
 
-    @Override
-    public void informManagerNumberOfPlayers(String number) {
-        guiObserver.fromGuiNumberOfPlayers(number);
-    }
 
     public void submitChoice(MouseEvent mouseEvent) {
         chooseField.setOpacity(1);
         choose1.setOpacity(1);
         choose2.setOpacity(1);
-        nickName = textfield.getText();
+        nickName = textfieldFirstPlayer.getText();
         ableToClickPlayers = true;
-        informManagerNickname(nickName);
+        informManagerInput(nickName);
+    }
+
+    public void saveNickname(ActionEvent event){
+        TextField text = (TextField)event.getSource();
+        String nickName = text.getText();
+        System.out.println(nickName);
+        informManagerInput(nickName);
+    }
+
+
+    public void setStatusLabel(String message){
+        if(message.equals("Name already taken choose another nickname"))
+            statusLabel.setText("Status: Nickname already taken");
+        else if(message.equals(ServerMessage.extraClient) || message.equals(ServerMessage.gameInProgress) )
+            statusLabel.setText("Status: Cannot access the Game try later...");
+        statusLabel.setOpacity(1);
+
+    }
+
+    public void submitName(MouseEvent mouseEvent) {
+        nickName = textfieldOtherPlayers.getText();
+        informManagerInput(nickName);
     }
 }

@@ -31,7 +31,7 @@
         </TextField>
         <ProgressIndicator id="progressIndicator" layoutX="718.0" layoutY="536.0" minHeight="50.0" minWidth="50.0" prefHeight="30.0" prefWidth="20.0" style="pr: white;" />
         <Label id="progressLabel" layoutX="780.0" layoutY="553.0" text="Waiting Game Initialisation..." textFill="WHITE" />
-        <Label id="statusLabel" fx:id="statusLabel" layoutX="490.0" layoutY="513.0" opacity="-Infinity" prefHeight="22.0" prefWidth="220.0" text="Status: Nickname already taken" />
+        <Label id="statusLabel" fx:id="statusLabel" layoutX="490.0" layoutY="513.0" opacity="-Infinity" prefHeight="22.0" prefWidth="220.0" text="" />
     </children>
 
     <stylesheets>

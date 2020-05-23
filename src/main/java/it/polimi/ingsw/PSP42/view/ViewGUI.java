@@ -14,7 +14,7 @@ public class ViewGUI extends Application {
     public void start(Stage stage) {
             //stage.setResizable(false);
             ViewManager.setStage(stage);
-            ViewManager.setLayout(stage.getScene(), "/fxml/WelcomeScene.fxml");
+            ViewManager.setLayout("/fxml/WelcomeScene.fxml");
             stage.show();
             ClientGUI c = new ClientGUI();
             c.attach(new ViewManager(c));

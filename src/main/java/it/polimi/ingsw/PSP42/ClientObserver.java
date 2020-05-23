@@ -12,7 +12,7 @@ public interface ClientObserver {
 
     public abstract void updateWaiting();
 
-    public abstract void updateExistingNickName();
+    public abstract void updateGameStatus(Object o);
 
     public abstract void updateShow(Object o);
 

@@ -64,6 +64,8 @@ public class ClientGUI implements Runnable, ClientObservable {
                             showGods(inputObject);
                             elaborateMessage(inputObject);
                         }
+                        else
+                            notifyShow(inputObject);
                     }
                 } catch (Exception e){
                     setActive(false);
@@ -143,10 +145,10 @@ public class ClientGUI implements Runnable, ClientObservable {
                 notifyWelcomeOtherPlayers();
             else if (message.equals("You are waiting other Players to connect..."))
                 notifyWaiting();
-            else if (message.equals("Name already taken choose another nickname"))
-                notifyExistingNickName();
-            else
-                notifyGameMessage(message);
+            else if(message.equals(ServerMessage.extraClient) || message.equals(ServerMessage.gameInProgress) || message.equals("Name already taken choose another nickname"))
+                notifyGameStatus(message);
+            /*else if(!message.equals("You entered the Game! 😊 \n") && !((String) message).contains("please enter the number of players"))
+                notifyGameMessage(message);*/
         }
         else if(message instanceof List)
             notifyGodSelection(message);
@@ -188,8 +190,8 @@ public class ClientGUI implements Runnable, ClientObservable {
     }
 
     @Override
-    public void notifyExistingNickName() {
-        clientObserver.updateExistingNickName();
+    public void notifyGameStatus(Object o) {
+        clientObserver.updateGameStatus(o);
     }
 
     @Override

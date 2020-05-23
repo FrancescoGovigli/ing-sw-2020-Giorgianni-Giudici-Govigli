@@ -14,14 +14,14 @@ public class ViewManager implements ClientObserver,GuiObserver {
 
     private static Stage stage;
     private static ClientGUI client;
-    private static ControllerWaitingScene controllerWaitingScene;
+    private static ControllerWelcomeScene controllerWelcomeScene;
     private static ControllerGameBoardScene controllerGameBoardScene;
     private static ControllerChooseGodScene controllerChooseGodScene;
     private static boolean playPushed = false;
     private static String CURRENT_SCENE_PATH;
     private static String WELCOME_FIRST_PLAYER_SCENE_PATH = "/fxml/WelcomeFirstPlayerScene3.fxml";
     private static String WAITING_SCENE_PATH = "/fxml/WaitingScene.fxml";
-    private static String WELCOME_OTHER_PLAYERS_SCENE_PATH = "/fxml/WelcomeOtherPlayers.fxml";
+    private static String WELCOME_OTHER_PLAYERS_SCENE_PATH = "/fxml/WelcomeNotFirstPlayerScene.fxml";
     private static String CHOOSE_GOD_SCENE_PATH = "/fxml/ChooseGodScene.fxml";
     private static String GAMEBOARD_SCENE_PATH = "/fxml/GameBoardScene.fxml";
 
@@ -45,24 +45,24 @@ public class ViewManager implements ClientObserver,GuiObserver {
         return stage;
     }
 
-    public static void setLayout(Scene scene, String path) {
+    public static void setLayout(/*Scene scene, */String path) {
         try {
             FXMLLoader loader = new FXMLLoader(ViewManager.class.getResource(path));
             CURRENT_SCENE_PATH = path;
             Parent root = loader.load();
             if(path.equals(WELCOME_OTHER_PLAYERS_SCENE_PATH))
-                controllerWaitingScene = loader.getController();
+                controllerWelcomeScene = loader.getController();
             else if (path.equals(CHOOSE_GOD_SCENE_PATH))
                 controllerChooseGodScene = loader.getController();
             else if(path.equals(GAMEBOARD_SCENE_PATH))
                 controllerGameBoardScene = loader.getController();
 
-            if(scene==null) {
+            if(stage.getScene()==null) {
                 Scene first = new Scene(root);
                 stage.setScene(first);
                 return;
             }
-            scene.setRoot(root);
+            stage.getScene().setRoot(root);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -70,12 +70,12 @@ public class ViewManager implements ClientObserver,GuiObserver {
 
     @Override
     public  void updateWelcomeFirstPlayer() {
-        setLayout(stage.getScene(), WELCOME_FIRST_PLAYER_SCENE_PATH);
+        setLayout(WELCOME_FIRST_PLAYER_SCENE_PATH);
     }
 
     @Override
     public void updateWelcomeOtherPlayers() {
-        setLayout(stage.getScene(), WELCOME_OTHER_PLAYERS_SCENE_PATH);
+        setLayout(WELCOME_OTHER_PLAYERS_SCENE_PATH);
     }
 
     @Override
@@ -91,29 +91,26 @@ public class ViewManager implements ClientObserver,GuiObserver {
 
     @Override
     public void updateGodSelection(Object listOfGods) {
-        setLayout(getStage().getScene(), CHOOSE_GOD_SCENE_PATH);
+        setLayout(CHOOSE_GOD_SCENE_PATH);
         controllerChooseGodScene.setGods(listOfGods);
     }
 
     @Override
     public void updateWaiting() {
-        setLayout(getStage().getScene(), WAITING_SCENE_PATH);
+        setLayout(WAITING_SCENE_PATH);
+    }
+
+
+    @Override
+    public void updateGameStatus(Object o) {
+        Platform.runLater(()-> controllerWelcomeScene.setStatusLabel((String)o));
     }
 
     @Override
-    public void updateExistingNickName() {
-        Platform.runLater(()->controllerWaitingScene.setExistingLabel());
+    public void fromGuiInput(String input) {
+        inputGui(input);
     }
 
-    @Override
-    public void fromGuiNickName(String nick) {
-        inputGui(nick);
-    }
-
-    @Override
-    public void fromGuiNumberOfPlayers(String number) {
-        inputGui(number);
-    }
 
     public void inputGui(String input){
         client.saveInput(input);
@@ -123,15 +120,6 @@ public class ViewManager implements ClientObserver,GuiObserver {
         return client;
     }
 
-    public FXMLLoader loadScene(String path) {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
-        try {
-            loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return loader;
-    }
 
     /**
      * Method to print the current GameBoard situation on the screen
@@ -152,14 +140,14 @@ public class ViewManager implements ClientObserver,GuiObserver {
 
     @Override
     public void updateGameMessage(Object message) {
-        //TODO
+        Platform.runLater(()->controllerGameBoardScene.showGameMessage(message));
     }
 
     private void insertSpecificPlayer(int i, int j, UserData playerData) {
         Platform.runLater(()->controllerGameBoardScene.setSpecificPlayer(i,j,playerData));
     }
-
+    /*TODO mettere isDOME() in fakecell*/
     private void insertSpecificLevel(int i, int j, int level) {
-        Platform.runLater(()->controllerGameBoardScene.setSpecificLevel(i,j,level));
+        Platform.runLater(()->controllerGameBoardScene.setSpecificLevel(i,j,level,false));
     }
 }

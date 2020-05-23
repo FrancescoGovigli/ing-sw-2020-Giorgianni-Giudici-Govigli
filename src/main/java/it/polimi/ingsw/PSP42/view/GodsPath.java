@@ -13,7 +13,7 @@ public class GodsPath {
     public static String DEMETER = "-fx-background-image: url('/images/Demeter/Demeter.png'); -fx-background-position: center; -fx-background-size: stretch; -fx-background-color: transparent";
     public static String DEMETER_DESC = "-fx-background-image: url('/images/Demeter/DemeterDesc.png'); -fx-background-position: center; -fx-background-size: stretch; -fx-background-color: transparent";
     public static String HEPHAESTUS = "-fx-background-image: url('/images/Hephaestus/Hephaestus.png'); -fx-background-position: center; -fx-background-size: stretch; -fx-background-color: transparent";
-    public static String HEPHAESTUS_DESC = "-fx-background-image: url('/images/Hephaestus/Hephaestus.png'); -fx-background-position: center; -fx-background-size: stretch; -fx-background-color: transparent";
+    public static String HEPHAESTUS_DESC = "-fx-background-image: url('/images/Hephaestus/HephaestusDesc.png'); -fx-background-position: center; -fx-background-size: stretch; -fx-background-color: transparent";
     public static String MINOTAUR = "-fx-background-image: url('/images/Minotaur/Minotaur.png'); -fx-background-position: center; -fx-background-size: stretch; -fx-background-color: transparent";
     public static String MINOTAUR_DESC = "-fx-background-image: url('/images/Minotaur/MinotaurDesc.png'); -fx-background-position: center; -fx-background-size: stretch; -fx-background-color: transparent";
     public static String PAN = "-fx-background-image: url('/images/Pan/Pan.png'); -fx-background-position: center; -fx-background-size: stretch; -fx-background-color: transparent";
@@ -22,7 +22,7 @@ public class GodsPath {
     public static String PROMETHEUS_DESC = "-fx-background-image: url('/images/Prometheus/PrometheusDesc.png'); -fx-background-position: center; -fx-background-size: stretch; -fx-background-color: transparent";
     public static String NONE = "-fx-opacity: 0;";
 
-    public static String getPath(String nameGod) {
+    public static String getGodStyle(String nameGod) {
         switch (nameGod) {
             case "APOLLO": {
                 return APOLLO;
@@ -81,5 +81,10 @@ public class GodsPath {
             default:
                 return NONE;
         }
+    }
+
+    public static String getImagePath(String nameGod) {
+        Character firstLetter = nameGod.charAt(0);
+        return "/images/" + firstLetter + nameGod.substring(1) + "/" + firstLetter + nameGod.substring(1) + ".png";
     }
 }

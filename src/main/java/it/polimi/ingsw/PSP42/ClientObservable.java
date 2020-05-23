@@ -17,9 +17,10 @@ public interface ClientObservable {
 
     public abstract void notifyGodSelection(Object listOfGods);
 
-    public abstract void notifyExistingNickName();
+    public abstract void notifyGameStatus(Object o);
 
     public abstract void notifyShow(Object o);
 
     public abstract void notifyGameMessage(Object message);
+
 }

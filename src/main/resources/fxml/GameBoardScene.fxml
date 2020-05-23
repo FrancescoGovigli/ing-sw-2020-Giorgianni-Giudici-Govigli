@@ -12,36 +12,36 @@
 
     <GridPane id="grid-pane" fx:id="board" alignment="CENTER" onDragDropped="#handleDragDropped" onDragOver="#handleDragOver" prefHeight="443.0" prefWidth="586.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
 
-        <Pane id="level3" fx:id="Cell00" GridPane.columnIndex="0" GridPane.rowIndex="0" >
+        <Pane id="cell00" fx:id="Cell00" GridPane.columnIndex="0" GridPane.rowIndex="0" >
         </Pane>
-        <Pane id="level2" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-        <Pane id="level3" GridPane.columnIndex="2" GridPane.rowIndex="0" />
-        <Pane id="level2" GridPane.columnIndex="3" GridPane.rowIndex="0" />
-        <Pane id="level3" GridPane.columnIndex="4" GridPane.rowIndex="0" />
+        <Pane id="cell01" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        <Pane id="cell02" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+        <Pane id="cell03" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+        <Pane id="cell04" GridPane.columnIndex="4" GridPane.rowIndex="0" />
 
-        <Pane id="level3" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-        <Pane id="level1" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-        <Pane id="level3" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-        <Pane id="level2" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-        <Pane id="level1" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+        <Pane id="cell10" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        <Pane id="cell11" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <Pane id="cell12" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+        <Pane id="cell13" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+        <Pane id="cell14" GridPane.columnIndex="4" GridPane.rowIndex="1" />
 
-        <Pane id="level3" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-        <Pane id="level3" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-        <Pane id="level1" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-        <Pane id="level3" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-        <Pane id="level2" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+        <Pane id="cell20" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+        <Pane id="cell21" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        <Pane id="cell22" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+        <Pane id="cell23" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+        <Pane id="cell24" GridPane.columnIndex="4" GridPane.rowIndex="2" />
 
-        <Pane id="level2" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-        <Pane id="level1" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-        <Pane id="level3" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-        <Pane id="level2" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-        <Pane id="level1" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+        <Pane id="cell30" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+        <Pane id="cell31" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+        <Pane id="cell32" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+        <Pane id="cell33" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+        <Pane id="cell34" GridPane.columnIndex="4" GridPane.rowIndex="3" />
 
-        <Pane id="level1" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-        <Pane id="level2" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-        <Pane id="level2" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-        <Pane id="level1" GridPane.columnIndex="3" GridPane.rowIndex="4" />
-        <Pane id="level3" GridPane.columnIndex="4" GridPane.rowIndex="4" />
+        <Pane id="cell40" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+        <Pane id="cell41" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+        <Pane id="cell42" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+        <Pane id="cell43" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+        <Pane id="cell44" GridPane.columnIndex="4" GridPane.rowIndex="4" />
 
         <gridLinesVisible>true</gridLinesVisible>
 

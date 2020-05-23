@@ -1,5 +1,6 @@
 package it.polimi.ingsw.PSP42.view;
 
+import it.polimi.ingsw.PSP42.*;
 import javafx.event.*;
 import javafx.fxml.*;
 import javafx.scene.*;
@@ -9,8 +10,8 @@ import javafx.stage.*;
 import java.io.*;
 import java.util.*;
 
-public class ControllerChooseGodScene {
-
+public class ControllerChooseGodScene implements GuiObservable {
+    private GuiObserver guiObserver = new ViewManager(ViewManager.getInstance());
     @FXML
     Button card1;
     private String godCard1;
@@ -36,20 +37,16 @@ public class ControllerChooseGodScene {
     }
 
     public void goToGameBoardScene(ActionEvent event) throws IOException {
-        Parent waitingSceneParent = FXMLLoader.load(getClass().getResource("/fxml/GameBoardScene.fxml"));
-        Scene waitingScene = new Scene(waitingSceneParent);
-        Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
-        window.setScene(waitingScene);
-        window.show();
+        Button clicked = (Button)event.getSource();
+        if(clicked.equals(card1))
+         informManagerInput(godCard1);
+        else if(clicked.equals(card2))
+            informManagerInput(godCard2);
+        else if(clicked.equals(card3))
+            informManagerInput(godCard3);
+        ViewManager.setLayout("/fxml/GameBoardScene.fxml");
     }
 
-    public void goToWaitingScene(ActionEvent event) throws IOException {
-        Parent waitingSceneParent = FXMLLoader.load(getClass().getResource("/fxml/WaitingScene.fxml"));
-        Scene waitingScene = new Scene(waitingSceneParent);
-        Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
-        window.setScene(waitingScene);
-        window.show();
-    }
 
     public void setGods(Object listOfGods) {
         List gods = (List)listOfGods;
@@ -74,15 +71,15 @@ public class ControllerChooseGodScene {
     public void setImageGodCard(String godName, int cardNum) {
         if (cardNum == 0) {
             setGodCard1(godName);
-            card1.setStyle(GodsPath.getPath(godName));
+            card1.setStyle(GodsPath.getGodStyle(godName));
         }
         else if (cardNum == 1) {
             setGodCard2(godName);
-            card2.setStyle(GodsPath.getPath(godName));
+            card2.setStyle(GodsPath.getGodStyle(godName));
         }
         else if (cardNum == 2) {
             setGodCard3(godName);
-            card3.setStyle(GodsPath.getPath(godName));
+            card3.setStyle(GodsPath.getGodStyle(godName));
         }
     }
 
@@ -117,19 +114,24 @@ public class ControllerChooseGodScene {
     public void setChangingGodCard(String godName, int cardNum, String action) {
         if (action.equals("image")) {
             if (cardNum == 0)
-                card1.setStyle(GodsPath.getPath(godName));
+                card1.setStyle(GodsPath.getGodStyle(godName));
             else if (cardNum == 1)
-                card2.setStyle(GodsPath.getPath(godName));
+                card2.setStyle(GodsPath.getGodStyle(godName));
             else if (cardNum == 2)
-                card3.setStyle(GodsPath.getPath(godName));
+                card3.setStyle(GodsPath.getGodStyle(godName));
         }
         else if (action.equals("description")) {
             if (cardNum == 0)
-                card1.setStyle(GodsPath.getPath(godName+"_DESC"));
+                card1.setStyle(GodsPath.getGodStyle(godName+"_DESC"));
             else if (cardNum == 1)
-                card2.setStyle(GodsPath.getPath(godName+"_DESC"));
+                card2.setStyle(GodsPath.getGodStyle(godName+"_DESC"));
             else if (cardNum == 2)
-                card3.setStyle(GodsPath.getPath(godName+"_DESC"));
+                card3.setStyle(GodsPath.getGodStyle(godName+"_DESC"));
         }
+    }
+
+    @Override
+    public void informManagerInput(String input) {
+        guiObserver.fromGuiInput(input);
     }
 }
