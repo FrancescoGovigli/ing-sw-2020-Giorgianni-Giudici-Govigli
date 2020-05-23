@@ -3,10 +3,8 @@ package it.polimi.ingsw.PSP42.view;
 import it.polimi.ingsw.PSP42.*;
 import javafx.event.*;
 import javafx.fxml.*;
-import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.*;
 import java.io.*;
 import java.util.*;
 
@@ -39,7 +37,7 @@ public class ControllerChooseGodScene implements GuiObservable {
     public void goToGameBoardScene(ActionEvent event) throws IOException {
         Button clicked = (Button)event.getSource();
         if(clicked.equals(card1))
-         informManagerInput(godCard1);
+            informManagerInput(godCard1);
         else if(clicked.equals(card2))
             informManagerInput(godCard2);
         else if(clicked.equals(card3))
@@ -47,20 +45,16 @@ public class ControllerChooseGodScene implements GuiObservable {
         ViewManager.setLayout("/fxml/GameBoardScene.fxml");
     }
 
-
     public void setGods(Object listOfGods) {
         List gods = (List)listOfGods;
-        int counter = 0;
-        for (int i = 0; i <gods.size(); i++) {
-            counter++;
+        for (int i = 0; i <gods.size(); i++)
             setImageGodCard(gods.get(i).toString(), i);
-        }
-        if (counter==1) {
+        if (gods.size()==2) {
+            setImageGodCard("NONE", 1);
             setImageGodCard("NONE", 2);
-            setImageGodCard("NONE", 3);
         }
-        else if (counter==2)
-            setImageGodCard("NONE", 3);
+        if (gods.size()==3)
+            setImageGodCard("NONE", 2);
     }
 
     /**

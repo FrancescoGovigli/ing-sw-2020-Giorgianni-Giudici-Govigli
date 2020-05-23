@@ -48,7 +48,6 @@ public class ControllerGameBoardScene {
         }
         textField.clear();
         event.consume();
-
     }
 
     public void handleDragDetected(MouseEvent event) {
@@ -89,8 +88,6 @@ public class ControllerGameBoardScene {
             image.fitHeightProperty().bind(cell.heightProperty());
             cell.getChildren().add(image);
         }
-
-
     }
 
     public void setSpecificPlayer(int row, int col, UserData playerData) {
@@ -131,6 +128,4 @@ public class ControllerGameBoardScene {
         else
             return null;
     }
-
-
 }

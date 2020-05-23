@@ -20,7 +20,7 @@ public class ViewManager implements ClientObserver,GuiObserver {
     private static boolean playPushed = false;
     private static String CURRENT_SCENE_PATH;
     private static String WELCOME_FIRST_PLAYER_SCENE_PATH = "/fxml/WelcomeFirstPlayerScene3.fxml";
-    private static String WAITING_SCENE_PATH = "/fxml/WaitingScene.fxml";
+    private static String WAITING_SCENE_PATH = "/fxml/WaitingScene2.fxml";
     private static String WELCOME_OTHER_PLAYERS_SCENE_PATH = "/fxml/WelcomeNotFirstPlayerScene.fxml";
     private static String CHOOSE_GOD_SCENE_PATH = "/fxml/ChooseGodScene.fxml";
     private static String GAMEBOARD_SCENE_PATH = "/fxml/GameBoardScene.fxml";

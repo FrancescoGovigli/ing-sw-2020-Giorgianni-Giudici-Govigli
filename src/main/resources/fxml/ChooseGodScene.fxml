@@ -13,6 +13,7 @@
           prefHeight="672.0"
           prefWidth="1200.0">
 
+
     <GridPane GridPane.columnIndex="1"
               GridPane.rowIndex="1">
 
@@ -32,6 +33,7 @@
                     GridPane.columnIndex="0"
                     GridPane.valignment="CENTER"
                     GridPane.halignment="CENTER"/>
+
             <rowConstraints>
                 <RowConstraints percentHeight="100"/>
             </rowConstraints>
@@ -56,6 +58,7 @@
                     GridPane.columnIndex="0"
                     GridPane.valignment="CENTER"
                     GridPane.halignment="CENTER"/>
+
             <rowConstraints>
                 <RowConstraints percentHeight="100"/>
             </rowConstraints>
@@ -80,6 +83,7 @@
                     GridPane.columnIndex="0"
                     GridPane.valignment="CENTER"
                     GridPane.halignment="CENTER"/>
+
             <rowConstraints>
                 <RowConstraints percentHeight="100"/>
             </rowConstraints>

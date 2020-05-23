@@ -1,27 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.*?>
-<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import java.net.URL?>
 
-<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="30.0" prefHeight="672.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.PSP42.view.ControllerWelcomeScene">
-   <children>
-      <ImageView fitHeight="700.0" fitWidth="1200.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="101.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-1.0">
-         <image>
-            <Image url="@../images/welcome_background.png" />
-         </image>
-         <viewport>
-            <Rectangle2D />
-         </viewport>
-      </ImageView>
-      <Button id="playButton" fx:id="playButton" alignment="BASELINE_CENTER" layoutX="509.0" layoutY="506.0" mnemonicParsing="false" onAction="#goToWaitingScene" prefHeight="80.0" prefWidth="182.0" text="PLAY" textAlignment="CENTER">
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets></Button>
-   </children>
+<GridPane id="back"
+          xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml"
+          fx:controller="it.polimi.ingsw.PSP42.view.ControllerWelcomeScene"
+          prefHeight="672.0" prefWidth="1200.0">
+
+   <Button id="playButton"
+           fx:id="playButton"
+           onAction="#goToWaitingScene"
+           GridPane.rowIndex="1"
+           GridPane.columnIndex="1"
+           GridPane.valignment="CENTER"
+           GridPane.halignment="CENTER"
+           alignment="CENTER"
+           prefHeight="80.0"
+           prefWidth="182.0"
+           text="PLAY"
+           textAlignment="CENTER"/>
+
+   <rowConstraints>
+      <RowConstraints percentHeight="75"/>
+      <RowConstraints percentHeight="10"/>
+      <RowConstraints percentHeight="15"/>
+   </rowConstraints>
+   <columnConstraints>
+      <ColumnConstraints percentWidth="40"/>
+      <ColumnConstraints percentWidth="20"/>
+      <ColumnConstraints percentWidth="40"/>
+   </columnConstraints>
+
    <stylesheets>
-   <URL value="@../css/WelcomeScene.css" />
-  </stylesheets>
-</AnchorPane>
+      <URL value="@../css/WelcomeScene.css" />
+   </stylesheets>
+</GridPane>

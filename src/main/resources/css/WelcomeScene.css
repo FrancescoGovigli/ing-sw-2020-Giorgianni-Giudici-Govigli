@@ -16,8 +16,6 @@
     -fx-font-size: 30;
     -fx-text-fill: white;
     -fx-text-alignment: center;
-    /*-fx-font-weight: bold;
-    -fx-font-family: "Segoe Script";*/
 }
 
 #playButton:pressed {
@@ -28,8 +26,6 @@
     -fx-text-fill: white;
     -fx-text-alignment: center;
     -fx-background-color: transparent;
-    /*-fx-font-weight: bold;
-    -fx-font-family: "Segoe Script";*/
 }
 
 #chooseButton {
@@ -40,8 +36,6 @@
     -fx-text-fill: white;
     -fx-text-alignment: center;
     -fx-background-color: transparent;
-    /*-fx-font-weight: bold;
-    -fx-font-family: "Segoe Script";*/
 }
 
 #labelPlayers {
@@ -54,7 +48,6 @@
 }
 
 #chooseField {
-    /*-fx-background-image:url("../images/choose_Player_Field.png");*/
     -fx-background-image:url("../images/blueField.png");
     -fx-background-size: stretch;
     -fx-alignment: center;
@@ -83,7 +76,6 @@
 
 #progressLabel {
     -fx-font-family: "Dalek Pinpoint";
-
     -fx-font-size: 20;
     -fx-text-fill: white;
     -fx-font-weight: bold;
@@ -94,5 +86,4 @@
     -fx-text-fill: white;
     -fx-font-size: 14;
     -fx-font-weight: bold;
-
 }
