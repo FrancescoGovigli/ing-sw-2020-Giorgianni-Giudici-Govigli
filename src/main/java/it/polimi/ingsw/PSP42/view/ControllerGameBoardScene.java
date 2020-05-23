@@ -1,6 +1,5 @@
 package it.polimi.ingsw.PSP42.view;
 
-
 import javafx.event.*;
 import javafx.fxml.*;
 import javafx.scene.*;
@@ -79,31 +78,42 @@ public class ControllerGameBoardScene {
         event.consume();
     }
 
-    public void setSpecificLevel(int row, int col, int level,boolean dome) {
-        Pane cell = (Pane)getPaneFromBoard(row,col);
-        ImageView image = getLevelImage(level);
-        if(image==null)
+    /**
+     * Method to set the appropriate construction on the GUI_GameBoard,
+     * considering the last built level and the one below
+     * @param row
+     * @param col
+     * @param level
+     * @param previousBuiltLevel
+     */
+    public void setSpecificLevel(int row, int col, int level, int previousBuiltLevel) {
+        Pane cell = (Pane)getPaneFromBoard(row, col);
+        ImageView image = getLevelImage(level, previousBuiltLevel);
+        if(image == null)
             return;
         else {
             image.fitWidthProperty().bind(cell.widthProperty());
             image.fitHeightProperty().bind(cell.heightProperty());
             cell.getChildren().add(image);
         }
-
-
     }
 
+    /**
+     * Method to set the appropriate player in the indicated position on the GUI_GameBoard
+     * @param row
+     * @param col
+     * @param playerData
+     */
     public void setSpecificPlayer(int row, int col, UserData playerData) {
-        Pane cell = (Pane)getPaneFromBoard(row,col);
+        Pane cell = (Pane)getPaneFromBoard(row, col);
         ImageView image = getWorkerImage(playerData.getCardChoosed());
-        if(image==null)
+        if(image == null)
             return;
         else {
             image.fitWidthProperty().bind(cell.widthProperty());
             image.fitHeightProperty().bind(cell.heightProperty());
             cell.getChildren().add(image);
         }
-
     }
 
     public void showGameMessage(Object message) {
@@ -118,19 +128,29 @@ public class ControllerGameBoardScene {
         return null;
     }
 
-    private ImageView getLevelImage(int level){
-        if(GameBoardElementsPath.getImagePath(level)!=null)
-         return new ImageView(GameBoardElementsPath.getImagePath(level));
+    /**
+     * Method to obtain the image corresponding to the specified level, also considering the level on which it rests
+     * @param level
+     * @param previousBuiltLevel
+     * @return the corresponding image
+     */
+    private ImageView getLevelImage(int level, int previousBuiltLevel) {
+        if(GameBoardElementsPath.getImagePath(level, previousBuiltLevel) != null)
+            return new ImageView(GameBoardElementsPath.getImagePath(level, previousBuiltLevel));
         else
             return null;
     }
 
-    private ImageView getWorkerImage(String worker){
-        if(GameBoardElementsPath.getWorkerImage(worker)!=null)
+    /**
+     * Method to obtain the image (as a pawn) of the God that the player has
+     * @param worker
+     * @return the corresponding image
+     */
+    private ImageView getWorkerImage(String worker) {
+        if(GameBoardElementsPath.getWorkerImage(worker) != null)
             return new ImageView(GameBoardElementsPath.getWorkerImage(worker));
         else
             return null;
     }
-
 
 }

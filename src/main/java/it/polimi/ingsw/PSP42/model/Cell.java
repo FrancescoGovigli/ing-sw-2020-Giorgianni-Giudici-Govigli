@@ -2,15 +2,26 @@ package it.polimi.ingsw.PSP42.model;
 
 public class Cell {
 
-    private boolean[] cellLevel;
+    private boolean[] builtLevel;
     private Worker worker;
 
     /**
      * Constructor to create a map's cell which has set level 0 (the ground) to true and no worker above it self.
      */
     public Cell() {
-        this.cellLevel = new boolean[]{true, false, false, false, false};
+        this.builtLevel = new boolean[]{true, false, false, false, false};
         this.worker = null;
+    }
+
+    /**
+     * Method to obtain which level are build on the cell under form of array.
+     * @return builtLevelCopy (array where the position indicates the constructed level)
+     */
+    public boolean[] getBuiltLevel() {
+        boolean[] builtLevelCopy = new boolean[5];
+        for (int i = 0; i < 5; i++)
+            builtLevelCopy[i] = builtLevel[i];
+        return builtLevelCopy;
     }
 
     /**
@@ -20,7 +31,7 @@ public class Cell {
     public int getLevel() {
         int level = 0;
         for (int i = 0; i < 5; i++)
-            if (cellLevel[i])
+            if (builtLevel[i])
                 level = i;
         return level;
     }
@@ -30,8 +41,8 @@ public class Cell {
      */
     public void setCellLevel() {
         for (int i = 0; i < 5; i++) {
-            if (!cellLevel[i]) {
-                this.cellLevel[i] = true;
+            if (! builtLevel[i]) {
+                this.builtLevel[i] = true;
                 i = 5;
             }
         }
@@ -43,10 +54,10 @@ public class Cell {
      */
     public void setSpecificCellLevel(int level) {
         if (level >= 0 && level <= 4) {
-            this.cellLevel[level] = true;
+            this.builtLevel[level] = true;
             if (level < this.getLevel())
-                for (int i = level+1; i < cellLevel.length; i++)
-                    cellLevel[i] = false;
+                for (int i = level+1; i < builtLevel.length; i++)
+                    builtLevel[i] = false;
         }
     }
 
