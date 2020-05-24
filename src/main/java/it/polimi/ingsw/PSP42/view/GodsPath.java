@@ -24,70 +24,7 @@ public class GodsPath {
 
     public static String getGodStyle(String nameGod) {
 
-        try {
-            switch (nameGod) {
-                case "APOLLO": {
-                    return APOLLO;
-                }
-                case "APOLLO_DESC": {
-                    return APOLLO_DESC;
-                }
-                case "ARTEMIS": {
-                    return ARTEMIS;
-                }
-                case "ARTEMIS_DESC": {
-                    return ARTEMIS_DESC;
-                }
-                case "ATHENA": {
-                    return ATHENA;
-                }
-                case "ATHENA_DESC": {
-                    return ATHENA_DESC;
-                }
-                case "ATLAS": {
-                    return ATLAS;
-                }
-                case "ATLAS_DESC": {
-                    return ATLAS_DESC;
-                }
-                case "DEMETER": {
-                    return DEMETER;
-                }
-                case "DEMETER_DESC": {
-                    return DEMETER_DESC;
-                }
-                case "HEPHAESTUS": {
-                    return HEPHAESTUS;
-                }
-                case "HEPHAESTUS_DESC": {
-                    return HEPHAESTUS_DESC;
-                }
-                case "MINOTAUR": {
-                    return MINOTAUR;
-                }
-                case "MINOTAUR_DESC": {
-                    return MINOTAUR_DESC;
-                }
-                case "PAN": {
-                    return PAN;
-                }
-                case "PAN_DESC": {
-                    return PAN_DESC;
-                }
-                case "PROMETHEUS": {
-                    return PROMETHEUS;
-                }
-                case "PROMETHEUS_DESC": {
-                    return PROMETHEUS_DESC;
-                }
-                default:
-                    return NONE;
-            }
-        } catch (NullPointerException e) {
-            return NONE;
-        }
-
-        /*if (nameGod.equals(null))
+        if (nameGod.equals(null))
             return NONE;
         switch (nameGod) {
             case "APOLLO": {
@@ -147,7 +84,6 @@ public class GodsPath {
             default:
                 return NONE;
         }
-        */
     }
 
     public static String getImagePath(String nameGod) {

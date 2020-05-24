@@ -19,7 +19,7 @@ public class ViewManager implements ClientObserver,GuiObserver {
     private static ControllerChooseGodScene controllerChooseGodScene;
     private static boolean playPushed = false;
     private static String CURRENT_SCENE_PATH;
-    private static String WELCOME_FIRST_PLAYER_SCENE_PATH = "/fxml/WelcomeFirstPlayerScene3.fxml";
+    private static String WELCOME_FIRST_PLAYER_SCENE_PATH = "/fxml/WelcomeFirstPlayerScene.fxml";
     private static String WAITING_SCENE_PATH = "/fxml/WaitingScene2.fxml";
     private static String WELCOME_OTHER_PLAYERS_SCENE_PATH = "/fxml/WelcomeNotFirstPlayerScene.fxml";
     private static String CHOOSE_GOD_SCENE_PATH = "/fxml/ChooseGodScene.fxml";
@@ -57,6 +57,7 @@ public class ViewManager implements ClientObserver,GuiObserver {
             else if(path.equals(GAMEBOARD_SCENE_PATH))
                 controllerGameBoardScene = loader.getController();
 
+            controllerGameBoardScene.prova();
             if(stage.getScene()==null) {
                 Scene first = new Scene(root);
                 stage.setScene(first);
@@ -100,7 +101,6 @@ public class ViewManager implements ClientObserver,GuiObserver {
         setLayout(WAITING_SCENE_PATH);
     }
 
-
     @Override
     public void updateGameStatus(Object o) {
         Platform.runLater(()-> controllerWelcomeScene.setStatusLabel((String)o));
@@ -111,7 +111,6 @@ public class ViewManager implements ClientObserver,GuiObserver {
         inputGui(input);
     }
 
-
     public void inputGui(String input){
         client.saveInput(input);
     }
@@ -119,7 +118,6 @@ public class ViewManager implements ClientObserver,GuiObserver {
     public static ClientGUI getInstance(){
         return client;
     }
-
 
     /**
      * Method to print the current GameBoard situation on the screen
@@ -146,6 +144,7 @@ public class ViewManager implements ClientObserver,GuiObserver {
     private void insertSpecificPlayer(int i, int j, UserData playerData) {
         Platform.runLater(()->controllerGameBoardScene.setSpecificPlayer(i,j,playerData));
     }
+
     /*TODO mettere isDOME() in fakecell*/
     private void insertSpecificLevel(int i, int j, int level) {
         Platform.runLater(()->controllerGameBoardScene.setSpecificLevel(i,j,level,false));
