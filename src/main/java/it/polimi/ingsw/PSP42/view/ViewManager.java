@@ -56,6 +56,7 @@ public class ViewManager implements ClientObserver,GuiObserver {
                 controllerChooseGodScene = loader.getController();
             else if(path.equals(GAMEBOARD_SCENE_PATH))
                 controllerGameBoardScene = loader.getController();
+
             if(stage.getScene()==null) {
                 Scene first = new Scene(root);
                 stage.setScene(first);
@@ -79,7 +80,7 @@ public class ViewManager implements ClientObserver,GuiObserver {
 
     @Override
     public void updateConnectionStart() {
-        while (! isPlayPushed()){
+        while (!isPlayPushed()) {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
@@ -99,6 +100,7 @@ public class ViewManager implements ClientObserver,GuiObserver {
         setLayout(WAITING_SCENE_PATH);
     }
 
+
     @Override
     public void updateGameStatus(Object o) {
         Platform.runLater(()-> controllerWelcomeScene.setStatusLabel((String)o));
@@ -109,6 +111,7 @@ public class ViewManager implements ClientObserver,GuiObserver {
         inputGui(input);
     }
 
+
     public void inputGui(String input){
         client.saveInput(input);
     }
@@ -117,6 +120,7 @@ public class ViewManager implements ClientObserver,GuiObserver {
         return client;
     }
 
+
     /**
      * Method to print the current GameBoard situation on the screen
      */
@@ -124,10 +128,20 @@ public class ViewManager implements ClientObserver,GuiObserver {
     public void updateShow(Object o) {
         FakeCell[][] gCopy = (FakeCell[][]) o;
         int DIM = gCopy.length;
+        int level = 0;
+        int previousBuiltLevel = 0;
         for (int i = 0; i < DIM; i++) {
             for (int j = 0; j < DIM; j++) {
-                if (gCopy[i][j].level != 0)
-                    insertSpecificLevel(i, j, gCopy[i][j].level);
+                if (gCopy[i][j].level != 0) {
+                    level = gCopy[i][j].level;
+                    for (int k = level - 1; k >= 0; k--) {
+                        if (gCopy[i][j].builtLevel[k]) {
+                            previousBuiltLevel = k;
+                            k = 0;
+                        }
+                    }
+                    insertSpecificLevel(i, j, level, previousBuiltLevel);
+                }
                 if (gCopy[i][j].playerName != null)
                     insertSpecificPlayer(i, j, client.getPlayerData(gCopy[i][j].playerName));
             }
@@ -140,11 +154,10 @@ public class ViewManager implements ClientObserver,GuiObserver {
     }
 
     private void insertSpecificPlayer(int i, int j, UserData playerData) {
-        Platform.runLater(()->controllerGameBoardScene.setSpecificPlayer(i,j,playerData));
+        Platform.runLater(()->controllerGameBoardScene.setSpecificPlayer(i, j, playerData));
     }
 
-    /*TODO mettere isDOME() in fakecell*/
-    private void insertSpecificLevel(int i, int j, int level) {
-        Platform.runLater(()->controllerGameBoardScene.setSpecificLevel(i,j,level,false));
+    private void insertSpecificLevel(int i, int j, int level, int previousBuiltLevel) {
+        Platform.runLater(()->controllerGameBoardScene.setSpecificLevel(i, j, level, previousBuiltLevel));
     }
 }

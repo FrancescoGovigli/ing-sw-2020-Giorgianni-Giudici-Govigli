@@ -5,23 +5,17 @@ import java.io.*;
 public class FakeCell implements Serializable {
 
     public String playerName;
+    public int id;
     public int workerNum;
     public int level;
-    public int id;
+    public boolean[] builtLevel;
 
-    public FakeCell(String playerName, int workerNum, int level, int id) {
+    public FakeCell(String playerName, int id, int workerNum, int level, boolean[] builtLevel) {
         this.playerName = playerName;
+        this.id = id;
         this.workerNum = workerNum;
         this.level = level;
-        this.id = id;
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public int getWorkerNum() {
-        return workerNum;
+        this.builtLevel = builtLevel;
     }
 
     public String getPlayerName() {
@@ -32,6 +26,18 @@ public class FakeCell implements Serializable {
         return id;
     }
 
+    public int getWorkerNum() {
+        return workerNum;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public boolean[] getBuiltLevel() {
+        return builtLevel;
+    }
+
     /**
      * Method that creates the copy of the game board at the call state
      * @return gCopy (FakeCell matrix containing only player name, worker 1 or 2 and construction level)
@@ -40,9 +46,10 @@ public class FakeCell implements Serializable {
         FakeCell[][] gCopy = new FakeCell[5][5];
         GameBoard g = GameBoard.getInstance();
         String playerName = null;
+        int id = 0;
         int workerNum = 0;
         int level = 0;
-        int id = 0;
+        boolean[] builtLevel;
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
                 playerName = null;
@@ -57,7 +64,8 @@ public class FakeCell implements Serializable {
                         workerNum = 2;
                 }
                 level = g.getCell(i, j).getLevel();
-                gCopy[i][j] = new FakeCell(playerName, workerNum, level, id);
+                builtLevel = g.getCell(i, j).getBuiltLevel();
+                gCopy[i][j] = new FakeCell(playerName, id, workerNum, level, builtLevel);
             }
         }
         return gCopy;
