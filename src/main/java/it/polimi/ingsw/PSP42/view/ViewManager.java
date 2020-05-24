@@ -56,8 +56,6 @@ public class ViewManager implements ClientObserver,GuiObserver {
                 controllerChooseGodScene = loader.getController();
             else if(path.equals(GAMEBOARD_SCENE_PATH))
                 controllerGameBoardScene = loader.getController();
-
-            controllerGameBoardScene.prova();
             if(stage.getScene()==null) {
                 Scene first = new Scene(root);
                 stage.setScene(first);
