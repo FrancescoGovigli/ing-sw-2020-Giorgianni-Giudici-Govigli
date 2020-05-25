@@ -11,6 +11,7 @@ import java.util.*;
 public class ClientGUI implements Runnable, ClientObservable {
     private boolean active=true;
     private boolean writeActive=true;
+    private boolean elaborating=false;
     private ArrayList<UserData> playersData = new ArrayList<>();
     private ClientObserver clientObserver;
     String input;
@@ -36,7 +37,7 @@ public class ClientGUI implements Runnable, ClientObservable {
             @Override
             public void run() {
                 try {
-                    while (isActive()) {
+                    while (isActive() && !elaborating) {
                         Object inputObject = socketIn.readObject();
                         if(inputObject instanceof String){
                             if(((String) inputObject).contains(ViewMessage.personalLoseMessage)) {
@@ -51,6 +52,7 @@ public class ClientGUI implements Runnable, ClientObservable {
                             }
                             else {
                                 System.out.println("[FROM SERVER] : "+inputObject);
+                                elaborateMessage(inputObject);
                                 socketIn.close();
                                 setActive(false);
                                 System.out.println("[FROM SERVER] : PRESS [ENTER] TO QUIT ");
@@ -67,7 +69,9 @@ public class ClientGUI implements Runnable, ClientObservable {
                         else
                             notifyShow(inputObject);
                     }
-                } catch (Exception e){
+                } catch (IOException | ClassNotFoundException e){
+                    e.printStackTrace();
+                    System.out.println("uscito dalla connessione");
                     setActive(false);
                 }
             }
@@ -138,20 +142,22 @@ public class ClientGUI implements Runnable, ClientObservable {
     }
 
     public void elaborateMessage(Object message) {
-        if(message instanceof String) {
-            if (message.equals("Welcome player 1 insert your name: "))
-                notifyWelcomeFirstPlayer();
-            else if (((String) message).contains("you are waiting the FIRST PLAYER to set the number of players, insert your name: "))
-                notifyWelcomeOtherPlayers();
-            else if (message.equals("You are waiting other Players to connect..."))
-                notifyWaiting();
-            else if(message.equals(ServerMessage.extraClient) || message.equals(ServerMessage.gameInProgress) || message.equals("Name already taken choose another nickname"))
-                notifyGameStatus(message);
-            /*else if(!message.equals("You entered the Game! 😊 \n") && !((String) message).contains("please enter the number of players"))
-                notifyGameMessage(message);*/
-        }
-        else if(message instanceof List)
-            notifyGodSelection(message);
+        elaborating=true;
+            if (message instanceof String) {
+                if (message.equals("Welcome player 1 insert your name: "))
+                    notifyWelcomeFirstPlayer();
+                else if (((String) message).contains("you are waiting the FIRST PLAYER to set the number of players, insert your name: "))
+                    notifyWelcomeOtherPlayers();
+                else if (message.equals("You are waiting other Players to connect..."))
+                    notifyWaiting();
+                else if (message.equals(ServerMessage.extraClient) || message.equals(ServerMessage.gameInProgress) || message.equals("Name already taken choose another nickname") || message.equals(ServerMessage.inactivityEnd))
+                    notifyGameStatus(message);
+                else if (! message.equals("You entered the Game! 😊 \n") && ! ((String) message).contains("please enter the number of players"))
+                    notifyGameMessage(message);
+            } else if (message instanceof List)
+                notifyGodSelection(message);
+
+            elaborating=false;
     }
 
     /**

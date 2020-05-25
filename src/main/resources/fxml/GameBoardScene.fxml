@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.net.*?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane fx:id="root"
-          alignment="CENTER"
-          prefHeight="672" prefWidth="1200"
-          xmlns="http://javafx.com/javafx/10.0.2-internal"
-          xmlns:fx="http://javafx.com/fxml/1"
-          fx:controller="it.polimi.ingsw.PSP42.view.ControllerGameBoardScene">
+<GridPane fx:id="root" alignment="CENTER" prefHeight="672" prefWidth="1200" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.PSP42.view.ControllerGameBoardScene">
 
     <Pane id="santoriniLogo" prefHeight="20" prefWidth="54" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
@@ -16,35 +12,35 @@
 
     <GridPane id="grid-pane" fx:id="board" alignment="CENTER" prefHeight="443.0" prefWidth="586.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
 
-        <Pane id="cell00" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-        <Pane id="cell01" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-        <Pane id="cell02" GridPane.columnIndex="2" GridPane.rowIndex="0" />
-        <Pane id="cell03" GridPane.columnIndex="3" GridPane.rowIndex="0" />
-        <Pane id="cell04" GridPane.columnIndex="4" GridPane.rowIndex="0" />
+        <Pane id="cell00" onMouseClicked="#PlayerChoice" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+        <Pane id="cell01" onMouseClicked="#PlayerChoice" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        <Pane id="cell02" onMouseClicked="#PlayerChoice" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+        <Pane id="cell03" onMouseClicked="#PlayerChoice" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+        <Pane id="cell04" onMouseClicked="#PlayerChoice" GridPane.columnIndex="4" GridPane.rowIndex="0" />
 
-        <Pane id="cell10" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-        <Pane id="cell11" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-        <Pane id="cell12" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-        <Pane id="cell13" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-        <Pane id="cell14" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+        <Pane id="cell10" onMouseClicked="#PlayerChoice" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        <Pane id="cell11" onMouseClicked="#PlayerChoice" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <Pane id="cell12" onMouseClicked="#PlayerChoice" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+        <Pane id="cell13" onMouseClicked="#PlayerChoice" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+        <Pane id="cell14" onMouseClicked="#PlayerChoice" GridPane.columnIndex="4" GridPane.rowIndex="1" />
 
-        <Pane id="cell20" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-        <Pane id="cell21" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-        <Pane id="cell22" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-        <Pane id="cell23" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-        <Pane id="cell24" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+        <Pane id="cell20" onMouseClicked="#PlayerChoice" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+        <Pane id="cell21" onMouseClicked="#PlayerChoice" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        <Pane id="cell22" onMouseClicked="#PlayerChoice" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+        <Pane id="cell23" onMouseClicked="#PlayerChoice" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+        <Pane id="cell24" onMouseClicked="#PlayerChoice" GridPane.columnIndex="4" GridPane.rowIndex="2" />
 
-        <Pane id="cell30" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-        <Pane id="cell31" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-        <Pane id="cell32" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-        <Pane id="cell33" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-        <Pane id="cell34" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+        <Pane id="cell30" onMouseClicked="#PlayerChoice" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+        <Pane id="cell31" onMouseClicked="#PlayerChoice" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+        <Pane id="cell32" onMouseClicked="#PlayerChoice" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+        <Pane id="cell33" onMouseClicked="#PlayerChoice" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+        <Pane id="cell34" onMouseClicked="#PlayerChoice" GridPane.columnIndex="4" GridPane.rowIndex="3" />
 
-        <Pane id="cell40" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-        <Pane id="cell41" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-        <Pane id="cell42" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-        <Pane id="cell43" GridPane.columnIndex="3" GridPane.rowIndex="4" />
-        <Pane id="cell44" GridPane.columnIndex="4" GridPane.rowIndex="4" />
+        <Pane id="cell40" onMouseClicked="#PlayerChoice" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+        <Pane id="cell41" onMouseClicked="#PlayerChoice" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+        <Pane id="cell42" onMouseClicked="#PlayerChoice" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+        <Pane id="cell43" onMouseClicked="#PlayerChoice" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+        <Pane id="cell44" onMouseClicked="#PlayerChoice" GridPane.columnIndex="4" GridPane.rowIndex="4" />
 
         <gridLinesVisible>true</gridLinesVisible>
 
@@ -64,6 +60,11 @@
             <RowConstraints minHeight="10.0" percentHeight="20.0" prefHeight="100.0" />
         </rowConstraints>
     </GridPane>
+   <Pane id="messageCloud" prefHeight="200.0" prefWidth="200.0" scaleY="0.75" translateY="-5.0" GridPane.columnIndex="1">
+      <children>
+         <Label id="gameMessage" fx:id="GameLabel" layoutX="19.0" layoutY="31.0" prefHeight="31.0" prefWidth="434.0" text="" />
+      </children>
+   </Pane>
 
     <rowConstraints>
         <RowConstraints minHeight="10.0" percentHeight="14.0" prefHeight="100.0" />

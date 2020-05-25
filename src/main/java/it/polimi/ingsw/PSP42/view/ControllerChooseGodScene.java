@@ -42,7 +42,7 @@ public class ControllerChooseGodScene implements GuiObservable {
             informManagerInput(godCard2);
         else if(clicked.equals(card3))
             informManagerInput(godCard3);
-        ViewManager.setLayout("/fxml/GameBoardScene.fxml");
+        //ViewManager.setLayout("/fxml/GameBoardScene.fxml");
     }
 
     public void setGods(Object listOfGods) {

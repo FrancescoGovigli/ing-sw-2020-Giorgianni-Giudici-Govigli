@@ -3,6 +3,7 @@ package it.polimi.ingsw.PSP42.view;
 import it.polimi.ingsw.PSP42.*;
 import it.polimi.ingsw.PSP42.client.*;
 import it.polimi.ingsw.PSP42.model.*;
+import it.polimi.ingsw.PSP42.server.*;
 import javafx.application.*;
 import javafx.fxml.*;
 import javafx.scene.*;
@@ -24,6 +25,8 @@ public class ViewManager implements ClientObserver,GuiObserver {
     private static String WELCOME_OTHER_PLAYERS_SCENE_PATH = "/fxml/WelcomeNotFirstPlayerScene.fxml";
     private static String CHOOSE_GOD_SCENE_PATH = "/fxml/ChooseGodScene.fxml";
     private static String GAMEBOARD_SCENE_PATH = "/fxml/GameBoardScene.fxml";
+    private static String DISCONNECTION_SCENE_PATH = "/fxml/DisconnectionScene.fxml";
+    private static FakeCell[][] gameBoardState;
 
     public ViewManager(ClientGUI client){
         this.client = client;
@@ -31,6 +34,10 @@ public class ViewManager implements ClientObserver,GuiObserver {
 
     public static boolean isPlayPushed() {
         return playPushed;
+    }
+
+    public static FakeCell[][] getGameBoardState() {
+        return gameBoardState;
     }
 
     public static void setPlayPushed(boolean playPushed) {
@@ -62,11 +69,12 @@ public class ViewManager implements ClientObserver,GuiObserver {
                 stage.setScene(first);
                 return;
             }
-            stage.getScene().setRoot(root);
+            Platform.runLater(()->stage.getScene().setRoot(root));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 
     @Override
     public  void updateWelcomeFirstPlayer() {
@@ -82,7 +90,7 @@ public class ViewManager implements ClientObserver,GuiObserver {
     public void updateConnectionStart() {
         while (!isPlayPushed()) {
             try {
-                Thread.sleep(100);
+                Thread.sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -92,7 +100,7 @@ public class ViewManager implements ClientObserver,GuiObserver {
     @Override
     public void updateGodSelection(Object listOfGods) {
         setLayout(CHOOSE_GOD_SCENE_PATH);
-        controllerChooseGodScene.setGods(listOfGods);
+        Platform.runLater(()->controllerChooseGodScene.setGods(listOfGods));
     }
 
     @Override
@@ -103,7 +111,12 @@ public class ViewManager implements ClientObserver,GuiObserver {
 
     @Override
     public void updateGameStatus(Object o) {
-        Platform.runLater(()-> controllerWelcomeScene.setStatusLabel((String)o));
+        if(!o.equals(ServerMessage.inactivityEnd)) {
+            Platform.runLater(() -> controllerWelcomeScene.setStatusLabel((String) o));
+            return;
+        }
+        Platform.runLater(() -> controllerGameBoardScene.showGameMessage(o));
+        setLayout(DISCONNECTION_SCENE_PATH);
     }
 
     @Override
@@ -126,12 +139,16 @@ public class ViewManager implements ClientObserver,GuiObserver {
      */
     @Override
     public void updateShow(Object o) {
+        setLayout(GAMEBOARD_SCENE_PATH);
         FakeCell[][] gCopy = (FakeCell[][]) o;
+        gameBoardState = gCopy;
         int DIM = gCopy.length;
         int level = 0;
         int previousBuiltLevel = 0;
         for (int i = 0; i < DIM; i++) {
             for (int j = 0; j < DIM; j++) {
+                int finalI = i;
+                int finalJ = j;
                 if (gCopy[i][j].level != 0) {
                     level = gCopy[i][j].level;
                     for (int k = level - 1; k >= 0; k--) {
@@ -140,17 +157,29 @@ public class ViewManager implements ClientObserver,GuiObserver {
                             k = 0;
                         }
                     }
-                    insertSpecificLevel(i, j, level, previousBuiltLevel);
+
+                    int finalPreviousBuiltLevel = previousBuiltLevel;
+                    int finalLevel = level;
+                    Platform.runLater(()->controllerGameBoardScene.setSpecificLevel(finalI,finalJ, finalLevel, finalPreviousBuiltLevel));
+
                 }
+
                 if (gCopy[i][j].playerName != null)
-                    insertSpecificPlayer(i, j, client.getPlayerData(gCopy[i][j].playerName));
+                    Platform.runLater(()-> controllerGameBoardScene.setSpecificPlayer(finalI, finalJ, client.getPlayerData(gCopy[finalI][finalJ].playerName)));
+                else
+                    Platform.runLater(()-> controllerGameBoardScene.setSpecificPlayer(finalI, finalJ, null));
             }
         }
+
+
+
     }
 
     @Override
     public void updateGameMessage(Object message) {
-        Platform.runLater(()->controllerGameBoardScene.showGameMessage(message));
+        if(controllerGameBoardScene!=null) {
+            Platform.runLater(() -> controllerGameBoardScene.showGameMessage(message));
+        }
     }
 
     private void insertSpecificPlayer(int i, int j, UserData playerData) {
@@ -159,5 +188,9 @@ public class ViewManager implements ClientObserver,GuiObserver {
 
     private void insertSpecificLevel(int i, int j, int level, int previousBuiltLevel) {
         Platform.runLater(()->controllerGameBoardScene.setSpecificLevel(i, j, level, previousBuiltLevel));
+    }
+
+    public static void closeWindow(){
+        stage.close();
     }
 }

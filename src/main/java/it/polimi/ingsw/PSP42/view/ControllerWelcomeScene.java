@@ -20,7 +20,12 @@ public class ControllerWelcomeScene implements GuiObservable {
 
     private boolean ableToClickPlayers = false;
     private String numberOfPlayers;
-    private String nickName;
+
+    public static String getNickName() {
+        return nickName;
+    }
+
+    private static String nickName;
     private GuiObserver guiObserver = new ViewManager(ViewManager.getInstance());
 
     @FXML
@@ -74,12 +79,12 @@ public class ControllerWelcomeScene implements GuiObservable {
         informManagerInput(nickName);
     }
 
-    public void saveNickname(ActionEvent event){
+    /*public void saveNickname(ActionEvent event){
         TextField text = (TextField)event.getSource();
         String nickName = text.getText();
         System.out.println(nickName);
         informManagerInput(nickName);
-    }
+    }*/
 
 
     public void setStatusLabel(String message){

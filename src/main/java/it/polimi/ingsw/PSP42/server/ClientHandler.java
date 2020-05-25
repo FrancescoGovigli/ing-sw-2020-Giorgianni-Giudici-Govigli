@@ -106,15 +106,12 @@ public class ClientHandler {
      */
     public Object readFromClient() {
         final String[] str = new String[1];
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    str[0] = input.readLine();
-                    System.out.println("[FROM CLIENT] :" + str[0]);
-                } catch (Exception e){
-                    setActive(false);
-                }
+        Thread t = new Thread(() -> {
+            try {
+                str[0] = input.readLine();
+                System.out.println("[FROM CLIENT] :" + str[0]);
+            } catch (Exception e){
+                setActive(false);
             }
         });
         t.start();

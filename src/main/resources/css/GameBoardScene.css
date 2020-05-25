@@ -57,3 +57,45 @@ root {
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
 }
+
+#messageCloud{
+    -fx-background-image: url("../images/PopUp.png");
+    -fx-background-size: stretch;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+#gameMessage{
+    -fx-padding: 200%;
+    -fx-background-size: stretch;
+    -fx-font-family: "Dalek Pinpoint";
+    -fx-font-size: 18;
+    -fx-text-fill: white;
+    -fx-text-alignment: center;
+
+}
+
+#disconnectionField {
+    -fx-background-image:url("../images/PopUp.png");
+    -fx-background-size: stretch;
+    -fx-alignment: center;
+}
+
+#quitButton {
+    -fx-background-image: url("../images/btn_blue.png");
+    -fx-background-size: stretch;
+    -fx-font-family: "Dalek Pinpoint";
+    -fx-font-size: 20;
+    -fx-text-fill: white;
+    -fx-text-alignment: center;
+}
+
+#quitButton:pressed {
+    -fx-background-image: url("../images/btn_blue_pressed.png");
+    -fx-background-size: stretch;
+    -fx-font-family: "Dalek Pinpoint";
+    -fx-font-size: 20;
+    -fx-text-fill: white;
+    -fx-text-alignment: center;
+    -fx-background-color: transparent;
+}

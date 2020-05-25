@@ -42,7 +42,7 @@ public class NetworkVirtualView {
                 }
             }
         };
-        timer.schedule(task, 30000);
+        timer.schedule(task, 25000);
         fromClient = p.readFromClient();
         timer.cancel();
         return fromClient;

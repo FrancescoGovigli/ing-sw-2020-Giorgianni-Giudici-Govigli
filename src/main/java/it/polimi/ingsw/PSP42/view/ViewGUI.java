@@ -12,7 +12,7 @@ public class ViewGUI extends Application {
 
     @Override
     public void start(Stage stage) {
-            //stage.setResizable(false);
+            stage.setResizable(false);
             ViewManager.setStage(stage);
             ViewManager.setLayout("/fxml/WelcomeScene.fxml");
             stage.show();

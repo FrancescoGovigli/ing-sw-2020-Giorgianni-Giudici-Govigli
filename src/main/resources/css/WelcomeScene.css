@@ -28,7 +28,7 @@
     -fx-background-color: transparent;
 }
 
-#chooseButton {
+#chooseButton.button {
     -fx-background-image: url("../images/btn_blue.png");
     -fx-background-size: stretch;
     -fx-font-family: "Dalek Pinpoint";

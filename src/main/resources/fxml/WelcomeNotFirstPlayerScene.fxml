@@ -5,45 +5,51 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane id="back" prefHeight="672.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.PSP42.view.ControllerWelcomeScene">
-
-    <!--Inner GridPane-->
-    <GridPane prefHeight="67.0" prefWidth="638.0" translateX="80.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-
-        <TextField id="textfield" fx:id="textfieldOtherPlayers" alignment="CENTER" editable="false" onAction="#saveNickname" onMouseClicked="#deleteText" prefHeight="52.0" prefWidth="216.0" text="Insert your Nickname" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-   
-        <ProgressIndicator id="progressIndicator" prefHeight="53.0" prefWidth="170.0" translateX="-300.0" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-         <GridPane.margin>
-            <Insets />
-         </GridPane.margin>
-      </ProgressIndicator>
-   
-        <Label id="progressLabel" prefHeight="22.0" prefWidth="293.0" text="Waiting Game Initialisation..." translateX="60.0" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-
-        <rowConstraints>
-            <RowConstraints maxHeight="67.0" minHeight="0.0" percentHeight="10.0" prefHeight="0.0" />
-            <RowConstraints maxHeight="67.0" minHeight="0.0" percentHeight="80.0" prefHeight="67.0" />
-            <RowConstraints percentHeight="10.0" />
-        </rowConstraints>
-        <columnConstraints>
-            <ColumnConstraints percentWidth="17" />
-            <ColumnConstraints percentWidth="36" />
-            <ColumnConstraints percentWidth="2" />
-            <ColumnConstraints percentWidth="80.0" />
-        </columnConstraints>
-    </GridPane>
-   <Button id="chooseButton" mnemonicParsing="false" onMouseClicked="#submitName" prefHeight="41.0" prefWidth="55.0" text="Submit" translateX="210.0" translateY="-35.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+<GridPane id="back" prefHeight="712.0" prefWidth="1169.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.PSP42.view.ControllerWelcomeScene">
    <Label id="statusLabel" fx:id="statusLabel" text="" translateX="135.0" translateY="240.0" GridPane.columnIndex="1" />
+   <GridPane prefHeight="168.0" prefWidth="558.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+     <columnConstraints>
+       <ColumnConstraints hgrow="SOMETIMES" maxWidth="421.0" minWidth="10.0" prefWidth="265.8" />
+       <ColumnConstraints hgrow="SOMETIMES" maxWidth="389.19999999999993" minWidth="10.0" prefWidth="334.99999999999994" />
+     </columnConstraints>
+      <children>
+      
+           <TextField id="textfield" fx:id="textfieldOtherPlayers" alignment="CENTER" editable="false" onMouseClicked="#deleteText" prefHeight="64.0" prefWidth="267.0" text="Insert your Nickname">
+            <GridPane.margin>
+               <Insets left="60.0" />
+            </GridPane.margin></TextField>
+         <Button id="chooseButton" mnemonicParsing="false" onMouseClicked="#submitName" prefHeight="41.0" prefWidth="55.0" text="Submit" GridPane.rowIndex="1">
+            <GridPane.margin>
+               <Insets left="135.0" />
+            </GridPane.margin></Button>
+      
+           <ProgressIndicator id="progressIndicator" prefHeight="32.0" prefWidth="34.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
+            <GridPane.margin>
+               <Insets />
+            </GridPane.margin>
+         </ProgressIndicator>
+      
+           <Label id="progressLabel" prefHeight="22.0" prefWidth="295.0" text="Waiting Game Initialisation..." GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="CENTER">
+            <GridPane.margin>
+               <Insets left="5.0" />
+            </GridPane.margin></Label>
+      </children>
+      <rowConstraints>
+         <RowConstraints prefHeight="80.0" />
+         <RowConstraints minHeight="10.0" prefHeight="70.0" />
+      </rowConstraints>
+   </GridPane>
 
     <rowConstraints>
-        <RowConstraints percentHeight="75" />
-        <RowConstraints percentHeight="10" />
-        <RowConstraints percentHeight="15" />
+        <RowConstraints maxHeight="300.0" minHeight="378.0" percentHeight="75.0" prefHeight="0.0" />
+        <RowConstraints maxHeight="193.0" minHeight="71.0" percentHeight="30.0" prefHeight="193.0" />
+        <RowConstraints percentHeight="15.0" />
     </rowConstraints>
     <columnConstraints>
-        <ColumnConstraints percentWidth="30" />
-        <ColumnConstraints percentWidth="50" />
-        <ColumnConstraints percentWidth="20" />
+        <ColumnConstraints maxWidth="464.0" minWidth="365.0" percentWidth="35.0" prefWidth="460.0" />
+        <ColumnConstraints maxWidth="595.0" minWidth="496.0" percentWidth="50.0" prefWidth="500.0" />
+        <ColumnConstraints percentWidth="10.0" />
+      <ColumnConstraints />
     </columnConstraints>
 
     <stylesheets>
