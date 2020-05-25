@@ -1,6 +1,5 @@
 package it.polimi.ingsw.PSP42.view;
 
-import javafx.event.*;
 import javafx.fxml.*;
 import javafx.scene.*;
 import javafx.scene.control.*;
@@ -86,8 +85,8 @@ public class ControllerGameBoardScene {
      * @return the corresponding image
      */
     private ImageView getLevelImage(int level, int previousBuiltLevel) {
-        if(GameBoardElementsPath.getImagePath(level, previousBuiltLevel) != null)
-            return new ImageView(GameBoardElementsPath.getImagePath(level, previousBuiltLevel));
+        if(GameBoardElementsPath.getLevelImagePath(level, previousBuiltLevel) != null)
+            return new ImageView(GameBoardElementsPath.getLevelImagePath(level, previousBuiltLevel));
         else
             return null;
     }
@@ -98,8 +97,8 @@ public class ControllerGameBoardScene {
      * @return the corresponding image
      */
     private ImageView getWorkerImage(String worker) {
-        if(GameBoardElementsPath.getWorkerImage(worker) != null)
-            return new ImageView(GameBoardElementsPath.getWorkerImage(worker));
+        if(GameBoardElementsPath.getWorkerImagePath(worker) != null)
+            return new ImageView(GameBoardElementsPath.getWorkerImagePath(worker));
         else
             return null;
     }

@@ -6,20 +6,20 @@ public class GameBoardElementsPath {
     public static String LEVEL1 = "/images/lvl1.png";
     public static String LEVEL2 = "/images/lvl2.png";
     public static String LEVEL3 = "/images/lvl3.png";
-    public static String LEVEL1DOME = "/images/lvl1Dome.png";
-    public static String LEVEL2DOME = "/images/lvl2Dome.png";
-    public static String LEVEL3DOME = "/images/lvl3Dome.png";
+    public static String LEVEL1DOME = "/images/lvl1dome.png";
+    public static String LEVEL2DOME = "/images/lvl2dome.png";
+    public static String LEVEL3DOME = "/images/lvl3dome.png";
 
     public static String NONE = "/images/glassBackground.png";
-    public static String APOLLO_WORKER = "/images/Apollo/ApolloWorker.png";
-    public static String ARTEMIS_WORKER = "/images/Artemis/ArtemisWorker.png";
-    public static String ATHENA_WORKER = "/images/Athena/AthenaWorker.png";
-    public static String ATLAS_WORKER = "images/Atlas/AtlasWorker.png";
-    public static String DEMETER_WORKER = "images/Demeter/DemeterWorker.png";
-    public static String HEPHAESTUS_WORKER = "images/Hephaestus/HephaestusWorker.png";
-    public static String MINOTAUR_WORKER = "images/Minotaur/MinotaurWorker.png";
-    public static String PAN_WORKER = "images/Pan/PanWorker.png";
-    public static String PROMETHEUS_WORKER = "/images/Prometheus/PrometheusWorker.png";
+    public static String APOLLO_WORKER = "/images/apollo/apolloWorker.png";
+    public static String ARTEMIS_WORKER = "/images/artemis/artemisWorker.png";
+    public static String ATHENA_WORKER = "/images/athena/athenaWorker.png";
+    public static String ATLAS_WORKER = "images/atlas/atlasWorker.png";
+    public static String DEMETER_WORKER = "images/demeter/demeterWorker.png";
+    public static String HEPHAESTUS_WORKER = "images/hephaestus/hephaestusWorker.png";
+    public static String MINOTAUR_WORKER = "images/minotaur/minotaurWorker.png";
+    public static String PAN_WORKER = "images/pan/panWorker.png";
+    public static String PROMETHEUS_WORKER = "/images/prometheus/prometheusWorker.png";
 
     /**
      * Method to obtain the path relative to the indicated level, considering the one on which it rests
@@ -27,18 +27,25 @@ public class GameBoardElementsPath {
      * @param previousBuiltLevel
      * @return the corresponding path as a string
      */
-    public static String getImagePath(int level, int previousBuiltLevel) {
+    public static String getLevelImagePath(int level, int previousBuiltLevel) {
         if (level == 0)
             return GROUND;
-        else if (level == 4 && previousBuiltLevel != 3)
+        else if (level == 4)
             return "/images/lvl" + previousBuiltLevel + "dome.png";
         return "/images/lvl" + level + ".png";
     }
 
-    public static String getWorkerImage(String worker){
+    /**
+     * Method to obtain the path relative to the specified worker (god)
+     * @param worker
+     * @return the corresponding path as a string
+     */
+    public static String getWorkerImagePath(String worker) {
         if (worker.equals(null))
             return NONE;
-        switch (worker) {
+        else
+            return "/images/" + worker.toLowerCase() + "/" + worker.toLowerCase() + "Worker.png";
+        /*switch (worker) {
             case "APOLLO": {
                 return APOLLO_WORKER;
             }
@@ -68,6 +75,6 @@ public class GameBoardElementsPath {
             }
             default:
                 return NONE;
-        }
+        }*/
     }
 }
