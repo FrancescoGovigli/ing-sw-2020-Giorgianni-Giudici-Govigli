@@ -22,7 +22,7 @@
                   GridPane.columnIndex="1"
                   GridPane.valignment="CENTER"
                   GridPane.halignment="CENTER">
-            <Button fx:id="card1"
+            <Button fx:id="buttonCard1"
                     onMouseEntered="#description"
                     onMouseExited="#image"
                     onAction="#goToGameBoardScene"
@@ -47,7 +47,7 @@
                   GridPane.columnIndex="3"
                   GridPane.valignment="CENTER"
                   GridPane.halignment="CENTER">
-            <Button fx:id="card2"
+            <Button fx:id="buttonCard2"
                     onMouseEntered="#description"
                     onMouseExited="#image"
                     onAction="#goToGameBoardScene"
@@ -72,7 +72,7 @@
                   GridPane.columnIndex="5"
                   GridPane.valignment="CENTER"
                   GridPane.halignment="CENTER">
-            <Button fx:id="card3"
+            <Button fx:id="buttonCard3"
                     onMouseEntered="#description"
                     onMouseExited="#image"
                     onAction="#goToGameBoardScene"

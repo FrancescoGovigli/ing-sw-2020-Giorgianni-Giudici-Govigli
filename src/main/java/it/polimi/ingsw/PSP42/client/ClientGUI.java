@@ -9,6 +9,7 @@ import java.net.*;
 import java.util.*;
 
 public class ClientGUI implements Runnable, ClientObservable {
+
     private boolean active=true;
     private boolean writeActive=true;
     private boolean elaborating=false;
@@ -18,7 +19,7 @@ public class ClientGUI implements Runnable, ClientObservable {
 
     public UserData getPlayerData(String nickname){
         for (UserData u:playersData) {
-            if(u.getNickname().equals(nickname))
+            if (u.getNickname().equals(nickname))
                 return u;
         }
         return null;
@@ -39,30 +40,30 @@ public class ClientGUI implements Runnable, ClientObservable {
                 try {
                     while (isActive() && !elaborating) {
                         Object inputObject = socketIn.readObject();
-                        if(inputObject instanceof String){
-                            if(((String) inputObject).contains(ViewMessage.personalLoseMessage)) {
+                        if (inputObject instanceof String){
+                            if (((String) inputObject).contains(ViewMessage.personalLoseMessage)) {
                                 System.out.println("[FROM SERVER] : " + inputObject);
                                 System.out.println("Game closed, PRESS [ENTER] TO QUIT...");
                                 socketIn.close();
                                 setActive(false);
                             }
-                            else if(!inputObject.equals(ServerMessage.extraClient) && !inputObject.equals(ServerMessage.gameInProgress) && !inputObject.equals(ServerMessage.endGame) && !inputObject.equals(ServerMessage.inactivityEnd)) {
+                            else if (!inputObject.equals(ServerMessage.extraClient) && !inputObject.equals(ServerMessage.gameInProgress) && !inputObject.equals(ServerMessage.endGame) && !inputObject.equals(ServerMessage.inactivityEnd)) {
                                 System.out.println("[FROM SERVER] : " + inputObject);
                                 elaborateMessage(inputObject);
                             }
                             else {
-                                System.out.println("[FROM SERVER] : "+inputObject);
+                                System.out.println("[FROM SERVER] : " + inputObject);
                                 elaborateMessage(inputObject);
                                 socketIn.close();
                                 setActive(false);
                                 System.out.println("[FROM SERVER] : PRESS [ENTER] TO QUIT ");
                             }
                         }
-                        else if(inputObject instanceof Boolean)
-                            writeActive=(Boolean)inputObject;
-                        else if(inputObject instanceof UserData)
+                        else if (inputObject instanceof Boolean)
+                            writeActive = (Boolean)inputObject;
+                        else if (inputObject instanceof UserData)
                             playersData.add(((UserData) inputObject));
-                        else if(inputObject instanceof List) {
+                        else if (inputObject instanceof List) {
                             showGods(inputObject);
                             elaborateMessage(inputObject);
                         }
@@ -86,7 +87,7 @@ public class ClientGUI implements Runnable, ClientObservable {
             public void run() {
                 try {
                     while (isActive()) {
-                        if(writeActive && input!=null) {
+                        if (writeActive && input != null) {
                             socketOut.println(input);
                             socketOut.flush();
                             input=null;
@@ -106,7 +107,7 @@ public class ClientGUI implements Runnable, ClientObservable {
         BufferedReader scanner= new BufferedReader(new InputStreamReader(System.in));
         Socket server;
         try {
-            server = new Socket("localhost",4000);
+            server = new Socket("localhost", 4000);
             System.out.println("Connection established\n");
             notifyConnectionStart();
         } catch (IOException e) {
@@ -142,32 +143,30 @@ public class ClientGUI implements Runnable, ClientObservable {
     }
 
     public void elaborateMessage(Object message) {
-        elaborating=true;
+        elaborating = true;
             if (message instanceof String) {
                 if (message.equals("Welcome player 1 insert your name: "))
                     notifyWelcomeFirstPlayer();
                 else if (((String) message).contains("you are waiting the FIRST PLAYER to set the number of players, insert your name: "))
                     notifyWelcomeOtherPlayers();
-                else if (message.equals("You are waiting other Players to connect..."))
+                else if (message.equals("You are waiting other Players to connect...") || message.equals("Waiting opponent to pick a card..."))
                     notifyWaiting();
                 else if (message.equals(ServerMessage.extraClient) || message.equals(ServerMessage.gameInProgress) || message.equals("Name already taken choose another nickname") || message.equals(ServerMessage.inactivityEnd))
                     notifyGameStatus(message);
-                else if (! message.equals("You entered the Game! 😊 \n") && ! ((String) message).contains("please enter the number of players"))
+                else if (!message.equals("You entered the Game! 😊 \n") && !((String) message).contains("please enter the number of players"))
                     notifyGameMessage(message);
             } else if (message instanceof List)
                 notifyGodSelection(message);
-
-            elaborating=false;
+            elaborating = false;
     }
 
     /**
      * Add an observer to the Model's observer list
-     *
      * @param ob
      */
     @Override
     public void attach(ClientObserver ob) {
-        clientObserver=ob;
+        clientObserver = ob;
     }
 
     @Override
@@ -211,11 +210,11 @@ public class ClientGUI implements Runnable, ClientObservable {
     }
 
     public void saveInput(String input){
-        this.input=input;
+        this.input = input;
     }
 
     public void showGods(Object listOfGods) {
-        for (int i = 0; i <((List<String>)listOfGods).size() ; i++) {
+        for (int i = 0; i < ((List<String>)listOfGods).size() ; i++) {
             System.out.println(((List<String>)listOfGods).get(i));
         }
     }
