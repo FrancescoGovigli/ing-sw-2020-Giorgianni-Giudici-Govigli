@@ -20,6 +20,7 @@ public class ViewManager implements ClientObserver,GuiObserver {
     private static ControllerChooseGodScene controllerChooseGodScene;
     private static boolean playPushed = false;
     private static String CURRENT_SCENE_PATH;
+    private static String currentNickname;
     private static String WELCOME_FIRST_PLAYER_SCENE_PATH = "/fxml/WelcomeFirstPlayerScene.fxml";
     private static String WAITING_SCENE_PATH = "/fxml/WaitingScene2.fxml";
     private static String WELCOME_OTHER_PLAYERS_SCENE_PATH = "/fxml/WelcomeNotFirstPlayerScene.fxml";
@@ -62,6 +63,8 @@ public class ViewManager implements ClientObserver,GuiObserver {
             else if (path.equals(CHOOSE_GOD_SCENE_PATH))
                 controllerChooseGodScene = loader.getController();
             else if(path.equals(GAMEBOARD_SCENE_PATH))
+                controllerGameBoardScene = loader.getController();
+            else if(path.equals(DISCONNECTION_SCENE_PATH))
                 controllerGameBoardScene = loader.getController();
 
             if(stage.getScene()==null) {
@@ -111,13 +114,27 @@ public class ViewManager implements ClientObserver,GuiObserver {
 
     @Override
     public void updateGameStatus(Object o) {
-        if(!o.equals(ServerMessage.inactivityEnd)) {
-            Platform.runLater(() -> controllerWelcomeScene.setStatusLabel((String) o));
-            return;
-        }
-        Platform.runLater(() -> controllerGameBoardScene.showGameMessage(o));
-        setLayout(DISCONNECTION_SCENE_PATH);
+        Platform.runLater(() -> controllerWelcomeScene.setStatusLabel((String) o));
+
     }
+
+    @Override
+    public void updateGameMessage(Object message) {
+        if(controllerGameBoardScene!=null) {
+            if (! message.equals(ServerMessage.inactivityEnd)) {
+                if(((String)message).contains(ViewMessage.yourTurnMessage) || ((String)message).contains(ViewMessage.waitingYourTurn)) {
+                    currentNickname = getCurrentNickname(message);
+                    Platform.runLater(() -> controllerGameBoardScene.setPlayersLabel(client.getPlayersList(),currentNickname));
+                }
+
+                Platform.runLater(() -> controllerGameBoardScene.showGameMessage(message));
+                return;
+            }
+            setLayout(DISCONNECTION_SCENE_PATH);
+            Platform.runLater(() -> controllerGameBoardScene.showGameMessage(message));
+        }
+    }
+
 
     @Override
     public void fromGuiInput(String input) {
@@ -140,6 +157,8 @@ public class ViewManager implements ClientObserver,GuiObserver {
     @Override
     public void updateShow(Object o) {
         setLayout(GAMEBOARD_SCENE_PATH);
+        Platform.runLater(() -> controllerGameBoardScene.setPlayersLabel(client.getPlayersList(),currentNickname));
+
         FakeCell[][] gCopy = (FakeCell[][]) o;
         gameBoardState = gCopy;
         int DIM = gCopy.length;
@@ -173,22 +192,18 @@ public class ViewManager implements ClientObserver,GuiObserver {
 
 
 
+
     }
 
-    @Override
-    public void updateGameMessage(Object message) {
-        if(controllerGameBoardScene!=null) {
-            Platform.runLater(() -> controllerGameBoardScene.showGameMessage(message));
+    public String getCurrentNickname(Object o){
+        String turn = (String)o;
+        for (UserData u: client.getPlayersList()) {
+            if(turn.contains(u.getNickname()))
+                return u.getNickname();
         }
+       return null;
     }
 
-    private void insertSpecificPlayer(int i, int j, UserData playerData) {
-        Platform.runLater(()->controllerGameBoardScene.setSpecificPlayer(i, j, playerData));
-    }
-
-    private void insertSpecificLevel(int i, int j, int level, int previousBuiltLevel) {
-        Platform.runLater(()->controllerGameBoardScene.setSpecificLevel(i, j, level, previousBuiltLevel));
-    }
 
     public static void closeWindow(){
         stage.close();

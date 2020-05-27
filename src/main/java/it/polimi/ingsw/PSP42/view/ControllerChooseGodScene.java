@@ -80,7 +80,6 @@ public class ControllerChooseGodScene implements GuiObservable {
             informManagerInput(godCard2);
         else if(clicked.equals(buttonCard3))
             informManagerInput(godCard3);
-        //ViewManager.setLayout("/fxml/GameBoardScene.fxml");
     }
 
     /**

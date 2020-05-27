@@ -2,6 +2,7 @@ package it.polimi.ingsw.PSP42.view;
 
 import it.polimi.ingsw.PSP42.*;
 import it.polimi.ingsw.PSP42.model.*;
+import it.polimi.ingsw.PSP42.server.*;
 import javafx.application.*;
 import javafx.fxml.*;
 import javafx.scene.*;
@@ -11,29 +12,29 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 
+import java.util.*;
+
 public class ControllerGameBoardScene implements GuiObservable {
 
+
+    public Label player1Label;
+    public Label player2Label;
+    public Label player3Label;
+
+    public Pane imagePlayer1;
+    public Pane imagePlayer2;
+    public Pane imagePlayer3;
     private GuiObserver guiObserver = new ViewManager(ViewManager.getInstance());
     @FXML
     public GridPane root;
-
     @FXML
     public GridPane board;
-
     @FXML
     public ImageView worker1;
-
-    @FXML
-    public TextField textField;
-
-    @FXML
-    public Label label;
-
-    @FXML
-    public Button button;
-
     @FXML
     public Label GameLabel;
+    @FXML
+    public Label DisconnectionLabel;
 
     /**
      * Method to set the appropriate construction on the GUI_GameBoard,
@@ -88,8 +89,15 @@ public class ControllerGameBoardScene implements GuiObservable {
     }
 
     public void showGameMessage(Object message) {
+        if(message.equals(ServerMessage.inactivityEnd)){
+            DisconnectionLabel.setText((String)message);
+            DisconnectionLabel.setTextAlignment(TextAlignment.CENTER);
+            return;
+        }
         GameLabel.setText((String)message);
         GameLabel.setTextAlignment(TextAlignment.CENTER);
+
+
 
     }
 
@@ -157,4 +165,28 @@ public class ControllerGameBoardScene implements GuiObservable {
     public void exitApp(MouseEvent event){
         ViewManager.closeWindow();
     }
+
+    public void setPlayersLabel(Object o,String currentNickname) {
+        ArrayList<UserData> playerList = (ArrayList<UserData>) o;
+        Label[] labels = {player1Label, player2Label, player3Label};
+        Pane[] workers = {imagePlayer1,imagePlayer2,imagePlayer3};
+        for (int i = 0; i < playerList.size(); i++) {
+            if(playerList.get(i).getNickname().equals(currentNickname))
+                labels[i].getParent().setId("currentPlayer");
+            else
+                labels[i].getParent().setId("player");
+            ImageView image = new ImageView(GameBoardElementsPath.getWorkerImagePath(playerList.get(i).getCardChoosed().toLowerCase()));
+            workers[i].getChildren().add(image);
+            image.fitWidthProperty().bind(workers[i].widthProperty());
+            image.fitHeightProperty().bind(workers[i].heightProperty());
+            workers[i].setOpacity(1);
+            labels[i].getParent().setOpacity(1);
+            labels[i].setOpacity(1);
+            labels[i].setText(playerList.get(i).getNickname());
+            labels[i].setTextAlignment(TextAlignment.CENTER);
+        }
+
+    }
+
+
 }

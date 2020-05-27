@@ -99,3 +99,28 @@ root {
     -fx-text-alignment: center;
     -fx-background-color: transparent;
 }
+
+#player{
+    -fx-background-image: url("../images/btn_blue_pressed.png");
+    -fx-background-size: stretch;
+
+}
+
+#currentPlayer{
+    -fx-background-image: url("../images/btn_green_pressed.png");
+    -fx-background-size: stretch;
+}
+
+#gamePlayersLabel{
+    -fx-padding: 200%;
+    -fx-background-size: stretch;
+    -fx-font-family: "Dalek Pinpoint";
+    -fx-font-size: 15;
+    -fx-text-fill: white;
+    -fx-text-alignment: center;
+}
+
+#playerList{
+    -fx-background-image: url("../images/glassBackground.png");
+    -fx-background-size: stretch;
+}

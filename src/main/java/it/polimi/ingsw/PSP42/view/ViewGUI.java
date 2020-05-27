@@ -12,13 +12,12 @@ public class ViewGUI extends Application {
 
     @Override
     public void start(Stage stage) {
-            stage.setResizable(false);
-            ViewManager.setStage(stage);
-            ViewManager.setLayout("/fxml/WelcomeScene.fxml");
-            stage.show();
-            ClientGUI c = new ClientGUI();
-            c.attach(new ViewManager(c));
-            Thread t = new Thread(c);
-            t.start();
+        ViewManager.setStage(stage);
+        ViewManager.setLayout("/fxml/WelcomeScene.fxml");
+        stage.show();
+        ClientGUI c = new ClientGUI();
+        c.attach(new ViewManager(c));
+        Thread t = new Thread(c);
+        t.start();
     }
 }

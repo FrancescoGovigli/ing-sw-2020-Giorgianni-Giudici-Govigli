@@ -327,7 +327,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
         sendToPlayerInGame(currentPlayerID, "\n" + s + ", " + ViewMessage.yourTurnMessage + "\n");
         for (int i = 0; i <playingClients.size(); i++) {
             if (i != currentPlayerID)
-                sendToPlayerInGame(i, ViewMessage.waitingYourTurn);
+                sendToPlayerInGame(i, playingClients.get(currentPlayerID).getNickName()+" is playing, "+ ViewMessage.waitingYourTurn);
         }
         return notifyWhatToDo();
     }

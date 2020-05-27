@@ -42,7 +42,7 @@
         <Pane id="cell43" onMouseClicked="#PlayerChoice" GridPane.columnIndex="3" GridPane.rowIndex="4" />
         <Pane id="cell44" onMouseClicked="#PlayerChoice" GridPane.columnIndex="4" GridPane.rowIndex="4" />
 
-        <gridLinesVisible>true</gridLinesVisible>
+        <gridLinesVisible>false</gridLinesVisible>
 
         <columnConstraints>
             <ColumnConstraints minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
@@ -63,6 +63,34 @@
    <Pane id="messageCloud" prefHeight="200.0" prefWidth="200.0" scaleY="0.75" translateY="-5.0" GridPane.columnIndex="1">
       <children>
          <Label id="gameMessage" fx:id="GameLabel" layoutX="19.0" layoutY="31.0" prefHeight="31.0" prefWidth="434.0" text="" />
+      </children>
+   </Pane>
+   <Pane prefHeight="491.0" prefWidth="234.0" GridPane.rowIndex="1">
+      <children>
+         <Pane id="playerList" layoutX="45.0" layoutY="33.0" prefHeight="400.0" prefWidth="260.0">
+            <children>
+               <Pane id="player" layoutX="14.0" layoutY="110.0" opacity="0.0" prefHeight="43.0" prefWidth="165.0">
+                  <children>
+                     <Label id="gamePlayersLabel" fx:id="player1Label" layoutX="73.0" layoutY="13.0" opacity="-Infinity" text="" />
+                  </children></Pane>
+                <Pane id="player" layoutX="14.0" layoutY="189.0" opacity="0.0" prefHeight="43.0" prefWidth="165.0">
+                    <children>
+                        <Label id="gamePlayersLabel" fx:id="player2Label" layoutX="73.0" layoutY="13.0" opacity="-Infinity" text="" />
+                    </children></Pane>
+               <Pane id="player" layoutX="14.0" layoutY="269.0" opacity="0.0" prefHeight="43.0" prefWidth="165.0">
+                  <children>
+                     <Label id="gamePlayersLabel" fx:id="player3Label" layoutX="73.0" layoutY="13.0" opacity="-Infinity" text="" />
+                  </children></Pane>
+               <Pane layoutX="26.0" layoutY="21.0" prefHeight="52.0" prefWidth="208.0">
+                  <children>
+                     <Label id="gamePlayersLabel" layoutX="30.0" layoutY="18.0" prefHeight="17.0" prefWidth="165.0" text="PLAYERS IN GAME: " />
+                  </children>
+               </Pane>
+               <Pane fx:id="imagePlayer1" layoutX="168.0" layoutY="100.0" opacity="0.0" prefHeight="79.0" prefWidth="86.0" />
+               <Pane fx:id="imagePlayer2" layoutX="168.0" layoutY="179.0" opacity="0.0" prefHeight="79.0" prefWidth="86.0" />
+               <Pane fx:id="imagePlayer3" layoutX="168.0" layoutY="258.0" opacity="0.0" prefHeight="79.0" prefWidth="86.0" />
+            </children>
+         </Pane>
       </children>
    </Pane>
 

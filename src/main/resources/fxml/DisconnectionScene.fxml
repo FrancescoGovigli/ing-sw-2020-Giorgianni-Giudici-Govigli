@@ -28,10 +28,10 @@
         <Pane id="cell21" GridPane.columnIndex="1" GridPane.rowIndex="2" />
         <Pane id="cell22" GridPane.columnIndex="2" GridPane.rowIndex="2">
          <children>
-            <Pane id="disconnectionField" layoutX="-59.0" layoutY="-12.0" prefHeight="123.0" prefWidth="217.0">
+            <Pane id="disconnectionField" layoutX="-18.0" layoutY="-4.0" prefHeight="110.0" prefWidth="134.0">
                <children>
                     <Pane id="cell23" layoutX="202.0" layoutY="38.0" />
-                  <Button id="quitButton" layoutX="51.0" layoutY="35.0" mnemonicParsing="false" onMouseClicked="#exitApp" prefHeight="54.0" prefWidth="112.0" text="QUIT" />
+                  <Button id="quitButton" layoutX="24.0" layoutY="28.0" mnemonicParsing="false" onMouseClicked="#exitApp" prefHeight="54.0" prefWidth="87.0" text="QUIT" />
                </children>
             </Pane>
          </children></Pane>
@@ -49,7 +49,7 @@
         <Pane id="cell43" GridPane.columnIndex="3" GridPane.rowIndex="4" />
         <Pane id="cell44" GridPane.columnIndex="4" GridPane.rowIndex="4" />
 
-        <gridLinesVisible>true</gridLinesVisible>
+        <gridLinesVisible>false</gridLinesVisible>
 
         <columnConstraints>
             <ColumnConstraints minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
@@ -69,7 +69,7 @@
     </GridPane>
     <Pane id="messageCloud" prefHeight="200.0" prefWidth="200.0" scaleY="0.75" translateY="-5.0" GridPane.columnIndex="1">
       <children>
-         <Label id="gameMessage" fx:id="GameLabel" layoutX="52.0" layoutY="31.0" prefHeight="31.0" prefWidth="384.0" />
+         <Label id="gameMessage" fx:id="DisconnectionLabel" layoutX="39.0" layoutY="31.0" prefHeight="31.0" prefWidth="437.0" />
       </children>
     </Pane>
 

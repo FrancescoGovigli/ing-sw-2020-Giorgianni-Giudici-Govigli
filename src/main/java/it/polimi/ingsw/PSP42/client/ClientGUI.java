@@ -13,6 +13,11 @@ public class ClientGUI implements Runnable, ClientObservable {
     private boolean active=true;
     private boolean writeActive=true;
     private boolean elaborating=false;
+
+    public ArrayList<UserData> getPlayersList() {
+        return (ArrayList<UserData>) playersData.clone();
+    }
+
     private ArrayList<UserData> playersData = new ArrayList<>();
     private ClientObserver clientObserver;
     String input;
@@ -61,8 +66,9 @@ public class ClientGUI implements Runnable, ClientObservable {
                         }
                         else if (inputObject instanceof Boolean)
                             writeActive = (Boolean)inputObject;
-                        else if (inputObject instanceof UserData)
+                        else if (inputObject instanceof UserData) {
                             playersData.add(((UserData) inputObject));
+                        }
                         else if (inputObject instanceof List) {
                             showGods(inputObject);
                             elaborateMessage(inputObject);
@@ -151,12 +157,14 @@ public class ClientGUI implements Runnable, ClientObservable {
                     notifyWelcomeOtherPlayers();
                 else if (message.equals("You are waiting other Players to connect...") || message.equals("Waiting opponent to pick a card..."))
                     notifyWaiting();
-                else if (message.equals(ServerMessage.extraClient) || message.equals(ServerMessage.gameInProgress) || message.equals("Name already taken choose another nickname") || message.equals(ServerMessage.inactivityEnd))
+                else if (message.equals(ServerMessage.extraClient) || message.equals(ServerMessage.gameInProgress) || message.equals("Name already taken choose another nickname"))
                     notifyGameStatus(message);
                 else if (!message.equals("You entered the Game! 😊 \n") && !((String) message).contains("please enter the number of players"))
                     notifyGameMessage(message);
-            } else if (message instanceof List)
+            }
+            else if (message instanceof List)
                 notifyGodSelection(message);
+
             elaborating = false;
     }
 

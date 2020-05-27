@@ -23,4 +23,5 @@ public interface ClientObservable {
 
     public abstract void notifyGameMessage(Object message);
 
+
 }

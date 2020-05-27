@@ -20,7 +20,7 @@ public class ViewMessage {
     public static String godPowerStart = "Your god's power started!\n";
     public static String godPowerEnd = "Your god's power finished!\n";
     public static String yourTurnMessage = "It's your turn! ";
-    public static String waitingYourTurn = "Waiting your turn... ";
+    public static String waitingYourTurn = "wait your turn... ";
     public static String waitingOpponentPick = "Waiting opponent to pick a card...";
     public static String waitingPositioning = "Opponent is positioning its workers...";
 
