@@ -1,0 +1,105 @@
+@font-face {
+    src: url("../font/DalekPinpointBold.ttf");
+}
+
+#back {
+    -fx-background-image: url("../images/welcome_background.png");
+    -fx-background-size: stretch;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-pref-height: 672px;
+    -fx-pref-width: 1200px;
+}
+
+#quitButton {
+    -fx-background-image: url("../images/btn_blue.png");
+    -fx-background-size: stretch;
+    -fx-background-repeat: no-repeat;
+    -fx-background-color: transparent;
+    -fx-font-family: "Dalek Pinpoint";
+    -fx-font-size: 20;
+    -fx-text-fill: white;
+    -fx-text-alignment: center;
+}
+
+#quitButton:pressed {
+    -fx-background-image: url("../images/btn_blue_pressed.png");
+    -fx-background-size: stretch;
+    -fx-background-repeat: no-repeat;
+    -fx-background-color: transparent;
+    -fx-font-family: "Dalek Pinpoint";
+    -fx-font-size: 20;
+    -fx-text-fill: white;
+    -fx-text-alignment: center;
+}
+
+#message {
+    -fx-font-family: "Dalek Pinpoint";
+    -fx-font-size: 18;
+    -fx-text-fill: white;
+    -fx-text-alignment: center;
+}
+
+#messagePane {
+    -fx-background-image: url("../images/PopUp.png");
+    -fx-background-size: stretch;
+    -fx-background-repeat: no-repeat;
+    -fx-background-color: transparent;
+    -fx-background-position: center;
+}
+
+#trumpetsVictoryLeft {
+    -fx-background-image: url("../images/endgame_victorytrumpetsleft.png");
+    -fx-background-size: stretch;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+#trumpetsVictoryRight {
+    -fx-background-image: url("../images/endgame_victorytrumpetsright.png");
+    -fx-background-size: stretch;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+#trumpetsDefeatLeft {
+    -fx-background-image: url("../images/endgame_defeattrumpetleft.png");
+    -fx-background-size: stretch;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+#trumpetsDefeatRight {
+    -fx-background-image: url("../images/endgame_defeattrumpetright.png");
+    -fx-background-size: stretch;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+#player {
+    -fx-background-image: url("../images/btn_blue.png");
+    -fx-background-size: stretch;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+#playerLabel {
+    -fx-font-family: "Dalek Pinpoint";
+    -fx-font-size: 17;
+    -fx-text-fill: white;
+    -fx-text-alignment: center;
+}
+
+#loserMedal {
+    -fx-background-image: url("../images/loserMedal.png");
+    -fx-background-size: stretch;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+#winnerMedal {
+    -fx-background-image: url("../images/winnerMedal.png");
+    -fx-background-size: stretch;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}

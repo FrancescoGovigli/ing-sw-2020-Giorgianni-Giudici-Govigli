@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Button?>
+
+<GridPane id="back"
+          xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml"
+          fx:controller="it.polimi.ingsw.PSP42.view.ControllerDisconnectionScene">
+
+    <Pane id="trumpetsVictoryLeft"
+          GridPane.rowIndex="1" GridPane.columnIndex="0"
+          GridPane.valignment="CENTER" GridPane.halignment="CENTER"/>
+
+    <Pane id="trumpetsVictoryRight"
+          GridPane.rowIndex="1" GridPane.columnIndex="2"
+          GridPane.valignment="CENTER" GridPane.halignment="CENTER"/>
+
+    <GridPane GridPane.rowIndex="2" GridPane.columnIndex="1">
+
+        <Pane id="messagePane"
+              GridPane.rowIndex="1" GridPane.columnIndex="1"
+              GridPane.valignment="CENTER" GridPane.halignment="CENTER"/>
+
+        <Label id="message"
+               fx:id="disconnectionLabel"
+               GridPane.rowIndex="1" GridPane.columnIndex="1"
+               GridPane.valignment="CENTER" GridPane.halignment="CENTER"/>
+
+        <GridPane GridPane.rowIndex="2" GridPane.columnIndex="1">
+
+            <Pane id="winnerMedal"
+                  GridPane.rowIndex="1" GridPane.columnIndex="1"
+                  GridPane.valignment="CENTER" GridPane.halignment="CENTER"/>
+            <Pane id="player"
+                  GridPane.rowIndex="1" GridPane.columnIndex="3"/>
+            <Label fx:id="winnerPlayer"
+                   id="playerLabel"
+                   GridPane.rowIndex="1" GridPane.columnIndex="3"
+                   GridPane.valignment="CENTER" GridPane.halignment="CENTER"/>
+
+            <Pane fx:id="loserPlayer1Medal"
+                  id="loserMedal"
+                  GridPane.rowIndex="3" GridPane.columnIndex="1"
+                  GridPane.valignment="CENTER" GridPane.halignment="CENTER"
+                  opacity="0"/>
+            <Pane fx:id="loserPlayer1Pane"
+                  id="player"
+                  GridPane.rowIndex="3" GridPane.columnIndex="3"
+                  opacity="0"/>
+            <Label fx:id="loserPlayer1"
+                   id="playerLabel"
+                   GridPane.rowIndex="3" GridPane.columnIndex="3"
+                   GridPane.valignment="CENTER" GridPane.halignment="CENTER"/>
+
+            <Pane fx:id="loserPlayer2Medal"
+                  id="loserMedal"
+                  GridPane.rowIndex="5" GridPane.columnIndex="1"
+                  GridPane.valignment="CENTER" GridPane.halignment="CENTER"
+                  opacity="0"/>
+            <Pane fx:id="loserPlayer2Pane"
+                  id="player"
+                  GridPane.rowIndex="5" GridPane.columnIndex="3"
+                  opacity="0"/>
+            <Label fx:id="loserPlayer2"
+                   id="playerLabel"
+                   GridPane.rowIndex="5" GridPane.columnIndex="3"
+                   GridPane.valignment="CENTER" GridPane.halignment="CENTER"/>
+
+            <rowConstraints>
+                <RowConstraints percentHeight="14.5"/>
+                <RowConstraints percentHeight="18.0"/>
+                <RowConstraints percentHeight="8.5"/>
+                <RowConstraints percentHeight="18.0"/>
+                <RowConstraints percentHeight="8.5"/>
+                <RowConstraints percentHeight="18.0"/>
+                <RowConstraints percentHeight="14.5"/>
+            </rowConstraints>
+            <columnConstraints>
+                <ColumnConstraints percentWidth="5.0"/>
+                <ColumnConstraints percentWidth="20.0"/>
+                <ColumnConstraints percentWidth="5.0"/>
+                <ColumnConstraints percentWidth="65.0"/>
+                <ColumnConstraints percentWidth="5.0"/>
+            </columnConstraints>
+        </GridPane>
+
+        <Button id="quitButton"
+                onMouseClicked="#exitApp"
+                prefHeight="54.0" prefWidth="87.0"
+                GridPane.columnIndex="1" GridPane.rowIndex="3"
+                GridPane.halignment="CENTER" GridPane.valignment="CENTER"
+                text="QUIT" />
+
+        <rowConstraints>
+            <RowConstraints percentHeight="13.0" />
+            <RowConstraints percentHeight="10.0" />
+            <RowConstraints percentHeight="62.0" />
+            <RowConstraints percentHeight="15.0" />
+        </rowConstraints>
+        <columnConstraints>
+            <ColumnConstraints percentWidth="12.0" />
+            <ColumnConstraints percentWidth="76.0" />
+            <ColumnConstraints percentWidth="12.0" />
+        </columnConstraints>
+    </GridPane>
+
+    <rowConstraints>
+        <RowConstraints percentHeight="7.0" />
+        <RowConstraints percentHeight="15.0" />
+        <RowConstraints percentHeight="65.0" />
+        <RowConstraints percentHeight="13.0" />
+    </rowConstraints>
+    <columnConstraints>
+        <ColumnConstraints percentWidth="29.5" />
+        <ColumnConstraints percentWidth="41.1" />
+        <ColumnConstraints percentWidth="29.4" />
+    </columnConstraints>
+
+    <stylesheets>
+        <URL value="@../css/DisconnectionScene.css" />
+    </stylesheets>
+</GridPane>

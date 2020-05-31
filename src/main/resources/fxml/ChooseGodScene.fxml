@@ -6,33 +6,25 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.ColumnConstraints?>
 
-<GridPane id="background"
+<GridPane id="back"
           xmlns="http://javafx.com/javafx/11.0.1"
           xmlns:fx="http://javafx.com/fxml/1"
-          fx:controller="it.polimi.ingsw.PSP42.view.ControllerChooseGodScene"
-          prefHeight="672.0"
-          prefWidth="1200.0">
+          fx:controller="it.polimi.ingsw.PSP42.view.ControllerChooseGodScene">
 
-
-    <GridPane GridPane.columnIndex="1"
-              GridPane.rowIndex="1">
+    <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1">
 
         <GridPane id="cardBackground"
-                  GridPane.rowIndex="1"
-                  GridPane.columnIndex="1"
-                  GridPane.valignment="CENTER"
-                  GridPane.halignment="CENTER">
+                  GridPane.rowIndex="1" GridPane.columnIndex="1"
+                  GridPane.valignment="CENTER" GridPane.halignment="CENTER">
+
             <Button fx:id="buttonCard1"
                     onMouseEntered="#description"
                     onMouseExited="#image"
-                    onAction="#goToGameBoardScene"
+                    onAction="#sendCardChoosed"
                     alignment="CENTER"
-                    prefHeight="223.0"
-                    prefWidth="168.0"
-                    GridPane.rowIndex="0"
-                    GridPane.columnIndex="0"
-                    GridPane.valignment="CENTER"
-                    GridPane.halignment="CENTER"/>
+                    prefHeight="223.0" prefWidth="168.0"
+                    GridPane.rowIndex="0" GridPane.columnIndex="0"
+                    GridPane.valignment="CENTER" GridPane.halignment="CENTER"/>
 
             <rowConstraints>
                 <RowConstraints percentHeight="100"/>
@@ -43,21 +35,17 @@
         </GridPane>
 
         <GridPane id="cardBackground"
-                  GridPane.rowIndex="1"
-                  GridPane.columnIndex="3"
-                  GridPane.valignment="CENTER"
-                  GridPane.halignment="CENTER">
+                  GridPane.rowIndex="1" GridPane.columnIndex="3"
+                  GridPane.valignment="CENTER" GridPane.halignment="CENTER">
+
             <Button fx:id="buttonCard2"
                     onMouseEntered="#description"
                     onMouseExited="#image"
-                    onAction="#goToGameBoardScene"
+                    onAction="#sendCardChoosed"
                     alignment="CENTER"
-                    prefHeight="223.0"
-                    prefWidth="168.0"
-                    GridPane.rowIndex="0"
-                    GridPane.columnIndex="0"
-                    GridPane.valignment="CENTER"
-                    GridPane.halignment="CENTER"/>
+                    prefHeight="223.0" prefWidth="168.0"
+                    GridPane.rowIndex="0" GridPane.columnIndex="0"
+                    GridPane.valignment="CENTER" GridPane.halignment="CENTER"/>
 
             <rowConstraints>
                 <RowConstraints percentHeight="100"/>
@@ -68,21 +56,16 @@
         </GridPane>
 
         <GridPane id="cardBackground"
-                  GridPane.rowIndex="1"
-                  GridPane.columnIndex="5"
-                  GridPane.valignment="CENTER"
-                  GridPane.halignment="CENTER">
+                  GridPane.rowIndex="1" GridPane.columnIndex="5"
+                  GridPane.valignment="CENTER" GridPane.halignment="CENTER">
             <Button fx:id="buttonCard3"
                     onMouseEntered="#description"
                     onMouseExited="#image"
-                    onAction="#goToGameBoardScene"
+                    onAction="#sendCardChoosed"
                     alignment="CENTER"
-                    prefHeight="223.0"
-                    prefWidth="168.0"
-                    GridPane.rowIndex="0"
-                    GridPane.columnIndex="0"
-                    GridPane.valignment="CENTER"
-                    GridPane.halignment="CENTER"/>
+                    prefHeight="223.0" prefWidth="168.0"
+                    GridPane.rowIndex="0" GridPane.columnIndex="0"
+                    GridPane.valignment="CENTER" GridPane.halignment="CENTER"/>
 
             <rowConstraints>
                 <RowConstraints percentHeight="100"/>
@@ -121,6 +104,6 @@
     </columnConstraints>
 
     <stylesheets>
-        <URL value="@../css/ChooseGodScene.css" />
+        <URL value="@../css/ChooseGodScene.css"/>
     </stylesheets>
 </GridPane>

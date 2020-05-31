@@ -10,25 +10,12 @@ import java.util.*;
 
 public class ClientGUI implements Runnable, ClientObservable {
 
-    private boolean active=true;
-    private boolean writeActive=true;
-    private boolean elaborating=false;
-
-    public ArrayList<UserData> getPlayersList() {
-        return (ArrayList<UserData>) playersData.clone();
-    }
-
-    private ArrayList<UserData> playersData = new ArrayList<>();
+    private boolean active = true;
+    private boolean writeActive = true;
+    private boolean elaborating = false;
+    private String input;
     private ClientObserver clientObserver;
-    String input;
-
-    public UserData getPlayerData(String nickname){
-        for (UserData u:playersData) {
-            if (u.getNickname().equals(nickname))
-                return u;
-        }
-        return null;
-    }
+    private ArrayList<UserData> playersData = new ArrayList<>();
 
     public synchronized boolean isActive(){
         return active;
@@ -38,7 +25,71 @@ public class ClientGUI implements Runnable, ClientObservable {
         this.active = active;
     }
 
-    public Thread asyncReadFromSocket(final ObjectInputStream socketIn){
+    /**
+     * Used to save locally input from GUI.
+     * @param input string obtained from GUI's command
+     */
+    public void saveInput(String input){
+        this.input = input;
+    }
+
+    public ArrayList<UserData> getPlayersList() {
+        return (ArrayList<UserData>) playersData.clone();
+    }
+
+    /**
+     * Used to obtain data from a name.
+     * @param nickname of the player of which needs data
+     * @return user data (nickname and choosed card) from nickname, if exist, null otherwise
+     */
+    public UserData getPlayerData(String nickname) {
+        for (UserData u:playersData) {
+            if (u.getNickname().equals(nickname))
+                return u;
+        }
+        return null;
+    }
+
+    public void run() {
+        BufferedReader scanner= new BufferedReader(new InputStreamReader(System.in));
+        Socket server;
+        try {
+            server = new Socket("localhost", 4000);
+            System.out.println("Connection established\n");
+            notifyConnectionStart();
+        } catch (IOException e) {
+            System.out.println("Server unreachable");
+            return;
+        }
+
+        ObjectInputStream socketIn = null;
+        PrintWriter socketOut = null;
+        try {
+            socketIn = new ObjectInputStream(server.getInputStream());
+            socketOut = new PrintWriter(server.getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            Thread t0 = asyncReadFromSocket(socketIn);
+            Thread t1 = asyncWriteToSocket(socketOut);
+            t0.join();
+            t1.join();
+        } catch(InterruptedException | NoSuchElementException e) {
+            System.out.println("Connection closed from the client side");
+        } finally {
+            try {
+                scanner.close();
+                socketIn.close();
+                socketOut.close();
+                server.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public Thread asyncReadFromSocket(final ObjectInputStream socketIn) {
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -48,11 +99,15 @@ public class ClientGUI implements Runnable, ClientObservable {
                         if (inputObject instanceof String){
                             if (((String) inputObject).contains(ViewMessage.personalLoseMessage)) {
                                 System.out.println("[FROM SERVER] : " + inputObject);
-                                System.out.println("Game closed, PRESS [ENTER] TO QUIT...");
+                                elaborateMessage(inputObject);
                                 socketIn.close();
                                 setActive(false);
+                                System.out.println("Game closed, PRESS [ENTER] TO QUIT...");
                             }
-                            else if (!inputObject.equals(ServerMessage.extraClient) && !inputObject.equals(ServerMessage.gameInProgress) && !inputObject.equals(ServerMessage.endGame) && !inputObject.equals(ServerMessage.inactivityEnd)) {
+                            else if (!inputObject.equals(ServerMessage.extraClient) &&
+                                        !inputObject.equals(ServerMessage.gameInProgress) &&
+                                            !inputObject.equals(ServerMessage.endGame) &&
+                                                !inputObject.equals(ServerMessage.inactivityEnd)) {
                                 System.out.println("[FROM SERVER] : " + inputObject);
                                 elaborateMessage(inputObject);
                             }
@@ -78,7 +133,7 @@ public class ClientGUI implements Runnable, ClientObservable {
                     }
                 } catch (IOException | ClassNotFoundException e){
                     e.printStackTrace();
-                    System.out.println("uscito dalla connessione");
+                    System.out.println("Exit from connection");
                     setActive(false);
                 }
             }
@@ -87,7 +142,7 @@ public class ClientGUI implements Runnable, ClientObservable {
         return t;
     }
 
-    public Thread asyncWriteToSocket(final BufferedReader stdin, final PrintWriter socketOut){
+    public Thread asyncWriteToSocket(final PrintWriter socketOut) {
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -99,7 +154,7 @@ public class ClientGUI implements Runnable, ClientObservable {
                             input=null;
                         }
                     }
-                } catch(Exception e){
+                } catch(Exception e) {
                     System.out.println("You disconnected");
                     setActive(false);
                 }
@@ -109,45 +164,10 @@ public class ClientGUI implements Runnable, ClientObservable {
         return t;
     }
 
-    public void run() {
-        BufferedReader scanner= new BufferedReader(new InputStreamReader(System.in));
-        Socket server;
-        try {
-            server = new Socket("localhost", 4000);
-            System.out.println("Connection established\n");
-            notifyConnectionStart();
-        } catch (IOException e) {
-            System.out.println("Server unreachable");
-            return;
-        }
-
-        ObjectInputStream socketIn = null;
-        PrintWriter socketOut = null;
-        try {
-            socketIn = new ObjectInputStream(server.getInputStream());
-            socketOut = new PrintWriter(server.getOutputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            Thread t0 = asyncReadFromSocket(socketIn);
-            Thread t1 = asyncWriteToSocket(scanner, socketOut);
-            t0.join();
-            t1.join();
-        } catch(InterruptedException | NoSuchElementException e) {
-            System.out.println("Connection closed from the client side");
-        } finally {
-            try {
-                scanner.close();
-                socketIn.close();
-                socketOut.close();
-                server.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
+    /**
+     * Method used to call the correct methods for client observer.
+     * @param message object to understand the message from server
+     */
     public void elaborateMessage(Object message) {
         elaborating = true;
             if (message instanceof String) {
@@ -164,13 +184,22 @@ public class ClientGUI implements Runnable, ClientObservable {
             }
             else if (message instanceof List)
                 notifyGodSelection(message);
-
             elaborating = false;
     }
 
     /**
-     * Add an observer to the Model's observer list
-     * @param ob
+     * Used to print listOfGods.
+     * @param listOfGods list of strings containing name of gods sent from server
+     */
+    public void showGods(Object listOfGods) {
+        for (int i = 0; i < ((List<String>)listOfGods).size() ; i++) {
+            System.out.println(((List<String>)listOfGods).get(i));
+        }
+    }
+
+    /**
+     * Add an observer to the Model's observer list.
+     * @param ob ClientObserver
      */
     @Override
     public void attach(ClientObserver ob) {
@@ -215,15 +244,5 @@ public class ClientGUI implements Runnable, ClientObservable {
     @Override
     public void notifyGameMessage(Object message) {
         clientObserver.updateGameMessage(message);
-    }
-
-    public void saveInput(String input){
-        this.input = input;
-    }
-
-    public void showGods(Object listOfGods) {
-        for (int i = 0; i < ((List<String>)listOfGods).size() ; i++) {
-            System.out.println(((List<String>)listOfGods).get(i));
-        }
     }
 }

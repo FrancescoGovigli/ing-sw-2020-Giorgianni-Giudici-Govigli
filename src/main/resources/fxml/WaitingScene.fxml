@@ -1,26 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.*?>
-<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import java.net.URL?>
 
-<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="30.0" prefHeight="672.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" >
-    <children>
-        <ImageView fitHeight="700.0" fitWidth="1200.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="101.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-1.0">
-            <image>
-                <Image url="@../images/welcome_background.png" />
-            </image>
-            <viewport>
-                <Rectangle2D />
-            </viewport>
-        </ImageView>
-        <ProgressIndicator id="progressIndicator" layoutX="574.0" layoutY="555.0" minHeight="50.0" minWidth="50.0" prefHeight="30.0" prefWidth="20.0" style="pr: white;" />
-        <Label id="progressLabel" layoutX="468.0" layoutY="420.0" prefHeight="125.0" prefWidth="262.0" text="WAITING OTHER PLAYERS..." textFill="WHITE" />
-    </children>
+<GridPane id="back">
+
+    <GridPane GridPane.rowIndex="1" GridPane.columnIndex="0">
+
+        <ProgressIndicator id="progressIndicator"
+                           GridPane.rowIndex="1" GridPane.columnIndex="1"
+                           GridPane.valignment="CENTER" GridPane.halignment="RIGHT"
+                           prefHeight="30.0" prefWidth="20.0"/>
+
+        <Label id="progressLabel"
+               GridPane.rowIndex="1" GridPane.columnIndex="1"
+               GridPane.valignment="CENTER" GridPane.halignment="LEFT"
+               prefHeight="125.0" prefWidth="262.0"
+               text="WAITING OTHER PLAYERS..."/>
+
+        <rowConstraints>
+            <RowConstraints percentHeight="10"/>
+            <RowConstraints percentHeight="40"/>
+            <RowConstraints percentHeight="50"/>
+        </rowConstraints>
+        <columnConstraints>
+            <ColumnConstraints percentWidth="35"/>
+            <ColumnConstraints percentWidth="30"/>
+            <ColumnConstraints percentWidth="35"/>
+        </columnConstraints>
+    </GridPane>
+
+    <rowConstraints>
+        <RowConstraints percentHeight="70"/>
+        <RowConstraints percentHeight="30"/>
+    </rowConstraints>
+    <columnConstraints>
+        <ColumnConstraints percentWidth="100"/>
+    </columnConstraints>
 
     <stylesheets>
-        <URL value="@../css/WelcomeScene.css" />
+        <URL value="@../css/WelcomeScene.css"/>
     </stylesheets>
-</AnchorPane>
+</GridPane>

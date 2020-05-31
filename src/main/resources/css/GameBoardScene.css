@@ -3,57 +3,17 @@ root {
 }
 
 .root {
-    -fx-background-image: url("../images/GameBoardNoPanel.png");
     -fx-pref-width: 1200px;
     -fx-pref-height: 672px;
+    -fx-background-image: url("../images/GameBoardNoPanel.png");
     -fx-background-size: stretch;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
 }
-
-#text-field {
-    -fx-background-image: url("../images/text-field.png");
-    -fx-background-size: stretch;
-    -fx-background-repeat: no-repeat;
-    -fx-background-position: center;
-    -fx-font-size: 15px;
-    -fx-font-family: Arial;
-    -fx-border-width: 200%;
-    -fx-border-color: #000000;
-}
-
-#level1 {
-    -fx-background-image: url("../images/lvl1.png");
-    -fx-background-size: stretch;
-    -fx-background-repeat: no-repeat;
-    -fx-background-position: center;
-}
-
-#level2 {
-    -fx-background-image: url("../images/lvl2.png");
-    -fx-background-size: stretch;
-    -fx-background-repeat: no-repeat;
-    -fx-background-position: center;
-}
-
-#level3 {
-    -fx-background-image: url("../images/lvl3.png");
-    -fx-background-size: stretch;
-    -fx-background-repeat: no-repeat;
-    -fx-background-position: center;
-}
-
-/*
-#level3:hover {
-    -fx-background-image: url("../images/PrometheusToken.png");
-    -fx-background-size: stretch;
-    -fx-background-repeat: no-repeat;
-    -fx-background-position: center;
-}*/
 
 #santoriniLogo{
-    -fx-background-size: stretch;
     -fx-background-image: url("../images/santorini-logo.png");
+    -fx-background-size: stretch;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
 }
@@ -66,61 +26,36 @@ root {
 }
 
 #gameMessage{
-    -fx-padding: 200%;
-    -fx-background-size: stretch;
     -fx-font-family: "Dalek Pinpoint";
-    -fx-font-size: 18;
+    -fx-font-size: 14;
     -fx-text-fill: white;
     -fx-text-alignment: center;
-
-}
-
-#disconnectionField {
-    -fx-background-image:url("../images/PopUp.png");
-    -fx-background-size: stretch;
-    -fx-alignment: center;
-}
-
-#quitButton {
-    -fx-background-image: url("../images/btn_blue.png");
-    -fx-background-size: stretch;
-    -fx-font-family: "Dalek Pinpoint";
-    -fx-font-size: 20;
-    -fx-text-fill: white;
-    -fx-text-alignment: center;
-}
-
-#quitButton:pressed {
-    -fx-background-image: url("../images/btn_blue_pressed.png");
-    -fx-background-size: stretch;
-    -fx-font-family: "Dalek Pinpoint";
-    -fx-font-size: 20;
-    -fx-text-fill: white;
-    -fx-text-alignment: center;
-    -fx-background-color: transparent;
 }
 
 #player{
     -fx-background-image: url("../images/btn_blue_pressed.png");
     -fx-background-size: stretch;
-
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
 }
 
 #currentPlayer{
     -fx-background-image: url("../images/btn_green_pressed.png");
     -fx-background-size: stretch;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
 }
 
 #gamePlayersLabel{
-    -fx-padding: 200%;
-    -fx-background-size: stretch;
     -fx-font-family: "Dalek Pinpoint";
     -fx-font-size: 15;
     -fx-text-fill: white;
     -fx-text-alignment: center;
 }
 
-#playerList{
+#playerList {
     -fx-background-image: url("../images/glassBackground.png");
     -fx-background-size: stretch;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
 }

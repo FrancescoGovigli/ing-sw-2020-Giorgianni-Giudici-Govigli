@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.*?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import java.net.URL?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
 
-<GridPane id="back" xmlns="http://javafx.com/javafx"
-          xmlns:fx="http://javafx.com/fxml"
+<GridPane id="back"
+          xmlns="http://javafx.com/javafx/10.0.2-internal"
+          xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="it.polimi.ingsw.PSP42.view.ControllerDisconnectionScene">
+
+    <Pane id="trumpetsDefeatLeft"
+          GridPane.rowIndex="1" GridPane.columnIndex="0"
+          GridPane.valignment="CENTER" GridPane.halignment="CENTER"/>
+
+    <Pane id="trumpetsDefeatRight"
+          GridPane.rowIndex="1" GridPane.columnIndex="2"
+          GridPane.valignment="CENTER" GridPane.halignment="CENTER"/>
 
     <GridPane GridPane.rowIndex="2" GridPane.columnIndex="1">
 
@@ -23,20 +31,20 @@
         <Button id="quitButton"
                 onMouseClicked="#exitApp"
                 prefHeight="54.0" prefWidth="87.0"
+                text="QUIT"
                 GridPane.rowIndex="2" GridPane.columnIndex="1"
-                GridPane.valignment="CENTER" GridPane.halignment="CENTER"
-                text="QUIT"/>
+                GridPane.valignment="CENTER" GridPane.halignment="CENTER"/>
 
         <rowConstraints>
-            <RowConstraints percentHeight="50.0"/>
+            <RowConstraints percentHeight="45.0"/>
             <RowConstraints percentHeight="10.0"/>
-            <RowConstraints percentHeight="20.0"/>
-            <RowConstraints percentHeight="20.0"/>
+            <RowConstraints percentHeight="30.0"/>
+            <RowConstraints percentHeight="15.0"/>
         </rowConstraints>
         <columnConstraints>
-            <ColumnConstraints percentWidth="7.0"/>
-            <ColumnConstraints percentWidth="86.0"/>
-            <ColumnConstraints percentWidth="7.0"/>
+            <ColumnConstraints percentWidth="12.0"/>
+            <ColumnConstraints percentWidth="76.0"/>
+            <ColumnConstraints percentWidth="12.0"/>
         </columnConstraints>
     </GridPane>
 

@@ -7,18 +7,18 @@
 <GridPane id="back"
           xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
-          fx:controller="it.polimi.ingsw.PSP42.view.ControllerWelcomeScene"
-          prefHeight="672.0"
-          prefWidth="1200.0">
+          fx:controller="it.polimi.ingsw.PSP42.view.ControllerWelcomeScene">
 
     <!--Grid Pane for Nickname-->
     <GridPane GridPane.rowIndex="1"
-              GridPane.columnIndex="1" >
+              GridPane.columnIndex="1">
+
         <GridPane
               GridPane.rowIndex="0"
               GridPane.columnIndex="0"
               GridPane.valignment="CENTER"
               GridPane.halignment="CENTER">
+
             <TextField id="textfield"
                        fx:id="textfieldFirstPlayer"
                        onMouseClicked="#deleteText"
@@ -29,15 +29,16 @@
                        alignment="CENTER"
                        text="Insert your name"
                        editable="false"/>
-            <Button id="chooseButton"
+
+            <Button id="submitButton"
                     mnemonicParsing="false"
                     onMouseClicked="#submitChoice"
                     prefHeight="41.0"
                     prefWidth="55.0"
                     text="Submit"
-                    translateX="15.0"
                     GridPane.rowIndex="0"
-                    GridPane.columnIndex="2" />
+                    GridPane.columnIndex="2"/>
+
             <rowConstraints>
                 <RowConstraints percentHeight="100"/>
             </rowConstraints>
@@ -54,6 +55,7 @@
                       fx:id="chooseField"
                       GridPane.columnIndex="1"
                       GridPane.rowIndex="1" opacity="-Infinity">
+
                 <Label id="labelPlayers"
                        GridPane.columnIndex="0"
                        GridPane.rowIndex="1"
@@ -61,6 +63,7 @@
                        GridPane.halignment="CENTER"
                        textAlignment="CENTER"
                        text="Choose"/>
+
                 <Label id="labelPlayers"
                        GridPane.columnIndex="0"
                        GridPane.rowIndex="2"
@@ -68,6 +71,7 @@
                        GridPane.halignment="CENTER"
                        textAlignment="CENTER"
                        text="number of"/>
+
                 <Label id="labelPlayers"
                        GridPane.columnIndex="0"
                        GridPane.rowIndex="3"
@@ -75,6 +79,7 @@
                        GridPane.halignment="CENTER"
                        textAlignment="CENTER"
                        text="players"/>
+
                 <rowConstraints>
                     <RowConstraints percentHeight="10"/>
                     <RowConstraints percentHeight="26.5"/>
@@ -111,6 +116,7 @@
     <!--GridPane for Buttons-->
     <GridPane GridPane.rowIndex="2"
               GridPane.columnIndex="1">
+
         <Button id="chooseButton"
                 fx:id="choose1"
                 opacity="-Infinity"
@@ -123,6 +129,7 @@
                 GridPane.columnIndex="1"
                 GridPane.valignment="CENTER"
                 GridPane.halignment="CENTER"/>
+
         <Button id="chooseButton"
                 fx:id="choose2"
                 opacity="-Infinity"
@@ -135,6 +142,7 @@
                 GridPane.columnIndex="2"
                 GridPane.valignment="CENTER"
                 GridPane.halignment="CENTER"/>
+
         <rowConstraints>
             <RowConstraints percentHeight="100"/>
         </rowConstraints>
@@ -159,6 +167,6 @@
     </columnConstraints>
 
     <stylesheets>
-        <URL value="@../css/WelcomeScene.css" />
+        <URL value="@../css/WelcomeScene.css"/>
     </stylesheets>
 </GridPane>

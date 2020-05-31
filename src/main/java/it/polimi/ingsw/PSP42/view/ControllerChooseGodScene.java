@@ -10,7 +10,7 @@ import java.util.*;
 
 public class ControllerChooseGodScene implements GuiObservable {
 
-    private GuiObserver guiObserver = new ViewManager(ViewManager.getInstance());
+    private final GuiObserver guiObserver = new ViewManager(ViewManager.getInstance());
     @FXML
     Button buttonCard1;
     private String godCard1;
@@ -41,10 +41,10 @@ public class ControllerChooseGodScene implements GuiObservable {
             this.godCard3 = godName;
     }
 
-    //TODO
     /**
-     *
-     * @param listOfGods
+     * Used to set on screen corresponding God's card in listOfGods.
+     * If there aren't enough gods to fill spaces, then spaces remain with their original background.
+     * @param listOfGods list of strings with name of gods received from ViewManager
      */
     public void setGods(Object listOfGods) {
         List gods = (List)listOfGods;
@@ -59,7 +59,7 @@ public class ControllerChooseGodScene implements GuiObservable {
     }
 
     /**
-     * Used to set image for god's cards
+     * Used to set image for god's cards.
      * @param godName name for the linked image
      * @param cardNum number of the card to set
      */
@@ -69,10 +69,10 @@ public class ControllerChooseGodScene implements GuiObservable {
     }
 
     /**
-     * TODO
-     * @param event
+     * Used to save the selection.
+     * @param event click on the corresponding card
      */
-    public void goToGameBoardScene(ActionEvent event) {
+    public void sendCardChoosed(ActionEvent event) {
         Button clicked = (Button)event.getSource();
         if(clicked.equals(buttonCard1))
             informManagerInput(godCard1);
@@ -83,7 +83,7 @@ public class ControllerChooseGodScene implements GuiObservable {
     }
 
     /**
-     * Used to see card's description when event is verified
+     * Used to see card's description when event is verified.
      * @param event mouse entered
      */
     public void description(MouseEvent event) {
@@ -92,7 +92,7 @@ public class ControllerChooseGodScene implements GuiObservable {
     }
 
     /**
-     * Used to see card when event is verified
+     * Used to see card when event is verified.
      * @param event mouse exited
      */
     public void image(MouseEvent event) {
@@ -101,8 +101,8 @@ public class ControllerChooseGodScene implements GuiObservable {
     }
 
     /**
-     * Method to obtain the string godCard# corresponding to the event passed as a string
-     * @param event
+     * Method to obtain the string godCard# corresponding to the event passed as a string.
+     * @param event click on a button
      * @return godCard# (where # indicates an integer from 1 to 3)
      */
     private String getGodCardFromMouse(String event) {
@@ -115,8 +115,8 @@ public class ControllerChooseGodScene implements GuiObservable {
     }
 
     /**
-     * Method to obtain the integer corresponding to the event passed as a string
-     * @param event
+     * Method to obtain the integer corresponding to the event passed as a string.
+     * @param event click on a button
      * @return an integer from 1 to 3
      */
     private int getGodCardNumFromMouse(String event) {
@@ -131,9 +131,9 @@ public class ControllerChooseGodScene implements GuiObservable {
     /**
      * Method that allows, during the choice of the divinity,
      * the display of the God card if the mouse is not on the card,
-     * otherwise it shows the relative description
-     * @param godName
-     * @param cardNum
+     * otherwise it shows the relative description.
+     * @param godName String containing God's name
+     * @param cardNum int
      * @param action ("image" if the mouse is not on the card, "description" otherwise)
      */
     public void setChangingGodCard(String godName, int cardNum, String action) {
@@ -150,8 +150,8 @@ public class ControllerChooseGodScene implements GuiObservable {
     }
 
     /**
-     * Method that returns the CSS style of the God given its name
-     * @param godName
+     * Method that returns the CSS style of the God given its name.
+     * @param godName String containing God's name
      * @return CSS style
      */
     private String getGodImageStyle(String godName) {
@@ -159,8 +159,8 @@ public class ControllerChooseGodScene implements GuiObservable {
     }
 
     /**
-     * Method that returns the CSS style of the God description given its name
-     * @param godName
+     * Method that returns the CSS style of the God description given its name.
+     * @param godName String containing God's name
      * @return CSS style
      */
     private String getGodDescriptionStyle(String godName) {

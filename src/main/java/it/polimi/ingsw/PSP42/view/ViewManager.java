@@ -11,73 +11,135 @@ import javafx.stage.*;
 
 import java.io.*;
 
-public class ViewManager implements ClientObserver,GuiObserver {
+public class ViewManager implements ClientObserver, GuiObserver {
 
     private static Stage stage;
     private static ClientGUI client;
     private static ControllerWelcomeScene controllerWelcomeScene;
     private static ControllerGameBoardScene controllerGameBoardScene;
     private static ControllerChooseGodScene controllerChooseGodScene;
+    private static ControllerDisconnectionScene controllerDisconnectionScene;
     private static boolean playPushed = false;
-    private static String CURRENT_SCENE_PATH;
     private static String currentNickname;
-    private static String WELCOME_FIRST_PLAYER_SCENE_PATH = "/fxml/WelcomeFirstPlayerScene.fxml";
-    private static String WAITING_SCENE_PATH = "/fxml/WaitingScene2.fxml";
-    private static String WELCOME_OTHER_PLAYERS_SCENE_PATH = "/fxml/WelcomeNotFirstPlayerScene.fxml";
-    private static String CHOOSE_GOD_SCENE_PATH = "/fxml/ChooseGodScene.fxml";
-    private static String GAMEBOARD_SCENE_PATH = "/fxml/GameBoardScene.fxml";
-    private static String DISCONNECTION_SCENE_PATH = "/fxml/DisconnectionScene.fxml";
+    private final static String WELCOME_SCENE = "/fxml/WelcomeScene.fxml";
+    private final static String WELCOME_FIRST_PLAYER_SCENE_PATH = "/fxml/WelcomeFirstPlayerScene.fxml";
+    private final static String WAITING_SCENE_PATH = "/fxml/WaitingScene.fxml";
+    private final static String WELCOME_OTHER_PLAYERS_SCENE_PATH = "/fxml/WelcomeNotFirstPlayerScene.fxml";
+    private final static String CHOOSE_GOD_SCENE_PATH = "/fxml/ChooseGodScene.fxml";
+    private final static String GAME_BOARD_SCENE_PATH = "/fxml/GameBoardScene.fxml";
+    private final static String DISCONNECTION_SCENE_PATH = "/fxml/DisconnectionScene.fxml";
+    private final static String END_GAME_SCENE_PATH = "/fxml/EndGameScene.fxml";
+    private final static String LOSER_SCENE_PATH = "/fxml/LoserScene.fxml";
     private static FakeCell[][] gameBoardState;
 
+
+    /** Constructor used to link this class with client.
+     * @param client class ClientGUI
+     */
     public ViewManager(ClientGUI client){
-        this.client = client;
+        ViewManager.client = client;
+    }
+
+    public static void setStage(Stage stage) {
+        ViewManager.stage = stage;
+    }
+
+    /**
+     * Used to close stage.
+     */
+    //TODO probably useless due to "stage.setOnCloseRequest" in "ClientAPP"
+    public static void closeWindow(){
+        stage.close();
+    }
+
+    public static ClientGUI getInstance(){
+        return client;
     }
 
     public static boolean isPlayPushed() {
         return playPushed;
     }
 
-    public static FakeCell[][] getGameBoardState() {
-        return gameBoardState;
-    }
-
     public static void setPlayPushed(boolean playPushed) {
         ViewManager.playPushed = playPushed;
     }
 
-    public static void setStage(Stage st) {
-        stage = st;
+    /**
+     * Used to know nickname of current player.
+     * @param o game's message sent from server
+     * @return nickname of current player as string
+     */
+    public String getCurrentNickname(Object o){
+        String turn = (String)o;
+        for (UserData u: client.getPlayersList()) {
+            if(turn.contains(u.getNickname()))
+                return u.getNickname();
+        }
+        return null;
     }
 
-    public static Stage getStage(){
-        return stage;
+    public static FakeCell[][] getGameBoardState() {
+        return gameBoardState;
     }
 
-    public static void setLayout(/*Scene scene, */String path) {
+    /** Used to save input in client.
+     * @param input translated from GUI's action in string
+     */
+    public void inputGui(String input){
+        client.saveInput(input);
+    }
+
+    /**
+     * Used to set Scene's layout.
+     * @param path string to set correct layout for the scene
+     */
+    public static void setLayout(String path) {
         try {
             FXMLLoader loader = new FXMLLoader(ViewManager.class.getResource(path));
-            CURRENT_SCENE_PATH = path;
             Parent root = loader.load();
-            if(path.equals(WELCOME_OTHER_PLAYERS_SCENE_PATH))
-                controllerWelcomeScene = loader.getController();
-            else if (path.equals(CHOOSE_GOD_SCENE_PATH))
-                controllerChooseGodScene = loader.getController();
-            else if(path.equals(GAMEBOARD_SCENE_PATH))
-                controllerGameBoardScene = loader.getController();
-            else if(path.equals(DISCONNECTION_SCENE_PATH))
-                controllerGameBoardScene = loader.getController();
+
+            switch (path) {
+                case WELCOME_SCENE:
+                case WELCOME_FIRST_PLAYER_SCENE_PATH:
+                case WELCOME_OTHER_PLAYERS_SCENE_PATH:
+                    controllerWelcomeScene = loader.getController();
+                    break;
+                case CHOOSE_GOD_SCENE_PATH:
+                    controllerChooseGodScene = loader.getController();
+                    break;
+                case GAME_BOARD_SCENE_PATH:
+                    controllerGameBoardScene = loader.getController();
+                    break;
+                case DISCONNECTION_SCENE_PATH:
+                case LOSER_SCENE_PATH:
+                case END_GAME_SCENE_PATH:
+                    controllerDisconnectionScene = loader.getController();
+                    break;
+            }
 
             if(stage.getScene()==null) {
                 Scene first = new Scene(root);
                 stage.setScene(first);
                 return;
             }
+
             Platform.runLater(()->stage.getScene().setRoot(root));
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Used to set the correct layout for player who used Atlas.
+     * @return true if current player is using Atlas, false otherwise
+     */
+    private boolean isAtlas() {
+        for (int i = 0; i < client.getPlayersList().size(); i++)
+            if (client.getPlayersList().get(i).getNickname().equals(currentNickname))
+                return client.getPlayersList().get(i).getCardChoosed().equals("ATLAS");
+        return false;
+    }
 
     @Override
     public  void updateWelcomeFirstPlayer() {
@@ -111,54 +173,48 @@ public class ViewManager implements ClientObserver,GuiObserver {
         setLayout(WAITING_SCENE_PATH);
     }
 
-
     @Override
     public void updateGameStatus(Object o) {
         Platform.runLater(() -> controllerWelcomeScene.setStatusLabel((String) o));
-
     }
 
     @Override
     public void updateGameMessage(Object message) {
-        if(controllerGameBoardScene!=null) {
-            if (! message.equals(ServerMessage.inactivityEnd)) {
-                if(((String)message).contains(ViewMessage.yourTurnMessage) || ((String)message).contains(ViewMessage.waitingYourTurn)) {
-                    currentNickname = getCurrentNickname(message);
-                    Platform.runLater(() -> controllerGameBoardScene.setPlayersLabel(client.getPlayersList(),currentNickname));
-                }
-
-                Platform.runLater(() -> controllerGameBoardScene.showGameMessage(message));
-                return;
+        if (controllerGameBoardScene!=null) {
+            if (message.equals(ServerMessage.inactivityEnd)) {
+                setLayout(DISCONNECTION_SCENE_PATH);
+                Platform.runLater(() -> controllerDisconnectionScene.showMessage(message));
             }
-            setLayout(DISCONNECTION_SCENE_PATH);
-            Platform.runLater(() -> controllerGameBoardScene.showGameMessage(message));
+            else if (((String)message).contains("lost")) {
+                setLayout(LOSER_SCENE_PATH);
+                Platform.runLater(() -> controllerDisconnectionScene.showMessage(message));
+            }
+            else if (((String)message).contains("You won") || ((String)message).contains("won the Game")) {
+                setLayout(END_GAME_SCENE_PATH);
+                Platform.runLater(() -> controllerDisconnectionScene.setPodium(client.getPlayersList(), currentNickname));
+                Platform.runLater(() -> controllerDisconnectionScene.showMessage(message));
+            }
+            else if (((String)message).contains("none default") && !isAtlas()) {
+                fromGuiInput("NO"); //used to avoid the request to build a none default level
+            }
+            else {
+                if (((String)message).contains(ViewMessage.yourTurnMessage) || ((String)message).contains(ViewMessage.waitingYourTurn)) {
+                    currentNickname = getCurrentNickname(message);
+                    Platform.runLater(() -> controllerGameBoardScene.setPlayersLabel(client.getPlayersList(), currentNickname));
+                }
+                Platform.runLater(() -> controllerGameBoardScene.showGameMessage(message));
+            }
         }
     }
-
-
-    @Override
-    public void fromGuiInput(String input) {
-        inputGui(input);
-    }
-
-
-    public void inputGui(String input){
-        client.saveInput(input);
-    }
-
-    public static ClientGUI getInstance(){
-        return client;
-    }
-
 
     /**
      * Method to print the current GameBoard situation on the screen
      */
     @Override
     public void updateShow(Object o) {
-        setLayout(GAMEBOARD_SCENE_PATH);
-        Platform.runLater(() -> controllerGameBoardScene.setPlayersLabel(client.getPlayersList(),currentNickname));
-
+        setLayout(GAME_BOARD_SCENE_PATH);
+        Platform.runLater(() -> controllerGameBoardScene.setPlayersLabel(client.getPlayersList(), currentNickname));
+        Platform.runLater(()-> controllerGameBoardScene.setStyleScene(client.getPlayersList(), currentNickname));
         FakeCell[][] gCopy = (FakeCell[][]) o;
         gameBoardState = gCopy;
         int DIM = gCopy.length;
@@ -176,36 +232,20 @@ public class ViewManager implements ClientObserver,GuiObserver {
                             k = 0;
                         }
                     }
-
                     int finalPreviousBuiltLevel = previousBuiltLevel;
                     int finalLevel = level;
-                    Platform.runLater(()->controllerGameBoardScene.setSpecificLevel(finalI,finalJ, finalLevel, finalPreviousBuiltLevel));
-
+                    Platform.runLater(()->controllerGameBoardScene.setImageSpecificLevel(finalI,finalJ, finalLevel, finalPreviousBuiltLevel));
                 }
-
                 if (gCopy[i][j].playerName != null)
-                    Platform.runLater(()-> controllerGameBoardScene.setSpecificPlayer(finalI, finalJ, client.getPlayerData(gCopy[finalI][finalJ].playerName)));
+                    Platform.runLater(()-> controllerGameBoardScene.setImageSpecificPlayer(finalI, finalJ, client.getPlayerData(gCopy[finalI][finalJ].playerName)));
                 else
-                    Platform.runLater(()-> controllerGameBoardScene.setSpecificPlayer(finalI, finalJ, null));
+                    Platform.runLater(()-> controllerGameBoardScene.setImageSpecificPlayer(finalI, finalJ, null));
             }
         }
-
-
-
-
     }
 
-    public String getCurrentNickname(Object o){
-        String turn = (String)o;
-        for (UserData u: client.getPlayersList()) {
-            if(turn.contains(u.getNickname()))
-                return u.getNickname();
-        }
-       return null;
-    }
-
-
-    public static void closeWindow(){
-        stage.close();
+    @Override
+    public void fromGuiInput(String input) {
+        inputGui(input);
     }
 }

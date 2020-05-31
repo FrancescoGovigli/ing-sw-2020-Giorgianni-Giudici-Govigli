@@ -71,7 +71,7 @@ public class Client implements Runnable{
 
     /**
      * Method to receive an object from the server
-     * @param socketIn
+     * @param socketIn input
      * @return t (thread that must wait for the operation to complete)
      */
     public Thread asyncReadFromSocket(final ObjectInputStream socketIn) {
@@ -90,8 +90,6 @@ public class Client implements Runnable{
                             }
                             else if (!inputObject.equals(ServerMessage.extraClient) && !inputObject.equals(ServerMessage.gameInProgress) && !inputObject.equals(ServerMessage.endGame) && !inputObject.equals(ServerMessage.inactivityEnd))
                                 System.out.println("[FROM SERVER] : " + inputObject);
-
-
                             else {
                                 System.out.println("[FROM SERVER] : " + inputObject);
                                 socketIn.close();
@@ -103,10 +101,8 @@ public class Client implements Runnable{
                             showGods(inputObject);
                         else if (inputObject instanceof Boolean)
                             writeActive=(Boolean)inputObject;
-
                         else if (inputObject instanceof UserData)
                             playersData.add(((UserData) inputObject));
-
                         else
                             show(inputObject);
                     }
@@ -121,8 +117,8 @@ public class Client implements Runnable{
 
     /**
      * Method to send an object to the server
-     * @param stdin
-     * @param socketOut
+     * @param stdin input
+     * @param socketOut output
      * @return t t (thread that must wait for the operation to complete)
      */
     public Thread asyncWriteToSocket(final BufferedReader stdin, final PrintWriter socketOut) {
@@ -148,7 +144,8 @@ public class Client implements Runnable{
     }
 
     /**
-     * Method to print the current GameBoard situation on the screen
+     * Method to print the current GameBoard situation on the screen.
+     * @param o object from server containing an update GameBoard
      */
     public void show(Object o) {
         FakeCell[][] gCopy = (FakeCell[][]) o;
@@ -232,7 +229,9 @@ public class Client implements Runnable{
         System.out.println("\n");
     }
 
-
+    /** Used to print listOfGods.
+     * @param listOfGods list of strings containing name of gods sent from server
+     */
     public void showGods(Object listOfGods){
         for (int i = 0; i <((List<String>)listOfGods).size() ; i++) {
             System.out.println(((List<String>)listOfGods).get(i));
