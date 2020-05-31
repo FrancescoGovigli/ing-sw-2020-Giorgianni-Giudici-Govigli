@@ -4,9 +4,6 @@ import it.polimi.ingsw.PSP42.*;
 import java.util.*;
 import it.polimi.ingsw.PSP42.server.*;
 
-/**
- * @author Francesco Govigli
- */
 public class VirtualView implements ViewObservable, ModelObserver {
 
     private boolean actionCorrect;
@@ -14,7 +11,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
     private boolean powerApply;
     private ArrayList<ViewObserver> obs = new ArrayList<>();
     private ArrayList<ClientHandler> playingClients;
-    private int numPlayers;
+    private int numberOfPlayers;
     private Choice choice;
     private int currentPlayerID;
     private boolean interrupted;
@@ -28,8 +25,8 @@ public class VirtualView implements ViewObservable, ModelObserver {
     }
 
     public VirtualView(ArrayList<ClientHandler> playingClients, int numberOfPlayers) {
-        numPlayers = numberOfPlayers;
-        actionCorrect = false;
+        this.numberOfPlayers = numberOfPlayers;
+        this.actionCorrect = false;
         this.playingClients = playingClients;
         this.currentPlayerID = 0;
     }
@@ -72,8 +69,8 @@ public class VirtualView implements ViewObservable, ModelObserver {
         return choice;
     }
 
-    public int getNumPlayers() {
-        return numPlayers;
+    public int getNumberOfPlayers() {
+        return numberOfPlayers;
     }
 
     /**
@@ -112,7 +109,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
                     choiceDone = true;
                 }
             }
-            for (int j = 0; j <playingClients.size(); j++) {
+            for (int j = 0; j < playingClients.size(); j++) {
                 if (j != i)
                     sendToPlayerInGame(j, playingClients.get(i).getNickName() + " picked " + selectedCard.toUpperCase() + "\n");
             }
@@ -193,7 +190,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
      */
     @Override
     public void notifyMove(Object o) {
-        for (int i = 0; i <obs.size(); i++)
+        for (int i = 0; i < obs.size(); i++)
             obs.get(i).updateMove(o);
     }
 
@@ -203,7 +200,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
      */
     @Override
     public void notifyBuild(Object o) {
-        for (int i = 0; i <obs.size(); i++)
+        for (int i = 0; i < obs.size(); i++)
             obs.get(i).updateBuild(o);
     }
 
@@ -256,7 +253,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
                 sendToPlayerInGame(currentPlayerID, loser + " " + ViewMessage.personalLoseMessage);
         }
     }
-    
+
     /**
      * This method has the task to initialize the Gameboard and set the initial players position.
      */
@@ -270,7 +267,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
      * to set this data.
      */
     public void handleInitialPosition() {
-        for (int i = 0; i < numPlayers; i++) {
+        for (int i = 0; i < numberOfPlayers; i++) {
             noWriteForNotCurrentPlayers(i);
             for (int j = 0; j <2; j++) {
                 String[] s = null;
@@ -325,9 +322,9 @@ public class VirtualView implements ViewObservable, ModelObserver {
         setActionCorrect(false);
 
         sendToPlayerInGame(currentPlayerID, "\n" + s + ", " + ViewMessage.yourTurnMessage + "\n");
-        for (int i = 0; i <playingClients.size(); i++) {
+        for (int i = 0; i < playingClients.size(); i++) {
             if (i != currentPlayerID)
-                sendToPlayerInGame(i, playingClients.get(currentPlayerID).getNickName()+" is playing, "+ ViewMessage.waitingYourTurn);
+                sendToPlayerInGame(i, playingClients.get(currentPlayerID).getNickName() + " is playing, " + ViewMessage.waitingYourTurn);
         }
         return notifyWhatToDo();
     }

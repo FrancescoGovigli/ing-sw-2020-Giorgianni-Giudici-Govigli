@@ -25,7 +25,7 @@ public class ControllerHandler {
      */
     public void controlInit(Object o) {
         if (view.getChoice().allFieldsNull()) {
-            mainController.createGame(view.getNumPlayers());
+            mainController.createGame(view.getNumberOfPlayers());
             GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(), "INIT");
         }
         if (!view.getChoice().allFieldsNull()) {
@@ -166,7 +166,7 @@ public class ControllerHandler {
      */
     public void controlEnd() {
         mainController.setTurnDone(true);
-        int num = view.getNumPlayers();
+        int num = view.getNumberOfPlayers();
         int curr = gameBoard.getCurrentPlayer();
         if (curr + 1 < num) {
             if (gameBoard.getPlayers().get(curr + 1).getPlayerState().equals("LOSE")) {
@@ -197,15 +197,15 @@ public class ControllerHandler {
         if (view.isUndoDone() && (mainController.getGameState().equals("PREMOVE") || (mainController.getGameState().equals("PREBUILD"))))
             mainController.setGameState(mainController.getGameState());
         else
-            if(view.isUndoDone() && view.isPowerApply() && (mainController.getGameState().equals("MOVE") || mainController.getGameState().equals("BUILD"))){
-                if(mainController.getGameState().equals("MOVE"))
-                    mainController.setGameState("PREMOVE");
-                if(mainController.getGameState().equals("BUILD"))
-                    mainController.setGameState("PREBUILD");
-                view.setPowerApply(false);
-            }
-            else
-                mainController.setGameState(s);
+        if(view.isUndoDone() && view.isPowerApply() && (mainController.getGameState().equals("MOVE") || mainController.getGameState().equals("BUILD"))){
+            if(mainController.getGameState().equals("MOVE"))
+                mainController.setGameState("PREMOVE");
+            if(mainController.getGameState().equals("BUILD"))
+                mainController.setGameState("PREBUILD");
+            view.setPowerApply(false);
+        }
+        else
+            mainController.setGameState(s);
         view.setUndoDone(false);
         view.setActionCorrect(false);
         if (gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getPlayerState().equals("LOSE")) {

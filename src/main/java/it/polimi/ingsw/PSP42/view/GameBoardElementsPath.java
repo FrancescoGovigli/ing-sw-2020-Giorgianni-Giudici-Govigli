@@ -25,6 +25,7 @@ public class GameBoardElementsPath {
      * @return the corresponding path as a string
      */
     public static String getWorkerImagePath(String worker) {
+        // TODO check -> previous version : if (worker.equals(null))
         if (worker.equals("NONE"))
             return NONE;
         else

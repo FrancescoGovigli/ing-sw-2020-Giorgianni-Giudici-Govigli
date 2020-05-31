@@ -88,7 +88,7 @@ public class Client implements Runnable{
                                 socketIn.close();
                                 setActive(false);
                             }
-                            else if (!inputObject.equals(ServerMessage.extraClient) && !inputObject.equals(ServerMessage.gameInProgress) && !inputObject.equals(ServerMessage.endGame) && !inputObject.equals(ServerMessage.inactivityEnd))
+                            else if (!inputObject.equals(ServerMessage.extraClient) && !inputObject.equals(ServerMessage.gameInProgress) && !inputObject.equals(ServerMessage.gameEnd) && !inputObject.equals(ServerMessage.inactivityEnd))
                                 System.out.println("[FROM SERVER] : " + inputObject);
                             else {
                                 System.out.println("[FROM SERVER] : " + inputObject);
@@ -119,7 +119,7 @@ public class Client implements Runnable{
      * Method to send an object to the server
      * @param stdin input
      * @param socketOut output
-     * @return t t (thread that must wait for the operation to complete)
+     * @return t (thread that must wait for the operation to complete)
      */
     public Thread asyncWriteToSocket(final BufferedReader stdin, final PrintWriter socketOut) {
         Thread t = new Thread(new Runnable() {

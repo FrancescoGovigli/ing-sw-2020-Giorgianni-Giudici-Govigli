@@ -6,11 +6,8 @@ import it.polimi.ingsw.PSP42.view.*;
 
 import java.util.*;
 
-/**
- * @author Francesco Govigli
- */
 public class ControllerCLI implements ViewObserver {
-    
+
     private final GameBoard g;
     private final VirtualView view;
     private final ControllerHandler handler;
@@ -34,14 +31,14 @@ public class ControllerCLI implements ViewObserver {
     }
 
     /**
-     * This method sets new player to the Gameboard and asks the View to set the Player names
+     * This method sets new player to the GameBoard and asks the View to set the Player names
      * @param numPlayer
      */
     public void createGame(int numPlayer) {
         ArrayList<Player> players = new ArrayList<>();
         ArrayList<UserData> data = view.getPlayerData(handler.pickCards(numPlayer));
         if (data!=null) {
-            for (int i = 0; i < view.getNumPlayers(); i++) {
+            for (int i = 0; i < view.getNumberOfPlayers(); i++) {
                 players.add(new Player(data.get(i).getNickname(), i + 1, data.get(i).getCardChoosed()));
             }
             g.setPlayers(players);

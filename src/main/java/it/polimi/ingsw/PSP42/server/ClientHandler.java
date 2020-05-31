@@ -5,7 +5,7 @@ import java.net.*;
 
 public class ClientHandler {
 
-    private Socket client;
+    private Socket clientSocket;
     private int clientID;
     private boolean readyToPlay;
     private ObjectOutputStream out;
@@ -13,8 +13,8 @@ public class ClientHandler {
     private boolean active = true;
     private String nickName;
 
-    public Socket getClient() {
-        return client;
+    public Socket getClientSocket() {
+        return clientSocket;
     }
 
     public int getClientID() {
@@ -41,7 +41,7 @@ public class ClientHandler {
         return active;
     }
 
-    public void setActive(boolean active) {
+    private void setActive(boolean active) {
         this.active = active;
     }
 
@@ -55,53 +55,54 @@ public class ClientHandler {
 
     /**
      * Constructor for the following object which will be managed by the ServerGameThread
-     * (PlayerHandler contains all the information necessary for the server and the SGT
-     * to correctly manage the interactions with the client (connection closure included))
-     * @param client
+     * (PlayerHandler contains all the information necessary for the Server and the SGT
+     * to correctly manage the interactions with the Client (connection closure included))
+     * @param clientSocket
      * @param clientID
      */
-    public ClientHandler(Socket client, int clientID) {
-        this.client = client;
+    public ClientHandler(Socket clientSocket, int clientID) {
+        this.clientSocket = clientSocket;
         this.clientID = clientID;
         this.readyToPlay = false;
         this.active = true;
         try {
-            input = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            out = new ObjectOutputStream(client.getOutputStream());
+            input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            out = new ObjectOutputStream(clientSocket.getOutputStream());
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("IOException in ClientHandler -> ClientHandler");
         }
     }
 
     /**
-     * Method to send an object to client
-     * It returns a thread because in the initialization phase it is invoked by every client that passes the accept(),
-     * while in the course of the game it will be called only for the player in turn
+     * Method to send an object to client.
+     * If an error occurs, the client is inactivated.
      * @param message (object to send)
      */
-    public Thread sendToClient(Object message) {
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    out.writeObject(message);
-                    out.flush();
-                } catch (IOException e) {
-                    e.printStackTrace();
+    public void sendToClient(Object message) {
+        if (isActive()) {
+            Thread t = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        out.writeObject(message);
+                        out.flush();
+                    } catch (IOException e) {
+                        clientInactivation();
+                    }
                 }
+            });
+            t.start();
+            try {
+                t.join();
+            } catch (InterruptedException e) {
+                System.out.println("InterruptedException in ClientHandler -> sendToClient");
             }
-        });
-        t.start();
-        try {
-            t.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
-        return t;
     }
 
     /**
      * Method to receive an object from client
+     * If an error occurs, the client is inactivated.
      * @return (received object)
      */
     public Object readFromClient() {
@@ -109,21 +110,30 @@ public class ClientHandler {
         Thread t = new Thread(() -> {
             try {
                 str[0] = input.readLine();
-                System.out.println("[FROM CLIENT] :" + str[0]);
+                System.out.println("[FROM CLIENT] : " + str[0]);
             } catch (Exception e){
-                setActive(false);
+                clientInactivation();
             }
         });
         t.start();
         try {
             t.join();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            System.out.println("InterruptedException in ClientHandler -> readFromClient");
         }
         return str[0];
     }
 
-    public void closeConnection(){
-        active = false;
+    /**
+     * Method to inactivate the client.
+     */
+    public void clientInactivation() {
+        setActive(false);
+        try {
+            getOut().reset();
+            getInput().reset();
+        } catch (IOException e) {
+            System.out.println("IOException in ClientHandler -> clientInactivation");
+        }
     }
 }
