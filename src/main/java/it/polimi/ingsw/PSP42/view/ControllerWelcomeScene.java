@@ -26,7 +26,10 @@ public class ControllerWelcomeScene implements GuiObservable {
     public Button choose1;
     @FXML
     public Button choose2;
+    @FXML
+    public TextField textfieldIP;
 
+    private boolean hostIPset = false;
     private boolean ableToClickPlayers = false;
     private String numberOfPlayers;
     private static String nickName;
@@ -40,7 +43,11 @@ public class ControllerWelcomeScene implements GuiObservable {
      */
     /*TODO (ABBELLIMENTO) metterei nella welcomeScene uno Status Connected oppure status: Insert Your name to continue*/
     public void goToWaitingScene() {
-        ViewManager.setPlayPushed(true);
+        if(hostIPset){
+            informManagerInput(textfieldIP.getText());
+            ViewManager.setPlayPushed(true);
+        }
+
     }
 
     /**
@@ -50,6 +57,7 @@ public class ControllerWelcomeScene implements GuiObservable {
     public void deleteText(MouseEvent mouseEvent) {
         TextField text = (TextField) mouseEvent.getSource();
         text.setText("");
+        hostIPset=true;
         text.setEditable(true);
     }
 
@@ -106,6 +114,10 @@ public class ControllerWelcomeScene implements GuiObservable {
         else if(message.equals(ServerMessage.extraClient) || message.equals(ServerMessage.gameInProgress)) {
             statusPane.setStyle("-fx-background-image: url('/images/PopUp.png'); -fx-background-size: stretch; -fx-opacity: 1;");
             statusLabel.setText("Status: Cannot access the Game try later...");
+        }
+        else if(message.equals("Server unreachable"));{
+            statusPane.setStyle("-fx-background-image: url('/images/PopUp.png'); -fx-background-size: stretch; -fx-opacity: 1;");
+            statusLabel.setText("Status: Server unreachable");
         }
     }
 

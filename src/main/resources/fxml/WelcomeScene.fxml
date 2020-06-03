@@ -1,69 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import java.net.URL?>
 
-<GridPane id="back"
-          xmlns="http://javafx.com/javafx"
-          xmlns:fx="http://javafx.com/fxml"
-          fx:controller="it.polimi.ingsw.PSP42.view.ControllerWelcomeScene">
+<GridPane id="back" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.PSP42.view.ControllerWelcomeScene">
 
-   <GridPane GridPane.rowIndex="0" GridPane.columnIndex="0">
-
-      <Pane fx:id="statusPane" GridPane.rowIndex="1" GridPane.columnIndex="1"
-            GridPane.valignment="CENTER" GridPane.halignment="CENTER"
-            opacity="0"/>
-
-      <Label id="statusLabel" fx:id="statusLabel"
-             GridPane.rowIndex="1" GridPane.columnIndex="1"
-             GridPane.valignment="CENTER" GridPane.halignment="CENTER"
-             alignment="CENTER"/>
+   <GridPane prefHeight="168.0" prefWidth="1200.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
+      <TextField id="textfield" fx:id="textfieldIP" alignment="CENTER" editable="false" onMouseClicked="#deleteText" prefHeight="47.0" prefWidth="306.0" text="Insert Host IP Address" GridPane.columnIndex="1" GridPane.rowIndex="1">
+         <GridPane.margin>
+            <Insets left="50.0" right="50.0" />
+         </GridPane.margin>
+      </TextField>
+      <Pane fx:id="statusPane" prefHeight="215.0" prefWidth="348.0" GridPane.columnIndex="1">
+         <GridPane.margin>
+            <Insets left="60.0" right="60.0" top="150.0" />
+         </GridPane.margin>
+         <children>
+            <Label id="statusLabel" fx:id="statusLabel" alignment="CENTER" layoutX="3.0" layoutY="24.0" prefHeight="17.0" prefWidth="234.0" text="" />
+         </children>
+      </Pane>
 
       <rowConstraints>
-         <RowConstraints percentHeight="78"/>
-         <RowConstraints percentHeight="15"/>
-         <RowConstraints percentHeight="7"/>
+         <RowConstraints percentHeight="78" />
+         <RowConstraints percentHeight="15" />
+         <RowConstraints percentHeight="7" />
       </rowConstraints>
       <columnConstraints>
-         <ColumnConstraints percentWidth="35"/>
-         <ColumnConstraints percentWidth="30"/>
-         <ColumnConstraints percentWidth="35"/>
+         <ColumnConstraints percentWidth="35" />
+         <ColumnConstraints percentWidth="30" />
+         <ColumnConstraints percentWidth="35" />
       </columnConstraints>
    </GridPane>
 
-   <GridPane GridPane.rowIndex="1" GridPane.columnIndex="0">
+   <GridPane GridPane.columnIndex="0" GridPane.rowIndex="2">
 
-      <Button id="playButton"
-              onAction="#goToWaitingScene"
-              GridPane.rowIndex="1" GridPane.columnIndex="1"
-              GridPane.valignment="CENTER" GridPane.halignment="CENTER"
-              alignment="CENTER"
-              prefHeight="80.0" prefWidth="182.0"
-              text="PLAY"
-              textAlignment="CENTER"/>
+      <Button id="playButton" alignment="CENTER" onAction="#goToWaitingScene" prefHeight="80.0" prefWidth="182.0" text="CONNECT &amp; PLAY" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
 
       <rowConstraints>
-         <RowConstraints percentHeight="5"/>
-         <RowConstraints percentHeight="45"/>
-         <RowConstraints percentHeight="50"/>
+         <RowConstraints percentHeight="5" />
+         <RowConstraints percentHeight="45" />
+         <RowConstraints percentHeight="50" />
       </rowConstraints>
       <columnConstraints>
-         <ColumnConstraints percentWidth="40"/>
-         <ColumnConstraints percentWidth="20"/>
-         <ColumnConstraints percentWidth="40"/>
+         <ColumnConstraints percentWidth="40" />
+         <ColumnConstraints percentWidth="20" />
+         <ColumnConstraints percentWidth="40" />
       </columnConstraints>
    </GridPane>
 
    <rowConstraints>
-      <RowConstraints percentHeight="70"/>
-      <RowConstraints percentHeight="30"/>
+      <RowConstraints minHeight="10.0" percentHeight="70.0" prefHeight="30.0" />
+      <RowConstraints percentHeight="70" />
+      <RowConstraints percentHeight="30" />
    </rowConstraints>
    <columnConstraints>
-      <ColumnConstraints percentWidth="100"/>
+      <ColumnConstraints percentWidth="100" />
    </columnConstraints>
 
    <stylesheets>
-      <URL value="@../css/WelcomeScene.css"/>
+      <URL value="@../css/WelcomeScene.css" />
    </stylesheets>
 </GridPane>

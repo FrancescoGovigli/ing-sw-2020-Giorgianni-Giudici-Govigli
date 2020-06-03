@@ -248,4 +248,9 @@ public class ViewManager implements ClientObserver, GuiObserver {
     public void fromGuiInput(String input) {
         inputGui(input);
     }
+
+    public static void hostIPIncorrect(String error){
+        Platform.runLater(() -> controllerWelcomeScene.setStatusLabel(error));
+        playPushed=false;
+    }
 }

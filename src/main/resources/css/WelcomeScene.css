@@ -18,7 +18,7 @@
     -fx-background-position: center;
     -fx-background-color: transparent;
     -fx-font-family: "Dalek Pinpoint";
-    -fx-font-size: 28;
+    -fx-font-size: 15;
     -fx-text-fill: white;
     -fx-text-alignment: center;
 }
@@ -30,7 +30,7 @@
     -fx-background-position: center;
     -fx-background-color: transparent;
     -fx-font-family: "Dalek Pinpoint";
-    -fx-font-size: 25;
+    -fx-font-size: 15;
     -fx-text-fill: white;
     -fx-text-alignment: center;
 }
