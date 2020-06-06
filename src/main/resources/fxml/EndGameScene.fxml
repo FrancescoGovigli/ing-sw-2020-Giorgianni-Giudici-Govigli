@@ -8,7 +8,7 @@
 <GridPane id="back"
           xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
-          fx:controller="it.polimi.ingsw.PSP42.view.ControllerDisconnectionScene">
+          fx:controller="it.polimi.ingsw.PSP42.client.clientView.ControllerDisconnectionScene">
 
     <Pane id="trumpetsVictoryLeft"
           GridPane.rowIndex="1" GridPane.columnIndex="0"

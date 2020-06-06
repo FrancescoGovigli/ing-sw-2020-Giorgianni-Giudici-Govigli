@@ -15,6 +15,9 @@ public class Server {
     private ArrayList<Socket> connectedToServerClients = new ArrayList<>();
     private ArrayList<ClientHandler> waitingClients = new ArrayList<>();
 
+    /**
+     * Constructor to set Server.
+     */
     public Server() {
         try {
             serverSocket = new ServerSocket(SOCKET_PORT);
@@ -32,7 +35,7 @@ public class Server {
     }
 
     /**
-     * Method to run the server, it only manages new connections.
+     * Method to run the Server, it only manages new connections.
      * Server admits until the game has started.
      */
     public void run() {
@@ -60,8 +63,8 @@ public class Server {
     }
 
     /**
-     * Method to associate an ServerGameThread to each connected client that will manage it until the game starts.
-     * @param client
+     * Method to associate a ServerGameThread to each connected client that will manage it until the game starts.
+     * @param client client' socket
      */
     public synchronized void newClientInitialization(Socket client) {
         connectionOrder++;
@@ -72,7 +75,7 @@ public class Server {
     }
 
     /**
-     * Method to put each connected client on hold until the server has reached the number of players needed
+     * Method to put each connected client on hold until the Server has reached the number of players needed
      * to start the game, the excess clients will be expelled (closing their connection).
      * The new game will be initialized by the last client who will satisfy the number of players.
      * @param sgt (ServerGameThread that assisted the client during the initialization phase)
@@ -103,7 +106,7 @@ public class Server {
     }
 
     /**
-     * Method to verify that all waiting players are ready to play (they will be ready after entering their name)
+     * Method to verify that all waiting players are ready to play (they will be ready after entering their name).
      * @return true if they are ready, false otherwise
      */
     public synchronized boolean allPlayersAreReady() {
@@ -122,12 +125,12 @@ public class Server {
     public synchronized void newGameInitialization() {
         this.gameStarted = true;
         System.out.println(ServerMessage.GAME_START);
-        ServerGameThread game = new ServerGameThread(this, waitingClients);
+        ServerGameThread game = new ServerGameThread(this, (ArrayList<ClientHandler>) waitingClients.clone());
         game.startGame();
     }
 
     /**
-     * Method to reset the server.
+     * Method to reset the Server.
      * It restores the default values to be able to create a new game and closes all open sockets.
      * @param cause (string identifying why the game should be reset)
      */

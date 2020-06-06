@@ -1,5 +1,6 @@
-package it.polimi.ingsw.PSP42.view;
+package it.polimi.ingsw.PSP42.client.clientView;
 
+import it.polimi.ingsw.PSP42.view.UserData;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
@@ -9,14 +10,17 @@ public class ControllerDisconnectionScene {
 
     @FXML
     public Label disconnectionLabel;
+
     @FXML
     public Label winnerPlayer;
+
     @FXML
     public Label loserPlayer1;
     @FXML
     public Pane loserPlayer1Pane;
     @FXML
     public Pane loserPlayer1Medal;
+
     @FXML
     public Label loserPlayer2;
     @FXML

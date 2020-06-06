@@ -12,7 +12,7 @@ public class ServerGameThread implements Runnable {
     private Server server;
     private VirtualView view;
     private GameBoard model;
-    private ControllerCLI controller;
+    private Controller controller;
     private ClientHandler managedClient;
     private enum ConnectionState {AVAILABLE, TIME_OUT, DISCONNECTED}
     private static ConnectionState connectionState = ConnectionState.AVAILABLE;
@@ -37,9 +37,9 @@ public class ServerGameThread implements Runnable {
     /**
      * Constructor for the thread that will manage the clientSocket until the game starts.
      * This thread is created to manage clients initialization (insertion of nickname and number of players).
-     * @param server
+     * @param server Server
      * @param clientSocket (client' socket to manage)
-     * @param orderOfConnection (order in which the Client has connected to the Server)
+     * @param orderOfConnection (order in which the ClientCLI has connected to the Server)
      */
     public ServerGameThread(Server server, Socket clientSocket, Integer orderOfConnection) {
         this.server = server;
@@ -51,7 +51,7 @@ public class ServerGameThread implements Runnable {
      * Constructor for the thread that will create the game.
      * This ServerGameThread is created when the required number of players has been reached in the waiting room and
      * it will take over the game.
-     * @param server
+     * @param server Server
      * @param waitingClients (Clients who will play the game)
      */
     public ServerGameThread(Server server, ArrayList<ClientHandler> waitingClients) {
@@ -75,14 +75,12 @@ public class ServerGameThread implements Runnable {
         NetworkVirtualView.assignSGT(this);
         view = new VirtualView(sgtClients, server.getNumberOfPlayer());
         model = GameBoard.getInstance();
-        controller = new ControllerCLI(model, view);
+        controller = new Controller(model, view);
         view.attach(controller);
         model.attach(view);
         controller.runGame();
-        if (!view.isInterrupted())
-            resetGame();
+        resetGame();
     }
-
 
     /**
      * Method to reset the game (model and server, to be able to accept new connections).
@@ -93,7 +91,6 @@ public class ServerGameThread implements Runnable {
      */
     public void resetGame() {
         if (model != null) {
-            view.handleInterrupt();
             model.reset();
         }
         if (connectionState.equals(ConnectionState.AVAILABLE)) {
@@ -112,7 +109,7 @@ public class ServerGameThread implements Runnable {
 
     /**
      * Method to communicate to the active Clients the reason for closing the game and then inactivate them.
-     * @param sgtClients (Client arrays managed by an ServerGameThread)
+     * @param sgtClients (ClientCLI arrays managed by an ServerGameThread)
      * @param object (message indicating why the game was closed)
      */
     private void clientCommunicationAndInactivation(ArrayList<ClientHandler> sgtClients, Object object) {
@@ -133,7 +130,7 @@ public class ServerGameThread implements Runnable {
     }
 
     /**
-     * Method executed by threads that manage clients
+     * Method executed by threads that manage clients.
      */
     @Override
     public void run() {
@@ -147,7 +144,7 @@ public class ServerGameThread implements Runnable {
     public void settingClient() {
         Object object = null;
         String nickName = null;
-        send(managedClient, "You entered the Game!" + " \uD83D\uDE0A \n");
+        send(managedClient, "You entered the Game!" + " \uD83D\uDE0A");
         if (managedClient.getClientID() == 1) {
             send(managedClient, "Welcome player " + managedClient.getClientID() + " insert your name: ");
             object = read(managedClient);
@@ -262,5 +259,4 @@ public class ServerGameThread implements Runnable {
     private boolean isReadOK(Object object){
         return object != null;
     }
-
 }

@@ -54,11 +54,11 @@ public class ClientHandler {
     }
 
     /**
-     * Constructor for the following object which will be managed by the ServerGameThread
+     * Constructor for the following object which will be managed by the ServerGameThread.
      * (PlayerHandler contains all the information necessary for the Server and the SGT
      * to correctly manage the interactions with the Client (connection closure included))
-     * @param clientSocket
-     * @param clientID
+     * @param clientSocket client' socket
+     * @param clientID client's ID
      */
     public ClientHandler(Socket clientSocket, int clientID) {
         this.clientSocket = clientSocket;
@@ -101,7 +101,7 @@ public class ClientHandler {
     }
 
     /**
-     * Method to receive an object from client
+     * Method to receive an object from client.
      * If an error occurs, the client is inactivated.
      * @return (received object)
      */

@@ -1,7 +1,5 @@
 package it.polimi.ingsw.PSP42.model;
 
-import it.polimi.ingsw.PSP42.*;
-
 import java.util.ArrayList;
 
 public class GameBoard implements ModelObservable {
@@ -14,7 +12,7 @@ public class GameBoard implements ModelObservable {
     private int currentPlayer;
 
     /**
-     * Constructor to initialize the board of dimension 5x5
+     * Constructor to initialize the board of dimension 5x5.
      */
     private GameBoard() {
         for (int i = 0; i < 5; i++) {
@@ -26,8 +24,8 @@ public class GameBoard implements ModelObservable {
     }
 
     /**
-     * Method to return the unique instance of the board
-     * @return instance
+     * Method to return the unique instance of the board.
+     * @return instance of gameBoard
      */
     public static GameBoard getInstance() {
         if (instance == null)
@@ -35,14 +33,17 @@ public class GameBoard implements ModelObservable {
         return instance;
     }
 
+    /**
+     * Method to set gameBoard's instance to null.
+     */
     public void reset(){
         instance = null;
     }
 
     /**
-     * Method to return the object Cell specified by the Cartesian coordinates (x, y)
-     * @param x
-     * @param y
+     * Method to return the object Cell specified by the Cartesian coordinates (x, y).
+     * @param x position on the x-axis
+     * @param y position on the y-axis
      * @return Cell
      */
     public Cell getCell(int x, int y) {
@@ -50,7 +51,7 @@ public class GameBoard implements ModelObservable {
     }
 
     /**
-     * Method to return a copy an ArrayList containing the list of players
+     * Method to return a copy an ArrayList containing the list of players.
      * @return players.clone()
      */
     public ArrayList<Player> getPlayers(){
@@ -58,8 +59,8 @@ public class GameBoard implements ModelObservable {
     }
 
     /**
-     * Used to set only one time all the players playing when initializing the game
-     * @param players
+     * Used to set only one time all the players playing when initializing the game.
+     * @param players ArrayList<Player>
      */
     public void setPlayers(ArrayList<Player> players) {
         if (this.players == null)
@@ -83,7 +84,7 @@ public class GameBoard implements ModelObservable {
     }
 
     /**
-     * Method to obtain a sub-matrix with cells surrounded the specified cell
+     * Method to obtain a sub-matrix with cells surrounded the specified cell.
      * @param x (x coordinate of the specified cell)
      * @param y (y coordinate of the specified cell)
      * @return c (sub-matrix with center in x, y)
@@ -101,7 +102,7 @@ public class GameBoard implements ModelObservable {
     }
 
     /**
-     * Method to obtain the available cell around your position (x,y)
+     * Method to obtain the available cell around your position (x,y).
      * @param x (x coordinate of your position)
      * @param y (y coordinate of your position)
      * @return adjCellMoveAvailable (array which contains all the possible cell where move)
@@ -127,7 +128,7 @@ public class GameBoard implements ModelObservable {
     }
 
     /**
-     * Method to know if a worker can be moved in (x,y) position
+     * Method to know if a worker can be moved in (x,y) position.
      * @param x (x coordinate of where you would like to go)
      * @param y (y coordinate of where you would like to go)
      * @param w (worker who would like to move)
@@ -145,7 +146,7 @@ public class GameBoard implements ModelObservable {
     }
 
     /**
-     * Method to obtain a list of cell where the worker can build
+     * Method to obtain a list of cell where the worker can build.
      * @param x (x coordinate of your position)
      * @param y (y coordinate of your position)
      * @return adjCellBuildAvailable (array which contains all the possible cell where build)
@@ -169,7 +170,7 @@ public class GameBoard implements ModelObservable {
     }
 
     /**
-     * Method to check if it's possible build in a position
+     * Method to check if it's possible build in a position.
      * @param x (x coordinate of where you would like to build)
      * @param y (y coordinate of where you would like to build)
      * @param w (worker who would like to build)
@@ -185,7 +186,7 @@ public class GameBoard implements ModelObservable {
     }
 
     /**
-     * Method to know which workers are available
+     * Method to know which workers are available.
      * @param w (worker to be verified)
      * @return true if worker can be used, false otherwise
      */
@@ -210,8 +211,9 @@ public class GameBoard implements ModelObservable {
 
     /**
      * Method to verify if the player are still in the game or not,
-     * if both of his workers are not available the player's status will be changed to "LOSE"
+     * if both of his workers are not available the player's status will be changed to "LOSE".
      * @param p (player to be verified)
+     * @param phase (game phase)
      */
     public void loseCondition(Player p, String phase) {
         switch (phase) {
@@ -253,8 +255,8 @@ public class GameBoard implements ModelObservable {
     }
 
     /**
-     * Utility method to unset worker on cells and set the PlayerState == LOSE
-     * @param p
+     * Utility method to unset worker on cells and set the PlayerState == LOSE.
+     * @param p player
      */
     public void playerLose(Player p) {
         p.getWorker1().unSetPosition();
@@ -263,12 +265,12 @@ public class GameBoard implements ModelObservable {
     }
 
     /**
-     * Method to check if a worker has at least one move available
+     * Method to check if a worker has at least one move available.
      * PowerMoveAvailable could set PlayerState == WIN if the Player has a move in which
      * he could win, but its not the task of this method so if the PowerMove is available than
      * it will simply continue to consider the PlayerState == INGAME.
-     * @param w
-     * @return
+     * @param w worker
+     * @return true if worker can do at least one move, false otherwise
      */
     public boolean atLeastOneMove(Worker w) {
         int x = w.getCurrentX();
@@ -299,9 +301,10 @@ public class GameBoard implements ModelObservable {
     }
 
     /**
-     * Method to check if a worker has at least one build available
-     * @param w
-     * @return
+     * Method to check if a worker has at least one build available.
+     * @param w worker
+     * @param level level that worker wants to build
+     * @return true if worker can do at least one build, false otherwise
      */
     public boolean atLeastOneBuild(Worker w, int level) {
         int x = w.getCurrentX();
@@ -322,7 +325,7 @@ public class GameBoard implements ModelObservable {
     }
 
     /**
-     * Method to verify if the worker who has moved has won
+     * Method to verify if the worker who has moved has won.
      * @param x (x coordinate of the future position of the worker)
      * @param y (y coordinate of the future position of the worker)
      * @param w (worker on moving)
@@ -335,8 +338,8 @@ public class GameBoard implements ModelObservable {
     }
 
     /**
-     * Add an observer to the Model's observer list
-     * @param ob
+     * Add an observer to the Model's observer list.
+     * @param ob ModelObserver
      */
     @Override
     public void attach(ModelObserver ob) {
@@ -344,8 +347,8 @@ public class GameBoard implements ModelObservable {
     }
 
     /**
-     * Removes an observer to the Model's observer list
-     * @param ob
+     * Removes an observer to the Model's observer list.
+     * @param ob ModelObserver
      */
     @Override
     public void detach(ModelObserver ob) {
@@ -353,15 +356,13 @@ public class GameBoard implements ModelObservable {
     }
 
     /**
-     * Notifies the observers who need update
+     * Notifies the observers who need an update.
+     * @param object updated gameBoard
+     * @param string is "INIT" during game initialization or "NOINIT" during game play
      */
     @Override
-    public void notifyObservers(Object o, String s) {
-        for (int i = 0; i <obs.size(); i++) {
-            if (getGamePhase().equals("START"))
-             obs.get(i).updateBoard(o, "INIT");
-            else
-                obs.get(i).updateBoard(o, "NOINIT");
-        }
+    public void notifyObservers(Object object, String string) {
+        for (int i = 0; i < obs.size(); i++)
+            obs.get(i).updateBoard(object, string);
     }
 }

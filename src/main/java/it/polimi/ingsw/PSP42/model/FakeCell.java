@@ -34,12 +34,8 @@ public class FakeCell implements Serializable {
         return level;
     }
 
-    public boolean[] getBuiltLevel() {
-        return builtLevel;
-    }
-
     /**
-     * Method that creates the copy of the game board at the call state
+     * Method that creates the copy of the game board at the call state.
      * @return gCopy (FakeCell matrix containing only player name, worker 1 or 2 and construction level)
      */
     public static FakeCell[][] getGameBoardCopy() {
@@ -70,5 +66,4 @@ public class FakeCell implements Serializable {
         }
         return gCopy;
     }
-
 }

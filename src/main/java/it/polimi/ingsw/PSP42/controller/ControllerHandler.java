@@ -9,34 +9,40 @@ public class ControllerHandler {
 
     private final GameBoard gameBoard;
     private final VirtualView view;
-    private final ControllerCLI mainController;
+    private final Controller mainController;
 
-    public ControllerHandler(GameBoard g, VirtualView v, ControllerCLI c) {
+    /**
+     * Constructor to set ControllerHandler
+     * @param g gameBoard
+     * @param v virtualView
+     * @param c controller
+     */
+    public ControllerHandler(GameBoard g, VirtualView v, Controller c) {
         gameBoard = g;
         view = v;
         mainController = c;
     }
 
     /**
-     * Handles the initialization of the game.
-     * @param o uses Object to identify the Choice of the user. If all the its attributes are null
-     *          no choice is done and its the creationgame invoked. If there a user choice it will set
-     *          the initial position of the workers
+     * Update method used to handle game initialization.
+     * It check user Choice.
+     * If all Choice's attributes are null no choice is done and creationGame is invoked.
+     * If an user choice was done it will set the initial position of the workers.
      */
-    public void controlInit(Object o) {
+    public void controlInit() {
         if (view.getChoice().allFieldsNull()) {
             mainController.createGame(view.getNumberOfPlayers());
             GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(), "INIT");
         }
-        if (!view.getChoice().allFieldsNull()) {
+        else {
             Worker w = null;
             boolean check;
-            //check what worker is setting initial position
+            // check what worker is setting initial position
             if (view.getChoice().getWorker() == 1)
                 w = (gameBoard.getPlayers()).get(view.getChoice().getIdPlayer()).getWorker1();
             if (view.getChoice().getWorker() == 2)
                 w = (gameBoard.getPlayers()).get(view.getChoice().getIdPlayer()).getWorker2();
-            //handle initial position
+            // handle initial position
             check = (gameBoard.getPlayers()).get(view.getChoice().getIdPlayer()).initialPosition(view.getChoice().getX(), view.getChoice().getY(), w);
             if (check) {
                 view.setActionCorrect(true);
@@ -44,19 +50,19 @@ public class ControllerHandler {
             }
         }
     }
+
     /**
-     * Handles to call the method in the model to modify the state of the worker selected
-     * @param o represent always the Choice done by the user
+     * Update method to call model's method that modify the state of the worker selected, checking user Choice.
      */
-    public void controlMove(Object o) {
+    public void controlMove() {
         Worker w = null;
         boolean check;
-        //check what worker is moving
+        // check what worker is moving
         if (view.getChoice().getWorker() == 1)
             w = (gameBoard.getPlayers()).get(gameBoard.getCurrentPlayer()).getWorker1();
         if (view.getChoice().getWorker() == 2)
             w = (gameBoard.getPlayers()).get(gameBoard.getCurrentPlayer()).getWorker2();
-        //check if worker is able to move at least in one position
+        // check if worker is able to move at least in one position
         if (gameBoard.atLeastOneMove(w)) {
             check = (gameBoard.getPlayers()).get(gameBoard.getCurrentPlayer()).move(view.getChoice().getX(), view.getChoice().getY(), w);
             if (check) {
@@ -71,7 +77,7 @@ public class ControllerHandler {
                 GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(), "NOINIT");
             }
         }
-        //THIS CASE OCCURS ONLY IF THE PLAYER LOSES IF NO UNDO IS DONE
+        // this case occurs only if the player loses because player's Undo was not done
         else {
             if (view.undoOption("WARNING")) {
                 controlUndoPower(w, getPreviousGamePhase());
@@ -86,18 +92,17 @@ public class ControllerHandler {
     }
 
     /**
-     * Handles to call the method in the model to modify the building state of the GameBoard
-     * @param o represent always the Choice done by the user
+     * Update method to call model's method that modify the state of the building selected, checking user Choice.
      */
-    public void controlBuild(Object o) {
+    public void controlBuild() {
         Worker w = null;
         boolean check;
-        //check what worker is building
+        // check what worker is building
         if (view.getChoice().getWorker() == 1)
             w = (gameBoard.getPlayers()).get(gameBoard.getCurrentPlayer()).getWorker1();
         if (view.getChoice().getWorker() == 2)
             w = (gameBoard.getPlayers()).get(gameBoard.getCurrentPlayer()).getWorker2();
-        //check if worker is able to build at least in one position
+        // check if worker is able to build at least in one position
         if (gameBoard.atLeastOneBuild(w, view.getChoice().getLevel())) {
             check = (gameBoard.getPlayers()).get(gameBoard.getCurrentPlayer()).build(view.getChoice().getX(), view.getChoice().getY(), view.getChoice().getLevel(), w);
             if (check) {
@@ -126,26 +131,25 @@ public class ControllerHandler {
     }
 
     /**
-     * Takes the 2 workers of the player and checks if the player has lost due to the opponents.
-     * If the player has not lost the method returns his nickname. If the current player is the only one remaining
-     * on the board he directly wins the Game
+     * Update method that takes the 2 player's workers and check if player has lost due to opponents' turn.
+     * If the player has not lost the method returns his nickname.
+     * If the current player is the only one remained on the board he directly wins the Game.
      * @return nickname of the Player
      */
     public String controlCurrentPlayer() {
         mainController.setTurnDone(false);
         Worker w1 = gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getWorker1();
         Worker w2 = gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getWorker2();
-        //SET THE WORKER AVAILABLE IF THE WORKER CAN MOVE OR NOT AVAILABLE IF BLOCKED
+        // set the worker available if the worker can move or not available if it is blocked
         gameBoard.workerAvailable(w1);
         gameBoard.workerAvailable(w2);
         gameBoard.loseCondition(gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()), "START");
         if (gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getPlayerState().equals("LOSE")) {
             view.handleLoser(gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getNickname());
-            GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(), "INIT");
+            GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(), "NOINIT");
             view.handleEnd();
             controlNextState("START");
         }
-
         int playersInGame = 0;
         for (Player p: gameBoard.getPlayers()) {
             if (p.getPlayerState().equals("INGAME"))
@@ -161,8 +165,8 @@ public class ControllerHandler {
     }
 
     /**
-     * Sets the new current player checking the arraylist of the gameboard.
-     * The new currentPlayer value will be the next of the new turn only if the Player has not lost yet
+     * Update method to set new current player checking the arraylist of the gameBoard.
+     * The new currentPlayer value will be the next of the new turn only if the Player has not lost yet.
      */
     public void controlEnd() {
         mainController.setTurnDone(true);
@@ -187,20 +191,20 @@ public class ControllerHandler {
     }
 
     /**
-     * Updates the new Phase of the game.
-     * It checks if after every phase if the player has the LOSE value or if the player has won. In this cases the Phase
-     * will be set at the END of turn. If the player WIN the GameDone value of the View will be set to true.
-     * @param s
+     * Update method to update the new game Phase.
+     * It checks if after every phase if the player has lost or has won.
+     * In this cases the game Phase will be set at the END of turn.
+     * If the player wins, the View's GameDone value will be set true.
+     * @param s string that identify the next game Phase
      */
     public void controlNextState(String s) {
-        mainController.setActionDone(false);
         if (view.isUndoDone() && (mainController.getGameState().equals("PREMOVE") || (mainController.getGameState().equals("PREBUILD"))))
             mainController.setGameState(mainController.getGameState());
         else
-        if(view.isUndoDone() && view.isPowerApply() && (mainController.getGameState().equals("MOVE") || mainController.getGameState().equals("BUILD"))){
-            if(mainController.getGameState().equals("MOVE"))
+        if (view.isUndoDone() && view.isPowerApply() && (mainController.getGameState().equals("MOVE") || mainController.getGameState().equals("BUILD"))){
+            if (mainController.getGameState().equals("MOVE"))
                 mainController.setGameState("PREMOVE");
-            if(mainController.getGameState().equals("BUILD"))
+            if (mainController.getGameState().equals("BUILD"))
                 mainController.setGameState("PREBUILD");
             view.setPowerApply(false);
         }
@@ -212,7 +216,7 @@ public class ControllerHandler {
             gameBoard.setGamePhase("END");
             mainController.setGameState("END");
             view.handleLoser(gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getNickname());
-            GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(), "INIT");
+            GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(), "NOINIT");
             return;
         }
         if ((s.equals("MOVE") || s.equals("PREBUILD")) && gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getPlayerState().equals("WIN")) {
@@ -226,9 +230,9 @@ public class ControllerHandler {
     }
 
     /**
-     * Every Card know the Action that are going to happen during the Player, who has the specific Card
-     * The method gives the values to the View to know which action to call and in with phase of the turn.
-     * @return
+     * Update method to obtain all the possible actions during a turn.
+     * These actions are contained in every Card.
+     * @return matrix of strings that contains all possible actions during the turn
      */
     public String[][] controlWhatToDo() {
         int current = gameBoard.getCurrentPlayer();
@@ -236,32 +240,27 @@ public class ControllerHandler {
     }
 
     /**
-     * Update method to choose the right worker only if available during the starting phase of turn
-     * @return 1 == worker1, 2 == worker2;
+     * Update method to choose the right worker only if it is available during the starting phase of turn.
+     * @param choice worker id choose by player
      */
-    public Integer controlStart(Integer i) {
-        Integer choice = i;
+    public void controlStart(Integer choice) {
         Worker w = null;
         Boolean check;
-        if(choice == null){
-            return null;
-        }
+        if(choice == null)
+            return;
         else if (choice == 1)
             w = (gameBoard.getPlayers()).get(gameBoard.getCurrentPlayer()).getWorker1();
         else if (choice == 2)
             w = (gameBoard.getPlayers()).get(gameBoard.getCurrentPlayer()).getWorker2();
-
         check = w.getAvailable();
-
         if (check)
             view.setActionCorrect(true);
         else
             view.setActionCorrect(false);
-        return choice;
     }
 
     /**
-     * Says the view to Print that effect (not explicit power) is applied
+     * Update method used to communicate to View to Print an effect that was applied.
      */
     public void controlEffect() {
         if (gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).effect()) {
@@ -274,52 +273,54 @@ public class ControllerHandler {
     }
 
     /**
-     * Generic function to call all undoAction referred to the previousPhase for worker w selected.
-     * @param w worker of the current turn
-     * @param previousPhase
+     * Method to call all undoAction referred to previousPhase for worker selected.
+     * @param worker worker of the current turn
+     * @param previousPhase previous game phase
      */
-    public void controlUndoPower(Worker w, String previousPhase) {
+    public void controlUndoPower(Worker worker, String previousPhase) {
         int current = gameBoard.getCurrentPlayer();
         Player currentPlayer = gameBoard.getPlayers().get(current);
         String[][] whatToDo = currentPlayer.getCard().getWhatToDo();
         switch (previousPhase) {
             case "PREMOVE":
-                if (whatToDo[1][0].equals("EMPTY"))
-                    break;
-                for (int i = 0; i < whatToDo[1].length; i++) {
-                    if (whatToDo[1][i].equals("MOVE"))
-                        currentPlayer.doUndoMove(w);
-                    if (whatToDo[1][i].equals("BUILD"))
-                        currentPlayer.doUndoBuild(w);
-                }
+                manageUndoPower(whatToDo, 1, currentPlayer, worker);
                 break;
             case "MOVE":
-                currentPlayer.doUndoMove(w);
+                currentPlayer.doUndoMove(worker);
                 break;
             case "PREBUILD":
-                if(whatToDo[3][0].equals("EMPTY"))
-                    break;
-                for (int i = 0; i < whatToDo[3].length; i++) {
-                    if (whatToDo[3][i].equals("MOVE"))
-                        currentPlayer.doUndoMove(w);
-                    if (whatToDo[3][i].equals("BUILD"))
-                        currentPlayer.doUndoBuild(w);
-                }
+                manageUndoPower(whatToDo, 3, currentPlayer, worker);
                 break;
             case "BUILD":
-                currentPlayer.doUndoBuild(w);
+                currentPlayer.doUndoBuild(worker);
                 break;
         }
     }
 
     /**
-     * Utility method to know, which was the previous Phase of the Turn
+     * Method to do right Undo based on phase turn action.
+     * @param whatToDo contains all possible actions during the turn
+     * @param phaseInt 1 = PREMOVE, 3 = PREBUILD
+     * @param worker Worker
+     */
+    private void manageUndoPower(String[][] whatToDo, int phaseInt, Player currentPlayer, Worker worker) {
+        if (!whatToDo[phaseInt][0].equals("EMPTY"))
+            for (int i = 0; i < whatToDo[phaseInt].length; i++) {
+                if (whatToDo[phaseInt][i].equals("MOVE"))
+                    currentPlayer.doUndoMove(worker);
+                else if (whatToDo[phaseInt][i].equals("BUILD"))
+                    currentPlayer.doUndoBuild(worker);
+            }
+    }
+
+    /**
+     * Utility method to know which was the previous Phase turn.
      * @return previousPhase
      */
     public String getPreviousGamePhase() {
         String previousPhase = null;
         String phase = gameBoard.getGamePhase();
-        switch (phase){
+        switch (phase) {
             case "START":
                 previousPhase = "END";
                 break;
@@ -343,18 +344,18 @@ public class ControllerHandler {
     }
 
     /**
-     * Pick a set of cards randomly string[].length = numPlayers
-     * @param numPlayers
-     * @return randomPick
+     * Method to pick a random set of cards.
+     * @param numPlayers number of players
+     * @return randomPick which length is equal to numPlayers
      */
     public String[] pickCards(int numPlayers) {
-        Random rand = new Random();
+        Random random = new Random();
         String[] set = DeckOfGods.possibleGods();
         String[] randomPick = new String[numPlayers];
         ArrayList<Integer> pickedRand = new ArrayList<>();
         for (int i = 0; i < numPlayers; i++) {
-            int randomIndex = rand.nextInt(set.length);
-            if(!pickedRand.contains(randomIndex)) {
+            int randomIndex = random.nextInt(set.length);
+            if (!pickedRand.contains(randomIndex)) {
                 pickedRand.add(randomIndex);
                 randomPick[i] = set[randomIndex];
             }

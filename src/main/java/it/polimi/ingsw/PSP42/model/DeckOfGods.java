@@ -4,20 +4,24 @@ public class DeckOfGods {
 
     public static String[] godAvailable = {"APOLLO", "ARTEMIS", "ATHENA", "ATLAS", "DEMETER", "HEPHAESTUS", "MINOTAUR", "PAN", "PROMETHEUS"};
 
+    /**
+     * Method used to know which Gods are available.
+     * @return possible gods
+     */
     public static String[] possibleGods() {
         return godAvailable;
     }
 
     /**
-     * Method to assign to player's workers the powers of the chosen card
+     * Method to assign to player's workers the powers of the chosen card.
      * @param cardName (God chosen)
-     * @param worker1
-     * @param worker2
+     * @param worker1 Worker 1
+     * @param worker2 Worker 2
      * @return cardSelected
      */
     public static SimpleGod setGod(String cardName, Worker worker1, Worker worker2) {
         SimpleGod cardSelected;
-        switch(cardName){
+        switch(cardName) {
             case "APOLLO":
                 cardSelected = new Apollo(worker1, worker2);
                 break;

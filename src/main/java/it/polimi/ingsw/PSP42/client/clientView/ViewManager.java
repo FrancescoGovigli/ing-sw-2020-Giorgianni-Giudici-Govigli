@@ -1,9 +1,10 @@
-package it.polimi.ingsw.PSP42.view;
+package it.polimi.ingsw.PSP42.client.clientView;
 
-import it.polimi.ingsw.PSP42.*;
 import it.polimi.ingsw.PSP42.client.*;
 import it.polimi.ingsw.PSP42.model.*;
 import it.polimi.ingsw.PSP42.server.*;
+import it.polimi.ingsw.PSP42.view.UserData;
+import it.polimi.ingsw.PSP42.view.ViewMessage;
 import javafx.application.*;
 import javafx.fxml.*;
 import javafx.scene.*;
@@ -11,6 +12,9 @@ import javafx.stage.*;
 
 import java.io.*;
 
+/**
+ * Class used to update scene to ClientGUI.
+ */
 public class ViewManager implements ClientObserver, GuiObserver {
 
     private static Stage stage;
@@ -32,11 +36,11 @@ public class ViewManager implements ClientObserver, GuiObserver {
     private final static String LOSER_SCENE_PATH = "/fxml/LoserScene.fxml";
     private static FakeCell[][] gameBoardState;
 
-
-    /** Constructor used to link this class with client.
+    /**
+     * Constructor used to link this class with Client.
      * @param client class ClientGUI
      */
-    public ViewManager(ClientGUI client){
+    public ViewManager(ClientGUI client) {
         ViewManager.client = client;
     }
 
@@ -47,12 +51,11 @@ public class ViewManager implements ClientObserver, GuiObserver {
     /**
      * Used to close stage.
      */
-    //TODO probably useless due to "stage.setOnCloseRequest" in "ClientAPP"
-    public static void closeWindow(){
+    public static void closeWindow() {
         stage.close();
     }
 
-    public static ClientGUI getInstance(){
+    public static ClientGUI getClientInstance() {
         return client;
     }
 
@@ -65,14 +68,14 @@ public class ViewManager implements ClientObserver, GuiObserver {
     }
 
     /**
-     * Used to know nickname of current player.
-     * @param o game's message sent from server
+     * Used to know current player nickname.
+     * @param o game's message sent from Server
      * @return nickname of current player as string
      */
-    public String getCurrentNickname(Object o){
+    public String getCurrentNickname(Object o) {
         String turn = (String)o;
-        for (UserData u: client.getPlayersList()) {
-            if(turn.contains(u.getNickname()))
+        for (UserData u : client.getPlayersList()) {
+            if (turn.contains(u.getNickname()))
                 return u.getNickname();
         }
         return null;
@@ -82,22 +85,21 @@ public class ViewManager implements ClientObserver, GuiObserver {
         return gameBoardState;
     }
 
-    /** Used to save input in client.
+    /** Used to save input in Client.
      * @param input translated from GUI's action in string
      */
-    public void inputGui(String input){
+    public void inputGui(String input) {
         client.saveInput(input);
     }
 
     /**
-     * Used to set Scene's layout.
+     * Used to set Scene layout.
      * @param path string to set correct layout for the scene
      */
     public static void setLayout(String path) {
         try {
             FXMLLoader loader = new FXMLLoader(ViewManager.class.getResource(path));
             Parent root = loader.load();
-
             switch (path) {
                 case WELCOME_SCENE:
                 case WELCOME_FIRST_PLAYER_SCENE_PATH:
@@ -116,41 +118,57 @@ public class ViewManager implements ClientObserver, GuiObserver {
                     controllerDisconnectionScene = loader.getController();
                     break;
             }
-
-            if(stage.getScene()==null) {
+            if (stage.getScene() == null) {
                 Scene first = new Scene(root);
                 stage.setScene(first);
                 return;
             }
-
-            Platform.runLater(()->stage.getScene().setRoot(root));
-
+            Platform.runLater(() -> stage.getScene().setRoot(root));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     /**
-     * Used to set the correct layout for player who used Atlas.
+     * Method used by Client to inform view that Server is unreachable due to incorrect IP.
+     * @param error String
+     */
+    public static void hostIPIncorrect(String error) {
+        Platform.runLater(() -> controllerWelcomeScene.setStatusLabel(error));
+        playPushed = false;
+    }
+
+    /**
+     * Method used to check if the current player has Atlas.
+     * Helpful to set the correct layout for player who is using Atlas.
      * @return true if current player is using Atlas, false otherwise
      */
     private boolean isAtlas() {
         for (int i = 0; i < client.getPlayersList().size(); i++)
             if (client.getPlayersList().get(i).getNickname().equals(currentNickname))
-                return client.getPlayersList().get(i).getCardChoosed().equals("ATLAS");
+                return client.getPlayersList().get(i).getCardChosen().equals("ATLAS");
         return false;
     }
 
+    /**
+     * Method used to set scene layout for first player connected.
+     */
     @Override
-    public  void updateWelcomeFirstPlayer() {
+    public void updateWelcomeFirstPlayer() {
         setLayout(WELCOME_FIRST_PLAYER_SCENE_PATH);
     }
 
+    /**
+     * Method used to set scene layout for players that aren't first connected.
+     */
     @Override
     public void updateWelcomeOtherPlayers() {
         setLayout(WELCOME_OTHER_PLAYERS_SCENE_PATH);
     }
 
+    /**
+     * Method used to wait until Player presses Play Button in Welcome Scene.
+     */
     @Override
     public void updateConnectionStart() {
         while (!isPlayPushed()) {
@@ -162,26 +180,41 @@ public class ViewManager implements ClientObserver, GuiObserver {
         }
     }
 
+    /**
+     * Method used to set God's chosen scene layout.
+     * @param listOfGods Gods available for choice
+     */
     @Override
     public void updateGodSelection(Object listOfGods) {
         setLayout(CHOOSE_GOD_SCENE_PATH);
-        Platform.runLater(()->controllerChooseGodScene.setGods(listOfGods));
+        Platform.runLater(() -> controllerChooseGodScene.setGods(listOfGods));
     }
 
+    /**
+     * Method used to set Waiting scene layout.
+     */
     @Override
     public void updateWaiting() {
         setLayout(WAITING_SCENE_PATH);
     }
 
+    /**
+     * Method used to set label to inform player about his status.
+     * @param o player status
+     */
     @Override
     public void updateGameStatus(Object o) {
         Platform.runLater(() -> controllerWelcomeScene.setStatusLabel((String) o));
     }
 
+    /**
+     * Method used to set scene layout based on message received.
+     * @param message received from Client
+     */
     @Override
     public void updateGameMessage(Object message) {
-        if (controllerGameBoardScene!=null) {
-            if (message.equals(ServerMessage.inactivityEnd)) {
+        if (controllerGameBoardScene != null) {
+            if (message.equals(ServerMessage.inactivityEnd) || message.equals(ServerMessage.disconnectionEnd)) {
                 setLayout(DISCONNECTION_SCENE_PATH);
                 Platform.runLater(() -> controllerDisconnectionScene.showMessage(message));
             }
@@ -205,10 +238,15 @@ public class ViewManager implements ClientObserver, GuiObserver {
                 Platform.runLater(() -> controllerGameBoardScene.showGameMessage(message));
             }
         }
+        else if (message.equals(ServerMessage.disconnectionEnd)) {
+            setLayout(DISCONNECTION_SCENE_PATH);
+            Platform.runLater(() -> controllerDisconnectionScene.showMessage(message));
+        }
     }
 
     /**
-     * Method to print the current GameBoard situation on the screen
+     * Method to print the current GameBoard situation on screen.
+     * @param o gameBoard to show
      */
     @Override
     public void updateShow(Object o) {
@@ -234,23 +272,22 @@ public class ViewManager implements ClientObserver, GuiObserver {
                     }
                     int finalPreviousBuiltLevel = previousBuiltLevel;
                     int finalLevel = level;
-                    Platform.runLater(()->controllerGameBoardScene.setImageSpecificLevel(finalI,finalJ, finalLevel, finalPreviousBuiltLevel));
+                    Platform.runLater(() -> controllerGameBoardScene.setImageSpecificLevel(finalI,finalJ, finalLevel, finalPreviousBuiltLevel));
                 }
                 if (gCopy[i][j].playerName != null)
-                    Platform.runLater(()-> controllerGameBoardScene.setImageSpecificPlayer(finalI, finalJ, client.getPlayerData(gCopy[finalI][finalJ].playerName)));
+                    Platform.runLater(() -> controllerGameBoardScene.setImageSpecificPlayer(finalI, finalJ, client.getPlayerData(gCopy[finalI][finalJ].playerName)));
                 else
-                    Platform.runLater(()-> controllerGameBoardScene.setImageSpecificPlayer(finalI, finalJ, null));
+                    Platform.runLater(() -> controllerGameBoardScene.setImageSpecificPlayer(finalI, finalJ, null));
             }
         }
     }
 
+    /**
+     * Used to convert a GUI action into an input.
+     * @param input as String
+     */
     @Override
     public void fromGuiInput(String input) {
         inputGui(input);
-    }
-
-    public static void hostIPIncorrect(String error){
-        Platform.runLater(() -> controllerWelcomeScene.setStatusLabel(error));
-        playPushed=false;
     }
 }

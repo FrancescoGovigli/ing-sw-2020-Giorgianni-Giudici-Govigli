@@ -1,6 +1,6 @@
 package it.polimi.ingsw.PSP42.model;
 
-public class NoGod extends SimpleGod{
+public class NoGod extends SimpleGod {
 
     public NoGod(Worker w1, Worker w2) {
         super(w1, w2);

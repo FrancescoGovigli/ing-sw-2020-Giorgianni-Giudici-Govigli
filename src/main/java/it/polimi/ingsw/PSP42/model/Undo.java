@@ -22,8 +22,8 @@ public class Undo {
     // UNDO MOVE
 
     /**
-     * Method for acquiring the position of the worker before he moves
-     * @param worker
+     * Method for acquiring the position of the worker before he moves.
+     * @param worker interested Worker
      */
     public void undoMoveSet(Worker worker) {
         this.undoMoveX = worker.getCurrentX();
@@ -37,8 +37,8 @@ public class Undo {
     }
 
     /**
-     * Method for restoring worker position before his move
-     * @param worker
+     * Method for restoring worker position before his move.
+     * @param worker interested Worker
      */
     public void undoMoveApply(Worker worker) {
         if (undoMove) {
@@ -55,10 +55,10 @@ public class Undo {
     // UNDO BUILD
 
     /**
-     * Method for acquiring cell values before it is built on it
-     * @param x
-     * @param y
-     * @param worker
+     * Method for acquiring cell values before it is built on it.
+     * @param x position on the x-axis
+     * @param y position on the y-axis
+     * @param worker interested Worker
      */
     public void undoBuildSet(int x, int y, Worker worker) {
         this.undoBuildX = x;
@@ -73,8 +73,8 @@ public class Undo {
     }
 
     /**
-     * Method for restoring cell state before construction
-     * @param worker
+     * Method for restoring cell state before construction.
+     * @param worker interested Worker
      */
     public void undoBuildApply(Worker worker) {
         if (undoBuild) {

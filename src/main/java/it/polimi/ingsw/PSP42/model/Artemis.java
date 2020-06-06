@@ -28,7 +28,7 @@ public class Artemis extends SimpleGod {
     }
 
     /**
-     * Method used to check if is possible move the worker in cell (x,y) and checking if he would not come back at starting position
+     * Method used to check if is possible move the worker in cell (x,y) and checking if he would not come back at starting position.
      * @param x (x coordinate of where you would like to go)
      * @param y (y coordinate of where you would like to go)
      * @param w (worker who would like to move)
@@ -48,7 +48,7 @@ public class Artemis extends SimpleGod {
     }
 
     /**
-     * Method to build in a position and resetting at default value the attributes
+     * Method to build in a position and resetting at default value the attributes.
      * @param x (x coordinate of where you would like to build)
      * @param y (y coordinate of where you would like to build)
      * @param w (worker who would like to build)
@@ -56,7 +56,7 @@ public class Artemis extends SimpleGod {
      */
     @Override
     public boolean powerBuild(int x, int y, int level, Worker w) {
-        if (powerBuildAvailable(x, y, level, w)){
+        if (powerBuildAvailable(x, y, level, w)) {
             w.buildBlock(x, y);
             moveNum = 0;
             startX = 0;
@@ -66,10 +66,6 @@ public class Artemis extends SimpleGod {
         return false;
     }
 
-    /**
-     * Method to obtain the current state of the Simple God's variables
-     * @return values.clone() (a clone of the ArrayList of Integer containing these variables)
-     */
     @Override
     public ArrayList<Integer> getCurrentValues() {
         ArrayList<Integer> values = new ArrayList<Integer>();
@@ -79,10 +75,6 @@ public class Artemis extends SimpleGod {
         return (ArrayList<Integer>) values.clone();
     }
 
-    /**
-     * Method to restore the state of the Simple God's variables
-     * @param valuesToRestore
-     */
     @Override
     public void reSetValues(ArrayList<Integer> valuesToRestore) {
         this.moveNum = valuesToRestore.get(0);

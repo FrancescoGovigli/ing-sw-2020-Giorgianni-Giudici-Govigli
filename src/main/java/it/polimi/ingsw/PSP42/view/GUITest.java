@@ -1,10 +1,11 @@
 package it.polimi.ingsw.PSP42.view;
 
 import it.polimi.ingsw.PSP42.client.*;
+import it.polimi.ingsw.PSP42.client.clientView.ViewManager;
 import javafx.application.*;
 import javafx.stage.*;
 
-public class ViewGUI extends Application {
+public class GUITest extends Application {
 
     public static void main(String[] args) {
         launch(args);

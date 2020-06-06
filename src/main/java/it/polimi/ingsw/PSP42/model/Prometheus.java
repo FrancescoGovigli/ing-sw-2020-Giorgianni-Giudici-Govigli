@@ -3,9 +3,9 @@ package it.polimi.ingsw.PSP42.model;
 import java.util.ArrayList;
 
 /**
- * Simple God who can build before moving if he does not move up a level while moving
+ * Simple God who can build before moving if he does not move up a level while moving.
  */
-public class Prometheus extends SimpleGod{
+public class Prometheus extends SimpleGod {
 
     private int buildNum = 0;
     private int moveNum = 0;
@@ -27,7 +27,7 @@ public class Prometheus extends SimpleGod{
     }
 
     /**
-     * Method used to move the worker in cell (x,y) and checking if he building before
+     * Method used to move the worker in cell (x,y) and checking if he building before.
      * @param x (x coordinate of where you would like to go)
      * @param y (y coordinate of where you would like to go)
      * @param w (worker who would like to move)
@@ -46,7 +46,7 @@ public class Prometheus extends SimpleGod{
     }
 
     /**
-     * Method used to move the worker in cell (x,y)
+     * Method used to move the worker in cell (x,y).
      * @param x (x coordinate of where you would like to go)
      * @param y (y coordinate of where you would like to go)
      * @param w (worker who would like to move)
@@ -67,7 +67,7 @@ public class Prometheus extends SimpleGod{
     }
 
     /**
-     * Method to build in a position and counting the building times in a turn
+     * Method to build in a position and counting the building times in a turn.
      * @param x (x coordinate of where you would like to build)
      * @param y (y coordinate of where you would like to build)
      * @param w (worker who would like to build)
@@ -88,10 +88,6 @@ public class Prometheus extends SimpleGod{
         return false;
     }
 
-    /**
-     * Method to obtain the current state of the Simple God's variables
-     * @return values.clone() (a clone of the ArrayList of Integer containing these variables)
-     */
     @Override
     public ArrayList<Integer> getCurrentValues() {
         ArrayList<Integer> values = new ArrayList<Integer>();
@@ -100,10 +96,6 @@ public class Prometheus extends SimpleGod{
         return (ArrayList<Integer>) values.clone();
     }
 
-    /**
-     * Method to restore the state of the Simple God's variables
-     * @param valuesToRestore
-     */
     @Override
     public void reSetValues(ArrayList<Integer> valuesToRestore) {
         this.buildNum = valuesToRestore.get(0);

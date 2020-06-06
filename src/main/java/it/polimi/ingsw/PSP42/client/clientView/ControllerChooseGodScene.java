@@ -1,6 +1,7 @@
-package it.polimi.ingsw.PSP42.view;
+package it.polimi.ingsw.PSP42.client.clientView;
 
-import it.polimi.ingsw.PSP42.*;
+import it.polimi.ingsw.PSP42.client.GuiObservable;
+import it.polimi.ingsw.PSP42.client.GuiObserver;
 import javafx.event.*;
 import javafx.fxml.*;
 import javafx.scene.control.*;
@@ -10,7 +11,8 @@ import java.util.*;
 
 public class ControllerChooseGodScene implements GuiObservable {
 
-    private final GuiObserver guiObserver = new ViewManager(ViewManager.getInstance());
+    private final GuiObserver guiObserver = new ViewManager(ViewManager.getClientInstance());
+
     @FXML
     Button buttonCard1;
     private String godCard1;
@@ -48,13 +50,13 @@ public class ControllerChooseGodScene implements GuiObservable {
      */
     public void setGods(Object listOfGods) {
         List gods = (List)listOfGods;
-        for (int i = 0; i < gods.size()-1; i++)     //gods.size()-1 to exclude NO_GOD selection
+        for (int i = 0; i < gods.size(); i++)
             setImageGodCard(gods.get(i).toString(), i+1);
-        if (gods.size() == 2) {
+        if (gods.size() == 1) {
             setImageGodCard("NONE", 2);
             setImageGodCard("NONE", 3);
         }
-        if (gods.size() == 3)
+        if (gods.size() == 2)
             setImageGodCard("NONE", 3);
     }
 
@@ -69,10 +71,10 @@ public class ControllerChooseGodScene implements GuiObservable {
     }
 
     /**
-     * Used to save the selection.
+     * Used to save card selection.
      * @param event click on the corresponding card
      */
-    public void sendCardChoosed(ActionEvent event) {
+    public void sendCardChosen(ActionEvent event) {
         Button clicked = (Button)event.getSource();
         if(clicked.equals(buttonCard1))
             informManagerInput(godCard1);
@@ -167,6 +169,10 @@ public class ControllerChooseGodScene implements GuiObservable {
         return "-fx-background-image: url('/images/" + godName.toLowerCase() + "/" + godName.toLowerCase() + "Desc.png'); -fx-background-position: center; -fx-background-size: stretch; -fx-background-color: transparent;";
     }
 
+    /**
+     * Used to inform ViewManager (observer) about a GUI choice done by Client.
+     * @param input choice done
+     */
     @Override
     public void informManagerInput(String input) {
         guiObserver.fromGuiInput(input);

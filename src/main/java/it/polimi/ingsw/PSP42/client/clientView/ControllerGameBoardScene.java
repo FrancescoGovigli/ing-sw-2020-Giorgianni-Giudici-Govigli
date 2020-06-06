@@ -1,7 +1,10 @@
-package it.polimi.ingsw.PSP42.view;
+package it.polimi.ingsw.PSP42.client.clientView;
 
-import it.polimi.ingsw.PSP42.*;
+import it.polimi.ingsw.PSP42.client.GuiObservable;
+import it.polimi.ingsw.PSP42.client.GuiObserver;
 import it.polimi.ingsw.PSP42.model.*;
+import it.polimi.ingsw.PSP42.view.UserData;
+import it.polimi.ingsw.PSP42.view.ViewMessage;
 import javafx.application.*;
 import javafx.fxml.*;
 import javafx.scene.*;
@@ -14,25 +17,29 @@ import java.util.*;
 
 public class ControllerGameBoardScene implements GuiObservable {
 
-    private final GuiObserver guiObserver = new ViewManager(ViewManager.getInstance());
+    private final GuiObserver guiObserver = new ViewManager(ViewManager.getClientInstance());
 
     @FXML
     public Label player1Label;
     @FXML
+    public Pane imagePlayer1;
+
+    @FXML
     public Label player2Label;
     @FXML
-    public Label player3Label;
-    @FXML
-    public Pane imagePlayer1;
-    @FXML
     public Pane imagePlayer2;
+
+    @FXML
+    public Label player3Label;
     @FXML
     public Pane imagePlayer3;
 
     @FXML
     public GridPane root;
+
     @FXML
     public GridPane board;
+
     @FXML
     public Label GameLabel;
 
@@ -40,6 +47,7 @@ public class ControllerGameBoardScene implements GuiObservable {
     public Button undo;
     @FXML
     public Button power;
+
     @FXML
     public Button noneDefaultLevel;
     @FXML
@@ -53,24 +61,18 @@ public class ControllerGameBoardScene implements GuiObservable {
      * @param message Object used as String containing game's instructions
      */
     public void showGameMessage(Object message) {
-
         GameLabel.setText((String)message);
-
-        //TODO optimization in if-else branches
-
-        //UNDO
+        // undo
         if (GameLabel.getText().contains("UNDO"))
             undo.setStyle(getUndoStyle("active"));
         else
             undo.setStyle(getUndoStyle("inactive"));
-
-        //POWER
+        // power
         if (GameLabel.getText().contains("power"))
             power.setStyle(getPowerStyle("active"));
         else
             power.setStyle(getPowerStyle("inactive"));
-
-        //NONE DEFAULT LEVEL
+        // none default level
         if (isAtlas) {
             if (GameLabel.getText().contains("none default"))
                 noneDefaultLevel.setStyle(getNoneDefaultStyle("active"));
@@ -87,12 +89,12 @@ public class ControllerGameBoardScene implements GuiObservable {
         }
     }
 
-    //Used to know if current player is atlas
+    //Used to know if current player is Atlas
     private boolean isAtlas = false;
 
     /**
      * Used to set default style for the scene.
-     * @param userDataArrayList arraylist of data of the playing player
+     * @param userDataArrayList arraylist of data of the playing players
      * @param currentNickname String, name of the current playing player
      */
     public void setStyleScene(ArrayList<UserData> userDataArrayList, String currentNickname) {
@@ -100,7 +102,7 @@ public class ControllerGameBoardScene implements GuiObservable {
         power.setStyle(getPowerStyle("inactive"));
         for (UserData userData : userDataArrayList)
             if (userData.getNickname().equals(currentNickname))
-                if (userData.getCardChoosed().equals("ATLAS")) {
+                if (userData.getCardChosen().equals("ATLAS")) {
                     noneDefaultLevel.setStyle(getNoneDefaultStyle("inactive"));
                     isAtlas = true;
                 }
@@ -121,6 +123,11 @@ public class ControllerGameBoardScene implements GuiObservable {
         }
     }
 
+    /**
+     * Used to obtain Undo Button CSS style.
+     * @param style what style this method has to set
+     * @return CSS style as a string
+     */
     private String getUndoStyle(String style) {
         String styleToSet;
         if (style.equals("active"))
@@ -138,6 +145,11 @@ public class ControllerGameBoardScene implements GuiObservable {
             informManagerInput("YES");
     }
 
+    /**
+     * Used to obtain Power Button CSS style.
+     * @param style what style this method has to set
+     * @return CSS style as a string
+     */
     private String getPowerStyle(String style) {
         String styleToSet;
         if (style.equals("active"))
@@ -155,6 +167,11 @@ public class ControllerGameBoardScene implements GuiObservable {
             informManagerInput("YES");
     }
 
+    /**
+     * Used to obtain None Default Button CSS style.
+     * @param style what style this method has to set
+     * @return CSS style as a string
+     */
     private String getNoneDefaultStyle(String style) {
         String styleToSet;
         if (style.equals("active"))
@@ -170,10 +187,10 @@ public class ControllerGameBoardScene implements GuiObservable {
      * Send to view manager, when clicked, to build a default level.
      */
     public void buildDefaultLevel() {
-        //When it's not visible
+        // When it's not visible
         if (GameLabel.getText().contains("none default"))
             informManagerInput("YES");
-        //When it's visible
+        // When it's visible
         if (GameLabel.getText().contains("level"))
             informManagerInput("1");
     }
@@ -188,6 +205,11 @@ public class ControllerGameBoardScene implements GuiObservable {
             informManagerInput("4");
     }
 
+    /**
+     * Used to obtain Dome Button and DefaultLevel Button CSS styles.
+     * @param style what style this method has to set
+     * @return CSS style as a string
+     */
     private String getBuildStyle(String type, String style) {
         String styleToSet;
         if (!(style.equals("active")))
@@ -214,7 +236,7 @@ public class ControllerGameBoardScene implements GuiObservable {
                 labels[i].getParent().setId("currentPlayer");
             else
                 labels[i].getParent().setId("player");
-            ImageView image = new ImageView(GameBoardElementsPath.getWorkerImagePath(playerList.get(i).getCardChoosed().toLowerCase()));
+            ImageView image = new ImageView(GameBoardElementsPath.getWorkerImagePath(playerList.get(i).getCardChosen().toLowerCase()));
             workers[i].getChildren().add(image);
             image.fitWidthProperty().bind(workers[i].widthProperty());
             image.fitHeightProperty().bind(workers[i].heightProperty());
@@ -231,13 +253,13 @@ public class ControllerGameBoardScene implements GuiObservable {
      * This information was sent to View Manager to process.
      * @param mouseEvent click on game board
      */
-    public void PlayerChoice(MouseEvent mouseEvent) {
+    public void playerChoice(MouseEvent mouseEvent) {
         FakeCell[][] checkBoard = ViewManager.getGameBoardState();
         Node cell = (Node)mouseEvent.getSource();
         Integer row = board.getRowIndex(cell);
         Integer col = board.getColumnIndex(cell);
         Pane pane = (Pane)cell;
-        if (GameLabel.getText().equals((ViewMessage.workerMessage) + "\n")){
+        if (GameLabel.getText().equals((ViewMessage.workerMessage))) {
             for (Node node : pane.getChildren()) {
                 if (node instanceof ImageView && node.getId().equals("Worker")) {
                     if (checkBoard[row][col].playerName.equals(ControllerWelcomeScene.getNickName())) {
@@ -287,7 +309,7 @@ public class ControllerGameBoardScene implements GuiObservable {
     public void setImageSpecificPlayer(int row, int col, UserData playerData) {
         Pane cell = (Pane)getPaneFromBoard(row, col);
         if (playerData != null) {
-            ImageView image = getWorkerImage(playerData.getCardChoosed());
+            ImageView image = getWorkerImage(playerData.getCardChosen());
             image.setId("Worker");
             if (image == null)
                 return;
@@ -298,7 +320,7 @@ public class ControllerGameBoardScene implements GuiObservable {
             }
         }
         else {
-           Platform.runLater(()->{for (Node node : cell.getChildren()) {
+           Platform.runLater(() -> {for (Node node : cell.getChildren()) {
                if (node instanceof ImageView && node.getId().equals("Worker"))
                    cell.getChildren().remove(node);
            }});
@@ -327,7 +349,7 @@ public class ControllerGameBoardScene implements GuiObservable {
      * @return the corresponding image
      */
     private ImageView getLevelImage(int level, int previousBuiltLevel) {
-        if(GameBoardElementsPath.getLevelImagePath(level, previousBuiltLevel) != null)
+        if (GameBoardElementsPath.getLevelImagePath(level, previousBuiltLevel) != null)
             return new ImageView(GameBoardElementsPath.getLevelImagePath(level, previousBuiltLevel));
         else
             return null;
@@ -339,12 +361,16 @@ public class ControllerGameBoardScene implements GuiObservable {
      * @return the corresponding image
      */
     private ImageView getWorkerImage(String worker) {
-        if(GameBoardElementsPath.getWorkerImagePath(worker) != null)
+        if (GameBoardElementsPath.getWorkerImagePath(worker) != null)
             return new ImageView(GameBoardElementsPath.getWorkerImagePath(worker));
         else
             return null;
     }
 
+    /**
+     * Used to inform ViewManager (observer) about a GUI choice done by Client.
+     * @param input choice done
+     */
     @Override
     public void informManagerInput(String input) {
         guiObserver.fromGuiInput(input);

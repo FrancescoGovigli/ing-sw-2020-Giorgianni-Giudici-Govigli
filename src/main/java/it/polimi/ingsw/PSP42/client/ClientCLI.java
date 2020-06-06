@@ -1,5 +1,6 @@
 package it.polimi.ingsw.PSP42.client;
 
+import it.polimi.ingsw.PSP42.client.clientView.Color;
 import it.polimi.ingsw.PSP42.server.*;
 import it.polimi.ingsw.PSP42.model.*;
 import it.polimi.ingsw.PSP42.view.*;
@@ -8,7 +9,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-public class Client implements Runnable{
+public class ClientCLI implements Runnable {
 
     private boolean active = true;
     private boolean writeActive = true;
@@ -22,25 +23,21 @@ public class Client implements Runnable{
         this.active = active;
     }
 
-    /**
-     * Method to run the client thread, after establishing the connection with the server will only receive and send
-     */
     public void run() {
         BufferedReader scanner= new BufferedReader(new InputStreamReader(System.in));
         System.out.println("IP address of server? or press Enter to skip this step");
         String ip = null;
-        try {
-            ip = scanner.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Socket server;
-        try {
-            server = new Socket(ip, 4000);
-            System.out.println("Connection established\n");
-        } catch (IOException e) {
-            System.out.println("Server unreachable");
-            return;
+        Socket server = null;
+        Boolean correctHostIP = false;
+        while(!correctHostIP) {
+            try {
+                ip = scanner.readLine();
+                server = new Socket(ip, 4000);
+                System.out.println("Connection established\n");
+                correctHostIP = true;
+            } catch (IOException e) {
+                System.out.println("Server unreachable");
+            }
         }
         ObjectInputStream socketIn = null;
         PrintWriter socketOut = null;
@@ -48,15 +45,15 @@ public class Client implements Runnable{
             socketIn = new ObjectInputStream(server.getInputStream());
             socketOut = new PrintWriter(server.getOutputStream());
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("IOException in ClientCLI -> run (creation of ObjectInputStream & PrintWriter)");
         }
         try {
             Thread t0 = asyncReadFromSocket(socketIn);
             Thread t1 = asyncWriteToSocket(scanner, socketOut);
             t0.join();
             t1.join();
-        } catch(InterruptedException | NoSuchElementException e){
-            System.out.println("Connection closed from the client side");
+        } catch(InterruptedException | NoSuchElementException e) {
+            System.out.println("Connection closed from the Client side");
         } finally {
             try {
                 scanner.close();
@@ -64,59 +61,13 @@ public class Client implements Runnable{
                 socketOut.close();
                 server.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println("IOException in ClientCLI -> run (finally branch)");
             }
         }
     }
 
     /**
-     * Method to receive an object from the server
-     * @param socketIn input
-     * @return t (thread that must wait for the operation to complete)
-     */
-    public Thread asyncReadFromSocket(final ObjectInputStream socketIn) {
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    while (isActive()) {
-                        Object inputObject = socketIn.readObject();
-                        if (inputObject instanceof String) {
-                            if (((String) inputObject).contains(ViewMessage.personalLoseMessage)) {
-                                System.out.println("[FROM SERVER] : " + inputObject);
-                                System.out.println("Game closed, PRESS [ENTER] TO QUIT...");
-                                socketIn.close();
-                                setActive(false);
-                            }
-                            else if (!inputObject.equals(ServerMessage.extraClient) && !inputObject.equals(ServerMessage.gameInProgress) && !inputObject.equals(ServerMessage.gameEnd) && !inputObject.equals(ServerMessage.inactivityEnd))
-                                System.out.println("[FROM SERVER] : " + inputObject);
-                            else {
-                                System.out.println("[FROM SERVER] : " + inputObject);
-                                socketIn.close();
-                                setActive(false);
-                                System.out.println("[FROM SERVER] : PRESS [ENTER] TO QUIT ");
-                            }
-                        }
-                        else if(inputObject instanceof List)
-                            showGods(inputObject);
-                        else if (inputObject instanceof Boolean)
-                            writeActive=(Boolean)inputObject;
-                        else if (inputObject instanceof UserData)
-                            playersData.add(((UserData) inputObject));
-                        else
-                            show(inputObject);
-                    }
-                } catch (Exception e){
-                    setActive(false);
-                }
-            }
-        });
-        t.start();
-        return t;
-    }
-
-    /**
-     * Method to send an object to the server
+     * Method to send an object to the server.
      * @param stdin input
      * @param socketOut output
      * @return t (thread that must wait for the operation to complete)
@@ -133,7 +84,7 @@ public class Client implements Runnable{
                             socketOut.flush();
                         }
                     }
-                }catch(Exception e){
+                } catch(Exception e) {
                     System.out.println("You disconnected");
                     setActive(false);
                 }
@@ -144,11 +95,67 @@ public class Client implements Runnable{
     }
 
     /**
-     * Method to print the current GameBoard situation on the screen.
-     * @param o object from server containing an update GameBoard
+     * Method to receive an object from the server.
+     * @param socketIn input
+     * @return t (thread that must wait for the operation to complete)
      */
-    public void show(Object o) {
-        FakeCell[][] gCopy = (FakeCell[][]) o;
+    public Thread asyncReadFromSocket(final ObjectInputStream socketIn) {
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    while (isActive()) {
+                        Object inputObject = socketIn.readObject();
+                        if (inputObject instanceof String) {
+                            if (isCloseMessage(inputObject)) {
+                                System.out.println("[FROM SERVER] : " + inputObject);
+                                socketIn.close();
+                                setActive(false);
+                                System.out.println("[FROM SERVER] : PRESS [ENTER] TO QUIT");
+                            }
+                            else
+                                System.out.println("[FROM SERVER] : " + inputObject);
+                        }
+                        else if(inputObject instanceof List)
+                            showGods(inputObject);
+                        else if (inputObject instanceof Boolean)
+                            writeActive = (Boolean)inputObject;
+                        else if (inputObject instanceof UserData)
+                            playersData.add(((UserData) inputObject));
+                        else
+                            show(inputObject);
+                    }
+                } catch (Exception e) {
+                    System.out.println("IOException | ClassNotFoundException in ClientCLI -> asyncReadFromSocket");
+                    System.out.println("Disconnected");
+                    setActive(false);
+                }
+            }
+        });
+        t.start();
+        return t;
+    }
+
+    /**
+     * Method to check if a message invites to close or not.
+     * @param object (message to check)
+     * @return true if motivation involves closure, false otherwise
+     */
+    private boolean isCloseMessage(Object object) {
+        return object.equals(ServerMessage.gameEnd) ||
+               object.equals(ServerMessage.inactivityEnd) ||
+               object.equals(ServerMessage.disconnectionEnd) ||
+               object.equals(ServerMessage.gameInProgress) ||
+               object.equals(ServerMessage.extraClient) ||
+               ((String) object).contains(ViewMessage.personalLoseMessage);
+    }
+
+    /**
+     * Method to print the current GameBoard situation on the screen.
+     * @param object from server containing an update GameBoard
+     */
+    public void show(Object object) {
+        FakeCell[][] gCopy = (FakeCell[][]) object;
         int rowIndex = 0;
         int colIndex = 0;
         int x = 0;
@@ -171,7 +178,7 @@ public class Client implements Runnable{
                     System.out.print(Color.ANSI_REVERSE + "|" + Color.RESET);
                 else if (col1 && row1)  // possible worker
                     if (gCopy[x][y].getPlayerName() != null)    // if a player has a worker set
-                        switch (gCopy[x][y].getId()){   // color (RGB) his "W" according to his id
+                        switch (gCopy[x][y].getId()) {   // color (RGB) his "W" according to his id
                             case 1:
                                 System.out.print(Color.ANSI_RED + "W" + Color.RESET);
                                 break;
@@ -216,24 +223,24 @@ public class Client implements Runnable{
             }
             System.out.println();
         }
-        for (int j = 0; j < 5; j++){    // to print the column index off the map
+        for (int j = 0; j < 5; j++) {    // to print the column index off the map
             System.out.print("  COL " + colIndex + " ");
             colIndex++;
         }
         System.out.println();
         System.out.println("Color matching to the letter 'W':");
-        if(playersData.size() == 3)
-            System.out.println("PLAYERS: " + Color.ANSI_RED + "Player 1: " + playersData.get(0).getNickname() + " with " + playersData.get(0).getCardChoosed().toUpperCase() + " " + Color.ANSI_GREEN + "Player 2: " + playersData.get(1).getNickname() + " with "+playersData.get(1).getCardChoosed().toUpperCase() + " " + Color.ANSI_BLUE + "Player 3: " + playersData.get(2).getNickname() + " with " + playersData.get(2).getCardChoosed().toUpperCase() + Color.RESET);
-        if(playersData.size() == 2)
-            System.out.println("PLAYERS: " + Color.ANSI_RED + "Player 1: " + playersData.get(0).getNickname() + " with " + playersData.get(0).getCardChoosed().toUpperCase() + " " + Color.ANSI_GREEN + "Player 2: " + playersData.get(1).getNickname() + " with "+playersData.get(1).getCardChoosed().toUpperCase() + Color.RESET);
+        if (playersData.size() == 3)
+            System.out.println("PLAYERS: " + Color.ANSI_RED + "Player 1: " + playersData.get(0).getNickname() + " with " + playersData.get(0).getCardChosen().toUpperCase() + " " + Color.ANSI_GREEN + "Player 2: " + playersData.get(1).getNickname() + " with " + playersData.get(1).getCardChosen().toUpperCase() + " " + Color.ANSI_BLUE + "Player 3: " + playersData.get(2).getNickname() + " with " + playersData.get(2).getCardChosen().toUpperCase() + Color.RESET);
+        if (playersData.size() == 2)
+            System.out.println("PLAYERS: " + Color.ANSI_RED + "Player 1: " + playersData.get(0).getNickname() + " with " + playersData.get(0).getCardChosen().toUpperCase() + " " + Color.ANSI_GREEN + "Player 2: " + playersData.get(1).getNickname() + " with " + playersData.get(1).getCardChosen().toUpperCase() + Color.RESET);
         System.out.println("\n");
     }
 
     /** Used to print listOfGods.
      * @param listOfGods list of strings containing name of gods sent from server
      */
-    public void showGods(Object listOfGods){
-        for (int i = 0; i <((List<String>)listOfGods).size() ; i++) {
+    public void showGods(Object listOfGods) {
+        for (int i = 0; i < ((List<String>)listOfGods).size(); i++) {
             System.out.println(((List<String>)listOfGods).get(i));
         }
     }

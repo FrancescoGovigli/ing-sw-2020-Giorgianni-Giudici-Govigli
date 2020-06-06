@@ -1,6 +1,6 @@
 package it.polimi.ingsw.PSP42.client;
 
-import it.polimi.ingsw.PSP42.*;
+import it.polimi.ingsw.PSP42.client.clientView.ViewManager;
 import it.polimi.ingsw.PSP42.server.*;
 import it.polimi.ingsw.PSP42.view.*;
 
@@ -42,10 +42,82 @@ public class ClientGUI implements Runnable, ClientObservable {
         return null;
     }
 
+    public void run() {
+        BufferedReader scanner= new BufferedReader(new InputStreamReader(System.in));
+        Socket server = null;
+        Boolean correctHostIP = false;
+        while (!correctHostIP) {
+            try {
+                notifyConnectionStart();
+                String hostIP = input;
+                server = new Socket(hostIP, 4000);
+                input = null;
+                System.out.println("Connection established");
+                correctHostIP = true;
+            } catch (IOException e) {
+                String error = "Server unreachable";
+                ViewManager.hostIPIncorrect(error);
+                System.out.println(error);
+            }
+        }
+        ObjectInputStream socketIn = null;
+        PrintWriter socketOut = null;
+        try {
+            socketIn = new ObjectInputStream(server.getInputStream());
+            socketOut = new PrintWriter(server.getOutputStream());
+        } catch (IOException e) {
+            System.out.println("IOException in ClientGUI -> run (creation of ObjectInputStream & PrintWriter)");
+        }
+        try {
+            Thread t0 = asyncReadFromSocket(socketIn);
+            Thread t1 = asyncWriteToSocket(socketOut);
+            t0.join();
+            t1.join();
+        } catch(InterruptedException | NoSuchElementException e) {
+            System.out.println("Connection closed from the Client side");
+        } finally {
+            try {
+                scanner.close();
+                socketIn.close();
+                socketOut.close();
+                server.close();
+            } catch (IOException e) {
+                System.out.println("IOException in ClientGUI -> run (finally branch)");
+            }
+        }
+    }
+
+    /**
+     * Method to send an object to the Server.
+     * @param socketOut output
+     * @return (thread that must wait for the operation to complete)
+     */
+    public Thread asyncWriteToSocket(final PrintWriter socketOut){
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    while (isActive()) {
+                        if (writeActive && input != null) {
+                            socketOut.println(input);
+                            socketOut.flush();
+                            input = null;
+                        }
+                    }
+                } catch(Exception e) {
+                    System.out.println("You disconnected");
+                    setActive(false);
+                }
+            }
+        });
+        t.start();
+        return t;
+    }
+
     /**
      * Method to receive an object from the Server.
-     * @param socketIn
-     * @return TODO
+     * @param socketIn input
+     * @return (thread that must wait for the operation to complete)
      */
     public Thread asyncReadFromSocket(final ObjectInputStream socketIn){
         Thread thread = new Thread(new Runnable() {
@@ -91,73 +163,7 @@ public class ClientGUI implements Runnable, ClientObservable {
     }
 
     /**
-     * Method to send an object to the Server.
-     * @param stdin
-     * @param socketOut
-     * @return TODO
-     */
-    public Thread asyncWriteToSocket(final BufferedReader stdin, final PrintWriter socketOut){
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    while (isActive()) {
-                        if (writeActive && input != null) {
-                            socketOut.println(input);
-                            socketOut.flush();
-                            input = null;
-                        }
-                    }
-                } catch(Exception e) {
-                    System.out.println("You disconnected");
-                    setActive(false);
-                }
-            }
-        });
-        t.start();
-        return t;
-    }
-
-    public void run() {
-        BufferedReader scanner= new BufferedReader(new InputStreamReader(System.in));
-        Socket server;
-        try {
-            server = new Socket("localhost", 4000);
-            System.out.println("Connection established");
-            notifyConnectionStart();
-        } catch (IOException e) {
-            System.out.println("Server unreachable");
-            return;
-        }
-        ObjectInputStream socketIn = null;
-        PrintWriter socketOut = null;
-        try {
-            socketIn = new ObjectInputStream(server.getInputStream());
-            socketOut = new PrintWriter(server.getOutputStream());
-        } catch (IOException e) {
-            System.out.println("IOException in ClientGUI -> run (creation of ObjectInputStream & PrintWriter)");
-        }
-        try {
-            Thread t0 = asyncReadFromSocket(socketIn);
-            Thread t1 = asyncWriteToSocket(scanner, socketOut);
-            t0.join();
-            t1.join();
-        } catch(InterruptedException | NoSuchElementException e) {
-            System.out.println("Connection closed from the client side");
-        } finally {
-            try {
-                scanner.close();
-                socketIn.close();
-                socketOut.close();
-                server.close();
-            } catch (IOException e) {
-                System.out.println("IOException in ClientGUI -> run (finally branch)");
-            }
-        }
-    }
-
-    /**
-     * Method used to call the correct methods for Client observer.
+     * Method used to call the correct methods for ClientCLI observer.
      * @param message object to understand the message from Server
      */
     public void elaborateMessage(Object message) {
@@ -212,49 +218,77 @@ public class ClientGUI implements Runnable, ClientObservable {
     }
 
     /**
-     * Add an observer to the Model's observer list
-     * @param ob
+     * Used to attach a Client observer (ViewManager) to ClientGUI.
+     * @param ob ClientObserver
      */
     @Override
     public void attach(ClientObserver ob) {
         clientObserver = ob;
     }
 
+    /**
+     * Used to notify Client observer when first player is added.
+     */
     @Override
     public void notifyWelcomeFirstPlayer() {
         clientObserver.updateWelcomeFirstPlayer();
     }
 
+    /**
+     * Used to notify Client observer when an other player is added.
+     */
     @Override
     public void notifyWelcomeOtherPlayers() {
         clientObserver.updateWelcomeOtherPlayers();
     }
 
+    /**
+     * Used to notify Client that he is connected to Server until he press play.
+     */
     @Override
     public void notifyConnectionStart() {
         clientObserver.updateConnectionStart();
     }
 
+    /**
+     * Used to notify a player to wait his turn.
+     */
     @Override
     public void notifyWaiting() {
         clientObserver.updateWaiting();
     }
 
+    /**
+     * Used to notify a player the possibility to choose his god.
+     * @param listOfGods possible god to choose from the list
+     */
     @Override
     public void notifyGodSelection(Object listOfGods) {
         clientObserver.updateGodSelection(listOfGods);
     }
 
+    /**
+     * Used to notify a player the status of game.
+     * @param o status message
+     */
     @Override
     public void notifyGameStatus(Object o) {
         clientObserver.updateGameStatus(o);
     }
 
+    /**
+     * Used to notify a player the updating of the gameBoard.
+     * @param o gameBoard updated
+     */
     @Override
     public void notifyShow(Object o) {
         clientObserver.updateShow(o);
     }
 
+    /**
+     * Used to notify a player a game message.
+     * @param message notified message
+     */
     @Override
     public void notifyGameMessage(Object message) {
         clientObserver.updateGameMessage(message);

@@ -1,8 +1,8 @@
-package it.polimi.ingsw.PSP42.view;
+package it.polimi.ingsw.PSP42.client.clientView;
 
-import it.polimi.ingsw.PSP42.*;
+import it.polimi.ingsw.PSP42.client.GuiObservable;
+import it.polimi.ingsw.PSP42.client.GuiObserver;
 import it.polimi.ingsw.PSP42.server.*;
-import javafx.event.*;
 import javafx.fxml.*;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
@@ -10,10 +10,10 @@ import javafx.scene.layout.*;
 
 public class ControllerWelcomeScene implements GuiObservable {
 
-    private final GuiObserver guiObserver = new ViewManager(ViewManager.getInstance());
+    private final GuiObserver guiObserver = new ViewManager(ViewManager.getClientInstance());
 
     @FXML
-    public TextField textfieldFirstPlayer;
+    public TextField textFieldFirstPlayer;
     @FXML
     public GridPane chooseField;
     @FXML
@@ -21,13 +21,13 @@ public class ControllerWelcomeScene implements GuiObservable {
     @FXML
     public Pane statusPane;
     @FXML
-    public TextField textfieldOtherPlayers;
+    public TextField textFieldOtherPlayers;
     @FXML
     public Button choose1;
     @FXML
     public Button choose2;
     @FXML
-    public TextField textfieldIP;
+    public TextField textFieldIP;
 
     private boolean hostIPset = false;
     private boolean ableToClickPlayers = false;
@@ -41,23 +41,21 @@ public class ControllerWelcomeScene implements GuiObservable {
     /**
      * Used to inform ViewManager that player pushed "Play" button.
      */
-    /*TODO (ABBELLIMENTO) metterei nella welcomeScene uno Status Connected oppure status: Insert Your name to continue*/
     public void goToWaitingScene() {
-        if(hostIPset){
-            informManagerInput(textfieldIP.getText());
+        if (hostIPset) {
+            informManagerInput(textFieldIP.getText());
             ViewManager.setPlayPushed(true);
         }
-
     }
 
     /**
-     * Used to delete text in textfield when clicked.
+     * Used to delete text in textField when clicked.
      * @param mouseEvent click of mouse on screen
      */
     public void deleteText(MouseEvent mouseEvent) {
         TextField text = (TextField) mouseEvent.getSource();
         text.setText("");
-        hostIPset=true;
+        hostIPset = true;
         text.setEditable(true);
     }
 
@@ -65,7 +63,7 @@ public class ControllerWelcomeScene implements GuiObservable {
      * Used to inform view manager that first player decide for a game with two players.
      */
     public void twoPlayerChoose() {
-        if(ableToClickPlayers) {
+        if (ableToClickPlayers) {
             System.out.println("2");
             numberOfPlayers = "2";
             informManagerInput(numberOfPlayers);
@@ -76,7 +74,7 @@ public class ControllerWelcomeScene implements GuiObservable {
      * Used to inform view manager that first player decide for a game with three players.
      */
     public void threePlayerChoose() {
-        if(ableToClickPlayers) {
+        if (ableToClickPlayers) {
             System.out.println("3");
             numberOfPlayers = "3";
             informManagerInput(numberOfPlayers);
@@ -92,7 +90,7 @@ public class ControllerWelcomeScene implements GuiObservable {
         chooseField.setOpacity(1);
         choose1.setOpacity(1);
         choose2.setOpacity(1);
-        nickName = textfieldFirstPlayer.getText();
+        nickName = textFieldFirstPlayer.getText();
         ableToClickPlayers = true;
         informManagerInput(nickName);
     }
@@ -102,25 +100,33 @@ public class ControllerWelcomeScene implements GuiObservable {
      * When submit button is pressed inform view manager of the name typed in text field.
      */
     public void submitName() {
-        nickName = textfieldOtherPlayers.getText();
+        nickName = textFieldOtherPlayers.getText();
         informManagerInput(nickName);
     }
 
-    public void setStatusLabel(String message){
-        if(message.equals("Name already taken choose another nickname")) {
+    /**
+     * Used to create a label to show an error message.
+     * @param message
+     */
+    public void setStatusLabel(String message) {
+        if (message.equals("Name already taken choose another nickname")) {
             statusPane.setStyle("-fx-background-image: url('/images/PopUp.png'); -fx-background-size: stretch; -fx-opacity: 1;");
             statusLabel.setText("Status: Nickname already taken");
         }
-        else if(message.equals(ServerMessage.extraClient) || message.equals(ServerMessage.gameInProgress)) {
+        else if (message.equals(ServerMessage.extraClient) || message.equals(ServerMessage.gameInProgress)) {
             statusPane.setStyle("-fx-background-image: url('/images/PopUp.png'); -fx-background-size: stretch; -fx-opacity: 1;");
             statusLabel.setText("Status: Cannot access the Game try later...");
         }
-        else if(message.equals("Server unreachable"));{
+        else if (message.equals("Server unreachable")) {
             statusPane.setStyle("-fx-background-image: url('/images/PopUp.png'); -fx-background-size: stretch; -fx-opacity: 1;");
             statusLabel.setText("Status: Server unreachable");
         }
     }
 
+    /**
+     * Used to inform ViewManager (observer) about a GUI choice done by Client.
+     * @param input choice done
+     */
     @Override
     public void informManagerInput(String input) {
         guiObserver.fromGuiInput(input);

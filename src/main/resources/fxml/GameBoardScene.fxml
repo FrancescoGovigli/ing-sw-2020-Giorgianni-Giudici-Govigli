@@ -8,7 +8,7 @@
 <GridPane fx:id="root"
           xmlns="http://javafx.com/javafx/10.0.2-internal"
           xmlns:fx="http://javafx.com/fxml/1"
-          fx:controller="it.polimi.ingsw.PSP42.view.ControllerGameBoardScene" >
+          fx:controller="it.polimi.ingsw.PSP42.client.clientView.ControllerGameBoardScene" >
 
     <Pane id="santoriniLogo"
           GridPane.columnIndex="1" GridPane.rowIndex="2" />
@@ -166,35 +166,35 @@
               GridPane.columnIndex="1" GridPane.halignment="CENTER"
               GridPane.rowIndex="1" GridPane.valignment="CENTER" >
 
-        <Pane id="cell00" onMouseClicked="#PlayerChoice" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-        <Pane id="cell01" onMouseClicked="#PlayerChoice" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-        <Pane id="cell02" onMouseClicked="#PlayerChoice" GridPane.columnIndex="2" GridPane.rowIndex="0" />
-        <Pane id="cell03" onMouseClicked="#PlayerChoice" GridPane.columnIndex="3" GridPane.rowIndex="0" />
-        <Pane id="cell04" onMouseClicked="#PlayerChoice" GridPane.columnIndex="4" GridPane.rowIndex="0" />
+        <Pane id="cell00" onMouseClicked="#playerChoice" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+        <Pane id="cell01" onMouseClicked="#playerChoice" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        <Pane id="cell02" onMouseClicked="#playerChoice" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+        <Pane id="cell03" onMouseClicked="#playerChoice" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+        <Pane id="cell04" onMouseClicked="#playerChoice" GridPane.columnIndex="4" GridPane.rowIndex="0" />
 
-        <Pane id="cell10" onMouseClicked="#PlayerChoice" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-        <Pane id="cell11" onMouseClicked="#PlayerChoice" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-        <Pane id="cell12" onMouseClicked="#PlayerChoice" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-        <Pane id="cell13" onMouseClicked="#PlayerChoice" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-        <Pane id="cell14" onMouseClicked="#PlayerChoice" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+        <Pane id="cell10" onMouseClicked="#playerChoice" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        <Pane id="cell11" onMouseClicked="#playerChoice" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <Pane id="cell12" onMouseClicked="#playerChoice" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+        <Pane id="cell13" onMouseClicked="#playerChoice" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+        <Pane id="cell14" onMouseClicked="#playerChoice" GridPane.columnIndex="4" GridPane.rowIndex="1" />
 
-        <Pane id="cell20" onMouseClicked="#PlayerChoice" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-        <Pane id="cell21" onMouseClicked="#PlayerChoice" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-        <Pane id="cell22" onMouseClicked="#PlayerChoice" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-        <Pane id="cell23" onMouseClicked="#PlayerChoice" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-        <Pane id="cell24" onMouseClicked="#PlayerChoice" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+        <Pane id="cell20" onMouseClicked="#playerChoice" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+        <Pane id="cell21" onMouseClicked="#playerChoice" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        <Pane id="cell22" onMouseClicked="#playerChoice" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+        <Pane id="cell23" onMouseClicked="#playerChoice" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+        <Pane id="cell24" onMouseClicked="#playerChoice" GridPane.columnIndex="4" GridPane.rowIndex="2" />
 
-        <Pane id="cell30" onMouseClicked="#PlayerChoice" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-        <Pane id="cell31" onMouseClicked="#PlayerChoice" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-        <Pane id="cell32" onMouseClicked="#PlayerChoice" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-        <Pane id="cell33" onMouseClicked="#PlayerChoice" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-        <Pane id="cell34" onMouseClicked="#PlayerChoice" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+        <Pane id="cell30" onMouseClicked="#playerChoice" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+        <Pane id="cell31" onMouseClicked="#playerChoice" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+        <Pane id="cell32" onMouseClicked="#playerChoice" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+        <Pane id="cell33" onMouseClicked="#playerChoice" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+        <Pane id="cell34" onMouseClicked="#playerChoice" GridPane.columnIndex="4" GridPane.rowIndex="3" />
 
-        <Pane id="cell40" onMouseClicked="#PlayerChoice" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-        <Pane id="cell41" onMouseClicked="#PlayerChoice" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-        <Pane id="cell42" onMouseClicked="#PlayerChoice" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-        <Pane id="cell43" onMouseClicked="#PlayerChoice" GridPane.columnIndex="3" GridPane.rowIndex="4" />
-        <Pane id="cell44" onMouseClicked="#PlayerChoice" GridPane.columnIndex="4" GridPane.rowIndex="4" />
+        <Pane id="cell40" onMouseClicked="#playerChoice" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+        <Pane id="cell41" onMouseClicked="#playerChoice" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+        <Pane id="cell42" onMouseClicked="#playerChoice" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+        <Pane id="cell43" onMouseClicked="#playerChoice" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+        <Pane id="cell44" onMouseClicked="#playerChoice" GridPane.columnIndex="4" GridPane.rowIndex="4" />
 
         <columnConstraints>
             <ColumnConstraints percentWidth="20.0" />

@@ -56,7 +56,7 @@ public class Cell {
         if (level >= 0 && level <= 4) {
             this.builtLevel[level] = true;
             if (level < this.getLevel())
-                for (int i = level+1; i < builtLevel.length; i++)
+                for (int i = level + 1; i < builtLevel.length; i++)
                     builtLevel[i] = false;
         }
     }

@@ -10,8 +10,10 @@ public class Worker {
     /**
      * Set Cartesian position, reference to Player and declare that the worker can be moved.
      * Used in Player's constructor.
-     * @see Player
+     * @param x position on the x-axis
+     * @param y position on the y-axis
      * @param player reference to Player that instantiate two Workers
+     * @see Player
      */
     public Worker(int x, int y, Player player) {
         this.currentX = x;
@@ -38,9 +40,9 @@ public class Worker {
 
     /**
      * Set Cartesian position. Used in Player's method: "setPositionWorker".
-     * @see Player
      * @param x position on x-axis
      * @param y position on y-axis
+     * @see Player
      */
     public void setPosition(int x, int y) {
         if (GameBoard.getInstance().getCell(x, y).getWorker() == null) {
@@ -53,7 +55,7 @@ public class Worker {
     }
 
     /**
-     * Used to unset worker on the cell and to set currentX and currentY out of map
+     * Used to unset worker on the cell and to set currentX and currentY out of map.
      */
     public void unSetPosition() {
         if (this.currentX != -1 && this.currentY != -1) {
@@ -89,9 +91,9 @@ public class Worker {
 
     /**
      * Used by Player to decide where to build.
-     * @see Player
      * @param x block's position on x-axis
      * @param y block's position on y-axis
+     * @see Player
      */
     public void buildBlock(int x, int y) {
         GameBoard.getInstance().getCell(x, y).setCellLevel();

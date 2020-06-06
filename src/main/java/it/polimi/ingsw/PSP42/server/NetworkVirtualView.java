@@ -7,7 +7,7 @@ public class NetworkVirtualView {
     /**
      * Method for assigning the ServerGameThread.
      * Used by the ServerGameThread who will manage the game.
-     * @param sgt
+     * @param sgt ServerGameThread
      */
     public static void assignSGT(ServerGameThread sgt) {
         game = sgt;
@@ -29,11 +29,6 @@ public class NetworkVirtualView {
      * @return returns what the player sent (null is possible)
      */
     public static Object readFromPlayer(ClientHandler clientHandler) {
-        // TODO check
-        if (!game.isConnectionAvailable()) {
-            game.resetGame();
-            return null;
-        }
         return game.read(clientHandler);
     }
 }

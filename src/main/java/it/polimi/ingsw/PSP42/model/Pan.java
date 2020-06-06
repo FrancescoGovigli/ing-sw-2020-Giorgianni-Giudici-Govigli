@@ -1,7 +1,7 @@
 package it.polimi.ingsw.PSP42.model;
 
 /**
- * Simple god that wins if it drops by at least 2 levels
+ * Simple god that wins if it drops by at least 2 levels.
  */
 public class Pan extends SimpleGod {
 
@@ -22,7 +22,7 @@ public class Pan extends SimpleGod {
     }
 
     /**
-     * Method used to move the worker in cell (x,y) and checking if he wins doing this move
+     * Method used to move the worker in cell (x,y) and checking if he wins doing this move.
      * @param x (x coordinate of where you would like to go)
      * @param y (y coordinate of where you would like to go)
      * @param w (worker who would like to move)

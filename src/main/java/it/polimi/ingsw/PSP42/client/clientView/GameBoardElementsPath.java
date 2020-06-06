@@ -1,9 +1,8 @@
-package it.polimi.ingsw.PSP42.view;
+package it.polimi.ingsw.PSP42.client.clientView;
 
 public class GameBoardElementsPath {
 
     public static String GROUND = null;
-    public static String NONE = "/images/glassBackground.png";
 
     /**
      * Method to obtain the path relative to the indicated level, considering the one on which it rests.
@@ -25,10 +24,6 @@ public class GameBoardElementsPath {
      * @return the corresponding path as a string
      */
     public static String getWorkerImagePath(String worker) {
-        // TODO check -> previous version : if (worker.equals(null))
-        if (worker.equals("NONE"))
-            return NONE;
-        else
-            return "/images/" + worker.toLowerCase() + "/" + worker.toLowerCase() + "Worker.png";
+        return "/images/" + worker.toLowerCase() + "/" + worker.toLowerCase() + "Worker.png";
     }
 }

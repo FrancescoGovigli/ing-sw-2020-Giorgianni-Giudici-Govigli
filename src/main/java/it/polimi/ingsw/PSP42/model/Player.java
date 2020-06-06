@@ -1,10 +1,5 @@
 package it.polimi.ingsw.PSP42.model;
 
-import java.io.*;
-
-/**
- * @author Francesco Govigli
- */
 public class Player {
 
     private final SimpleGod card;
@@ -16,33 +11,10 @@ public class Player {
     private State playerState = State.INGAME;
     private Undo undo;  // UNDO
 
-    /**
-     * Constructor to initialize a player object and instantiating 2 workers used by the player outside the Map cell(-1,-1)
-     * @param nick nickname choosed from the player
-     * @param id   id automatically given to choose the order of gameplay during constructing
-     * @param cardName choosed from the player
-     */
-    public Player(String nick, int id, String cardName) {
-        this.nickname = nick;
-        this.id = id;
-        this.worker1 = new Worker(- 1, - 1, this);
-        this.worker2 = new Worker(- 1, - 1, this);
-        this.card = DeckOfGods.setGod(cardName, worker1, worker2);
-        this.undo = new Undo(); // UNDO
-    }
-
-    /**
-     * In every move of a player it's important to get the GodCard assigned to the player
-     * @return card
-     */
     public SimpleGod getCard() {
         return card;
     }
 
-    /**
-     * Used to get the id of a player to know the order of the gameplay
-     * @return id (it's an integer from 1 to 3 if the game is planned for 3 player)
-     */
     public int getId() {
         return id;
     }
@@ -59,10 +31,6 @@ public class Player {
         return worker2;
     }
 
-    /**
-     * It is an important getter to know the status of a player during the game
-     * @return
-     */
     public String getPlayerState() {
         if (playerState.equals(State.INGAME))
             return "INGAME";
@@ -73,20 +41,31 @@ public class Player {
         return "NO_STATE";
     }
 
-    /**
-     * Enum State used to know if a player is still in game, have lost or won the game.
-     * The gameboard has methods to change state of player looking at the whole Game State
-     * @param s
-     */
     public void setPlayerState(String s) {
         playerState = State.valueOf(s);
     }
 
     /**
-     * Method used to initialize the worker in cell (x,y)
+     * Constructor to initialize Player and generate his 2 workers setting them outside the map in cell(-1,-1).
+     * @param nick nickname chosen from the player
+     * @param id id automatically given to choose the order of gameplay during constructing
+     * @param cardName chosen from the player
+     */
+    public Player(String nick, int id, String cardName) {
+        this.nickname = nick;
+        this.id = id;
+        this.worker1 = new Worker(- 1, - 1, this);
+        this.worker2 = new Worker(- 1, - 1, this);
+        this.card = DeckOfGods.setGod(cardName, worker1, worker2);
+        this.undo = new Undo(); // UNDO
+    }
+
+    /**
+     * Method used to initialize the worker in cell (x,y).
      * @param x is the initialization x-coordinate
      * @param y is the initialization y-coordinate
-     * @param w is the worker initialized in gameboard
+     * @param w is the worker initialized in gameBoard
+     * @return true if initial position is available, false otherwise
      */
     public boolean initialPosition( int x, int y, Worker w) {
         if (x >= 0 && x <= 4 && y >= 0 && y <= 4)
@@ -95,10 +74,11 @@ public class Player {
     }
 
     /**
-     * Method used to move the worker w in (x,y) position
+     * Method used to move the worker w in (x,y) position.
      * @param x is the x-coordinate for the move
      * @param y is the y-coordinate for the move
      * @param w is the worker who moves
+     * @return true if move position is available, false otherwise
      */
     public boolean move(int x, int y, Worker w) {
         if (x >= 0 && x <= 4 && y >= 0 && y <= 4) {
@@ -112,8 +92,8 @@ public class Player {
     }
 
     /**
-     * Method to cancel the move made by the worker
-     * @param w
+     * Method to cancel the move made by the worker.
+     * @param w interested worker
      */
     public void doUndoMove(Worker w) {
         undo.undoMoveApply(w);
@@ -121,10 +101,12 @@ public class Player {
     }
 
     /**
-     * Method used to build with worker w in (x,y) position
+     * Method used to build with worker w in (x,y) position.
      * @param x is the x-coordinate for the construction
      * @param y is the y-coordinate for the construction
+     * @param level Level
      * @param w is the worker who builds
+     * @return true if build position is available, false otherwise
      */
     public boolean build(int x, int y, int level, Worker w) {
         if (x >= 0 && x <= 4 && y >= 0 && y <= 4 && level >= 0 && level <= 4)
@@ -137,8 +119,8 @@ public class Player {
     }
 
     /**
-     * Method to cancel the build made by the worker
-     * @param w
+     * Method to cancel the build made by the worker.
+     * @param w interested worker
      */
     public void doUndoBuild(Worker w) {
         undo.undoBuildApply(w);
@@ -146,7 +128,7 @@ public class Player {
     }
 
     /**
-     * Method used to obtain the effect of a god
+     * Method used to obtain the effect of a god.
      * @return false if the god does not have an effect, true otherwise (this value depends on how the god implements the method)
      */
     public boolean effect(){
@@ -154,7 +136,7 @@ public class Player {
     }
 
     /**
-     * Method used to know the phase sequence of a Simple God
+     * Method used to know the phase sequence of a Simple God.
      * @return an array of strings with variable size lines, initialized by the specific phases that a god has during his turn
      * Structured like:
      *  start   preMove     Move    preBuild    Build   End

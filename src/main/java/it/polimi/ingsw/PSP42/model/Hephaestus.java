@@ -105,10 +105,6 @@ public class Hephaestus extends SimpleGod {
         return false;
     }
 
-    /**
-     * Method to obtain the current state of the Simple God's variables
-     * @return values.clone() (a clone of the ArrayList of Integer containing these variables)
-     */
     @Override
     public ArrayList<Integer> getCurrentValues() {
         ArrayList<Integer> values = new ArrayList<Integer>();
@@ -116,10 +112,6 @@ public class Hephaestus extends SimpleGod {
         return (ArrayList<Integer>) values.clone();
     }
 
-    /**
-     * Method to restore the state of the Simple God's variables
-     * @param valuesToRestore
-     */
     @Override
     public void reSetValues(ArrayList<Integer> valuesToRestore) {
         this.buildNum = valuesToRestore.get(0);

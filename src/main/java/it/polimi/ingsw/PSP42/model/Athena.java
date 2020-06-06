@@ -14,7 +14,6 @@ public class Athena extends SimpleGod {
         super(w1, w2);
     }
 
-
     @Override
     public String[][] setPhase() {
         String[] START = {"EFFECT"};
@@ -149,10 +148,6 @@ public class Athena extends SimpleGod {
         return "Other players now can step up!\n";
     }
 
-    /**
-     * Method to obtain the current state of the Simple God's variables
-     * @return values.clone() (a clone of the ArrayList of Integer containing these variables)
-     */
     @Override
     public ArrayList<Integer> getCurrentValues() {
         ArrayList<Integer> values = new ArrayList<Integer>();
@@ -161,10 +156,6 @@ public class Athena extends SimpleGod {
         return (ArrayList<Integer>) values.clone();
     }
 
-    /**
-     * Method to restore the state of the Simple God's variables
-     * @param valuesToRestore
-     */
     @Override
     public void reSetValues(ArrayList<Integer> valuesToRestore) {
         this.blockOpponentsStepUp = valuesToRestore.get(0);

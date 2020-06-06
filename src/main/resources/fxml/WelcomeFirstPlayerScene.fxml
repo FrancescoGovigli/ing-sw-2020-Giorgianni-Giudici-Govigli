@@ -7,7 +7,7 @@
 <GridPane id="back"
           xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
-          fx:controller="it.polimi.ingsw.PSP42.view.ControllerWelcomeScene">
+          fx:controller="it.polimi.ingsw.PSP42.client.clientView.ControllerWelcomeScene">
 
     <!--Grid Pane for Nickname-->
     <GridPane GridPane.rowIndex="1"
@@ -20,7 +20,7 @@
               GridPane.halignment="CENTER">
 
             <TextField id="textfield"
-                       fx:id="textfieldFirstPlayer"
+                       fx:id="textFieldFirstPlayer"
                        onMouseClicked="#deleteText"
                        prefHeight="52.0"
                        prefWidth="193.0"

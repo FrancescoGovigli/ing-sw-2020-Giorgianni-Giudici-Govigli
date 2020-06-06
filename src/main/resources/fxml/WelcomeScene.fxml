@@ -5,10 +5,10 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane id="back" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.PSP42.view.ControllerWelcomeScene">
+<GridPane id="back" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.PSP42.client.clientView.ControllerWelcomeScene">
 
    <GridPane prefHeight="168.0" prefWidth="1200.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
-      <TextField id="textfield" fx:id="textfieldIP" alignment="CENTER" editable="false" onMouseClicked="#deleteText" prefHeight="47.0" prefWidth="306.0" text="Insert Host IP Address" GridPane.columnIndex="1" GridPane.rowIndex="1">
+      <TextField id="textfield" fx:id="textFieldIP" alignment="CENTER" editable="false" onMouseClicked="#deleteText" prefHeight="47.0" prefWidth="306.0" text="Insert Host IP Address" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <GridPane.margin>
             <Insets left="50.0" right="50.0" />
          </GridPane.margin>

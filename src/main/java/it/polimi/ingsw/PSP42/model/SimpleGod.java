@@ -10,30 +10,6 @@ public abstract class SimpleGod {
     protected Worker w2;
     private ArrayList<Integer> values = null;   // UNDO
 
-    /**
-     * Method to obtain the current state of the Simple God's variables
-     * [NOTE] In the Simple God that make it override it is important to insert
-     * the variables in the ArrayList in the order in which they were declared in the class,
-     * in other words the first variable declared must be insert in the first position of values
-     * @return values.clone() (a clone of the ArrayList of Integer containing these variables)
-     */
-    public ArrayList<Integer> getCurrentValues() {
-        if(values != null)
-            return (ArrayList<Integer>) values.clone();
-        return null;
-    }
-
-    /**
-     * Method to restore the state of the Simple God's variables
-     * [NOTE] In the Simple God that make it override it is important
-     * that the variables to be reset are taken from the ArrayList in the order in which they were declared in the class,
-     * in other words the first variable declared is in the first position of valuesToRestore
-     * @param valuesToRestore
-     */
-    public void reSetValues(ArrayList<Integer> valuesToRestore) {
-        values = null;
-    }
-
     public SimpleGod(Worker w1, Worker w2) {
         this.w1 = w1;
         this.w2 = w2;
@@ -43,7 +19,7 @@ public abstract class SimpleGod {
     public abstract String[][] setPhase();
 
     /**
-     * Method to check if worker can move to cell (x,y)
+     * Method to check if worker can move to cell (x,y).
      * @param x (x position of where he wants to go)
      * @param y (y position of where he wants to go)
      * @param w (concerned worker)
@@ -56,7 +32,7 @@ public abstract class SimpleGod {
     }
 
     /**
-     * Method used to apply the move
+     * Method used to apply the move.
      * @param x (x position of the destination)
      * @param y (y position of the destination)
      * @param w (concerned worker)
@@ -74,7 +50,7 @@ public abstract class SimpleGod {
     }
 
     /**
-     * Method to check if worker can build in cell (x,y)
+     * Method to check if worker can build in cell (x,y).
      * @param x (x position of where he wants to build)
      * @param y (y position of where he wants to build)
      * @param level (level he wants to build)
@@ -88,7 +64,7 @@ public abstract class SimpleGod {
     }
 
     /**
-     * Method used to apply the build
+     * Method used to apply the build.
      * @param x (x position of the building)
      * @param y (y position of the building)
      * @param level (level to build)
@@ -120,7 +96,7 @@ public abstract class SimpleGod {
     }
 
     /**
-     * Method used to set the starting position of the worker
+     * Method used to set the starting position of the worker.
      * @param x (starting position x)
      * @param y (starting position y)
      * @param w (concerned worker)
@@ -147,7 +123,31 @@ public abstract class SimpleGod {
     }
 
     /**
-     * Method for obtaining the description of the power that the god has
+     * Method to obtain the current state of the Simple God's variables
+     * [NOTE] In the Simple God that make it override it is important to insert
+     * the variables in the ArrayList in the order in which they were declared in the class,
+     * in other words the first variable declared must be insert in the first position of values
+     * @return values.clone() (a clone of the ArrayList of Integer containing these variables)
+     */
+    public ArrayList<Integer> getCurrentValues() {
+        if(values != null)
+            return (ArrayList<Integer>) values.clone();
+        return null;
+    }
+
+    /**
+     * Method to restore the state of the Simple God's variables.
+     * [NOTE] In the Simple God that make it override it is important
+     * that the variables to be reset are taken from the ArrayList in the order in which they were declared in the class,
+     * in other words the first variable declared is in the first position of valuesToRestore
+     * @param valuesToRestore possible values to restore after an undo
+     */
+    public void reSetValues(ArrayList<Integer> valuesToRestore) {
+        values = null;
+    }
+
+    /**
+     * Method for obtaining the description of the power that the god has.
      * @return descriptive string
      */
     public String getPowerDescription() {

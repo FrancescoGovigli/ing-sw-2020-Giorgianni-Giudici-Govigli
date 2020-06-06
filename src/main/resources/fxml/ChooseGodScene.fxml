@@ -9,7 +9,7 @@
 <GridPane id="back"
           xmlns="http://javafx.com/javafx/11.0.1"
           xmlns:fx="http://javafx.com/fxml/1"
-          fx:controller="it.polimi.ingsw.PSP42.view.ControllerChooseGodScene">
+          fx:controller="it.polimi.ingsw.PSP42.client.clientView.ControllerChooseGodScene">
 
     <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1">
 
@@ -20,7 +20,7 @@
             <Button fx:id="buttonCard1"
                     onMouseEntered="#description"
                     onMouseExited="#image"
-                    onAction="#sendCardChoosed"
+                    onAction="#sendCardChosen"
                     alignment="CENTER"
                     prefHeight="223.0" prefWidth="168.0"
                     GridPane.rowIndex="0" GridPane.columnIndex="0"
@@ -41,7 +41,7 @@
             <Button fx:id="buttonCard2"
                     onMouseEntered="#description"
                     onMouseExited="#image"
-                    onAction="#sendCardChoosed"
+                    onAction="#sendCardChosen"
                     alignment="CENTER"
                     prefHeight="223.0" prefWidth="168.0"
                     GridPane.rowIndex="0" GridPane.columnIndex="0"
@@ -61,7 +61,7 @@
             <Button fx:id="buttonCard3"
                     onMouseEntered="#description"
                     onMouseExited="#image"
-                    onAction="#sendCardChoosed"
+                    onAction="#sendCardChosen"
                     alignment="CENTER"
                     prefHeight="223.0" prefWidth="168.0"
                     GridPane.rowIndex="0" GridPane.columnIndex="0"
