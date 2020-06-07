@@ -1,42 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.net.*?>
-<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane id="back" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.PSP42.client.clientView.ControllerWelcomeScene">
+<GridPane id="back"
+          xmlns="http://javafx.com/javafx/10.0.2-internal"
+          xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="it.polimi.ingsw.PSP42.client.clientView.ControllerWelcomeScene">
 
-   <GridPane prefHeight="168.0" prefWidth="1200.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
-      <TextField id="textfield" fx:id="textFieldIP" alignment="CENTER" editable="false" onMouseClicked="#deleteText" prefHeight="47.0" prefWidth="306.0" text="Insert Host IP Address" GridPane.columnIndex="1" GridPane.rowIndex="1">
-         <GridPane.margin>
-            <Insets left="50.0" right="50.0" />
-         </GridPane.margin>
-      </TextField>
-      <Pane fx:id="statusPane" prefHeight="215.0" prefWidth="348.0" GridPane.columnIndex="1">
-         <GridPane.margin>
-            <Insets left="60.0" right="60.0" top="150.0" />
-         </GridPane.margin>
-         <children>
-            <Label id="statusLabel" fx:id="statusLabel" alignment="CENTER" layoutX="3.0" layoutY="24.0" prefHeight="17.0" prefWidth="234.0" text="" />
-         </children>
-      </Pane>
+   <GridPane GridPane.columnIndex="0" GridPane.rowIndex="1">
+
+      <Pane fx:id="statusPane"
+            prefHeight="215.0" prefWidth="348.0"
+            GridPane.rowIndex="1" GridPane.columnIndex="1"
+            GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
+
+      <Label id="statusLabel"
+             fx:id="statusLabel"
+             alignment="CENTER"
+             prefHeight="17.0" prefWidth="234.0"
+             GridPane.rowIndex="1" GridPane.columnIndex="1"
+             GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
+
+      <TextField id="textfield"
+                 fx:id="textFieldIP"
+                 alignment="CENTER"
+                 editable="false"
+                 onMouseClicked="#deleteText"
+                 prefHeight="47.0" prefWidth="306.0"
+                 text="Insert Host IP Address"
+                 GridPane.columnIndex="1" GridPane.rowIndex="3"
+                 GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
 
       <rowConstraints>
-         <RowConstraints percentHeight="78" />
+         <RowConstraints percentHeight="63" />
          <RowConstraints percentHeight="15" />
-         <RowConstraints percentHeight="7" />
+         <RowConstraints percentHeight="5" />
+         <RowConstraints percentHeight="10" />
       </rowConstraints>
       <columnConstraints>
-         <ColumnConstraints percentWidth="35" />
-         <ColumnConstraints percentWidth="30" />
-         <ColumnConstraints percentWidth="35" />
+         <ColumnConstraints percentWidth="37.5" />
+         <ColumnConstraints percentWidth="25" />
+         <ColumnConstraints percentWidth="37.5" />
       </columnConstraints>
    </GridPane>
 
    <GridPane GridPane.columnIndex="0" GridPane.rowIndex="2">
 
-      <Button id="playButton" alignment="CENTER" onAction="#goToWaitingScene" prefHeight="80.0" prefWidth="182.0" text="CONNECT &amp; PLAY" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+      <Button id="playButton"
+              onAction="#goToWaitingScene"
+              alignment="CENTER"
+              prefHeight="70.0" prefWidth="180.0"
+              text="CONNECT &amp; PLAY"
+              textAlignment="CENTER"
+              GridPane.rowIndex="1" GridPane.columnIndex="1"
+              GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
 
       <rowConstraints>
          <RowConstraints percentHeight="5" />
@@ -51,8 +70,8 @@
    </GridPane>
 
    <rowConstraints>
-      <RowConstraints minHeight="10.0" percentHeight="70.0" prefHeight="30.0" />
-      <RowConstraints percentHeight="70" />
+      <RowConstraints percentHeight="10" />
+      <RowConstraints percentHeight="60" />
       <RowConstraints percentHeight="30" />
    </rowConstraints>
    <columnConstraints>

@@ -38,8 +38,10 @@
         </columnConstraints>
     </GridPane>
 
-    <!--Players' List-->
+    <!--Players' List Update-->
     <GridPane GridPane.columnIndex="0" GridPane.rowIndex="1" >
+
+        <gridLinesVisible>true</gridLinesVisible>
 
         <GridPane id="playerList"
                   GridPane.columnIndex="1" GridPane.rowIndex="1">
@@ -59,35 +61,70 @@
 
             <GridPane GridPane.columnIndex="0" GridPane.rowIndex="1" >
 
-                <Pane fx:id="imagePlayer1" opacity="0.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                <gridLinesVisible>true</gridLinesVisible>
 
-                <Pane id="player" maxHeight="40.0" opacity="0.0" prefHeight="40.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-                    <Label id="gamePlayersLabel" fx:id="player1Label" alignment="CENTER" prefHeight="40.0" prefWidth="127.0" />
-                </Pane>
+                <Pane fx:id="imagePlayer1"
+                      opacity="0"
+                      GridPane.columnIndex="1" GridPane.halignment="CENTER"
+                      GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                <Pane id="player"
+                      fx:id="player1Pane"
+                      maxHeight="40.0" prefHeight="40.0"
+                      opacity="0"
+                      GridPane.columnIndex="2" GridPane.halignment="CENTER"
+                      GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                <Label id="gamePlayersLabel"
+                       fx:id="player1Label"
+                       alignment="CENTER"
+                       prefHeight="40.0" prefWidth="127.0"
+                       GridPane.columnIndex="2" GridPane.halignment="CENTER"
+                       GridPane.rowIndex="1" GridPane.valignment="CENTER" />
 
-                <Pane fx:id="imagePlayer2" opacity="0.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+                <Pane fx:id="imagePlayer2"
+                      opacity="0"
+                      GridPane.columnIndex="1" GridPane.halignment="CENTER"
+                      GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+                <Pane id="player"
+                      fx:id="player2Pane"
+                      maxHeight="40.0" prefHeight="40.0"
+                      opacity="0"
+                      GridPane.columnIndex="2" GridPane.halignment="CENTER"
+                      GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+                <Label id="gamePlayersLabel"
+                       fx:id="player2Label"
+                       alignment="CENTER"
+                       prefHeight="40.0" prefWidth="127.0"
+                       GridPane.columnIndex="2" GridPane.halignment="CENTER"
+                       GridPane.rowIndex="2" GridPane.valignment="CENTER" />
 
-                <Pane id="player" maxHeight="40.0" opacity="0.0" prefHeight="40.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-                    <Label id="gamePlayersLabel" fx:id="player2Label" alignment="CENTER" prefHeight="40.0" prefWidth="127.0" />
-                </Pane>
-
-                <Pane fx:id="imagePlayer3" opacity="0.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
-
-                <Pane id="player" maxHeight="40.0" opacity="0.0" prefHeight="40.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
-                    <Label id="gamePlayersLabel" fx:id="player3Label" alignment="CENTER" prefHeight="40.0" prefWidth="127.0" />
-                </Pane>
+                <Pane fx:id="imagePlayer3"
+                      opacity="0.0"
+                      GridPane.columnIndex="1" GridPane.halignment="CENTER"
+                      GridPane.rowIndex="3" GridPane.valignment="CENTER" />
+                <Pane id="player"
+                      fx:id="player3Pane"
+                      maxHeight="40.0" prefHeight="40.0"
+                      opacity="0"
+                      GridPane.columnIndex="2" GridPane.halignment="CENTER"
+                      GridPane.rowIndex="3" GridPane.valignment="CENTER" />
+                <Label id="gamePlayersLabel"
+                       fx:id="player3Label"
+                       alignment="CENTER"
+                       prefHeight="40.0" prefWidth="127.0"
+                       GridPane.columnIndex="2" GridPane.halignment="CENTER"
+                       GridPane.rowIndex="3" GridPane.valignment="CENTER" />
 
                 <rowConstraints>
-                    <RowConstraints percentHeight="10" />
-                    <RowConstraints percentHeight="23" />
-                    <RowConstraints percentHeight="23" />
-                    <RowConstraints percentHeight="23" />
-                    <RowConstraints percentHeight="21" />
+                    <RowConstraints percentHeight="5" />
+                    <RowConstraints percentHeight="25" />
+                    <RowConstraints percentHeight="25" />
+                    <RowConstraints percentHeight="25" />
+                    <RowConstraints percentHeight="20" />
                 </rowConstraints>
                 <columnConstraints>
                     <ColumnConstraints percentWidth="5" />
-                    <ColumnConstraints percentWidth="30" />
-                    <ColumnConstraints percentWidth="60" />
+                    <ColumnConstraints percentWidth="32" />
+                    <ColumnConstraints percentWidth="58" />
                     <ColumnConstraints percentWidth="5" />
                 </columnConstraints>
             </GridPane>
@@ -116,48 +153,59 @@
     <!--Buttons-->
     <GridPane alignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="1" >
 
-        <Button fx:id="undo"
-                onAction="#doUndo"
-                prefHeight="140" prefWidth="140"
-                GridPane.rowIndex="0" GridPane.columnIndex="1"
-                GridPane.halignment="CENTER" GridPane.valignment="CENTER"  />
+        <GridPane alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <Button fx:id="undo"
+                    onAction="#doUndo"
+                    prefHeight="140" prefWidth="140"
+                    GridPane.rowIndex="0" GridPane.columnIndex="0"
+                    GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
 
-        <Button fx:id="power"
-                onAction="#doPower"
-                prefHeight="140" prefWidth="140"
-                GridPane.rowIndex="1" GridPane.columnIndex="1"
-                GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+            <Button fx:id="power"
+                    onAction="#doPower"
+                    prefHeight="140" prefWidth="140"
+                    GridPane.rowIndex="1" GridPane.columnIndex="0"
+                    GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
 
-        <Button fx:id="noneDefaultLevel"
-                onAction="#doNoneDefaultLevel"
-                prefHeight="140" prefWidth="140"
-                GridPane.rowIndex="2" GridPane.columnIndex="1"
-                GridPane.halignment="CENTER" GridPane.valignment="CENTER"
-                opacity="0" />
+            <Button fx:id="noneDefaultLevel"
+                    onAction="#doNoneDefaultLevel"
+                    prefHeight="140" prefWidth="140"
+                    GridPane.rowIndex="2" GridPane.columnIndex="0"
+                    GridPane.halignment="CENTER" GridPane.valignment="CENTER"
+                    opacity="0" />
 
             <Button fx:id="defaultLevel"
                     onAction="#buildDefaultLevel"
                     prefHeight="100" prefWidth="100"
-                    GridPane.rowIndex="2" GridPane.columnIndex="1"
+                    GridPane.rowIndex="2" GridPane.columnIndex="0"
                     GridPane.valignment="CENTER" GridPane.halignment="LEFT"
                     opacity="0" />
 
             <Button fx:id="dome"
                     onAction="#buildDome"
                     prefHeight="100" prefWidth="100"
-                    GridPane.rowIndex="2" GridPane.columnIndex="1"
+                    GridPane.rowIndex="2" GridPane.columnIndex="0"
                     GridPane.valignment="CENTER" GridPane.halignment="RIGHT"
                     opacity="0" />
 
+            <rowConstraints>
+                <RowConstraints percentHeight="33.0" />
+                <RowConstraints percentHeight="33.0" />
+                <RowConstraints percentHeight="34.0" />
+            </rowConstraints>
+            <columnConstraints>
+                <ColumnConstraints percentWidth="100" />
+            </columnConstraints>
+        </GridPane>
+
         <rowConstraints>
-            <RowConstraints percentHeight="33.0" />
-            <RowConstraints percentHeight="33.0" />
-            <RowConstraints percentHeight="34.0" />
+            <RowConstraints percentHeight="15" />
+            <RowConstraints percentHeight="70" />
+            <RowConstraints percentHeight="15" />
         </rowConstraints>
         <columnConstraints>
-            <ColumnConstraints percentWidth="15" />
-            <ColumnConstraints percentWidth="70" />
-            <ColumnConstraints percentWidth="15" />
+            <ColumnConstraints percentWidth="20" />
+            <ColumnConstraints percentWidth="60" />
+            <ColumnConstraints percentWidth="20" />
         </columnConstraints>
     </GridPane>
 
@@ -196,13 +244,6 @@
         <Pane id="cell43" onMouseClicked="#playerChoice" GridPane.columnIndex="3" GridPane.rowIndex="4" />
         <Pane id="cell44" onMouseClicked="#playerChoice" GridPane.columnIndex="4" GridPane.rowIndex="4" />
 
-        <columnConstraints>
-            <ColumnConstraints percentWidth="20.0" />
-            <ColumnConstraints percentWidth="20.0" />
-            <ColumnConstraints percentWidth="20.0" />
-            <ColumnConstraints percentWidth="20.0" />
-            <ColumnConstraints percentWidth="20.0" />
-        </columnConstraints>
         <rowConstraints>
             <RowConstraints percentHeight="20.0" />
             <RowConstraints percentHeight="20.0" />
@@ -210,6 +251,13 @@
             <RowConstraints percentHeight="20.0" />
             <RowConstraints percentHeight="20.0" />
         </rowConstraints>
+        <columnConstraints>
+            <ColumnConstraints percentWidth="20.0" />
+            <ColumnConstraints percentWidth="20.0" />
+            <ColumnConstraints percentWidth="20.0" />
+            <ColumnConstraints percentWidth="20.0" />
+            <ColumnConstraints percentWidth="20.0" />
+        </columnConstraints>
     </GridPane>
 
     <rowConstraints>

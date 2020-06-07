@@ -26,4 +26,13 @@ public class GameBoardElementsPath {
     public static String getWorkerImagePath(String worker) {
         return "/images/" + worker.toLowerCase() + "/" + worker.toLowerCase() + "Worker.png";
     }
+
+    /**
+     * Method to obtain the path relative to the specified image for player (god).
+     * @param god String corresponding to a god
+     * @return the corresponding path as a string
+     */
+    public static String getGodPlayerImagePath(String god) {
+        return "/images/" + god.toLowerCase() + "/" + god.toLowerCase() + "Player.png";
+    }
 }

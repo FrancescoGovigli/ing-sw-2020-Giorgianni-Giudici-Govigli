@@ -20,19 +20,25 @@ public class ControllerGameBoardScene implements GuiObservable {
     private final GuiObserver guiObserver = new ViewManager(ViewManager.getClientInstance());
 
     @FXML
-    public Label player1Label;
-    @FXML
     public Pane imagePlayer1;
-
     @FXML
-    public Label player2Label;
+    public Pane player1Pane;
+    @FXML
+    public Label player1Label;
+
     @FXML
     public Pane imagePlayer2;
+    @FXML
+    public Pane player2Pane;
+    @FXML
+    public Label player2Label;
 
     @FXML
-    public Label player3Label;
-    @FXML
     public Pane imagePlayer3;
+    @FXML
+    public Pane player3Pane;
+    @FXML
+    public Label player3Label;
 
     @FXML
     public GridPane root;
@@ -54,6 +60,8 @@ public class ControllerGameBoardScene implements GuiObservable {
     public Button defaultLevel;
     @FXML
     public Button dome;
+
+    private boolean firstLabelSetting = false;
 
     /**
      * Used to set label with the instruction to proceed with the game.
@@ -223,29 +231,34 @@ public class ControllerGameBoardScene implements GuiObservable {
         return styleToSet + " -fx-background-size: stretch; -fx-background-color: transparent; -fx-opacity: 1; ";
     }
 
+
     /**
      * Used to set style for the list of players.
      * @param playerList list to know all players
      * @param currentNickname String to know who is the current player playing
      */
     public void setPlayersLabel(ArrayList<UserData> playerList, String currentNickname) {
-        Label[] labels = {player1Label, player2Label, player3Label};
         Pane[] workers = {imagePlayer1, imagePlayer2, imagePlayer3};
+        Pane[] panes = {player1Pane, player2Pane, player3Pane};
+        Label[] labels = {player1Label, player2Label, player3Label};
         for (int i = 0; i < playerList.size(); i++) {
-            if(playerList.get(i).getNickname().equals(currentNickname))
-                labels[i].getParent().setId("currentPlayer");
+            if (playerList.get(i).getNickname().equals(currentNickname))
+                panes[i].setId("currentPlayer");
             else
-                labels[i].getParent().setId("player");
-            ImageView image = new ImageView(GameBoardElementsPath.getWorkerImagePath(playerList.get(i).getCardChosen().toLowerCase()));
-            workers[i].getChildren().add(image);
-            image.fitWidthProperty().bind(workers[i].widthProperty());
-            image.fitHeightProperty().bind(workers[i].heightProperty());
-            workers[i].setOpacity(1);
-            labels[i].getParent().setOpacity(1);
-            labels[i].setOpacity(1);
-            labels[i].setText(playerList.get(i).getNickname());
-            labels[i].setTextAlignment(TextAlignment.CENTER);
+                panes[i].setId("player");
+            if (!firstLabelSetting) {
+                //ImageView image = new ImageView(GameBoardElementsPath.getWorkerImagePath(playerList.get(i).getCardChosen().toLowerCase()));
+                ImageView image = new ImageView(GameBoardElementsPath.getGodPlayerImagePath(playerList.get(i).getCardChosen().toLowerCase()));
+                workers[i].getChildren().add(image);
+                image.fitWidthProperty().bind(workers[i].widthProperty());
+                image.fitHeightProperty().bind(workers[i].heightProperty());
+                workers[i].setOpacity(1);
+                panes[i].setOpacity(1);
+                labels[i].setOpacity(1);
+                labels[i].setText(playerList.get(i).getNickname());
+            }
         }
+        firstLabelSetting = true;
     }
 
     /**

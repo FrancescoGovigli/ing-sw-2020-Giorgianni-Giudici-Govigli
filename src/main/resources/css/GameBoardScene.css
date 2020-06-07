@@ -48,7 +48,7 @@ root {
 
 #gamePlayersLabel{
     -fx-font-family: "Dalek Pinpoint";
-    -fx-font-size: 15;
+    -fx-font-size: 17;
     -fx-text-fill: white;
     -fx-text-alignment: center;
 }
