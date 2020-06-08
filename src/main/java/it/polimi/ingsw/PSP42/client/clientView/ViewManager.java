@@ -218,7 +218,7 @@ public class ViewManager implements ClientObserver, GuiObserver {
                 setLayout(DISCONNECTION_SCENE_PATH);
                 Platform.runLater(() -> controllerDisconnectionScene.showMessage(message));
             }
-            else if (((String)message).contains("lost")) {
+            else if (((String)message).contains("You lost")) {
                 setLayout(LOSER_SCENE_PATH);
                 Platform.runLater(() -> controllerDisconnectionScene.showMessage(message));
             }
@@ -256,7 +256,7 @@ public class ViewManager implements ClientObserver, GuiObserver {
         FakeCell[][] gCopy = (FakeCell[][]) o;
         gameBoardState = gCopy;
         int DIM = gCopy.length;
-        int level = 0;
+        int level;
         int previousBuiltLevel = 0;
         for (int i = 0; i < DIM; i++) {
             for (int j = 0; j < DIM; j++) {

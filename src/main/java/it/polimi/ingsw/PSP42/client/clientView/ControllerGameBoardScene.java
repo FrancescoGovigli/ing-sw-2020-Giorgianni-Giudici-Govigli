@@ -247,7 +247,6 @@ public class ControllerGameBoardScene implements GuiObservable {
             else
                 panes[i].setId("player");
             if (!firstLabelSetting) {
-                //ImageView image = new ImageView(GameBoardElementsPath.getWorkerImagePath(playerList.get(i).getCardChosen().toLowerCase()));
                 ImageView image = new ImageView(GameBoardElementsPath.getGodPlayerImagePath(playerList.get(i).getCardChosen().toLowerCase()));
                 workers[i].getChildren().add(image);
                 image.fitWidthProperty().bind(workers[i].widthProperty());

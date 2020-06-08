@@ -200,8 +200,7 @@ public class ControllerHandler {
     public void controlNextState(String s) {
         if (view.isUndoDone() && (mainController.getGameState().equals("PREMOVE") || (mainController.getGameState().equals("PREBUILD"))))
             mainController.setGameState(mainController.getGameState());
-        else
-        if (view.isUndoDone() && view.isPowerApply() && (mainController.getGameState().equals("MOVE") || mainController.getGameState().equals("BUILD"))){
+        else if (view.isUndoDone() && view.isPowerApply() && (mainController.getGameState().equals("MOVE") || mainController.getGameState().equals("BUILD"))) {
             if (mainController.getGameState().equals("MOVE"))
                 mainController.setGameState("PREMOVE");
             if (mainController.getGameState().equals("BUILD"))
