@@ -14,6 +14,7 @@ public class Server {
     private boolean numberOfPlayerSet;
     private ArrayList<Socket> connectedToServerClients = new ArrayList<>();
     private ArrayList<ClientHandler> waitingClients = new ArrayList<>();
+    private Object waitingLock = new Object();
 
     /**
      * Constructor to set Server.
@@ -80,7 +81,7 @@ public class Server {
      * The new game will be initialized by the last client who will satisfy the number of players.
      * @param sgt (ServerGameThread that assisted the client during the initialization phase)
      */
-    public synchronized void waitingRoom(ServerGameThread sgt) {
+    /*public synchronized void waitingRoom(ServerGameThread sgt) {
         ClientHandler sgtClient = sgt.getManagedClient();
         if (!ServerGameThread.isConnectionAvailable())
             return;
@@ -103,15 +104,50 @@ public class Server {
                 System.out.println("IOException in Server -> waitingRoom (else)");
             }
         }
+    }*/
+    //TODO
+    public void waitingRoom(ServerGameThread sgt) {
+        synchronized (waitingLock) {
+            ClientHandler sgtClient = sgt.getManagedClient();
+            sgtClient.setReadyToPlay(true);
+            waitingLock.notifyAll();
+            if (sgt.getOrderOfConnection() <= numberOfPlayer) {
+                waitingClients.add(sgtClient);
+                System.out.println(sgt.getClientNickname() + " player added to the Waiting Room");
+                if (waitingClients.size() == numberOfPlayer)
+                    newGameInitialization();
+                else if (waitingClients.size() != numberOfPlayer)
+                    sgt.send(sgtClient, ServerMessage.waiting);
+            } else {
+                sgt.send(sgtClient, ServerMessage.extraClient);
+                sgtClient.clientInactivation();
+                try {
+                    Socket socket = sgtClient.getClientSocket();
+                    connectedToServerClients.remove(socket);
+                    socket.close();
+                } catch (IOException e) {
+                    System.out.println("IOException in Server -> waitingRoom (else)");
+                }
+            }
+        }
     }
+
 
     /**
      * Method to verify that all waiting players are ready to play (they will be ready after entering their name).
      * @return true if they are ready, false otherwise
      */
-    public synchronized boolean allPlayersAreReady() {
+    /*public synchronized boolean allPlayersAreReady() {
         for (ClientHandler clientHandler : waitingClients) {
             if (!clientHandler.isReadyToPlay())
+                return false;
+        }
+        return true;
+    }*/
+    //TODO (DA METTERE NEL SGT COSI DA NON AVERE IL GETTER SULLA LISTA
+    public synchronized boolean allPlayersAreReady() {
+        for (ClientHandler clientHandler : ServerGameThread.getSgtClients()) {
+            if (!clientHandler.isReadyToPlay() && clientHandler.isActive())
                 return false;
         }
         return true;
@@ -122,8 +158,25 @@ public class Server {
      * The Server takes note of the start of the game and delegates its execution to a ServerGameThread,
      * so the Server will be able to manage new possible connection requests.
      */
-    public synchronized void newGameInitialization() {
+    /*public synchronized void newGameInitialization() {
         this.gameStarted = true;
+        System.out.println(ServerMessage.GAME_START);
+        ServerGameThread game = new ServerGameThread(this, (ArrayList<ClientHandler>) waitingClients.clone());
+        game.startGame();
+    }*/
+    //TODO
+    public void newGameInitialization() {
+        this.gameStarted = true;
+        synchronized (waitingLock) {
+            while (! allPlayersAreReady()) {
+                try {
+                    waitingLock.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
         System.out.println(ServerMessage.GAME_START);
         ServerGameThread game = new ServerGameThread(this, (ArrayList<ClientHandler>) waitingClients.clone());
         game.startGame();
@@ -134,10 +187,29 @@ public class Server {
      * It restores the default values to be able to create a new game and closes all open sockets.
      * @param cause (string identifying why the game should be reset)
      */
-    public void reset(String cause) {
+    /*public void reset(String cause) {
         gameStarted = false;
         connectionOrder = 0;
         numberOfPlayer = -1;
+        numberOfPlayerSet = false;
+        for (Socket socket : connectedToServerClients) {
+            try {
+                System.out.println("Closing socket with IP: " + socket.getRemoteSocketAddress());
+                socket.close();
+            } catch (IOException e) {
+                System.out.println("IOException in Server -> reset (ERROR closing socket " + socket.getRemoteSocketAddress() + ")");
+            }
+        }
+        connectedToServerClients.clear();
+        waitingClients.clear();
+        ServerGameThread.reactivateConnectionState();
+        System.out.println("Reset generated by " + cause);
+    }*/
+    //TODO
+    public synchronized void reset(String cause) {
+        gameStarted = false;
+        connectionOrder = 0;
+        numberOfPlayer = - 1;
         numberOfPlayerSet = false;
         for (Socket socket : connectedToServerClients) {
             try {

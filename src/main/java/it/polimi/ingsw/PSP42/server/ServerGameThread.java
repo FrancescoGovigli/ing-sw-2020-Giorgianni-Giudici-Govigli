@@ -17,6 +17,12 @@ public class ServerGameThread implements Runnable {
     private enum ConnectionState {AVAILABLE, TIME_OUT, DISCONNECTED}
     private static ConnectionState connectionState = ConnectionState.AVAILABLE;
     private static ArrayList<ClientHandler> sgtClients = new ArrayList<>();
+    private static Object resetLock = new Object();
+    private static Object numberPlayersLock = new Object();
+
+    public static ArrayList<ClientHandler> getSgtClients() {
+        return (ArrayList<ClientHandler>) sgtClients.clone();
+    }
 
     public ClientHandler getManagedClient() {
         return managedClient;
@@ -79,7 +85,8 @@ public class ServerGameThread implements Runnable {
         view.attach(controller);
         model.attach(view);
         controller.runGame();
-        resetGame();
+        if(!view.isInterrupted())
+            resetGame();
     }
 
     /**
@@ -89,8 +96,9 @@ public class ServerGameThread implements Runnable {
      * if a disconnection occurs.
      * In these cases, a message will be sent to the players and the server reset will be called.
      */
-    public void resetGame() {
+    /*public void resetGame() {
         if (model != null) {
+            view.handleInterrupt();
             model.reset();
         }
         if (connectionState.equals(ConnectionState.AVAILABLE)) {
@@ -105,7 +113,27 @@ public class ServerGameThread implements Runnable {
             clientCommunicationAndInactivation(sgtClients, ServerMessage.disconnectionEnd);
             server.reset(ServerMessage.DISCONNECTION);
         }
+    }*/
+    //TODO
+    public void resetGame() {
+        synchronized (resetLock) {
+            if (model != null) {
+                view.handleInterrupt();
+                model.reset();
+            }
+            if (connectionState.equals(ConnectionState.AVAILABLE)) {
+                clientCommunicationAndInactivation(sgtClients, ServerMessage.gameEnd);
+                server.reset(ServerMessage.END);
+            } else if (connectionState.equals(ConnectionState.TIME_OUT)) {
+                clientCommunicationAndInactivation(sgtClients, ServerMessage.inactivityEnd);
+                server.reset(ServerMessage.INACTIVITY);
+            } else if (connectionState.equals(ConnectionState.DISCONNECTED)) {
+                clientCommunicationAndInactivation(sgtClients, ServerMessage.disconnectionEnd);
+                server.reset(ServerMessage.DISCONNECTION);
+            }
+        }
     }
+
 
     /**
      * Method to communicate to the active Clients the reason for closing the game and then inactivate them.
@@ -141,8 +169,8 @@ public class ServerGameThread implements Runnable {
      * Method to welcome the client, ask for his name and the number of players if he is the first to connect,
      * make him ready to play and put him on hold until the Server has reached the number of players needed to play.
      */
-    public void settingClient() {
-        Object object = null;
+    /*public void settingClient() {
+        Object object;
         String nickName = null;
         send(managedClient, "You entered the Game!" + " \uD83D\uDE0A");
         if (managedClient.getClientID() == 1) {
@@ -154,7 +182,7 @@ public class ServerGameThread implements Runnable {
             }
             nickName = object.toString();
             Integer i = chooseNumberOfPlayer(nickName);
-            if (i == null) {
+            if (! isReadOK(i)) {
                 resetGame();
                 return;
             }
@@ -184,6 +212,54 @@ public class ServerGameThread implements Runnable {
         if (managedClient.isActive()) {
             managedClient.setNickName(nickName);
             managedClient.setReadyToPlay(true);
+            server.waitingRoom(this);
+        }
+    }*/
+    //TODO
+    public void settingClient() {
+        Object object;
+        String nickName = null;
+        send(managedClient, "You entered the Game!" + " \uD83D\uDE0A \n");
+        if (managedClient.getClientID() == 1) {
+            send(managedClient, "Welcome player " + managedClient.getClientID() + " insert your name: ");
+            object = read(managedClient);
+            if (! isReadOK(object)) {
+                return;
+            }
+            nickName = object.toString();
+            Integer i = chooseNumberOfPlayer(nickName);
+            if (! isReadOK(i)) {
+                return;
+            }
+            System.out.println("Number of players received is: " + i);
+            server.setNumberOfPlayer(i);
+            synchronized (numberPlayersLock) {
+                numberPlayersLock.notifyAll();
+            }
+        }
+        else {
+            send(managedClient, "Welcome player " + managedClient.getClientID() + " you are waiting the FIRST PLAYER to set the number of players, insert your name: ");
+            do {
+                if (nickName != null)
+                    send(managedClient, "Name already taken choose another nickname");
+                object = read(managedClient);
+                if (! isReadOK(object)) {
+                    return;
+                }
+                nickName = object.toString();
+                while (! server.isNumberOfPlayerSet() && isConnectionAvailable()) {
+                    synchronized (numberPlayersLock) {
+                        try {
+                            numberPlayersLock.wait();
+                        } catch (InterruptedException e) {
+                            System.out.println("InterruptedException in ServerGameThread -> settingClient");
+                        }
+                    }
+                }
+            } while (! server.isNickNameUnique(nickName));
+        }
+        if (managedClient.isActive()) {
+            managedClient.setNickName(nickName);
             server.waitingRoom(this);
         }
     }
@@ -240,6 +316,9 @@ public class ServerGameThread implements Runnable {
                 if (receivedObject[0] == null) {
                     timeOut[0] = true;
                     connectionState = ConnectionState.TIME_OUT;
+                    if(view!=null)
+                        view.handleInterrupt();
+                    resetGame();
                 }
             }
         };
@@ -256,7 +335,17 @@ public class ServerGameThread implements Runnable {
      * @param object to be verified
      * @return true if the object exists (it isn't null), false otherwise
      */
-    private boolean isReadOK(Object object){
+    /*private boolean isReadOK(Object object){
         return object != null;
+    }*/
+    //TODO
+    private boolean isReadOK(Object object){
+        synchronized (resetLock) {
+            if (connectionState == ConnectionState.DISCONNECTED && object == null)
+                resetGame();
+            return object != null;
+        }
     }
+
+
 }

@@ -510,9 +510,10 @@ public class VirtualView implements ViewObservable, ModelObserver {
      * @param object to be verified
      * @return true if the object exists (it isn't null), false otherwise
      */
+    //TODO
     private boolean isReadFromPlayerInGameOK(Object object) {
         if (object == null) {
-            handleInterrupt();
+            //handleInterrupt();
             return false;
         }
         return true;

@@ -238,7 +238,7 @@ public class ViewManager implements ClientObserver, GuiObserver {
                 Platform.runLater(() -> controllerGameBoardScene.showGameMessage(message));
             }
         }
-        else if (message.equals(ServerMessage.disconnectionEnd)) {
+        else if (message.equals(ServerMessage.disconnectionEnd) || message.equals(ServerMessage.inactivityEnd)) {
             setLayout(DISCONNECTION_SCENE_PATH);
             Platform.runLater(() -> controllerDisconnectionScene.showMessage(message));
         }

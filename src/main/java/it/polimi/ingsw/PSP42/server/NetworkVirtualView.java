@@ -29,6 +29,10 @@ public class NetworkVirtualView {
      * @return returns what the player sent (null is possible)
      */
     public static Object readFromPlayer(ClientHandler clientHandler) {
+        if (!game.isConnectionAvailable()) {
+            game.resetGame();
+            return null;
+        }
         return game.read(clientHandler);
     }
 }
