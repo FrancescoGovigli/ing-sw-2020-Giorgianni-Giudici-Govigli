@@ -36,12 +36,36 @@ public class Artemis extends SimpleGod {
      */
     @Override
     public boolean powerMoveAvailable(int x, int y, Worker w) {
-        if (moveNum == 0) {
-            startX = w.getCurrentX();
-            startY = w.getCurrentY();
+        if (GameBoard.getInstance().moveAvailable(x, y, w)) {
+            if (moveNum == 0) {
+                startX = w.getCurrentX();
+                startY = w.getCurrentY();
+                return true;
+            }
+            else
+                return (startX != x || startY != y);
         }
-        if ((startX != x || startY != y) && GameBoard.getInstance().moveAvailable(x, y, w)) {
-            moveNum = moveNum + 1;
+        return false;
+    }
+
+    /**
+     * Method used to apply the move considering Artemis' power.
+     * @param x (x position of the destination)
+     * @param y (y position of the destination)
+     * @param w (concerned worker)
+     * @return true if the move was successful, false otherwise
+     */
+    @Override
+    public boolean powerMove(int x, int y, Worker w) {
+        for (Player player : effectPlayers)
+            if (player != null && !player.getCard().powerMoveAvailable(x, y, w))
+                return false;
+        if (powerMoveAvailable(x, y, w)) {
+            if (moveNum == 0)
+                moveNum = 1;
+            else
+                moveNum = 0;
+            w.setPosition(x, y);
             return true;
         }
         return false;
@@ -59,8 +83,8 @@ public class Artemis extends SimpleGod {
         if (powerBuildAvailable(x, y, level, w)) {
             w.buildBlock(x, y);
             moveNum = 0;
-            startX = 0;
-            startY = 0;
+            startX = -1;
+            startY = -1;
             return true;
         }
         return false;

@@ -39,7 +39,7 @@ public abstract class SimpleGod {
      * @return true if the move was successful, false otherwise
      */
     public boolean powerMove(int x, int y, Worker w) {
-        for (Player player: effectPlayers)
+        for (Player player : effectPlayers)
             if (player != null && !player.getCard().powerMoveAvailable(x, y, w))
                 return false;
         if (powerMoveAvailable(x, y, w)) {
