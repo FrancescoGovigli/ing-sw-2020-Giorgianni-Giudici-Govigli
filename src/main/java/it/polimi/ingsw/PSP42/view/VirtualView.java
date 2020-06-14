@@ -479,7 +479,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
         for (int i = 0; i < playingClients.size(); i++) {
             if (!string.equals("INIT")) {
                 if (i != currentPlayerID)
-                    sendToPlayerInGame(i, " " + playingClients.get(currentPlayerID).getNickName() + " did his move");
+                    sendToPlayerInGame(i, playingClients.get(currentPlayerID).getNickName() + " did his move");
             }
             sendToPlayerInGame(i, object);
         }
@@ -513,7 +513,6 @@ public class VirtualView implements ViewObservable, ModelObserver {
     //TODO
     private boolean isReadFromPlayerInGameOK(Object object) {
         if (object == null) {
-            //handleInterrupt();
             return false;
         }
         return true;

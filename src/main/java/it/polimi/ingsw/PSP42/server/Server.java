@@ -106,17 +106,16 @@ public class Server {
         }
     }*/
     //TODO
-    public void waitingRoom(ServerGameThread sgt) {
+     public void waitingRoom(ServerGameThread sgt) {
         synchronized (waitingLock) {
             ClientHandler sgtClient = sgt.getManagedClient();
             sgtClient.setReadyToPlay(true);
-            waitingLock.notifyAll();
             if (sgt.getOrderOfConnection() <= numberOfPlayer) {
                 waitingClients.add(sgtClient);
                 System.out.println(sgt.getClientNickname() + " player added to the Waiting Room");
                 if (waitingClients.size() == numberOfPlayer)
                     newGameInitialization();
-                else if (waitingClients.size() != numberOfPlayer)
+                else
                     sgt.send(sgtClient, ServerMessage.waiting);
             } else {
                 sgt.send(sgtClient, ServerMessage.extraClient);
@@ -129,6 +128,7 @@ public class Server {
                     System.out.println("IOException in Server -> waitingRoom (else)");
                 }
             }
+            waitingLock.notifyAll();
         }
     }
 
@@ -166,7 +166,6 @@ public class Server {
     }*/
     //TODO
     public void newGameInitialization() {
-        this.gameStarted = true;
         synchronized (waitingLock) {
             while (! allPlayersAreReady()) {
                 try {
@@ -177,6 +176,7 @@ public class Server {
 
             }
         }
+        this.gameStarted = true;
         System.out.println(ServerMessage.GAME_START);
         ServerGameThread game = new ServerGameThread(this, (ArrayList<ClientHandler>) waitingClients.clone());
         game.startGame();

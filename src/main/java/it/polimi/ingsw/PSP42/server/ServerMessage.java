@@ -14,4 +14,5 @@ public class ServerMessage {
     public static String gameInProgress = ("Game in progress, try again later...");
     public static String extraClient = ("Sorry the Game has just been created, you are an Extra client");
     public static String waiting = ("You are waiting other Players to connect...");
+    public static String nameNotFree = ("Name already taken choose another nickname");
 }

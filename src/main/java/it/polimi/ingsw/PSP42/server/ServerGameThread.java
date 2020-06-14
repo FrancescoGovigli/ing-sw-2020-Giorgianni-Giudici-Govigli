@@ -85,8 +85,8 @@ public class ServerGameThread implements Runnable {
         view.attach(controller);
         model.attach(view);
         controller.runGame();
-        if(!view.isInterrupted())
-            resetGame();
+        if (!view.isInterrupted())
+         resetGame();
     }
 
     /**
@@ -241,7 +241,7 @@ public class ServerGameThread implements Runnable {
             send(managedClient, "Welcome player " + managedClient.getClientID() + " you are waiting the FIRST PLAYER to set the number of players, insert your name: ");
             do {
                 if (nickName != null)
-                    send(managedClient, "Name already taken choose another nickname");
+                    send(managedClient, ServerMessage.nameNotFree);
                 object = read(managedClient);
                 if (! isReadOK(object)) {
                     return;
@@ -316,7 +316,7 @@ public class ServerGameThread implements Runnable {
                 if (receivedObject[0] == null) {
                     timeOut[0] = true;
                     connectionState = ConnectionState.TIME_OUT;
-                    if(view!=null)
+                    if (view!=null)
                         view.handleInterrupt();
                     resetGame();
                 }
@@ -341,7 +341,7 @@ public class ServerGameThread implements Runnable {
     //TODO
     private boolean isReadOK(Object object){
         synchronized (resetLock) {
-            if (connectionState == ConnectionState.DISCONNECTED && object == null)
+            if (object == null && connectionState == ConnectionState.DISCONNECTED)
                 resetGame();
             return object != null;
         }
