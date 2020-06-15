@@ -79,12 +79,12 @@ public class ClientCLI implements Runnable {
                 try {
                     while (isActive()) {
                         String inputLine = stdin.readLine();
-                        if(writeActive) {
+                        if (writeActive) {
                             socketOut.println(inputLine);
                             socketOut.flush();
                         }
                     }
-                } catch(Exception e) {
+                } catch (Exception e) {
                     System.out.println("You disconnected");
                     setActive(false);
                 }
@@ -116,7 +116,7 @@ public class ClientCLI implements Runnable {
                             else
                                 System.out.println("[FROM SERVER] : " + inputObject);
                         }
-                        else if(inputObject instanceof List)
+                        else if (inputObject instanceof List)
                             showGods(inputObject);
                         else if (inputObject instanceof Boolean)
                             writeActive = (Boolean)inputObject;

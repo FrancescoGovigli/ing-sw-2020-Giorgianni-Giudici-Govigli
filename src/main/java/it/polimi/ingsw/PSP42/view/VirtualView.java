@@ -393,15 +393,6 @@ public class VirtualView implements ViewObservable, ModelObserver {
      */
     public void handleLoser(String loser) {
         for (int i = 0; i < playingClients.size(); i++) {
-            // TODO : delete wrong version
-            /*
-            // original
-            if (i != currentPlayerID)
-                sendToPlayerInGame(i, loser + " " + ViewMessage.loseMessage);
-            else
-                sendToPlayerInGame(currentPlayerID, loser + " " + ViewMessage.personalLoseMessage);
-            */
-            // update --> check on nickname instead of currentPlayerID
             if (playingClients.get(i).getNickName().equals(loser))
                 sendToPlayerInGame(i, loser + " " + ViewMessage.personalLoseMessage);
             else
@@ -510,11 +501,9 @@ public class VirtualView implements ViewObservable, ModelObserver {
      * @param object to be verified
      * @return true if the object exists (it isn't null), false otherwise
      */
-    //TODO
     private boolean isReadFromPlayerInGameOK(Object object) {
-        if (object == null) {
+        if (object == null)
             return false;
-        }
         return true;
     }
 

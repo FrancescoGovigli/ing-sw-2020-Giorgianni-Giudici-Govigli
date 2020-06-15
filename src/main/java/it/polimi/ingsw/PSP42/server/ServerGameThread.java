@@ -86,7 +86,7 @@ public class ServerGameThread implements Runnable {
         model.attach(view);
         controller.runGame();
         if (!view.isInterrupted())
-         resetGame();
+            resetGame();
     }
 
     /**
@@ -96,25 +96,6 @@ public class ServerGameThread implements Runnable {
      * if a disconnection occurs.
      * In these cases, a message will be sent to the players and the server reset will be called.
      */
-    /*public void resetGame() {
-        if (model != null) {
-            view.handleInterrupt();
-            model.reset();
-        }
-        if (connectionState.equals(ConnectionState.AVAILABLE)) {
-            clientCommunicationAndInactivation(sgtClients, ServerMessage.gameEnd);
-            server.reset(ServerMessage.END);
-        }
-        else if (connectionState.equals(ConnectionState.TIME_OUT)) {
-            clientCommunicationAndInactivation(sgtClients, ServerMessage.inactivityEnd);
-            server.reset(ServerMessage.INACTIVITY);
-        }
-        else if (connectionState.equals(ConnectionState.DISCONNECTED)) {
-            clientCommunicationAndInactivation(sgtClients, ServerMessage.disconnectionEnd);
-            server.reset(ServerMessage.DISCONNECTION);
-        }
-    }*/
-    //TODO
     public void resetGame() {
         synchronized (resetLock) {
             if (model != null) {
@@ -169,53 +150,6 @@ public class ServerGameThread implements Runnable {
      * Method to welcome the client, ask for his name and the number of players if he is the first to connect,
      * make him ready to play and put him on hold until the Server has reached the number of players needed to play.
      */
-    /*public void settingClient() {
-        Object object;
-        String nickName = null;
-        send(managedClient, "You entered the Game!" + " \uD83D\uDE0A");
-        if (managedClient.getClientID() == 1) {
-            send(managedClient, "Welcome player " + managedClient.getClientID() + " insert your name: ");
-            object = read(managedClient);
-            if (!isReadOK(object)) {
-                resetGame();
-                return;
-            }
-            nickName = object.toString();
-            Integer i = chooseNumberOfPlayer(nickName);
-            if (! isReadOK(i)) {
-                resetGame();
-                return;
-            }
-            System.out.println("Number of players received is: " + i);
-            server.setNumberOfPlayer(i);
-        }
-        else {
-            send(managedClient, "Welcome player " + managedClient.getClientID() + " you are waiting the FIRST PLAYER to set the number of players, insert your name: ");
-            do {
-                if (nickName != null)
-                    send(managedClient, "Name already taken choose another nickname");
-                object = read(managedClient);
-                if (!isReadOK(object)) {
-                    resetGame();
-                    return;
-                }
-                nickName = object.toString();
-                while (!server.isNumberOfPlayerSet()) {
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        System.out.println("InterruptedException in ServerGameThread -> settingClient");
-                    }
-                }
-            } while (!server.isNickNameUnique(nickName));
-        }
-        if (managedClient.isActive()) {
-            managedClient.setNickName(nickName);
-            managedClient.setReadyToPlay(true);
-            server.waitingRoom(this);
-        }
-    }*/
-    //TODO
     public void settingClient() {
         Object object;
         String nickName = null;
@@ -223,12 +157,12 @@ public class ServerGameThread implements Runnable {
         if (managedClient.getClientID() == 1) {
             send(managedClient, "Welcome player " + managedClient.getClientID() + " insert your name: ");
             object = read(managedClient);
-            if (! isReadOK(object)) {
+            if (!isReadOK(object)) {
                 return;
             }
             nickName = object.toString();
             Integer i = chooseNumberOfPlayer(nickName);
-            if (! isReadOK(i)) {
+            if (!isReadOK(i)) {
                 return;
             }
             System.out.println("Number of players received is: " + i);
@@ -243,11 +177,11 @@ public class ServerGameThread implements Runnable {
                 if (nickName != null)
                     send(managedClient, ServerMessage.nameNotFree);
                 object = read(managedClient);
-                if (! isReadOK(object)) {
+                if (!isReadOK(object)) {
                     return;
                 }
                 nickName = object.toString();
-                while (! server.isNumberOfPlayerSet() && isConnectionAvailable()) {
+                while (!server.isNumberOfPlayerSet() && isConnectionAvailable()) {
                     synchronized (numberPlayersLock) {
                         try {
                             numberPlayersLock.wait();
@@ -256,7 +190,7 @@ public class ServerGameThread implements Runnable {
                         }
                     }
                 }
-            } while (! server.isNickNameUnique(nickName));
+            } while (!server.isNickNameUnique(nickName));
         }
         if (managedClient.isActive()) {
             managedClient.setNickName(nickName);
@@ -316,7 +250,7 @@ public class ServerGameThread implements Runnable {
                 if (receivedObject[0] == null) {
                     timeOut[0] = true;
                     connectionState = ConnectionState.TIME_OUT;
-                    if (view!=null)
+                    if (view != null)
                         view.handleInterrupt();
                     resetGame();
                 }
@@ -335,17 +269,11 @@ public class ServerGameThread implements Runnable {
      * @param object to be verified
      * @return true if the object exists (it isn't null), false otherwise
      */
-    /*private boolean isReadOK(Object object){
-        return object != null;
-    }*/
-    //TODO
-    private boolean isReadOK(Object object){
+    private boolean isReadOK(Object object) {
         synchronized (resetLock) {
             if (object == null && connectionState == ConnectionState.DISCONNECTED)
                 resetGame();
             return object != null;
         }
     }
-
-
 }

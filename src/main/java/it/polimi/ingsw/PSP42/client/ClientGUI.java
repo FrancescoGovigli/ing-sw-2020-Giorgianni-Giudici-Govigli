@@ -73,8 +73,8 @@ public class ClientGUI implements Runnable, ClientObservable {
             Thread t1 = asyncWriteToSocket(socketOut);
             t0.join();
             t1.join();
-        } catch(InterruptedException | NoSuchElementException e) {
-            System.out.println("Connection closed from the Client side");
+        } catch (InterruptedException | NoSuchElementException e) {
+            System.out.println("Connection closed from Client side");
         } finally {
             try {
                 scanner.close();
@@ -104,7 +104,7 @@ public class ClientGUI implements Runnable, ClientObservable {
                             input = null;
                         }
                     }
-                } catch(Exception e) {
+                } catch (Exception e) {
                     System.out.println("You disconnected");
                     setActive(false);
                 }
