@@ -30,7 +30,7 @@
                        GridPane.valignment="CENTER" GridPane.halignment="CENTER"
                        prefHeight="64.0" prefWidth="267.0"
                        alignment="CENTER" editable="false"
-                       text="Insert your Nickname"/>
+                       text="Insert your nickname"/>
 
             <rowConstraints>
                 <RowConstraints percentHeight="7"/>

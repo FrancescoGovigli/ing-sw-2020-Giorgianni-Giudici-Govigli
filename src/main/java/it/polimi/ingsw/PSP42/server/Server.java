@@ -196,9 +196,10 @@ public class Server {
      * @return true if the name is free (unique), false otherwise.
      */
     public boolean isNickNameUnique(String nickName) {
-        for (int i = 0; i < waitingClients.size(); i++)
+        for (int i = 0; i < waitingClients.size(); i++) {
             if (waitingClients.get(i).getNickName().equals(nickName))
                 return false;
+        }
         return true;
     }
 }

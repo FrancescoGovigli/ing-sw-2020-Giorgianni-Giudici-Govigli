@@ -43,7 +43,6 @@ public class ClientGUI implements Runnable, ClientObservable {
     }
 
     public void run() {
-        BufferedReader scanner= new BufferedReader(new InputStreamReader(System.in));
         Socket server = null;
         Boolean correctHostIP = false;
         while (!correctHostIP) {
@@ -77,7 +76,6 @@ public class ClientGUI implements Runnable, ClientObservable {
             System.out.println("Connection closed from Client side");
         } finally {
             try {
-                scanner.close();
                 socketIn.close();
                 socketOut.close();
                 server.close();
@@ -175,7 +173,7 @@ public class ClientGUI implements Runnable, ClientObservable {
                 notifyWelcomeOtherPlayers();
             else if (message.equals("You are waiting other Players to connect...") || message.equals("Waiting opponent to pick a card..."))
                 notifyWaiting();
-            else if (message.equals(ServerMessage.extraClient) || message.equals(ServerMessage.gameInProgress) || message.equals("Name already taken choose another nickname"))
+            else if (message.equals(ServerMessage.extraClient) || message.equals(ServerMessage.gameInProgress) || message.equals(ServerMessage.nameNotFree))
                 notifyGameStatus(message);
             else if (!message.equals("You entered the Game! 😊") && !((String) message).contains("please enter the number of players"))
                 notifyGameMessage(message);

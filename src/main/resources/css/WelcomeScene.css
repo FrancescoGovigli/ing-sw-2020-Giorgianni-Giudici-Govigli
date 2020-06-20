@@ -88,6 +88,18 @@
     -fx-text-alignment: center;
 }
 
+#submitButton:pressed {
+    -fx-background-image: url("../images/btn_blue_pressed.png");
+    -fx-background-size: stretch;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-color: transparent;
+    -fx-font-family: "Dalek Pinpoint";
+    -fx-font-size: 12;
+    -fx-text-fill: white;
+    -fx-text-alignment: center;
+}
+
 #textField {
     -fx-pref-height: 50px;
     -fx-pref-width: 100px;

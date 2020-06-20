@@ -9,7 +9,7 @@
           xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="it.polimi.ingsw.PSP42.client.clientView.ControllerWelcomeScene">
 
-   <GridPane GridPane.columnIndex="0" GridPane.rowIndex="1">
+   <GridPane GridPane.columnIndex="0" GridPane.rowIndex="1" focusTraversable="true">
 
       <Pane fx:id="statusPane"
             prefHeight="215.0" prefWidth="348.0"

@@ -168,6 +168,10 @@ public class ServerGameThread implements Runnable {
             System.out.println("Number of players received is: " + i);
             server.setNumberOfPlayer(i);
             synchronized (numberPlayersLock) {
+                if (managedClient.isActive()) {
+                    managedClient.setNickName(nickName);
+                    server.waitingRoom(this);
+                }
                 numberPlayersLock.notifyAll();
             }
         }
@@ -191,10 +195,10 @@ public class ServerGameThread implements Runnable {
                     }
                 }
             } while (!server.isNickNameUnique(nickName));
-        }
-        if (managedClient.isActive()) {
-            managedClient.setNickName(nickName);
-            server.waitingRoom(this);
+            if (managedClient.isActive()) {
+                managedClient.setNickName(nickName);
+                server.waitingRoom(this);
+            }
         }
     }
 

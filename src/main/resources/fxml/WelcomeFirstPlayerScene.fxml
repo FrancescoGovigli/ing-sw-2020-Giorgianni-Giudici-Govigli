@@ -27,7 +27,7 @@
                        GridPane.rowIndex="0"
                        GridPane.columnIndex="1"
                        alignment="CENTER"
-                       text="Insert your name"
+                       text="Insert your nickname"
                        editable="false"/>
 
             <Button id="submitButton"
