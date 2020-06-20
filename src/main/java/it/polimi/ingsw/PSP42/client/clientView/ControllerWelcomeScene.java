@@ -87,12 +87,14 @@ public class ControllerWelcomeScene implements GuiObservable {
      * Also, inform view manager of the name typed in text field.
      */
     public void submitChoice() {
-        chooseField.setOpacity(1);
-        choose1.setOpacity(1);
-        choose2.setOpacity(1);
         nickName = textFieldFirstPlayer.getText();
-        ableToClickPlayers = true;
-        informManagerInput(nickName);
+        if(!nickName.equals("") && !nickName.equals("Insert your nickname")) {
+            chooseField.setOpacity(1);
+            choose1.setOpacity(1);
+            choose2.setOpacity(1);
+            ableToClickPlayers = true;
+            informManagerInput(nickName);
+        }
     }
 
     /**
@@ -101,7 +103,8 @@ public class ControllerWelcomeScene implements GuiObservable {
      */
     public void submitName() {
         nickName = textFieldOtherPlayers.getText();
-        informManagerInput(nickName);
+        if(!nickName.equals("") && !nickName.equals("Insert your nickname"))
+         informManagerInput(nickName);
     }
 
     /**
@@ -109,7 +112,7 @@ public class ControllerWelcomeScene implements GuiObservable {
      * @param message
      */
     public void setStatusLabel(String message) {
-        if (message.equals("Name already taken choose another nickname")) {
+        if (message.equals(ServerMessage.nameNotFree)) {
             statusPane.setStyle("-fx-background-image: url('/images/PopUp.png'); -fx-background-size: stretch; -fx-opacity: 1;");
             statusLabel.setText("Nickname already taken");
         }

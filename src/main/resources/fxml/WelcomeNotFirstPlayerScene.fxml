@@ -28,9 +28,9 @@
                        onMouseClicked="#deleteText"
                        GridPane.rowIndex="1" GridPane.columnIndex="1"
                        GridPane.valignment="CENTER" GridPane.halignment="CENTER"
-                       prefHeight="40.0" prefWidth="185.0"
-                       alignment="CENTER"
-                       text="Insert your Nickname"/>
+                       prefHeight="64.0" prefWidth="267.0"
+                       alignment="CENTER" editable="false"
+                       text="Insert your nickname"/>
 
             <rowConstraints>
                 <RowConstraints percentHeight="7"/>
@@ -48,7 +48,7 @@
                 onMouseClicked="#submitName"
                 GridPane.rowIndex="5" GridPane.columnIndex="1"
                 GridPane.valignment="CENTER" GridPane.halignment="CENTER"
-                prefHeight="42.0" prefWidth="58.0"
+                prefHeight="41.0" prefWidth="55.0"
                 text="Submit"/>
 
         <rowConstraints>

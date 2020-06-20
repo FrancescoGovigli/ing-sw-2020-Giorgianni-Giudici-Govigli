@@ -42,7 +42,6 @@ public class ClientGUI implements Runnable, ClientObservable {
     }
 
     public void run() {
-        BufferedReader scanner= new BufferedReader(new InputStreamReader(System.in));
         Socket server = null;
         Boolean correctHostIP = false;
         while (!correctHostIP) {
@@ -76,7 +75,6 @@ public class ClientGUI implements Runnable, ClientObservable {
             System.out.println("Connection closed from Client side");
         } finally {
             try {
-                scanner.close();
                 socketIn.close();
                 socketOut.close();
                 server.close();
