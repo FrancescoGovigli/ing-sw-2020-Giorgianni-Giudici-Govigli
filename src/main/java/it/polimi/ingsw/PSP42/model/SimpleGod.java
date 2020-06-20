@@ -145,12 +145,4 @@ public abstract class SimpleGod {
     public void reSetValues(ArrayList<Integer> valuesToRestore) {
         values = null;
     }
-
-    /**
-     * Method for obtaining the description of the power that the god has.
-     * @return descriptive string
-     */
-    public String getPowerDescription() {
-        return "[POWER] No power";
-    }
 }

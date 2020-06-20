@@ -82,9 +82,9 @@ public class ControllerGameBoardScene implements GuiObservable {
             power.setStyle(getPowerStyle("inactive"));
         // none default level
         if (isAtlas) {
-            if (GameLabel.getText().contains("none default"))
+            if (GameLabel.getText().contains(ClientGUIMessage.levelGUIMessage))
                 noneDefaultLevel.setStyle(getNoneDefaultStyle("active"));
-            else if (GameLabel.getText().contains("level")) {
+            else if (GameLabel.getText().contains(ClientGUIMessage.insertLevelGUIMessage)) {
                 noneDefaultLevel.setStyle(getNoneDefaultStyle("levels"));
                 defaultLevel.setStyle(getBuildStyle("default", "active"));
                 dome.setStyle(getBuildStyle("dome", "active"));
@@ -171,7 +171,7 @@ public class ControllerGameBoardScene implements GuiObservable {
      * Send to view manager "YES" when clicked on none default button to activate default and dome button.
      */
     public void doNoneDefaultLevel() {
-        if (GameLabel.getText().contains("none default"))
+        if (GameLabel.getText().contains(ClientGUIMessage.levelGUIMessage))
             informManagerInput("YES");
     }
 
@@ -196,10 +196,10 @@ public class ControllerGameBoardScene implements GuiObservable {
      */
     public void buildDefaultLevel() {
         // When it's not visible
-        if (GameLabel.getText().contains("none default"))
+        if (GameLabel.getText().contains(ClientGUIMessage.levelGUIMessage))
             informManagerInput("YES");
         // When it's visible
-        if (GameLabel.getText().contains("level"))
+        if (GameLabel.getText().contains(ClientGUIMessage.insertLevelGUIMessage))
             informManagerInput("1");
     }
 
@@ -207,9 +207,11 @@ public class ControllerGameBoardScene implements GuiObservable {
      * Send to view manager, when clicked, to build a dome.
      */
     public void buildDome() {
-        if (GameLabel.getText().contains("none default"))
+        // When it's not visible
+        if (GameLabel.getText().contains(ClientGUIMessage.levelGUIMessage))
             informManagerInput("YES");
-        if (GameLabel.getText().contains("level"))
+        // When it's visible
+        if (GameLabel.getText().contains(ClientGUIMessage.insertLevelGUIMessage))
             informManagerInput("4");
     }
 
@@ -271,7 +273,7 @@ public class ControllerGameBoardScene implements GuiObservable {
         Integer row = board.getRowIndex(cell);
         Integer col = board.getColumnIndex(cell);
         Pane pane = (Pane)cell;
-        if (GameLabel.getText().equals((ViewMessage.workerMessage))) {
+        if (GameLabel.getText().equals(ClientGUIMessage.workerGUIMessage)) {
             for (Node node : pane.getChildren()) {
                 if (node instanceof ImageView && node.getId().equals("Worker")) {
                     if (checkBoard[row][col].playerName.equals(ControllerWelcomeScene.getNickName())) {

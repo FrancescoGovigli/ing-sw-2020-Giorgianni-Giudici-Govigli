@@ -105,9 +105,4 @@ public class Artemis extends SimpleGod {
         this.startX = valuesToRestore.get(1);
         this.startY = valuesToRestore.get(2);
     }
-
-    @Override
-    public String getPowerDescription() {
-        return "[POWER] Your Move: Your Worker may move one additional time, but not back to its initial space.";
-    }
 }

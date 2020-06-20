@@ -12,7 +12,6 @@ public class ClientGUI implements Runnable, ClientObservable {
 
     private boolean active = true;
     private boolean writeActive = true;
-    private boolean elaborating = false;
     private ArrayList<UserData> playersData = new ArrayList<>();
     private ClientObserver clientObserver;
     private String input;
@@ -124,7 +123,7 @@ public class ClientGUI implements Runnable, ClientObservable {
             @Override
             public void run() {
                 try {
-                    while (isActive() && !elaborating) {
+                    while (isActive()) {
                         Object inputObject = socketIn.readObject();
                         if (inputObject instanceof String) {
                             if (isCloseMessage(inputObject)) {
@@ -167,22 +166,20 @@ public class ClientGUI implements Runnable, ClientObservable {
      * @param message object to understand the message from Server
      */
     public void elaborateMessage(Object message) {
-        elaborating = true;
         if (message instanceof String) {
             if (message.equals("Welcome player 1 insert your name: "))
                 notifyWelcomeFirstPlayer();
             else if (((String) message).contains("you are waiting the FIRST PLAYER to set the number of players, insert your name: "))
                 notifyWelcomeOtherPlayers();
-            else if (message.equals("You are waiting other Players to connect...") || message.equals("Waiting opponent to pick a card..."))
+            else if (message.equals(ServerMessage.waiting) || message.equals(ViewMessage.waitingOpponentPick))
                 notifyWaiting();
-            else if (message.equals(ServerMessage.extraClient) || message.equals(ServerMessage.gameInProgress) || message.equals("Name already taken choose another nickname"))
+            else if (message.equals(ServerMessage.extraClient) || message.equals(ServerMessage.gameInProgress) || message.equals(ServerMessage.nameNotFree))
                 notifyGameStatus(message);
-            else if (!message.equals("You entered the Game! 😊") && !((String) message).contains("please enter the number of players"))
+            else if (!(message.equals(ServerMessage.enteredGame)) && !((String) message).contains("please enter the number of players"))
                 notifyGameMessage(message);
         }
         else if (message instanceof List)
             notifyGodSelection(message);
-        elaborating = false;
     }
 
     /**

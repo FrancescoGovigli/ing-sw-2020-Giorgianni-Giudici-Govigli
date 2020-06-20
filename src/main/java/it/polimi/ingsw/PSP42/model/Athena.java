@@ -161,9 +161,4 @@ public class Athena extends SimpleGod {
         this.blockOpponentsStepUp = valuesToRestore.get(0);
         this.counterPhase = valuesToRestore.get(1);
     }
-
-    @Override
-    public String getPowerDescription() {
-        return "[POWER] Opponent’s Turn: If one of your Workers moved up on your last turn, opponent Workers cannot move up this turn.";
-    }
 }

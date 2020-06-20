@@ -169,9 +169,4 @@ public class Minotaur extends SimpleGod {
         this.opponentPrecedentY = valuesToRestore.get(3);
         this.moveNumber = valuesToRestore.get(4);
     }
-
-    @Override
-    public String getPowerDescription() {
-        return "[POWER] Your Move: Your Worker may move into an opponent Worker’s space, if their Worker can be forced one space straight backwards to an unoccupied space at any level.";
-    }
 }

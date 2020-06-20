@@ -153,7 +153,7 @@ public class ServerGameThread implements Runnable {
     public void settingClient() {
         Object object;
         String nickName = null;
-        send(managedClient, "You entered the Game!" + " \uD83D\uDE0A \n");
+        send(managedClient, ServerMessage.enteredGame);
         if (managedClient.getClientID() == 1) {
             send(managedClient, "Welcome player " + managedClient.getClientID() + " insert your name: ");
             object = read(managedClient);

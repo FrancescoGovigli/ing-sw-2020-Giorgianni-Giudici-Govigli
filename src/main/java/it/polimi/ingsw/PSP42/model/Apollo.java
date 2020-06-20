@@ -160,9 +160,4 @@ public class Apollo extends SimpleGod {
         this.opponentY = valuesToRestore.get(3);
         this.moveNum = valuesToRestore.get(4);
     }
-
-    @Override
-    public String getPowerDescription() {
-        return "[POWER] Your Move: Your Worker may move into an opponent Worker’s space by forcing their Worker to the space yours just vacated.";
-    }
 }

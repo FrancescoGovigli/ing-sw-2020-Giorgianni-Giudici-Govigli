@@ -111,15 +111,15 @@ public class ControllerWelcomeScene implements GuiObservable {
     public void setStatusLabel(String message) {
         if (message.equals("Name already taken choose another nickname")) {
             statusPane.setStyle("-fx-background-image: url('/images/PopUp.png'); -fx-background-size: stretch; -fx-opacity: 1;");
-            statusLabel.setText("Status: Nickname already taken");
+            statusLabel.setText("Nickname already taken");
         }
         else if (message.equals(ServerMessage.extraClient) || message.equals(ServerMessage.gameInProgress)) {
             statusPane.setStyle("-fx-background-image: url('/images/PopUp.png'); -fx-background-size: stretch; -fx-opacity: 1;");
-            statusLabel.setText("Status: Cannot access the Game try later...");
+            statusLabel.setText("Cannot access the Game try later...");
         }
         else if (message.equals("Server unreachable")) {
             statusPane.setStyle("-fx-background-image: url('/images/PopUp.png'); -fx-background-size: stretch; -fx-opacity: 1;");
-            statusLabel.setText("Status: Server unreachable");
+            statusLabel.setText("Server unreachable");
         }
     }
 

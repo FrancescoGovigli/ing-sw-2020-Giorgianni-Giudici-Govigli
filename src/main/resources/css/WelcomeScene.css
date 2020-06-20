@@ -89,8 +89,6 @@
 }
 
 #textField {
-    -fx-pref-height: 50px;
-    -fx-pref-width: 100px;
     -fx-font-style: italic;
     -fx-text-alignment: center;
     -fx-opacity: 0.5;

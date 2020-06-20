@@ -12,37 +12,46 @@
    <GridPane GridPane.columnIndex="0" GridPane.rowIndex="1">
 
       <Pane fx:id="statusPane"
-            prefHeight="215.0" prefWidth="348.0"
             GridPane.rowIndex="1" GridPane.columnIndex="1"
             GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
 
       <Label id="statusLabel"
              fx:id="statusLabel"
              alignment="CENTER"
-             prefHeight="17.0" prefWidth="234.0"
              GridPane.rowIndex="1" GridPane.columnIndex="1"
              GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
 
-      <TextField id="textfield"
-                 fx:id="textFieldIP"
-                 alignment="CENTER"
-                 editable="false"
-                 onMouseClicked="#deleteText"
-                 prefHeight="47.0" prefWidth="306.0"
-                 text="Insert Host IP Address"
-                 GridPane.columnIndex="1" GridPane.rowIndex="3"
-                 GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
+      <GridPane GridPane.rowIndex="3" GridPane.columnIndex="1">
+
+         <TextField id="textfield"
+                    fx:id="textFieldIP"
+                    alignment="CENTER"
+                    onMouseClicked="#deleteText"
+                    text="Insert Host IP Address"
+                    prefHeight="40.0" prefWidth="185.0"
+                    GridPane.columnIndex="1" GridPane.rowIndex="0"
+                    GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
+
+         <rowConstraints>
+            <RowConstraints percentHeight="100" />
+         </rowConstraints>
+         <columnConstraints>
+            <ColumnConstraints percentWidth="20" />
+            <ColumnConstraints percentWidth="60" />
+            <ColumnConstraints percentWidth="20" />
+         </columnConstraints>
+      </GridPane>
 
       <rowConstraints>
-         <RowConstraints percentHeight="63" />
+         <RowConstraints percentHeight="60" />
          <RowConstraints percentHeight="15" />
-         <RowConstraints percentHeight="5" />
-         <RowConstraints percentHeight="10" />
+         <RowConstraints percentHeight="3" />
+         <RowConstraints percentHeight="12" />
       </rowConstraints>
       <columnConstraints>
-         <ColumnConstraints percentWidth="37.5" />
-         <ColumnConstraints percentWidth="25" />
-         <ColumnConstraints percentWidth="37.5" />
+         <ColumnConstraints percentWidth="35" />
+         <ColumnConstraints percentWidth="30" />
+         <ColumnConstraints percentWidth="35" />
       </columnConstraints>
    </GridPane>
 

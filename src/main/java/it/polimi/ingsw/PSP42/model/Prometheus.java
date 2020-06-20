@@ -101,9 +101,4 @@ public class Prometheus extends SimpleGod {
         this.buildNum = valuesToRestore.get(0);
         this.moveNum = valuesToRestore.get(1);
     }
-
-    @Override
-    public String getPowerDescription() {
-        return "[POWER] Your Turn: If your Worker does not move up, it may build both before and after moving.";
-    }
 }

@@ -34,9 +34,9 @@
             <RowConstraints percentHeight="20.0"/>
         </rowConstraints>
         <columnConstraints>
-            <ColumnConstraints percentWidth="7.0"/>
-            <ColumnConstraints percentWidth="86.0"/>
-            <ColumnConstraints percentWidth="7.0"/>
+            <ColumnConstraints percentWidth="8.0"/>
+            <ColumnConstraints percentWidth="84.0"/>
+            <ColumnConstraints percentWidth="8.0"/>
         </columnConstraints>
     </GridPane>
 

@@ -7,7 +7,7 @@ public class ViewMessage {
     public static String workerMessage = "Choose worker to use (1 or 2): ";
     public static String initialPositionMessage = "Insert where to position your worker ";
     public static String moveMessage = "Make your move (x,y): ";
-    public static String buildMessage = "Make your build (x,y) with Worker ";
+    public static String buildMessage = "Make your build (x,y) with your worker ";
     public static String levelMessage = "Do you want to build a none default level? (YES or NO) ";
     public static String personalWinMessage = "You won! ";
     public static String winMessage = "won the Game";

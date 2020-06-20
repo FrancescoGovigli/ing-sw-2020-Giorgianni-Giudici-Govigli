@@ -8,6 +8,7 @@ public class ServerMessage {
     public static String INACTIVITY = ("INACTIVITY");
     public static String DISCONNECTION = ("DISCONNECTION");
     // ServerGameThread
+    public static String enteredGame = ("You entered the Game!" + " \uD83D\uDE0A \n");
     public static String gameEnd = ("End of Game");
     public static String inactivityEnd = ("Game interrupted due to inactivity of a player");
     public static String disconnectionEnd = ("A player has disconnected");

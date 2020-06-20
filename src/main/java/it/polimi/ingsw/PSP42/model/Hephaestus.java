@@ -116,9 +116,4 @@ public class Hephaestus extends SimpleGod {
     public void reSetValues(ArrayList<Integer> valuesToRestore) {
         this.buildNum = valuesToRestore.get(0);
     }
-
-    @Override
-    public String getPowerDescription() {
-        return "[POWER] Your Build: Your Worker may build one additional block (not dome) on top of your first block.";
-    }
 }

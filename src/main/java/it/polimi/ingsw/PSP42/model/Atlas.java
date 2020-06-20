@@ -38,9 +38,4 @@ public class Atlas extends SimpleGod {
         }
         return false;
     }
-
-    @Override
-    public String getPowerDescription() {
-        return "[POWER] Your Build: Your Worker may build a dome at any level.";
-    }
 }

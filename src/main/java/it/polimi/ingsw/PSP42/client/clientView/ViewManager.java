@@ -235,7 +235,8 @@ public class ViewManager implements ClientObserver, GuiObserver {
                     currentNickname = getCurrentNickname(message);
                     Platform.runLater(() -> controllerGameBoardScene.setPlayersLabel(client.getPlayersList(), currentNickname));
                 }
-                Platform.runLater(() -> controllerGameBoardScene.showGameMessage(message));
+                Object translatedMessage = ClientGUIMessage.translateMessage((String) message);
+                Platform.runLater(() -> controllerGameBoardScene.showGameMessage(translatedMessage));
             }
         }
         else if (message.equals(ServerMessage.disconnectionEnd) || message.equals(ServerMessage.inactivityEnd)) {
