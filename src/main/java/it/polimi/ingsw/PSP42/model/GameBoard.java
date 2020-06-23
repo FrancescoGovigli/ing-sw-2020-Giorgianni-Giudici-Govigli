@@ -84,7 +84,7 @@ public class GameBoard implements ModelObservable {
     }
 
     /**
-     * Method to obtain a sub-matrix with cells surrounded the specified cell.
+     * Method to obtain a sub-matrix of cells surrounding the specified cell.
      * @param x (x coordinate of the specified cell)
      * @param y (y coordinate of the specified cell)
      * @return c (sub-matrix with center in x, y)
@@ -170,7 +170,7 @@ public class GameBoard implements ModelObservable {
     }
 
     /**
-     * Method to check if it's possible build in a position.
+     * Method to check if it's possible to build in a position.
      * @param x (x coordinate of where you would like to build)
      * @param y (y coordinate of where you would like to build)
      * @param w (worker who would like to build)
@@ -186,7 +186,7 @@ public class GameBoard implements ModelObservable {
     }
 
     /**
-     * Method to know which workers are available.
+     * Method that set available to false if the specified worker is blocked.
      * @param w (worker to be verified)
      * @return true if worker can be used, false otherwise
      */
@@ -210,7 +210,7 @@ public class GameBoard implements ModelObservable {
     }
 
     /**
-     * Method to verify if the player are still in the game or not,
+     * Method to verify if the player is still in the game or not,
      * if both of his workers are not available the player's status will be changed to "LOSE".
      * @param p (player to be verified)
      * @param phase (game phase)
@@ -325,7 +325,7 @@ public class GameBoard implements ModelObservable {
     }
 
     /**
-     * Method to verify if the worker who has moved has won.
+     * Method to verify if the worker, who has moved, has won.
      * @param x (x coordinate of the future position of the worker)
      * @param y (y coordinate of the future position of the worker)
      * @param w (worker on moving)

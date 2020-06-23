@@ -3,7 +3,7 @@ package it.polimi.ingsw.PSP42.model;
 import java.util.ArrayList;
 
 /**
- * Thanks to this simple god if a player's worker, who have this god, step up, the workers of other players can't.
+ * Thanks to this simple god if a player's worker, who has this god, steps up, other players workers can't.
  */
 public class Athena extends SimpleGod {
 
@@ -28,7 +28,7 @@ public class Athena extends SimpleGod {
 
     /**
      * Used by Athena as standard moveAvailable method.
-     * Used by opponents' workers, if they can't step up, to know if they can move in that position.
+     * Used by opponent's workers, if they can't step up, to know if they can move in that position.
      * @param x x-axis position
      * @param y y-axis position
      * @param w worker who wants to move
@@ -80,7 +80,7 @@ public class Athena extends SimpleGod {
     }
 
     /**
-     * Check if worker, during his movement, step up.
+     * Check if worker steps up during his movement.
      * @param x position on x-axis where worker is going
      * @param y position on y-axis where worker is going
      * @param w worker

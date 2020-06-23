@@ -6,7 +6,7 @@ public class Cell {
     private Worker worker;
 
     /**
-     * Constructor to create a map's cell which has set level 0 (the ground) to true and no worker above it self.
+     * Constructor to create a map's cell which has level 0  (the ground) set true and no worker above it self.
      */
     public Cell() {
         this.builtLevel = new boolean[]{true, false, false, false, false};
@@ -14,7 +14,7 @@ public class Cell {
     }
 
     /**
-     * Method to obtain which level are build on the cell under form of array.
+     * Method to obtain which levels are build on the cell described by an array.
      * @return builtLevelCopy (array where the position indicates the constructed level)
      */
     public boolean[] getBuiltLevel() {
@@ -49,7 +49,7 @@ public class Cell {
     }
 
     /**
-     * Used to set a specific level instead of set the successive level.
+     * Used to set a specific level instead of setting the next level as usual.
      * @param level the level that the worker want to build.
      */
     public void setSpecificCellLevel(int level) {
@@ -62,7 +62,7 @@ public class Cell {
     }
 
     /**
-     * Method to obtain which worker stay on the cell.
+     * Method to obtain which worker stays on the cell.
      * @return worker (if it is set, null otherwise)
      */
     public Worker getWorker() {

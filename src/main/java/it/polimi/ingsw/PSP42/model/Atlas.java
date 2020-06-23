@@ -1,7 +1,7 @@
 package it.polimi.ingsw.PSP42.model;
 
 /**
- * Simple god that allowed one worker to build a dome even if the level of the cell isn't 3.
+ * Simple god that allows one worker to build a dome even if the level of the cell isn't 3.
  */
 public class Atlas extends SimpleGod {
 

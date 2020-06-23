@@ -70,7 +70,7 @@ public class ClientCLI implements Runnable {
      * Method to send an object to the server.
      * @param stdin input
      * @param socketOut output
-     * @return t (thread that must wait for the operation to complete)
+     * @return t (the main thread will wait for the operation to be completed)
      */
     public Thread asyncWriteToSocket(final BufferedReader stdin, final PrintWriter socketOut) {
         Thread t = new Thread(new Runnable() {
@@ -97,7 +97,7 @@ public class ClientCLI implements Runnable {
     /**
      * Method to receive an object from the server.
      * @param socketIn input
-     * @return t (thread that must wait for the operation to complete)
+     * @return t (the main thread will wait for the operation to be completed)
      */
     public Thread asyncReadFromSocket(final ObjectInputStream socketIn) {
         Thread t = new Thread(new Runnable() {

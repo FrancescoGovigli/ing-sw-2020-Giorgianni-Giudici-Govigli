@@ -45,7 +45,8 @@ public class Choice {
     }
 
     /**
-     * Method used to find out if each Choice attribute is null.
+     * Method used to find out if each Choice attribute is null, that means the player
+     * has not chosen anything yet.
      * @return true if each Choice attribute is null, false otherwise
      */
     public boolean allFieldsNull() {

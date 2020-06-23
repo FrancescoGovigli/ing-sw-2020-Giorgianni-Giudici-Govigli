@@ -67,7 +67,7 @@ public class Controller implements ViewObserver {
     }
 
     /**
-     * The method used to start the game and handle a turn.
+     * The method is used to start the game and handle a turn.
      */
     public void runGame() {
         view.handleWelcomeMessage();
@@ -119,7 +119,7 @@ public class Controller implements ViewObserver {
     }
 
     /**
-     * Method to show the right action message based on phase turn.
+     * Method to show the right action message based on the turn phase.
      * @param whatToDo contains all possible actions during the turn
      * @param phaseInt  0 = START, 1 = PREMOVE, 3 = PREBUILD, 5 = END
      * @param worker 1 = worker1, 2 = worker2
@@ -142,9 +142,9 @@ public class Controller implements ViewObserver {
     }
 
     /**
-     * Every Card know the Action that are going to happen during the Player's turn.
-     * The method gives the values to the View to know which action to call and in with phase of the turn.
-     * @return action to do during the Player's turn
+     * Every Card knows the Actions that are going to happen during the Player's turn.
+     * The method gives the values to the View to know which action to call and in which phase of the turn.
+     * @return actions to do during the Player's turn
      */
     @Override
     public String[][] updateWhatToDo() {
@@ -153,7 +153,7 @@ public class Controller implements ViewObserver {
 
     /**
      * Update method to choose the right worker only if it is available during the starting phase of turn.
-     * @param i worker id chosen by player (1 = worker1 or 2 = worker2)
+     * @param i worker id chosen by the player (1 = worker1 or 2 = worker2)
      */
     @Override
     public void updateStart(Integer i) {

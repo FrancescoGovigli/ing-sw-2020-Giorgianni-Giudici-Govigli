@@ -121,7 +121,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
     }
 
     /**
-     * Method used by the Controller to ask for the worker to use during the turn.
+     * Method used by the Controller to ask which worker to use during the turn.
      * @return worker, 1 if its the worker1 , 2 if its the worker2 of the player
      */
     public Integer getWorker() {
@@ -154,7 +154,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
     }
 
     /**
-     * Method used to consider input only from current player and to ignore input from not current player.
+     * Method used to ignore input from not current player.
      * @param currentPlayer current player id
      */
     public void noWriteForNotCurrentPlayers(Integer currentPlayer) {
@@ -239,7 +239,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
     }
 
     /**
-     * Handle method to notify observer that have to handle a move action from player.
+     * Handle method to notify observer that has to handle a move action from player.
      * @param worker is an integer that tells which one of the two worker are selected by player
      */
     public void handleMove(Integer worker) {
@@ -261,7 +261,7 @@ public class VirtualView implements ViewObservable, ModelObserver {
     }
 
     /**
-     * Handle method to notify observer that have to handle a build action from player.
+     * Handle method to notify observer that has to handle a build action from player.
      * @param worker is an integer that tells which one of the two worker are selected by player
      *               (its the same one called from the move action)
      */

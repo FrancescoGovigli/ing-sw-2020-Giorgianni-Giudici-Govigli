@@ -23,8 +23,6 @@ public class ViewManager implements ClientObserver, GuiObserver {
     private static ControllerGameBoardScene controllerGameBoardScene;
     private static ControllerChooseGodScene controllerChooseGodScene;
     private static ControllerDisconnectionScene controllerDisconnectionScene;
-    private static boolean playPushed = false;
-    private static String currentNickname;
     private final static String WELCOME_SCENE = "/fxml/WelcomeScene.fxml";
     private final static String WELCOME_FIRST_PLAYER_SCENE_PATH = "/fxml/WelcomeFirstPlayerScene.fxml";
     private final static String WAITING_SCENE_PATH = "/fxml/WaitingScene.fxml";
@@ -35,6 +33,8 @@ public class ViewManager implements ClientObserver, GuiObserver {
     private final static String END_GAME_SCENE_PATH = "/fxml/EndGameScene.fxml";
     private final static String LOSER_SCENE_PATH = "/fxml/LoserScene.fxml";
     private static FakeCell[][] gameBoardState;
+    private static boolean playPushed = false;
+    private static String currentNickname;
 
     /**
      * Constructor used to link this class with Client.

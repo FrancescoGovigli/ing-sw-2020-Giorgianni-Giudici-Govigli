@@ -3,7 +3,7 @@ package it.polimi.ingsw.PSP42.model;
 import java.util.ArrayList;
 
 /**
- * Simple God who can build before moving if he does not move up a level while moving.
+ * Simple God who can build before moving only if he does not move up while moving.
  */
 public class Prometheus extends SimpleGod {
 
@@ -67,7 +67,7 @@ public class Prometheus extends SimpleGod {
     }
 
     /**
-     * Method to build in a position and counting the building times in a turn.
+     * Method to build in a position and counting how many times he has built in a turn.
      * @param x (x coordinate of where you would like to build)
      * @param y (y coordinate of where you would like to build)
      * @param w (worker who would like to build)

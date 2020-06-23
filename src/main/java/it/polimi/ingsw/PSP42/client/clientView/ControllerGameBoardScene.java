@@ -65,7 +65,7 @@ public class ControllerGameBoardScene implements GuiObservable {
 
     /**
      * Used to set label with the instruction to proceed with the game.
-     * Used also to set buttons' style based on game's progress.
+     * Used also to set buttons style based on game's progress.
      * @param message Object used as String containing game's instructions
      */
     public void showGameMessage(Object message) {

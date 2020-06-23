@@ -3,12 +3,12 @@ package it.polimi.ingsw.PSP42.client;
 public interface ClientObserver {
 
     /**
-     * Method used to set scene layout for first player connected.
+     * Method used to set the scene layout for first player connected.
      */
     public abstract void updateWelcomeFirstPlayer();
 
     /**
-     * Method used to set scene layout for players that aren't first connected.
+     * Method used to set the scene layout for players that aren't first connected.
      */
     public abstract void updateWelcomeOtherPlayers();
 

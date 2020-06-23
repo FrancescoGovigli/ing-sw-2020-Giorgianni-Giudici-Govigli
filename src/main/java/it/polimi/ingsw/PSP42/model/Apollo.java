@@ -3,7 +3,7 @@ package it.polimi.ingsw.PSP42.model;
 import java.util.ArrayList;
 
 /**
- * Simple god that allowed a worker to move in a cell occupied by another worker, switching their position.
+ * Simple god that allows a worker to move in a cell occupied by another worker, switching their positions.
  */
 public class Apollo extends SimpleGod {
 

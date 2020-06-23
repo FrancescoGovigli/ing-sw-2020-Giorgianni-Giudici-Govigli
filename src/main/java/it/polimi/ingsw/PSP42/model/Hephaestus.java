@@ -3,7 +3,7 @@ package it.polimi.ingsw.PSP42.model;
 import java.util.ArrayList;
 
 /**
- * This god allowed a worker to build twice in the same position in one turn.
+ * This god allows a worker to build twice in the same position in one turn.
  */
 public class Hephaestus extends SimpleGod {
 

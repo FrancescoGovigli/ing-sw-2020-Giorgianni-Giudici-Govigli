@@ -124,7 +124,7 @@ public abstract class SimpleGod {
 
     /**
      * Method to obtain the current state of the Simple God's variables
-     * [NOTE] In the Simple God that make it override it is important to insert
+     * [NOTE] In the Simple God that makes override it is important to insert
      * the variables in the ArrayList in the order in which they were declared in the class,
      * in other words the first variable declared must be insert in the first position of values
      * @return values.clone() (a clone of the ArrayList of Integer containing these variables)

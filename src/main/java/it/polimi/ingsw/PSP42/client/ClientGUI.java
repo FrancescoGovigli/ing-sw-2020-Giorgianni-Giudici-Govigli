@@ -87,7 +87,7 @@ public class ClientGUI implements Runnable, ClientObservable {
     /**
      * Method to send an object to the Server.
      * @param socketOut output
-     * @return (thread that must wait for the operation to complete)
+     * @return (the main thread will wait for the operation to be completed)
      */
     public Thread asyncWriteToSocket(final PrintWriter socketOut){
         Thread t = new Thread(new Runnable() {
@@ -114,7 +114,7 @@ public class ClientGUI implements Runnable, ClientObservable {
     /**
      * Method to receive an object from the Server.
      * @param socketIn input
-     * @return (thread that must wait for the operation to complete)
+     * @return (the main thread will wait for the operation to be completed)
      */
     public Thread asyncReadFromSocket(final ObjectInputStream socketIn){
         Thread thread = new Thread(new Runnable() {

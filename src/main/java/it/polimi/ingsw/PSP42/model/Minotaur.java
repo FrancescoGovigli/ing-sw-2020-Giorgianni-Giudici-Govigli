@@ -43,7 +43,7 @@ public class Minotaur extends SimpleGod {
     }
 
     /**
-     * Used to move "minotaur" worker in a cell and to push away opponent's worker if he is along the way.
+     * Used to move "minotaur" worker in a cell and to push opponent's worker away, if he is along the way.
      * @param x position on x-axis
      * @param y position on y-axis
      * @param w worker

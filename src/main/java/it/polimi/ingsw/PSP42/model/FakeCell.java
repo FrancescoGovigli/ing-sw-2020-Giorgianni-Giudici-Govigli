@@ -35,7 +35,7 @@ public class FakeCell implements Serializable {
     }
 
     /**
-     * Method that creates the copy of the game board at the call state.
+     * Method that creates the copy of the game board during a specific game state.
      * @return gCopy (FakeCell matrix containing only player name, worker 1 or 2 and construction level)
      */
     public static FakeCell[][] getGameBoardCopy() {

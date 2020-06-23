@@ -14,7 +14,7 @@ public interface ModelObservable {
     public void detach(ModelObserver ob);
 
     /**
-     * Notifies the observers who need update.
+     * Notifies the observers who needs update.
      * @param o Object
      * @param s String
      */

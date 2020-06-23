@@ -18,7 +18,7 @@ public interface ClientObservable {
     public abstract void notifyWelcomeOtherPlayers();
 
     /**
-     * Used to notify Client that he is connected to Server until he press play.
+     * Used to notify Client that he is not connected to the Server until he presses play.
      */
     public abstract void notifyConnectionStart();
 

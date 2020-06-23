@@ -3,7 +3,7 @@ package it.polimi.ingsw.PSP42.model;
 import java.util.ArrayList;
 
 /**
- * This simple god allow a worker to build twice in one turn but not in same place.
+ * This simple god allows a worker to build twice in one turn but not in the same place.
  */
 public class Demeter extends SimpleGod {
 

@@ -25,9 +25,9 @@ public class ControllerHandler {
 
     /**
      * Update method used to handle game initialization.
-     * It check user Choice.
+     * It checks user Choice.
      * If all Choice's attributes are null no choice is done and creationGame is invoked.
-     * If an user choice was done it will set the initial position of the workers.
+     * If a user choice was done it will set the initial position of the workers.
      */
     public void controlInit() {
         if (view.getChoice().allFieldsNull()) {
@@ -52,7 +52,7 @@ public class ControllerHandler {
     }
 
     /**
-     * Update method to call model's method that modify the state of the worker selected, checking user Choice.
+     * Update method to call model's method that modifies the state of the worker selected, checking user Choice.
      */
     public void controlMove() {
         Worker w = null;
@@ -92,7 +92,7 @@ public class ControllerHandler {
     }
 
     /**
-     * Update method to call model's method that modify the state of the building selected, checking user Choice.
+     * Update method to call model's method that modifies the state of the building selected, checking user Choice.
      */
     public void controlBuild() {
         Worker w = null;
@@ -131,7 +131,7 @@ public class ControllerHandler {
     }
 
     /**
-     * Update method that takes the 2 player's workers and check if player has lost due to opponents' turn.
+     * Update method that takes the 2 player's workers and checks if player has lost due to opponents' turn.
      * If the player has not lost the method returns his nickname.
      * If the current player is the only one remained on the board he directly wins the Game.
      * @return nickname of the Player
@@ -192,7 +192,7 @@ public class ControllerHandler {
 
     /**
      * Update method to update the new game Phase.
-     * It checks if after every phase if the player has lost or has won.
+     * It checks, after every phase, if the player has lost or has won.
      * In this cases the game Phase will be set at the END of turn.
      * If the player wins, the View's GameDone value will be set true.
      * @param s string that identify the next game Phase
@@ -272,7 +272,7 @@ public class ControllerHandler {
     }
 
     /**
-     * Method to call all undoAction referred to previousPhase for worker selected.
+     * Method to call all undoAction referred to previousPhase for the worker selected.
      * @param worker worker of the current turn
      * @param previousPhase previous game phase
      */
@@ -297,7 +297,7 @@ public class ControllerHandler {
     }
 
     /**
-     * Method to do right Undo based on phase turn action.
+     * Method to do the right Undo based on phase turn action.
      * @param whatToDo contains all possible actions during the turn
      * @param phaseInt 1 = PREMOVE, 3 = PREBUILD
      * @param worker Worker
