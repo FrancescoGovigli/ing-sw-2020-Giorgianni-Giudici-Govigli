@@ -1,0 +1,708 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: VirtualView</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.PSP42.view</a> ]
+</div>
+
+<h1>Coverage Summary for Class: VirtualView (it.polimi.ingsw.PSP42.view)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">VirtualView</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 42)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 235)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">VirtualView$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 4)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 44)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 239)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.PSP42.view;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import java.util.*;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;import it.polimi.ingsw.PSP42.model.ModelObserver;
+<i>6</i>&nbsp;import it.polimi.ingsw.PSP42.server.*;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;public class VirtualView implements ViewObservable, ModelObserver {
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;    private int numberOfPlayers;
+<i>11</i>&nbsp;    private int currentPlayerID;
+<i>12</i>&nbsp;    private Choice choice;
+<i>13</i>&nbsp;    private boolean actionCorrect;
+<i>14</i>&nbsp;    private boolean undoDone;
+<i>15</i>&nbsp;    private boolean powerApply;
+<i>16</i>&nbsp;    private boolean interrupted;
+<b class="nc"><i>17</i>&nbsp;    private ArrayList&lt;ViewObserver&gt; obs = new ArrayList&lt;&gt;();</b>
+<i>18</i>&nbsp;    private ArrayList&lt;ClientHandler&gt; playingClients;
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;    public int getNumberOfPlayers() {
+<b class="nc"><i>21</i>&nbsp;        return numberOfPlayers;</b>
+<i>22</i>&nbsp;    }
+<i>23</i>&nbsp;
+<i>24</i>&nbsp;    public void setCurrentPlayerID(int currentPlayerID) {
+<b class="nc"><i>25</i>&nbsp;        this.currentPlayerID = currentPlayerID;</b>
+<i>26</i>&nbsp;    }
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;    /**
+<i>29</i>&nbsp;     * Getter to obtain a player Choice.
+<i>30</i>&nbsp;     * Every choice (move or build) made by a player is saved in a Choice object.
+<i>31</i>&nbsp;     * @return choice
+<i>32</i>&nbsp;     */
+<i>33</i>&nbsp;    public Choice getChoice(){
+<b class="nc"><i>34</i>&nbsp;        return choice;</b>
+<i>35</i>&nbsp;    }
+<i>36</i>&nbsp;
+<i>37</i>&nbsp;    /**
+<i>38</i>&nbsp;     * This method is used to set the boolean attribute actionCorrect,
+<i>39</i>&nbsp;     * which determines the end of an action done by the current player, so the GamePhase can move on.
+<i>40</i>&nbsp;     * @param value true if action is correct, false otherwise
+<i>41</i>&nbsp;     */
+<i>42</i>&nbsp;    public void setActionCorrect(boolean value){
+<b class="nc"><i>43</i>&nbsp;        actionCorrect = value;</b>
+<i>44</i>&nbsp;    }
+<i>45</i>&nbsp;
+<i>46</i>&nbsp;    public boolean isUndoDone(){
+<b class="nc"><i>47</i>&nbsp;        return undoDone;</b>
+<i>48</i>&nbsp;    }
+<i>49</i>&nbsp;
+<i>50</i>&nbsp;    public void setUndoDone(boolean value){
+<b class="nc"><i>51</i>&nbsp;        undoDone = value;</b>
+<i>52</i>&nbsp;    }
+<i>53</i>&nbsp;
+<i>54</i>&nbsp;    public boolean isPowerApply(){
+<b class="nc"><i>55</i>&nbsp;        return powerApply;</b>
+<i>56</i>&nbsp;    }
+<i>57</i>&nbsp;
+<i>58</i>&nbsp;    /**
+<i>59</i>&nbsp;     * This method is used to set the boolean attribute powerApply,
+<i>60</i>&nbsp;     * which determines that the player is going to use the power.
+<i>61</i>&nbsp;     * @param value true if player wants to apply the power, false otherwise
+<i>62</i>&nbsp;     */
+<i>63</i>&nbsp;    public void setPowerApply(boolean value) {
+<b class="nc"><i>64</i>&nbsp;        powerApply = value;</b>
+<i>65</i>&nbsp;    }
+<i>66</i>&nbsp;
+<i>67</i>&nbsp;    public boolean isInterrupted() {
+<b class="nc"><i>68</i>&nbsp;        return interrupted;</b>
+<i>69</i>&nbsp;    }
+<i>70</i>&nbsp;
+<i>71</i>&nbsp;    /**
+<i>72</i>&nbsp;     * Constructor to set VirtualView.
+<i>73</i>&nbsp;     * @param playingClients number of player in game as ArrayList&lt;ClientHandler&gt;
+<i>74</i>&nbsp;     * @param numberOfPlayers number of player
+<i>75</i>&nbsp;     */
+<b class="nc"><i>76</i>&nbsp;    public VirtualView(ArrayList&lt;ClientHandler&gt; playingClients, int numberOfPlayers) {</b>
+<b class="nc"><i>77</i>&nbsp;        this.numberOfPlayers = numberOfPlayers;</b>
+<b class="nc"><i>78</i>&nbsp;        this.currentPlayerID = 0;</b>
+<b class="nc"><i>79</i>&nbsp;        this.actionCorrect = false;</b>
+<b class="nc"><i>80</i>&nbsp;        this.playingClients = playingClients;</b>
+<i>81</i>&nbsp;    }
+<i>82</i>&nbsp;
+<i>83</i>&nbsp;    /**
+<i>84</i>&nbsp;     * Method that helps the Controller to ask for the players data during the creation of game.
+<i>85</i>&nbsp;     * The method uses a utility class called UserData which contains {Nickname, GodCard}.
+<i>86</i>&nbsp;     * @param set is an Array of string containing the set of Gods picked randomly, set.length = number of Players
+<i>87</i>&nbsp;     * @return ArrayList&lt;UserData&gt;  player names given through System.in
+<i>88</i>&nbsp;     */
+<i>89</i>&nbsp;    public ArrayList&lt;UserData&gt; getPlayerData(String[] set) {
+<b class="nc"><i>90</i>&nbsp;        setActionCorrect(false);</b>
+<b class="nc"><i>91</i>&nbsp;        List&lt;String&gt; setOfCards = new LinkedList&lt;String&gt;(Arrays.asList(set));</b>
+<b class="nc"><i>92</i>&nbsp;        ArrayList&lt;UserData&gt; players = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>93</i>&nbsp;        for (int i = 0; i &lt; playingClients.size(); i++) {</b>
+<b class="nc"><i>94</i>&nbsp;            noWriteForNotCurrentPlayers(i);</b>
+<b class="nc"><i>95</i>&nbsp;            boolean choiceDone = false;</b>
+<b class="nc"><i>96</i>&nbsp;            String selectedCard = null;</b>
+<b class="nc"><i>97</i>&nbsp;            while (!choiceDone &amp;&amp; !interrupted) {</b>
+<b class="nc"><i>98</i>&nbsp;                sendToPlayerInGame(i, ViewMessage.selectCard + (i + 1));</b>
+<b class="nc"><i>99</i>&nbsp;                for (int j = 0; j &lt; playingClients.size(); j++) {</b>
+<b class="nc"><i>100</i>&nbsp;                    if (j != i)</b>
+<b class="nc"><i>101</i>&nbsp;                        sendToPlayerInGame(j, ViewMessage.waitingOpponentPick);</b>
+<i>102</i>&nbsp;                }
+<b class="nc"><i>103</i>&nbsp;                sendToPlayerInGame(i, setOfCards);</b>
+<b class="nc"><i>104</i>&nbsp;                selectedCard = (String) readFromPlayerInGame(playingClients.get(i));</b>
+<b class="nc"><i>105</i>&nbsp;                if (!isReadFromPlayerInGameOK(selectedCard))</b>
+<b class="nc"><i>106</i>&nbsp;                    return null;</b>
+<b class="nc"><i>107</i>&nbsp;                if (setOfCards.contains(selectedCard.toUpperCase())) {</b>
+<b class="nc"><i>108</i>&nbsp;                    setOfCards.remove(selectedCard.toUpperCase());</b>
+<b class="nc"><i>109</i>&nbsp;                    choiceDone = true;</b>
+<i>110</i>&nbsp;                }
+<i>111</i>&nbsp;            }
+<b class="nc"><i>112</i>&nbsp;            for (int j = 0; j &lt; playingClients.size(); j++) {</b>
+<b class="nc"><i>113</i>&nbsp;                if (j != i)</b>
+<b class="nc"><i>114</i>&nbsp;                    sendToPlayerInGame(j, playingClients.get(i).getNickName() + &quot; picked &quot; + selectedCard.toUpperCase() + &quot;\n&quot;);</b>
+<i>115</i>&nbsp;            }
+<b class="nc"><i>116</i>&nbsp;            players.add(new UserData(playingClients.get(i).getNickName(), selectedCard.toUpperCase()));</b>
+<b class="nc"><i>117</i>&nbsp;            sendUserDataToPlayerInGame(new UserData(playingClients.get(i).getNickName(), selectedCard.toUpperCase()));</b>
+<b class="nc"><i>118</i>&nbsp;            setActionCorrect(false);</b>
+<i>119</i>&nbsp;        }
+<b class="nc"><i>120</i>&nbsp;        return players;</b>
+<i>121</i>&nbsp;    }
+<i>122</i>&nbsp;
+<i>123</i>&nbsp;    /**
+<i>124</i>&nbsp;     * Method used by the Controller to ask which worker to use during the turn.
+<i>125</i>&nbsp;     * @return worker, 1 if its the worker1 , 2 if its the worker2 of the player
+<i>126</i>&nbsp;     */
+<i>127</i>&nbsp;    public Integer getWorker() {
+<b class="nc"><i>128</i>&nbsp;        Integer worker = null;</b>
+<b class="nc"><i>129</i>&nbsp;        boolean correct = false;</b>
+<b class="nc"><i>130</i>&nbsp;        while (!correct &amp;&amp; !interrupted) {</b>
+<b class="nc"><i>131</i>&nbsp;            sendToPlayerInGame(currentPlayerID, ViewMessage.workerMessage);</b>
+<i>132</i>&nbsp;            try {
+<b class="nc"><i>133</i>&nbsp;                String input = (String) readFromPlayerInGame(playingClients.get(currentPlayerID));</b>
+<b class="nc"><i>134</i>&nbsp;                if (!isReadFromPlayerInGameOK(input))</b>
+<b class="nc"><i>135</i>&nbsp;                    return null;</b>
+<b class="nc"><i>136</i>&nbsp;                worker =  Integer.parseInt(input);</b>
+<b class="nc"><i>137</i>&nbsp;                if (worker == 1 || worker == 2)</b>
+<b class="nc"><i>138</i>&nbsp;                    correct = true;</b>
+<i>139</i>&nbsp;            }
+<b class="nc"><i>140</i>&nbsp;            catch (InputMismatchException | NumberFormatException e) {</b>
+<b class="nc"><i>141</i>&nbsp;                sendToPlayerInGame(currentPlayerID, ErrorMessage.inputMessage + &quot;\n&quot;);</b>
+<b class="nc"><i>142</i>&nbsp;            }</b>
+<i>143</i>&nbsp;        }
+<b class="nc"><i>144</i>&nbsp;        return worker;</b>
+<i>145</i>&nbsp;    }
+<i>146</i>&nbsp;
+<i>147</i>&nbsp;    /**
+<i>148</i>&nbsp;     * Handle method used to send to all players welcome message.
+<i>149</i>&nbsp;     */
+<i>150</i>&nbsp;    public void handleWelcomeMessage() {
+<b class="nc"><i>151</i>&nbsp;        noWriteForNotCurrentPlayers(currentPlayerID);</b>
+<b class="nc"><i>152</i>&nbsp;        for (int i = 0; i &lt; playingClients.size(); i++)</b>
+<b class="nc"><i>153</i>&nbsp;            sendToPlayerInGame(i, ViewMessage.welcome);</b>
+<i>154</i>&nbsp;    }
+<i>155</i>&nbsp;
+<i>156</i>&nbsp;    /**
+<i>157</i>&nbsp;     * Method used to ignore input from not current player.
+<i>158</i>&nbsp;     * @param currentPlayer current player id
+<i>159</i>&nbsp;     */
+<i>160</i>&nbsp;    public void noWriteForNotCurrentPlayers(Integer currentPlayer) {
+<b class="nc"><i>161</i>&nbsp;        for (int i = 0; i &lt; playingClients.size(); i++) {</b>
+<b class="nc"><i>162</i>&nbsp;            if (!interrupted) {</b>
+<b class="nc"><i>163</i>&nbsp;                if (i != currentPlayer)</b>
+<b class="nc"><i>164</i>&nbsp;                    sendToPlayerInGame(i, false);</b>
+<i>165</i>&nbsp;                else
+<b class="nc"><i>166</i>&nbsp;                    sendToPlayerInGame(i, true);</b>
+<i>167</i>&nbsp;            }
+<i>168</i>&nbsp;        }
+<i>169</i>&nbsp;    }
+<i>170</i>&nbsp;
+<i>171</i>&nbsp;    /**
+<i>172</i>&nbsp;     * Handle method used to initialize the GameBoard by ControllerHandler.
+<i>173</i>&nbsp;     */
+<i>174</i>&nbsp;    public void handleInit() {
+<b class="nc"><i>175</i>&nbsp;        if (!interrupted) {</b>
+<b class="nc"><i>176</i>&nbsp;            choice = new Choice(null, null, null, null, null);</b>
+<b class="nc"><i>177</i>&nbsp;            notifyInit();</b>
+<i>178</i>&nbsp;        }
+<i>179</i>&nbsp;    }
+<i>180</i>&nbsp;
+<i>181</i>&nbsp;    /**
+<i>182</i>&nbsp;     * Handle method used to ask to user to insert coordinates for his 2 workers and notify observers to set this data.
+<i>183</i>&nbsp;     */
+<i>184</i>&nbsp;    public void handleInitialPosition() {
+<b class="nc"><i>185</i>&nbsp;        for (int i = 0; i &lt; numberOfPlayers; i++) {</b>
+<b class="nc"><i>186</i>&nbsp;            noWriteForNotCurrentPlayers(i);</b>
+<b class="nc"><i>187</i>&nbsp;            for (int j = 0; j &lt; 2; j++) {</b>
+<b class="nc"><i>188</i>&nbsp;                String[] s = null;</b>
+<b class="nc"><i>189</i>&nbsp;                for (int k = 0; k &lt; playingClients.size(); k++)</b>
+<b class="nc"><i>190</i>&nbsp;                    if (k != i)</b>
+<b class="nc"><i>191</i>&nbsp;                        sendToPlayerInGame(k, ViewMessage.waitingPositioning);</b>
+<b class="nc"><i>192</i>&nbsp;                while (!actionCorrect &amp;&amp; !interrupted) {</b>
+<b class="nc"><i>193</i>&nbsp;                    sendToPlayerInGame(i, &quot;Player &quot; + (i + 1) + &quot;, &quot; + ViewMessage.initialPositionMessage + (j + 1) + &quot; (digit x,y)&quot;);</b>
+<i>194</i>&nbsp;                    try {
+<b class="nc"><i>195</i>&nbsp;                        String input = (String) readFromPlayerInGame(playingClients.get(i));</b>
+<b class="nc"><i>196</i>&nbsp;                        if (!isReadFromPlayerInGameOK(input))</b>
+<b class="nc"><i>197</i>&nbsp;                            break;</b>
+<b class="nc"><i>198</i>&nbsp;                        s = input.split(&quot;,&quot;);</b>
+<b class="nc"><i>199</i>&nbsp;                        choice = new Choice(Integer.parseInt(s[0]), Integer.parseInt(s[1]), j + 1, null, i);</b>
+<b class="nc"><i>200</i>&nbsp;                        notifyInit();</b>
+<i>201</i>&nbsp;                    }
+<b class="nc"><i>202</i>&nbsp;                    catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {</b>
+<b class="nc"><i>203</i>&nbsp;                        sendToPlayerInGame(i, ErrorMessage.inputMessage + &quot;\n&quot;);</b>
+<b class="nc"><i>204</i>&nbsp;                    }</b>
+<i>205</i>&nbsp;                }
+<b class="nc"><i>206</i>&nbsp;                setActionCorrect(false);</b>
+<i>207</i>&nbsp;            }
+<i>208</i>&nbsp;        }
+<b class="nc"><i>209</i>&nbsp;        setActionCorrect(false);</b>
+<i>210</i>&nbsp;    }
+<i>211</i>&nbsp;
+<i>212</i>&nbsp;    /**
+<i>213</i>&nbsp;     * Handle method that gives to view the information about all the action that a playerCard can perform.
+<i>214</i>&nbsp;     * @param s player nickname
+<i>215</i>&nbsp;     * @return array of String arrays with (START, PREMOVE, MOVE, PREBUILD, BUILD, END)
+<i>216</i>&nbsp;     */
+<i>217</i>&nbsp;    public String[][] handleWhatToDo(String s) {
+<b class="nc"><i>218</i>&nbsp;        setActionCorrect(false);</b>
+<b class="nc"><i>219</i>&nbsp;        sendToPlayerInGame(currentPlayerID, &quot;\n&quot; + s + &quot;, &quot; + ViewMessage.yourTurnMessage + &quot;\n&quot;);</b>
+<b class="nc"><i>220</i>&nbsp;        for (int i = 0; i &lt; playingClients.size(); i++) {</b>
+<b class="nc"><i>221</i>&nbsp;            if (i != currentPlayerID)</b>
+<b class="nc"><i>222</i>&nbsp;                sendToPlayerInGame(i, playingClients.get(currentPlayerID).getNickName() + &quot; is playing, &quot; + ViewMessage.waitingYourTurn);</b>
+<i>223</i>&nbsp;        }
+<b class="nc"><i>224</i>&nbsp;        return notifyWhatToDo();</b>
+<i>225</i>&nbsp;    }
+<i>226</i>&nbsp;
+<i>227</i>&nbsp;    /**
+<i>228</i>&nbsp;     * Handle method used to ask to choose one of the 2 available workers of currentPlayer.
+<i>229</i>&nbsp;     * @return 1 = worker1, 2 = worker2
+<i>230</i>&nbsp;     */
+<i>231</i>&nbsp;    public Integer handleStart() {
+<b class="nc"><i>232</i>&nbsp;        Integer worker = null;</b>
+<b class="nc"><i>233</i>&nbsp;        setActionCorrect(false);</b>
+<b class="nc"><i>234</i>&nbsp;        while (!actionCorrect &amp;&amp; !interrupted) {</b>
+<b class="nc"><i>235</i>&nbsp;            worker = getWorker();</b>
+<b class="nc"><i>236</i>&nbsp;            notifyStart(worker);</b>
+<i>237</i>&nbsp;        }
+<b class="nc"><i>238</i>&nbsp;        return worker;</b>
+<i>239</i>&nbsp;    }
+<i>240</i>&nbsp;
+<i>241</i>&nbsp;    /**
+<i>242</i>&nbsp;     * Handle method to notify observer that has to handle a move action from player.
+<i>243</i>&nbsp;     * @param worker is an integer that tells which one of the two worker are selected by player
+<i>244</i>&nbsp;     */
+<i>245</i>&nbsp;    public void handleMove(Integer worker) {
+<b class="nc"><i>246</i>&nbsp;        setActionCorrect(false);</b>
+<b class="nc"><i>247</i>&nbsp;        while (!actionCorrect &amp;&amp; !interrupted) {</b>
+<i>248</i>&nbsp;            String[] s;
+<b class="nc"><i>249</i>&nbsp;            sendToPlayerInGame(currentPlayerID, ViewMessage.moveMessage);</b>
+<i>250</i>&nbsp;            try {
+<b class="nc"><i>251</i>&nbsp;                String input = (String) readFromPlayerInGame(playingClients.get(currentPlayerID));</b>
+<b class="nc"><i>252</i>&nbsp;                if (!isReadFromPlayerInGameOK(input))</b>
+<b class="nc"><i>253</i>&nbsp;                    break;</b>
+<b class="nc"><i>254</i>&nbsp;                s = input.split(&quot;,&quot;);</b>
+<b class="nc"><i>255</i>&nbsp;                choice = new Choice(Integer.parseInt(s[0]), Integer.parseInt(s[1]), worker, null, null);</b>
+<b class="nc"><i>256</i>&nbsp;                notifyMove();</b>
+<b class="nc"><i>257</i>&nbsp;            } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {</b>
+<b class="nc"><i>258</i>&nbsp;                sendToPlayerInGame(currentPlayerID, ErrorMessage.inputMessage + &quot;\n&quot;);</b>
+<b class="nc"><i>259</i>&nbsp;            }</b>
+<i>260</i>&nbsp;        }
+<i>261</i>&nbsp;    }
+<i>262</i>&nbsp;
+<i>263</i>&nbsp;    /**
+<i>264</i>&nbsp;     * Handle method to notify observer that has to handle a build action from player.
+<i>265</i>&nbsp;     * @param worker is an integer that tells which one of the two worker are selected by player
+<i>266</i>&nbsp;     *               (its the same one called from the move action)
+<i>267</i>&nbsp;     */
+<i>268</i>&nbsp;    public void handleBuild(Integer worker) {
+<b class="nc"><i>269</i>&nbsp;        int counter = 0;</b>
+<b class="nc"><i>270</i>&nbsp;        setActionCorrect(false);</b>
+<b class="nc"><i>271</i>&nbsp;        while (!actionCorrect &amp;&amp; !interrupted) {</b>
+<i>272</i>&nbsp;            try {
+<b class="nc"><i>273</i>&nbsp;                if (counter == 0)</b>
+<b class="nc"><i>274</i>&nbsp;                    sendToPlayerInGame(currentPlayerID, ViewMessage.buildMessage + worker);</b>
+<i>275</i>&nbsp;                String[] b;
+<b class="nc"><i>276</i>&nbsp;                String build = (String) readFromPlayerInGame(playingClients.get(currentPlayerID));</b>
+<b class="nc"><i>277</i>&nbsp;                if (!isReadFromPlayerInGameOK(build))</b>
+<b class="nc"><i>278</i>&nbsp;                    break;</b>
+<b class="nc"><i>279</i>&nbsp;                b = build.split(&quot;,&quot;);</b>
+<b class="nc"><i>280</i>&nbsp;                if (!build.equals(&quot;&quot;)) {</b>
+<b class="nc"><i>281</i>&nbsp;                    counter = 0;</b>
+<b class="nc"><i>282</i>&nbsp;                    sendToPlayerInGame(currentPlayerID, ViewMessage.levelMessage);</b>
+<b class="nc"><i>283</i>&nbsp;                    String answer = (String) readFromPlayerInGame(playingClients.get(currentPlayerID));</b>
+<b class="nc"><i>284</i>&nbsp;                    if (!isReadFromPlayerInGameOK(answer))</b>
+<b class="nc"><i>285</i>&nbsp;                        break;</b>
+<b class="nc"><i>286</i>&nbsp;                    if (answer.toUpperCase().equals(&quot;YES&quot;)) {</b>
+<b class="nc"><i>287</i>&nbsp;                        sendToPlayerInGame(currentPlayerID, ViewMessage.insertLevel);</b>
+<b class="nc"><i>288</i>&nbsp;                        String input =  (String) readFromPlayerInGame(playingClients.get(currentPlayerID));</b>
+<b class="nc"><i>289</i>&nbsp;                        if (!isReadFromPlayerInGameOK(input))</b>
+<b class="nc"><i>290</i>&nbsp;                            break;</b>
+<b class="nc"><i>291</i>&nbsp;                        Integer level =  Integer.parseInt(input);</b>
+<b class="nc"><i>292</i>&nbsp;                        choice = new Choice(Integer.parseInt(b[0]), Integer.parseInt(b[1]), worker, level, null);</b>
+<b class="nc"><i>293</i>&nbsp;                    }</b>
+<i>294</i>&nbsp;                    else {
+<b class="nc"><i>295</i>&nbsp;                        choice = new Choice(Integer.parseInt(b[0]), Integer.parseInt(b[1]), worker, 0, null);</b>
+<i>296</i>&nbsp;                    }
+<b class="nc"><i>297</i>&nbsp;                    notifyBuild();</b>
+<b class="nc"><i>298</i>&nbsp;                }</b>
+<i>299</i>&nbsp;                else
+<b class="nc"><i>300</i>&nbsp;                    counter = 1;</b>
+<b class="nc"><i>301</i>&nbsp;            } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {</b>
+<b class="nc"><i>302</i>&nbsp;                sendToPlayerInGame(currentPlayerID, ErrorMessage.inputMessage + &quot;\n&quot;);</b>
+<b class="nc"><i>303</i>&nbsp;            }</b>
+<i>304</i>&nbsp;        }
+<i>305</i>&nbsp;    }
+<i>306</i>&nbsp;
+<i>307</i>&nbsp;    /**
+<i>308</i>&nbsp;     * Method used to show/manage Undo function accessible to the player.
+<i>309</i>&nbsp;     * It has an internal timer and ask if the current player wants to apply Undo Option within 5 seconds.
+<i>310</i>&nbsp;     * @param warning its a string that can be only (NOWARNING, WARNING) and tells the player that if he doesn&#39;t
+<i>311</i>&nbsp;     *                use undo function he will lose the game
+<i>312</i>&nbsp;     * @return true if the undo is applied
+<i>313</i>&nbsp;     */
+<i>314</i>&nbsp;    public boolean undoOption(String warning) {
+<b class="nc"><i>315</i>&nbsp;        final boolean[] value = {true};</b>
+<b class="nc"><i>316</i>&nbsp;        String str = &quot;&quot;;</b>
+<b class="nc"><i>317</i>&nbsp;        final String[] finalStr = {str};</b>
+<b class="nc"><i>318</i>&nbsp;        Timer timer = new Timer();</b>
+<b class="nc"><i>319</i>&nbsp;        TimerTask task = new TimerTask() {</b>
+<i>320</i>&nbsp;            public void run() {
+<b class="nc"><i>321</i>&nbsp;                if (finalStr[0].equals(&quot;&quot;)) {</b>
+<b class="nc"><i>322</i>&nbsp;                    sendToPlayerInGame(currentPlayerID, &quot;You input nothing. UNDO wasn&#39;t done...&quot;);</b>
+<b class="nc"><i>323</i>&nbsp;                    value[0] = false;</b>
+<i>324</i>&nbsp;                }
+<i>325</i>&nbsp;            }
+<i>326</i>&nbsp;        };
+<b class="nc"><i>327</i>&nbsp;        timer.schedule(task, 5000);</b>
+<b class="nc"><i>328</i>&nbsp;        if (warning.equals(&quot;WARNING&quot;))</b>
+<b class="nc"><i>329</i>&nbsp;            sendToPlayerInGame(currentPlayerID, ErrorMessage.blockingMessage);</b>
+<b class="nc"><i>330</i>&nbsp;        sendToPlayerInGame(currentPlayerID, &quot;Input a YES within 5 seconds for UNDO : &quot;);</b>
+<b class="nc"><i>331</i>&nbsp;        String action = (String) readFromPlayerInGame(playingClients.get(currentPlayerID));</b>
+<b class="nc"><i>332</i>&nbsp;        if (!isReadFromPlayerInGameOK(action))</b>
+<b class="nc"><i>333</i>&nbsp;            return false;</b>
+<b class="nc"><i>334</i>&nbsp;        timer.cancel();</b>
+<b class="nc"><i>335</i>&nbsp;        if (value[0] == false || (!action.toUpperCase().equals(&quot;YES&quot;)) || action.equals(&quot;&quot;)) {</b>
+<b class="nc"><i>336</i>&nbsp;            sendToPlayerInGame(currentPlayerID, &quot;UNDO is not applied&quot;);</b>
+<b class="nc"><i>337</i>&nbsp;            undoDone = false;</b>
+<b class="nc"><i>338</i>&nbsp;            return false;</b>
+<i>339</i>&nbsp;        }
+<b class="nc"><i>340</i>&nbsp;        if (action.toUpperCase().equals(&quot;YES&quot;)) {</b>
+<b class="nc"><i>341</i>&nbsp;            sendToPlayerInGame(currentPlayerID, &quot;UNDO is applied&quot;);</b>
+<b class="nc"><i>342</i>&nbsp;            undoDone = true;</b>
+<b class="nc"><i>343</i>&nbsp;            return true;</b>
+<i>344</i>&nbsp;        }
+<i>345</i>&nbsp;        else
+<b class="nc"><i>346</i>&nbsp;            return false;</b>
+<i>347</i>&nbsp;    }
+<i>348</i>&nbsp;
+<i>349</i>&nbsp;    /**
+<i>350</i>&nbsp;     * Handle method to notify the observers about an effect, that involves all players, has been applied (not move/build effect).
+<i>351</i>&nbsp;     */
+<i>352</i>&nbsp;    public void handleEffect(){
+<b class="nc"><i>353</i>&nbsp;        notifyEffect();</b>
+<i>354</i>&nbsp;    }
+<i>355</i>&nbsp;
+<i>356</i>&nbsp;    /**
+<i>357</i>&nbsp;     * Method used to send to players that an effect started or ended.
+<i>358</i>&nbsp;     * @param s start or end effect
+<i>359</i>&nbsp;     * @param effect effect type
+<i>360</i>&nbsp;     */
+<i>361</i>&nbsp;    public void printEffect(String s, String effect) {
+<b class="nc"><i>362</i>&nbsp;        if (s.equals(&quot;ON&quot;))</b>
+<b class="nc"><i>363</i>&nbsp;            sendToPlayerInGame(currentPlayerID, ViewMessage.godPowerStart + effect);</b>
+<b class="nc"><i>364</i>&nbsp;        if (s.equals(&quot;OFF&quot;))</b>
+<b class="nc"><i>365</i>&nbsp;            sendToPlayerInGame(currentPlayerID, ViewMessage.godPowerEnd + effect);</b>
+<i>366</i>&nbsp;    }
+<i>367</i>&nbsp;
+<i>368</i>&nbsp;    /**
+<i>369</i>&nbsp;     * Handle method to notify to controller to change next currentPlayer.
+<i>370</i>&nbsp;     */
+<i>371</i>&nbsp;    public void handleEnd() {
+<b class="nc"><i>372</i>&nbsp;        setActionCorrect(false);</b>
+<b class="nc"><i>373</i>&nbsp;        powerApply = false;</b>
+<b class="nc"><i>374</i>&nbsp;        notifyEnd();</b>
+<i>375</i>&nbsp;    }
+<i>376</i>&nbsp;
+<i>377</i>&nbsp;    /**
+<i>378</i>&nbsp;     * Handle method used to send to all players win message.
+<i>379</i>&nbsp;     * @param winner player
+<i>380</i>&nbsp;     */
+<i>381</i>&nbsp;    public void handleWinner(String winner) {
+<b class="nc"><i>382</i>&nbsp;        for (int i = 0; i &lt;playingClients.size(); i++) {</b>
+<b class="nc"><i>383</i>&nbsp;            if (i != currentPlayerID)</b>
+<b class="nc"><i>384</i>&nbsp;                sendToPlayerInGame(i, winner + &quot; &quot; + ViewMessage.winMessage);</b>
+<i>385</i>&nbsp;            else
+<b class="nc"><i>386</i>&nbsp;                sendToPlayerInGame(currentPlayerID, winner + &quot; &quot; + ViewMessage.personalWinMessage);</b>
+<i>387</i>&nbsp;        }
+<i>388</i>&nbsp;    }
+<i>389</i>&nbsp;
+<i>390</i>&nbsp;    /**
+<i>391</i>&nbsp;     * Used to send to all players lose message.
+<i>392</i>&nbsp;     * @param loser player
+<i>393</i>&nbsp;     */
+<i>394</i>&nbsp;    public void handleLoser(String loser) {
+<b class="nc"><i>395</i>&nbsp;        for (int i = 0; i &lt; playingClients.size(); i++) {</b>
+<b class="nc"><i>396</i>&nbsp;            if (playingClients.get(i).getNickName().equals(loser))</b>
+<b class="nc"><i>397</i>&nbsp;                sendToPlayerInGame(i, loser + &quot; &quot; + ViewMessage.personalLoseMessage);</b>
+<i>398</i>&nbsp;            else
+<b class="nc"><i>399</i>&nbsp;                sendToPlayerInGame(i, loser + &quot; &quot; + ViewMessage.loseMessage);</b>
+<i>400</i>&nbsp;        }
+<i>401</i>&nbsp;    }
+<i>402</i>&nbsp;
+<i>403</i>&nbsp;    /**
+<i>404</i>&nbsp;     * Handle method used to notify to controller the game interruption.
+<i>405</i>&nbsp;     */
+<i>406</i>&nbsp;    public void handleInterrupt() {
+<b class="nc"><i>407</i>&nbsp;        interrupted = true;</b>
+<b class="nc"><i>408</i>&nbsp;        notifyInterrupt();</b>
+<i>409</i>&nbsp;    }
+<i>410</i>&nbsp;
+<i>411</i>&nbsp;    /**
+<i>412</i>&nbsp;     * Utility method to call the correct handle method.
+<i>413</i>&nbsp;     * @param s String (MOVE, BUILD, EFFECT) that identify corresponding handle method to call
+<i>414</i>&nbsp;     * @param worker integer that identifies the worker who will do move/build action
+<i>415</i>&nbsp;     */
+<i>416</i>&nbsp;    public void callPowerFunction(String s, Integer worker) {
+<b class="nc"><i>417</i>&nbsp;        boolean askUndo = false;</b>
+<b class="nc"><i>418</i>&nbsp;        switch (s) {</b>
+<i>419</i>&nbsp;            case &quot;MOVE&quot;:
+<b class="nc"><i>420</i>&nbsp;                while (!askUndo &amp;&amp; !interrupted) {</b>
+<b class="nc"><i>421</i>&nbsp;                    sendToPlayerInGame(currentPlayerID, s + &quot; POWER : &quot; + ViewMessage.applyPowerMessage);</b>
+<b class="nc"><i>422</i>&nbsp;                    String input = (String) readFromPlayerInGame(playingClients.get(currentPlayerID));</b>
+<b class="nc"><i>423</i>&nbsp;                    if (!isReadFromPlayerInGameOK(input))</b>
+<b class="nc"><i>424</i>&nbsp;                        break;</b>
+<b class="nc"><i>425</i>&nbsp;                    if (input.toUpperCase().equals(&quot;YES&quot;)) {</b>
+<b class="nc"><i>426</i>&nbsp;                        handleMove(worker);</b>
+<b class="nc"><i>427</i>&nbsp;                        setPowerApply(true);</b>
+<b class="nc"><i>428</i>&nbsp;                        askUndo = true;</b>
+<i>429</i>&nbsp;                    }
+<i>430</i>&nbsp;                    else {
+<b class="nc"><i>431</i>&nbsp;                        if (!undoOption(&quot;NOWARNING&quot;))</b>
+<b class="nc"><i>432</i>&nbsp;                            askUndo = true;</b>
+<i>433</i>&nbsp;                        else
+<b class="nc"><i>434</i>&nbsp;                            setActionCorrect(false);</b>
+<i>435</i>&nbsp;                    }
+<b class="nc"><i>436</i>&nbsp;                }</b>
+<i>437</i>&nbsp;                break;
+<i>438</i>&nbsp;            case &quot;BUILD&quot;:
+<b class="nc"><i>439</i>&nbsp;                while (!askUndo &amp;&amp; !interrupted) {</b>
+<b class="nc"><i>440</i>&nbsp;                    sendToPlayerInGame(currentPlayerID, s + &quot; POWER : &quot; + ViewMessage.applyPowerMessage);</b>
+<b class="nc"><i>441</i>&nbsp;                    String input = (String) readFromPlayerInGame(playingClients.get(currentPlayerID));</b>
+<b class="nc"><i>442</i>&nbsp;                    if (!isReadFromPlayerInGameOK(input))</b>
+<b class="nc"><i>443</i>&nbsp;                        break;</b>
+<b class="nc"><i>444</i>&nbsp;                    if (input.toUpperCase().equals(&quot;YES&quot;)) {</b>
+<b class="nc"><i>445</i>&nbsp;                        handleBuild(worker);</b>
+<b class="nc"><i>446</i>&nbsp;                        setPowerApply(true);</b>
+<b class="nc"><i>447</i>&nbsp;                        askUndo = true;</b>
+<i>448</i>&nbsp;                    }
+<i>449</i>&nbsp;                    else {
+<b class="nc"><i>450</i>&nbsp;                        if (!undoOption(&quot;NOWARNING&quot;))</b>
+<b class="nc"><i>451</i>&nbsp;                            askUndo = true;</b>
+<i>452</i>&nbsp;                        else
+<b class="nc"><i>453</i>&nbsp;                            setActionCorrect(false);</b>
+<i>454</i>&nbsp;                    }
+<b class="nc"><i>455</i>&nbsp;                }</b>
+<i>456</i>&nbsp;                break;
+<i>457</i>&nbsp;            case &quot;EFFECT&quot;:
+<b class="nc"><i>458</i>&nbsp;                handleEffect();</b>
+<i>459</i>&nbsp;                break;
+<i>460</i>&nbsp;        }
+<i>461</i>&nbsp;    }
+<i>462</i>&nbsp;
+<i>463</i>&nbsp;    /**
+<i>464</i>&nbsp;     * Used to send to all players the update GameBoard after a player action.
+<i>465</i>&nbsp;     * @param object GameBoard
+<i>466</i>&nbsp;     * @param string used to inform other players about the current player action
+<i>467</i>&nbsp;     */
+<i>468</i>&nbsp;    @Override
+<i>469</i>&nbsp;    public void updateBoard(Object object, String string) {
+<b class="nc"><i>470</i>&nbsp;        for (int i = 0; i &lt; playingClients.size(); i++) {</b>
+<b class="nc"><i>471</i>&nbsp;            if (!string.equals(&quot;INIT&quot;)) {</b>
+<b class="nc"><i>472</i>&nbsp;                if (i != currentPlayerID)</b>
+<b class="nc"><i>473</i>&nbsp;                    sendToPlayerInGame(i, playingClients.get(currentPlayerID).getNickName() + &quot; did his move&quot;);</b>
+<i>474</i>&nbsp;            }
+<b class="nc"><i>475</i>&nbsp;            sendToPlayerInGame(i, object);</b>
+<i>476</i>&nbsp;        }
+<i>477</i>&nbsp;    }
+<i>478</i>&nbsp;
+<i>479</i>&nbsp;    /**
+<i>480</i>&nbsp;     * Method used to inform player in game.
+<i>481</i>&nbsp;     * @param clientToSend player id
+<i>482</i>&nbsp;     * @param message Object
+<i>483</i>&nbsp;     */
+<i>484</i>&nbsp;    public void sendToPlayerInGame(Integer clientToSend, Object message) {
+<b class="nc"><i>485</i>&nbsp;        if (!interrupted)</b>
+<b class="nc"><i>486</i>&nbsp;            NetworkVirtualView.sendToPlayer(playingClients.get(clientToSend), message);</b>
+<i>487</i>&nbsp;    }
+<i>488</i>&nbsp;
+<i>489</i>&nbsp;    /**
+<i>490</i>&nbsp;     * Method used to receive from player in game.
+<i>491</i>&nbsp;     * @param player ClientHandler
+<i>492</i>&nbsp;     * @return fromPlayer (what current player sent)
+<i>493</i>&nbsp;     */
+<i>494</i>&nbsp;    public Object readFromPlayerInGame(ClientHandler player) {
+<b class="nc"><i>495</i>&nbsp;        return NetworkVirtualView.readFromPlayer(player);</b>
+<i>496</i>&nbsp;    }
+<i>497</i>&nbsp;
+<i>498</i>&nbsp;    /**
+<i>499</i>&nbsp;     * Method to verify that what has been received by the Client is correct,
+<i>500</i>&nbsp;     * if it is incorrect game is interrupted.
+<i>501</i>&nbsp;     * @param object to be verified
+<i>502</i>&nbsp;     * @return true if the object exists (it isn&#39;t null), false otherwise
+<i>503</i>&nbsp;     */
+<i>504</i>&nbsp;    private boolean isReadFromPlayerInGameOK(Object object) {
+<b class="nc"><i>505</i>&nbsp;        if (object == null)</b>
+<b class="nc"><i>506</i>&nbsp;            return false;</b>
+<b class="nc"><i>507</i>&nbsp;        return true;</b>
+<i>508</i>&nbsp;    }
+<i>509</i>&nbsp;
+<i>510</i>&nbsp;    /**
+<i>511</i>&nbsp;     * Method used to send UserData to player in game.
+<i>512</i>&nbsp;     * It is useful for clients to know other players data.
+<i>513</i>&nbsp;     * @param data UserData
+<i>514</i>&nbsp;     */
+<i>515</i>&nbsp;    public void sendUserDataToPlayerInGame(UserData data) {
+<b class="nc"><i>516</i>&nbsp;        if (!interrupted) {</b>
+<b class="nc"><i>517</i>&nbsp;            for (int i = 0; i &lt; playingClients.size(); i++)</b>
+<b class="nc"><i>518</i>&nbsp;                sendToPlayerInGame(i, data);</b>
+<i>519</i>&nbsp;        }
+<i>520</i>&nbsp;    }
+<i>521</i>&nbsp;
+<i>522</i>&nbsp;    /**
+<i>523</i>&nbsp;     * Add an observer to the View&#39;s observer list
+<i>524</i>&nbsp;     * @param ob ViewObserver
+<i>525</i>&nbsp;     */
+<i>526</i>&nbsp;    @Override
+<i>527</i>&nbsp;    public void attach(ViewObserver ob) {
+<b class="nc"><i>528</i>&nbsp;        obs.add(ob);</b>
+<i>529</i>&nbsp;    }
+<i>530</i>&nbsp;
+<i>531</i>&nbsp;    /**
+<i>532</i>&nbsp;     * Notifies all observers about game initialization by view.
+<i>533</i>&nbsp;     */
+<i>534</i>&nbsp;    @Override
+<i>535</i>&nbsp;    public void notifyInit() {
+<b class="nc"><i>536</i>&nbsp;        for (int i = 0; i &lt; obs.size(); i++)</b>
+<b class="nc"><i>537</i>&nbsp;            obs.get(i).updateInit();</b>
+<i>538</i>&nbsp;    }
+<i>539</i>&nbsp;
+<i>540</i>&nbsp;    /**
+<i>541</i>&nbsp;     * Notifies all observers about the action to do during turn.
+<i>542</i>&nbsp;     * @return matrix contains all possible action
+<i>543</i>&nbsp;     */
+<i>544</i>&nbsp;    @Override
+<i>545</i>&nbsp;    public String[][] notifyWhatToDo() {
+<b class="nc"><i>546</i>&nbsp;        return obs.get(0).updateWhatToDo();</b>
+<i>547</i>&nbsp;    }
+<i>548</i>&nbsp;
+<i>549</i>&nbsp;    /**
+<i>550</i>&nbsp;     * Notifies all observers that user start his turn.
+<i>551</i>&nbsp;     * @param i worker id chosen by player (1 = worker1 or 2 = worker2)
+<i>552</i>&nbsp;     */
+<i>553</i>&nbsp;    @Override
+<i>554</i>&nbsp;    public void notifyStart(Integer i) {
+<b class="nc"><i>555</i>&nbsp;        obs.get(0).updateStart(i);</b>
+<i>556</i>&nbsp;    }
+<i>557</i>&nbsp;
+<i>558</i>&nbsp;    /**
+<i>559</i>&nbsp;     * Notifies all observers that user selected a move coordinate.
+<i>560</i>&nbsp;     */
+<i>561</i>&nbsp;    @Override
+<i>562</i>&nbsp;    public void notifyMove() {
+<b class="nc"><i>563</i>&nbsp;        for (int i = 0; i &lt; obs.size(); i++)</b>
+<b class="nc"><i>564</i>&nbsp;            obs.get(i).updateMove();</b>
+<i>565</i>&nbsp;    }
+<i>566</i>&nbsp;
+<i>567</i>&nbsp;    /**
+<i>568</i>&nbsp;     * Notifies all observers that user selected a build coordinate.
+<i>569</i>&nbsp;     */
+<i>570</i>&nbsp;    @Override
+<i>571</i>&nbsp;    public void notifyBuild() {
+<b class="nc"><i>572</i>&nbsp;        for (int i = 0; i &lt; obs.size(); i++)</b>
+<b class="nc"><i>573</i>&nbsp;            obs.get(i).updateBuild();</b>
+<i>574</i>&nbsp;    }
+<i>575</i>&nbsp;
+<i>576</i>&nbsp;    /**
+<i>577</i>&nbsp;     * Notifies all observers that an effect was activated.
+<i>578</i>&nbsp;     */
+<i>579</i>&nbsp;    @Override
+<i>580</i>&nbsp;    public void notifyEffect() {
+<b class="nc"><i>581</i>&nbsp;        obs.get(0).updateEffect();</b>
+<i>582</i>&nbsp;    }
+<i>583</i>&nbsp;
+<i>584</i>&nbsp;    /**
+<i>585</i>&nbsp;     * Notifies all observers that user end his turn.
+<i>586</i>&nbsp;     */
+<i>587</i>&nbsp;    @Override
+<i>588</i>&nbsp;    public void notifyEnd() {
+<b class="nc"><i>589</i>&nbsp;        obs.get(0).updateEnd();</b>
+<i>590</i>&nbsp;    }
+<i>591</i>&nbsp;
+<i>592</i>&nbsp;    /**
+<i>593</i>&nbsp;     * Notifies all observers that game was interrupted.
+<i>594</i>&nbsp;     */
+<i>595</i>&nbsp;    @Override
+<i>596</i>&nbsp;    public void notifyInterrupt() {
+<b class="nc"><i>597</i>&nbsp;        obs.get(0).updateInterrupt();</b>
+<i>598</i>&nbsp;    }
+<i>599</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-06-27 14:16</div>
+</div>
+</body>
+</html>

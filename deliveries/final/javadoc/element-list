@@ -1,0 +1,7 @@
+module:it.polimi.ingsw.PSP42
+it.polimi.ingsw.PSP42.client
+it.polimi.ingsw.PSP42.client.clientView
+it.polimi.ingsw.PSP42.controller
+it.polimi.ingsw.PSP42.model
+it.polimi.ingsw.PSP42.server
+it.polimi.ingsw.PSP42.view

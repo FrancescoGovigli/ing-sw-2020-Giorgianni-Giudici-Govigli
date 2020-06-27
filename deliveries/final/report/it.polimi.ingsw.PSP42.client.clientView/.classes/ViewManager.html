@@ -1,0 +1,377 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: ViewManager</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.PSP42.client.clientView</a> ]
+</div>
+
+<h1>Coverage Summary for Class: ViewManager (it.polimi.ingsw.PSP42.client.clientView)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ViewManager</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 37)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 96)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.PSP42.client.clientView;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.PSP42.client.*;
+<i>4</i>&nbsp;import it.polimi.ingsw.PSP42.model.*;
+<i>5</i>&nbsp;import it.polimi.ingsw.PSP42.server.*;
+<i>6</i>&nbsp;import it.polimi.ingsw.PSP42.view.UserData;
+<i>7</i>&nbsp;import it.polimi.ingsw.PSP42.view.ViewMessage;
+<i>8</i>&nbsp;import javafx.application.*;
+<i>9</i>&nbsp;import javafx.fxml.*;
+<i>10</i>&nbsp;import javafx.scene.*;
+<i>11</i>&nbsp;import javafx.stage.*;
+<i>12</i>&nbsp;
+<i>13</i>&nbsp;import java.io.*;
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;/**
+<i>16</i>&nbsp; * Class used to update scene to ClientGUI.
+<i>17</i>&nbsp; */
+<i>18</i>&nbsp;public class ViewManager implements ClientObserver, GuiObserver {
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;    private static Stage stage;
+<i>21</i>&nbsp;    private static ClientGUI client;
+<i>22</i>&nbsp;    private static ControllerWelcomeScene controllerWelcomeScene;
+<i>23</i>&nbsp;    private static ControllerGameBoardScene controllerGameBoardScene;
+<i>24</i>&nbsp;    private static ControllerChooseGodScene controllerChooseGodScene;
+<i>25</i>&nbsp;    private static ControllerDisconnectionScene controllerDisconnectionScene;
+<i>26</i>&nbsp;    private final static String WELCOME_SCENE = &quot;/fxml/WelcomeScene.fxml&quot;;
+<i>27</i>&nbsp;    private final static String WELCOME_FIRST_PLAYER_SCENE_PATH = &quot;/fxml/WelcomeFirstPlayerScene.fxml&quot;;
+<i>28</i>&nbsp;    private final static String WAITING_SCENE_PATH = &quot;/fxml/WaitingScene.fxml&quot;;
+<i>29</i>&nbsp;    private final static String WELCOME_OTHER_PLAYERS_SCENE_PATH = &quot;/fxml/WelcomeNotFirstPlayerScene.fxml&quot;;
+<i>30</i>&nbsp;    private final static String CHOOSE_GOD_SCENE_PATH = &quot;/fxml/ChooseGodScene.fxml&quot;;
+<i>31</i>&nbsp;    private final static String GAME_BOARD_SCENE_PATH = &quot;/fxml/GameBoardScene.fxml&quot;;
+<i>32</i>&nbsp;    private final static String DISCONNECTION_SCENE_PATH = &quot;/fxml/DisconnectionScene.fxml&quot;;
+<i>33</i>&nbsp;    private final static String END_GAME_SCENE_PATH = &quot;/fxml/EndGameScene.fxml&quot;;
+<i>34</i>&nbsp;    private final static String LOSER_SCENE_PATH = &quot;/fxml/LoserScene.fxml&quot;;
+<i>35</i>&nbsp;    private static FakeCell[][] gameBoardState;
+<b class="nc"><i>36</i>&nbsp;    private static boolean playPushed = false;</b>
+<i>37</i>&nbsp;    private static String currentNickname;
+<i>38</i>&nbsp;
+<i>39</i>&nbsp;    /**
+<i>40</i>&nbsp;     * Constructor used to link this class with Client.
+<i>41</i>&nbsp;     * @param client class ClientGUI
+<i>42</i>&nbsp;     */
+<b class="nc"><i>43</i>&nbsp;    public ViewManager(ClientGUI client) {</b>
+<b class="nc"><i>44</i>&nbsp;        ViewManager.client = client;</b>
+<i>45</i>&nbsp;    }
+<i>46</i>&nbsp;
+<i>47</i>&nbsp;    public static void setStage(Stage stage) {
+<b class="nc"><i>48</i>&nbsp;        ViewManager.stage = stage;</b>
+<i>49</i>&nbsp;    }
+<i>50</i>&nbsp;
+<i>51</i>&nbsp;    /**
+<i>52</i>&nbsp;     * Used to close stage.
+<i>53</i>&nbsp;     */
+<i>54</i>&nbsp;    public static void closeWindow() {
+<b class="nc"><i>55</i>&nbsp;        stage.close();</b>
+<i>56</i>&nbsp;    }
+<i>57</i>&nbsp;
+<i>58</i>&nbsp;    public static ClientGUI getClientInstance() {
+<b class="nc"><i>59</i>&nbsp;        return client;</b>
+<i>60</i>&nbsp;    }
+<i>61</i>&nbsp;
+<i>62</i>&nbsp;    public static boolean isPlayPushed() {
+<b class="nc"><i>63</i>&nbsp;        return playPushed;</b>
+<i>64</i>&nbsp;    }
+<i>65</i>&nbsp;
+<i>66</i>&nbsp;    public static void setPlayPushed(boolean playPushed) {
+<b class="nc"><i>67</i>&nbsp;        ViewManager.playPushed = playPushed;</b>
+<i>68</i>&nbsp;    }
+<i>69</i>&nbsp;
+<i>70</i>&nbsp;    /**
+<i>71</i>&nbsp;     * Used to know current player nickname.
+<i>72</i>&nbsp;     * @param o game&#39;s message sent from Server
+<i>73</i>&nbsp;     * @return nickname of current player as string
+<i>74</i>&nbsp;     */
+<i>75</i>&nbsp;    public String getCurrentNickname(Object o) {
+<b class="nc"><i>76</i>&nbsp;        String turn = (String)o;</b>
+<b class="nc"><i>77</i>&nbsp;        for (UserData u : client.getPlayersList()) {</b>
+<b class="nc"><i>78</i>&nbsp;            if (turn.contains(u.getNickname()))</b>
+<b class="nc"><i>79</i>&nbsp;                return u.getNickname();</b>
+<b class="nc"><i>80</i>&nbsp;        }</b>
+<b class="nc"><i>81</i>&nbsp;        return null;</b>
+<i>82</i>&nbsp;    }
+<i>83</i>&nbsp;
+<i>84</i>&nbsp;    public static FakeCell[][] getGameBoardState() {
+<b class="nc"><i>85</i>&nbsp;        return gameBoardState;</b>
+<i>86</i>&nbsp;    }
+<i>87</i>&nbsp;
+<i>88</i>&nbsp;    /** Used to save input in Client.
+<i>89</i>&nbsp;     * @param input translated from GUI&#39;s action in string
+<i>90</i>&nbsp;     */
+<i>91</i>&nbsp;    public void inputGui(String input) {
+<b class="nc"><i>92</i>&nbsp;        client.saveInput(input);</b>
+<i>93</i>&nbsp;    }
+<i>94</i>&nbsp;
+<i>95</i>&nbsp;    /**
+<i>96</i>&nbsp;     * Used to set Scene layout.
+<i>97</i>&nbsp;     * @param path string to set correct layout for the scene
+<i>98</i>&nbsp;     */
+<i>99</i>&nbsp;    public static void setLayout(String path) {
+<i>100</i>&nbsp;        try {
+<b class="nc"><i>101</i>&nbsp;            FXMLLoader loader = new FXMLLoader(ViewManager.class.getResource(path));</b>
+<b class="nc"><i>102</i>&nbsp;            Parent root = loader.load();</b>
+<b class="nc"><i>103</i>&nbsp;            switch (path) {</b>
+<i>104</i>&nbsp;                case WELCOME_SCENE:
+<i>105</i>&nbsp;                case WELCOME_FIRST_PLAYER_SCENE_PATH:
+<i>106</i>&nbsp;                case WELCOME_OTHER_PLAYERS_SCENE_PATH:
+<b class="nc"><i>107</i>&nbsp;                    controllerWelcomeScene = loader.getController();</b>
+<b class="nc"><i>108</i>&nbsp;                    break;</b>
+<i>109</i>&nbsp;                case CHOOSE_GOD_SCENE_PATH:
+<b class="nc"><i>110</i>&nbsp;                    controllerChooseGodScene = loader.getController();</b>
+<b class="nc"><i>111</i>&nbsp;                    break;</b>
+<i>112</i>&nbsp;                case GAME_BOARD_SCENE_PATH:
+<b class="nc"><i>113</i>&nbsp;                    controllerGameBoardScene = loader.getController();</b>
+<b class="nc"><i>114</i>&nbsp;                    break;</b>
+<i>115</i>&nbsp;                case DISCONNECTION_SCENE_PATH:
+<i>116</i>&nbsp;                case LOSER_SCENE_PATH:
+<i>117</i>&nbsp;                case END_GAME_SCENE_PATH:
+<b class="nc"><i>118</i>&nbsp;                    controllerDisconnectionScene = loader.getController();</b>
+<i>119</i>&nbsp;                    break;
+<i>120</i>&nbsp;            }
+<b class="nc"><i>121</i>&nbsp;            if (stage.getScene() == null) {</b>
+<b class="nc"><i>122</i>&nbsp;                Scene first = new Scene(root);</b>
+<b class="nc"><i>123</i>&nbsp;                stage.setScene(first);</b>
+<i>124</i>&nbsp;                return;
+<i>125</i>&nbsp;            }
+<b class="nc"><i>126</i>&nbsp;            Platform.runLater(() -&gt; stage.getScene().setRoot(root));</b>
+<b class="nc"><i>127</i>&nbsp;        } catch (IOException e) {</b>
+<b class="nc"><i>128</i>&nbsp;            e.printStackTrace();</b>
+<b class="nc"><i>129</i>&nbsp;        }</b>
+<i>130</i>&nbsp;    }
+<i>131</i>&nbsp;
+<i>132</i>&nbsp;    /**
+<i>133</i>&nbsp;     * Method used by Client to inform view that Server is unreachable due to incorrect IP.
+<i>134</i>&nbsp;     * @param error String
+<i>135</i>&nbsp;     */
+<i>136</i>&nbsp;    public static void hostIPIncorrect(String error) {
+<b class="nc"><i>137</i>&nbsp;        Platform.runLater(() -&gt; controllerWelcomeScene.setStatusLabel(error));</b>
+<b class="nc"><i>138</i>&nbsp;        playPushed = false;</b>
+<i>139</i>&nbsp;    }
+<i>140</i>&nbsp;
+<i>141</i>&nbsp;    /**
+<i>142</i>&nbsp;     * Method used to check if the current player has Atlas.
+<i>143</i>&nbsp;     * Helpful to set the correct layout for player who is using Atlas.
+<i>144</i>&nbsp;     * @return true if current player is using Atlas, false otherwise
+<i>145</i>&nbsp;     */
+<i>146</i>&nbsp;    private boolean isAtlas() {
+<b class="nc"><i>147</i>&nbsp;        for (int i = 0; i &lt; client.getPlayersList().size(); i++)</b>
+<b class="nc"><i>148</i>&nbsp;            if (client.getPlayersList().get(i).getNickname().equals(currentNickname))</b>
+<b class="nc"><i>149</i>&nbsp;                return client.getPlayersList().get(i).getCardChosen().equals(&quot;ATLAS&quot;);</b>
+<b class="nc"><i>150</i>&nbsp;        return false;</b>
+<i>151</i>&nbsp;    }
+<i>152</i>&nbsp;
+<i>153</i>&nbsp;    /**
+<i>154</i>&nbsp;     * Method used to set scene layout for first player connected.
+<i>155</i>&nbsp;     */
+<i>156</i>&nbsp;    @Override
+<i>157</i>&nbsp;    public void updateWelcomeFirstPlayer() {
+<b class="nc"><i>158</i>&nbsp;        setLayout(WELCOME_FIRST_PLAYER_SCENE_PATH);</b>
+<i>159</i>&nbsp;    }
+<i>160</i>&nbsp;
+<i>161</i>&nbsp;    /**
+<i>162</i>&nbsp;     * Method used to set scene layout for players that aren&#39;t first connected.
+<i>163</i>&nbsp;     */
+<i>164</i>&nbsp;    @Override
+<i>165</i>&nbsp;    public void updateWelcomeOtherPlayers() {
+<b class="nc"><i>166</i>&nbsp;        setLayout(WELCOME_OTHER_PLAYERS_SCENE_PATH);</b>
+<i>167</i>&nbsp;    }
+<i>168</i>&nbsp;
+<i>169</i>&nbsp;    /**
+<i>170</i>&nbsp;     * Method used to wait until Player presses Play Button in Welcome Scene.
+<i>171</i>&nbsp;     */
+<i>172</i>&nbsp;    @Override
+<i>173</i>&nbsp;    public void updateConnectionStart() {
+<b class="nc"><i>174</i>&nbsp;        while (!isPlayPushed()) {</b>
+<i>175</i>&nbsp;            try {
+<b class="nc"><i>176</i>&nbsp;                Thread.sleep(10);</b>
+<b class="nc"><i>177</i>&nbsp;            } catch (InterruptedException e) {</b>
+<b class="nc"><i>178</i>&nbsp;                e.printStackTrace();</b>
+<b class="nc"><i>179</i>&nbsp;            }</b>
+<i>180</i>&nbsp;        }
+<i>181</i>&nbsp;    }
+<i>182</i>&nbsp;
+<i>183</i>&nbsp;    /**
+<i>184</i>&nbsp;     * Method used to set God&#39;s chosen scene layout.
+<i>185</i>&nbsp;     * @param listOfGods Gods available for choice
+<i>186</i>&nbsp;     */
+<i>187</i>&nbsp;    @Override
+<i>188</i>&nbsp;    public void updateGodSelection(Object listOfGods) {
+<b class="nc"><i>189</i>&nbsp;        setLayout(CHOOSE_GOD_SCENE_PATH);</b>
+<b class="nc"><i>190</i>&nbsp;        Platform.runLater(() -&gt; controllerChooseGodScene.setGods(listOfGods));</b>
+<i>191</i>&nbsp;    }
+<i>192</i>&nbsp;
+<i>193</i>&nbsp;    /**
+<i>194</i>&nbsp;     * Method used to set Waiting scene layout.
+<i>195</i>&nbsp;     */
+<i>196</i>&nbsp;    @Override
+<i>197</i>&nbsp;    public void updateWaiting() {
+<b class="nc"><i>198</i>&nbsp;        setLayout(WAITING_SCENE_PATH);</b>
+<i>199</i>&nbsp;    }
+<i>200</i>&nbsp;
+<i>201</i>&nbsp;    /**
+<i>202</i>&nbsp;     * Method used to set label to inform player about his status.
+<i>203</i>&nbsp;     * @param o player status
+<i>204</i>&nbsp;     */
+<i>205</i>&nbsp;    @Override
+<i>206</i>&nbsp;    public void updateGameStatus(Object o) {
+<b class="nc"><i>207</i>&nbsp;        Platform.runLater(() -&gt; controllerWelcomeScene.setStatusLabel((String) o));</b>
+<i>208</i>&nbsp;    }
+<i>209</i>&nbsp;
+<i>210</i>&nbsp;    /**
+<i>211</i>&nbsp;     * Method used to set scene layout based on message received.
+<i>212</i>&nbsp;     * @param message received from Client
+<i>213</i>&nbsp;     */
+<i>214</i>&nbsp;    @Override
+<i>215</i>&nbsp;    public void updateGameMessage(Object message) {
+<b class="nc"><i>216</i>&nbsp;        if (controllerGameBoardScene != null) {</b>
+<b class="nc"><i>217</i>&nbsp;            if (message.equals(ServerMessage.inactivityEnd) || message.equals(ServerMessage.disconnectionEnd)) {</b>
+<b class="nc"><i>218</i>&nbsp;                setLayout(DISCONNECTION_SCENE_PATH);</b>
+<b class="nc"><i>219</i>&nbsp;                Platform.runLater(() -&gt; controllerDisconnectionScene.showMessage(message));</b>
+<i>220</i>&nbsp;            }
+<b class="nc"><i>221</i>&nbsp;            else if (((String)message).contains(&quot;You lost&quot;)) {</b>
+<b class="nc"><i>222</i>&nbsp;                setLayout(LOSER_SCENE_PATH);</b>
+<b class="nc"><i>223</i>&nbsp;                Platform.runLater(() -&gt; controllerDisconnectionScene.showMessage(message));</b>
+<i>224</i>&nbsp;            }
+<b class="nc"><i>225</i>&nbsp;            else if (((String)message).contains(&quot;You won&quot;) || ((String)message).contains(&quot;won the Game&quot;)) {</b>
+<b class="nc"><i>226</i>&nbsp;                setLayout(END_GAME_SCENE_PATH);</b>
+<b class="nc"><i>227</i>&nbsp;                Platform.runLater(() -&gt; controllerDisconnectionScene.setPodium(client.getPlayersList(), currentNickname));</b>
+<b class="nc"><i>228</i>&nbsp;                Platform.runLater(() -&gt; controllerDisconnectionScene.showMessage(message));</b>
+<i>229</i>&nbsp;            }
+<b class="nc"><i>230</i>&nbsp;            else if (((String)message).contains(&quot;none default&quot;) &amp;&amp; !isAtlas()) {</b>
+<b class="nc"><i>231</i>&nbsp;                fromGuiInput(&quot;NO&quot;); //used to avoid the request to build a none default level</b>
+<i>232</i>&nbsp;            }
+<i>233</i>&nbsp;            else {
+<b class="nc"><i>234</i>&nbsp;                if (((String)message).contains(ViewMessage.yourTurnMessage) || ((String)message).contains(ViewMessage.waitingYourTurn)) {</b>
+<b class="nc"><i>235</i>&nbsp;                    currentNickname = getCurrentNickname(message);</b>
+<b class="nc"><i>236</i>&nbsp;                    Platform.runLater(() -&gt; controllerGameBoardScene.setPlayersLabel(client.getPlayersList(), currentNickname));</b>
+<i>237</i>&nbsp;                }
+<b class="nc"><i>238</i>&nbsp;                Object translatedMessage = ClientGUIMessage.translateMessage((String) message);</b>
+<b class="nc"><i>239</i>&nbsp;                Platform.runLater(() -&gt; controllerGameBoardScene.showGameMessage(translatedMessage));</b>
+<b class="nc"><i>240</i>&nbsp;            }</b>
+<i>241</i>&nbsp;        }
+<b class="nc"><i>242</i>&nbsp;        else if (message.equals(ServerMessage.disconnectionEnd) || message.equals(ServerMessage.inactivityEnd)) {</b>
+<b class="nc"><i>243</i>&nbsp;            setLayout(DISCONNECTION_SCENE_PATH);</b>
+<b class="nc"><i>244</i>&nbsp;            Platform.runLater(() -&gt; controllerDisconnectionScene.showMessage(message));</b>
+<i>245</i>&nbsp;        }
+<i>246</i>&nbsp;    }
+<i>247</i>&nbsp;
+<i>248</i>&nbsp;    /**
+<i>249</i>&nbsp;     * Method to print the current GameBoard situation on screen.
+<i>250</i>&nbsp;     * @param o gameBoard to show
+<i>251</i>&nbsp;     */
+<i>252</i>&nbsp;    @Override
+<i>253</i>&nbsp;    public void updateShow(Object o) {
+<b class="nc"><i>254</i>&nbsp;        setLayout(GAME_BOARD_SCENE_PATH);</b>
+<b class="nc"><i>255</i>&nbsp;        Platform.runLater(() -&gt; controllerGameBoardScene.setPlayersLabel(client.getPlayersList(), currentNickname));</b>
+<b class="nc"><i>256</i>&nbsp;        Platform.runLater(()-&gt; controllerGameBoardScene.setStyleScene(client.getPlayersList(), currentNickname));</b>
+<b class="nc"><i>257</i>&nbsp;        FakeCell[][] gCopy = (FakeCell[][]) o;</b>
+<b class="nc"><i>258</i>&nbsp;        gameBoardState = gCopy;</b>
+<b class="nc"><i>259</i>&nbsp;        int DIM = gCopy.length;</b>
+<i>260</i>&nbsp;        int level;
+<b class="nc"><i>261</i>&nbsp;        int previousBuiltLevel = 0;</b>
+<b class="nc"><i>262</i>&nbsp;        for (int i = 0; i &lt; DIM; i++) {</b>
+<b class="nc"><i>263</i>&nbsp;            for (int j = 0; j &lt; DIM; j++) {</b>
+<b class="nc"><i>264</i>&nbsp;                int finalI = i;</b>
+<b class="nc"><i>265</i>&nbsp;                int finalJ = j;</b>
+<b class="nc"><i>266</i>&nbsp;                if (gCopy[i][j].level != 0) {</b>
+<b class="nc"><i>267</i>&nbsp;                    level = gCopy[i][j].level;</b>
+<b class="nc"><i>268</i>&nbsp;                    for (int k = level - 1; k &gt;= 0; k--) {</b>
+<b class="nc"><i>269</i>&nbsp;                        if (gCopy[i][j].builtLevel[k]) {</b>
+<b class="nc"><i>270</i>&nbsp;                            previousBuiltLevel = k;</b>
+<b class="nc"><i>271</i>&nbsp;                            k = 0;</b>
+<i>272</i>&nbsp;                        }
+<i>273</i>&nbsp;                    }
+<b class="nc"><i>274</i>&nbsp;                    int finalPreviousBuiltLevel = previousBuiltLevel;</b>
+<b class="nc"><i>275</i>&nbsp;                    int finalLevel = level;</b>
+<b class="nc"><i>276</i>&nbsp;                    Platform.runLater(() -&gt; controllerGameBoardScene.setImageSpecificLevel(finalI,finalJ, finalLevel, finalPreviousBuiltLevel));</b>
+<i>277</i>&nbsp;                }
+<b class="nc"><i>278</i>&nbsp;                if (gCopy[i][j].playerName != null)</b>
+<b class="nc"><i>279</i>&nbsp;                    Platform.runLater(() -&gt; controllerGameBoardScene.setImageSpecificPlayer(finalI, finalJ, client.getPlayerData(gCopy[finalI][finalJ].playerName)));</b>
+<i>280</i>&nbsp;                else
+<b class="nc"><i>281</i>&nbsp;                    Platform.runLater(() -&gt; controllerGameBoardScene.setImageSpecificPlayer(finalI, finalJ, null));</b>
+<i>282</i>&nbsp;            }
+<i>283</i>&nbsp;        }
+<i>284</i>&nbsp;    }
+<i>285</i>&nbsp;
+<i>286</i>&nbsp;    /**
+<i>287</i>&nbsp;     * Used to convert a GUI action into an input.
+<i>288</i>&nbsp;     * @param input as String
+<i>289</i>&nbsp;     */
+<i>290</i>&nbsp;    @Override
+<i>291</i>&nbsp;    public void fromGuiInput(String input) {
+<b class="nc"><i>292</i>&nbsp;        inputGui(input);</b>
+<i>293</i>&nbsp;    }
+<i>294</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-06-27 14:16</div>
+</div>
+</body>
+</html>

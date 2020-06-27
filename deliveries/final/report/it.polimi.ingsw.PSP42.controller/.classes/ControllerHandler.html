@@ -1,0 +1,449 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: ControllerHandler</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.PSP42.controller</a> ]
+</div>
+
+<h1>Coverage Summary for Class: ControllerHandler (it.polimi.ingsw.PSP42.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ControllerHandler</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 175)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.PSP42.controller;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.PSP42.model.*;
+<i>4</i>&nbsp;import it.polimi.ingsw.PSP42.view.*;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;import java.util.*;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;public class ControllerHandler {
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;    private final GameBoard gameBoard;
+<i>11</i>&nbsp;    private final VirtualView view;
+<i>12</i>&nbsp;    private final Controller mainController;
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;    /**
+<i>15</i>&nbsp;     * Constructor to set ControllerHandler
+<i>16</i>&nbsp;     * @param g gameBoard
+<i>17</i>&nbsp;     * @param v virtualView
+<i>18</i>&nbsp;     * @param c controller
+<i>19</i>&nbsp;     */
+<b class="nc"><i>20</i>&nbsp;    public ControllerHandler(GameBoard g, VirtualView v, Controller c) {</b>
+<b class="nc"><i>21</i>&nbsp;        gameBoard = g;</b>
+<b class="nc"><i>22</i>&nbsp;        view = v;</b>
+<b class="nc"><i>23</i>&nbsp;        mainController = c;</b>
+<i>24</i>&nbsp;    }
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;    /**
+<i>27</i>&nbsp;     * Update method used to handle game initialization.
+<i>28</i>&nbsp;     * It checks user Choice.
+<i>29</i>&nbsp;     * If all Choice&#39;s attributes are null no choice is done and creationGame is invoked.
+<i>30</i>&nbsp;     * If a user choice was done it will set the initial position of the workers.
+<i>31</i>&nbsp;     */
+<i>32</i>&nbsp;    public void controlInit() {
+<b class="nc"><i>33</i>&nbsp;        if (view.getChoice().allFieldsNull()) {</b>
+<b class="nc"><i>34</i>&nbsp;            mainController.createGame(view.getNumberOfPlayers());</b>
+<b class="nc"><i>35</i>&nbsp;            GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(), &quot;INIT&quot;);</b>
+<i>36</i>&nbsp;        }
+<i>37</i>&nbsp;        else {
+<b class="nc"><i>38</i>&nbsp;            Worker w = null;</b>
+<i>39</i>&nbsp;            boolean check;
+<i>40</i>&nbsp;            // check what worker is setting initial position
+<b class="nc"><i>41</i>&nbsp;            if (view.getChoice().getWorker() == 1)</b>
+<b class="nc"><i>42</i>&nbsp;                w = (gameBoard.getPlayers()).get(view.getChoice().getIdPlayer()).getWorker1();</b>
+<b class="nc"><i>43</i>&nbsp;            if (view.getChoice().getWorker() == 2)</b>
+<b class="nc"><i>44</i>&nbsp;                w = (gameBoard.getPlayers()).get(view.getChoice().getIdPlayer()).getWorker2();</b>
+<i>45</i>&nbsp;            // handle initial position
+<b class="nc"><i>46</i>&nbsp;            check = (gameBoard.getPlayers()).get(view.getChoice().getIdPlayer()).initialPosition(view.getChoice().getX(), view.getChoice().getY(), w);</b>
+<b class="nc"><i>47</i>&nbsp;            if (check) {</b>
+<b class="nc"><i>48</i>&nbsp;                view.setActionCorrect(true);</b>
+<b class="nc"><i>49</i>&nbsp;                GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(), &quot;INIT&quot;);</b>
+<i>50</i>&nbsp;            }
+<i>51</i>&nbsp;        }
+<i>52</i>&nbsp;    }
+<i>53</i>&nbsp;
+<i>54</i>&nbsp;    /**
+<i>55</i>&nbsp;     * Update method to call model&#39;s method that modifies the state of the worker selected, checking user Choice.
+<i>56</i>&nbsp;     */
+<i>57</i>&nbsp;    public void controlMove() {
+<b class="nc"><i>58</i>&nbsp;        Worker w = null;</b>
+<i>59</i>&nbsp;        boolean check;
+<i>60</i>&nbsp;        // check what worker is moving
+<b class="nc"><i>61</i>&nbsp;        if (view.getChoice().getWorker() == 1)</b>
+<b class="nc"><i>62</i>&nbsp;            w = (gameBoard.getPlayers()).get(gameBoard.getCurrentPlayer()).getWorker1();</b>
+<b class="nc"><i>63</i>&nbsp;        if (view.getChoice().getWorker() == 2)</b>
+<b class="nc"><i>64</i>&nbsp;            w = (gameBoard.getPlayers()).get(gameBoard.getCurrentPlayer()).getWorker2();</b>
+<i>65</i>&nbsp;        // check if worker is able to move at least in one position
+<b class="nc"><i>66</i>&nbsp;        if (gameBoard.atLeastOneMove(w)) {</b>
+<b class="nc"><i>67</i>&nbsp;            check = (gameBoard.getPlayers()).get(gameBoard.getCurrentPlayer()).move(view.getChoice().getX(), view.getChoice().getY(), w);</b>
+<b class="nc"><i>68</i>&nbsp;            if (check) {</b>
+<b class="nc"><i>69</i>&nbsp;                if (view.undoOption(&quot;NOWARNING&quot;)) {</b>
+<b class="nc"><i>70</i>&nbsp;                    gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).doUndoMove(w);</b>
+<b class="nc"><i>71</i>&nbsp;                    if (gameBoard.getGamePhase().equals(&quot;PREMOVE&quot;) || gameBoard.getGamePhase().equals(&quot;PREBUILD&quot;))</b>
+<b class="nc"><i>72</i>&nbsp;                        view.setActionCorrect(true);</b>
+<b class="nc"><i>73</i>&nbsp;                    GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(), &quot;NOINIT&quot;);</b>
+<i>74</i>&nbsp;                    return;
+<i>75</i>&nbsp;                }
+<b class="nc"><i>76</i>&nbsp;                view.setActionCorrect(true);</b>
+<b class="nc"><i>77</i>&nbsp;                GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(), &quot;NOINIT&quot;);</b>
+<i>78</i>&nbsp;            }
+<i>79</i>&nbsp;        }
+<i>80</i>&nbsp;        // this case occurs only if the player loses because player&#39;s Undo was not done
+<i>81</i>&nbsp;        else {
+<b class="nc"><i>82</i>&nbsp;            if (view.undoOption(&quot;WARNING&quot;)) {</b>
+<b class="nc"><i>83</i>&nbsp;                controlUndoPower(w, getPreviousGamePhase());</b>
+<b class="nc"><i>84</i>&nbsp;                view.setActionCorrect(true);</b>
+<b class="nc"><i>85</i>&nbsp;                GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(), &quot;NOINIT&quot;);</b>
+<i>86</i>&nbsp;            }
+<i>87</i>&nbsp;            else {
+<b class="nc"><i>88</i>&nbsp;                gameBoard.loseCondition(gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()), &quot;MOVE&quot;);</b>
+<b class="nc"><i>89</i>&nbsp;                view.setActionCorrect(true);</b>
+<i>90</i>&nbsp;            }
+<i>91</i>&nbsp;        }
+<i>92</i>&nbsp;    }
+<i>93</i>&nbsp;
+<i>94</i>&nbsp;    /**
+<i>95</i>&nbsp;     * Update method to call model&#39;s method that modifies the state of the building selected, checking user Choice.
+<i>96</i>&nbsp;     */
+<i>97</i>&nbsp;    public void controlBuild() {
+<b class="nc"><i>98</i>&nbsp;        Worker w = null;</b>
+<i>99</i>&nbsp;        boolean check;
+<i>100</i>&nbsp;        // check what worker is building
+<b class="nc"><i>101</i>&nbsp;        if (view.getChoice().getWorker() == 1)</b>
+<b class="nc"><i>102</i>&nbsp;            w = (gameBoard.getPlayers()).get(gameBoard.getCurrentPlayer()).getWorker1();</b>
+<b class="nc"><i>103</i>&nbsp;        if (view.getChoice().getWorker() == 2)</b>
+<b class="nc"><i>104</i>&nbsp;            w = (gameBoard.getPlayers()).get(gameBoard.getCurrentPlayer()).getWorker2();</b>
+<i>105</i>&nbsp;        // check if worker is able to build at least in one position
+<b class="nc"><i>106</i>&nbsp;        if (gameBoard.atLeastOneBuild(w, view.getChoice().getLevel())) {</b>
+<b class="nc"><i>107</i>&nbsp;            check = (gameBoard.getPlayers()).get(gameBoard.getCurrentPlayer()).build(view.getChoice().getX(), view.getChoice().getY(), view.getChoice().getLevel(), w);</b>
+<b class="nc"><i>108</i>&nbsp;            if (check) {</b>
+<b class="nc"><i>109</i>&nbsp;                if (view.undoOption(&quot;NOWARNING&quot;)) {</b>
+<b class="nc"><i>110</i>&nbsp;                    (gameBoard.getPlayers()).get(gameBoard.getCurrentPlayer()).doUndoBuild(w);</b>
+<b class="nc"><i>111</i>&nbsp;                    if (gameBoard.getGamePhase().equals(&quot;PREMOVE&quot;) || gameBoard.getGamePhase().equals(&quot;PREBUILD&quot;))</b>
+<b class="nc"><i>112</i>&nbsp;                        view.setActionCorrect(true);</b>
+<b class="nc"><i>113</i>&nbsp;                    GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(), &quot;NOINIT&quot;);</b>
+<i>114</i>&nbsp;                    return;
+<i>115</i>&nbsp;                }
+<b class="nc"><i>116</i>&nbsp;                view.setActionCorrect(true);</b>
+<b class="nc"><i>117</i>&nbsp;                GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(), &quot;NOINIT&quot;);</b>
+<i>118</i>&nbsp;            }
+<i>119</i>&nbsp;        }
+<i>120</i>&nbsp;        else {
+<b class="nc"><i>121</i>&nbsp;            if (view.undoOption(&quot;WARNING&quot;)) {</b>
+<b class="nc"><i>122</i>&nbsp;                controlUndoPower(w, getPreviousGamePhase());</b>
+<b class="nc"><i>123</i>&nbsp;                view.setActionCorrect(true);</b>
+<b class="nc"><i>124</i>&nbsp;                GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(), &quot;NOINIT&quot;);</b>
+<i>125</i>&nbsp;            }
+<i>126</i>&nbsp;            else {
+<b class="nc"><i>127</i>&nbsp;                gameBoard.loseCondition(gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()), &quot;BUILD&quot;);</b>
+<b class="nc"><i>128</i>&nbsp;                view.setActionCorrect(true);</b>
+<i>129</i>&nbsp;            }
+<i>130</i>&nbsp;        }
+<i>131</i>&nbsp;    }
+<i>132</i>&nbsp;
+<i>133</i>&nbsp;    /**
+<i>134</i>&nbsp;     * Update method that takes the 2 player&#39;s workers and checks if player has lost due to opponents&#39; turn.
+<i>135</i>&nbsp;     * If the player has not lost the method returns his nickname.
+<i>136</i>&nbsp;     * If the current player is the only one remained on the board he directly wins the Game.
+<i>137</i>&nbsp;     * @return nickname of the Player
+<i>138</i>&nbsp;     */
+<i>139</i>&nbsp;    public String controlCurrentPlayer() {
+<b class="nc"><i>140</i>&nbsp;        mainController.setTurnDone(false);</b>
+<b class="nc"><i>141</i>&nbsp;        Worker w1 = gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getWorker1();</b>
+<b class="nc"><i>142</i>&nbsp;        Worker w2 = gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getWorker2();</b>
+<i>143</i>&nbsp;        // set the worker available if the worker can move or not available if it is blocked
+<b class="nc"><i>144</i>&nbsp;        gameBoard.workerAvailable(w1);</b>
+<b class="nc"><i>145</i>&nbsp;        gameBoard.workerAvailable(w2);</b>
+<b class="nc"><i>146</i>&nbsp;        gameBoard.loseCondition(gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()), &quot;START&quot;);</b>
+<b class="nc"><i>147</i>&nbsp;        if (gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getPlayerState().equals(&quot;LOSE&quot;)) {</b>
+<b class="nc"><i>148</i>&nbsp;            view.handleLoser(gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getNickname());</b>
+<b class="nc"><i>149</i>&nbsp;            GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(), &quot;NOINIT&quot;);</b>
+<b class="nc"><i>150</i>&nbsp;            view.handleEnd();</b>
+<b class="nc"><i>151</i>&nbsp;            controlNextState(&quot;START&quot;);</b>
+<i>152</i>&nbsp;        }
+<b class="nc"><i>153</i>&nbsp;        int playersInGame = 0;</b>
+<b class="nc"><i>154</i>&nbsp;        for (Player p: gameBoard.getPlayers()) {</b>
+<b class="nc"><i>155</i>&nbsp;            if (p.getPlayerState().equals(&quot;INGAME&quot;))</b>
+<b class="nc"><i>156</i>&nbsp;                playersInGame++;</b>
+<b class="nc"><i>157</i>&nbsp;        }</b>
+<b class="nc"><i>158</i>&nbsp;        if(playersInGame == 1) {</b>
+<b class="nc"><i>159</i>&nbsp;            mainController.setTurnDone(true);</b>
+<b class="nc"><i>160</i>&nbsp;            mainController.setGameDone(true);</b>
+<i>161</i>&nbsp;        }
+<b class="nc"><i>162</i>&nbsp;        view.setCurrentPlayerID(gameBoard.getCurrentPlayer());</b>
+<b class="nc"><i>163</i>&nbsp;        view.noWriteForNotCurrentPlayers(gameBoard.getCurrentPlayer());</b>
+<b class="nc"><i>164</i>&nbsp;        return gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getNickname();</b>
+<i>165</i>&nbsp;    }
+<i>166</i>&nbsp;
+<i>167</i>&nbsp;    /**
+<i>168</i>&nbsp;     * Update method to set new current player checking the arraylist of the gameBoard.
+<i>169</i>&nbsp;     * The new currentPlayer value will be the next of the new turn only if the Player has not lost yet.
+<i>170</i>&nbsp;     */
+<i>171</i>&nbsp;    public void controlEnd() {
+<b class="nc"><i>172</i>&nbsp;        mainController.setTurnDone(true);</b>
+<b class="nc"><i>173</i>&nbsp;        int num = view.getNumberOfPlayers();</b>
+<b class="nc"><i>174</i>&nbsp;        int curr = gameBoard.getCurrentPlayer();</b>
+<b class="nc"><i>175</i>&nbsp;        if (curr + 1 &lt; num) {</b>
+<b class="nc"><i>176</i>&nbsp;            if (gameBoard.getPlayers().get(curr + 1).getPlayerState().equals(&quot;LOSE&quot;)) {</b>
+<b class="nc"><i>177</i>&nbsp;                if (curr + 2 &lt; num)</b>
+<b class="nc"><i>178</i>&nbsp;                    gameBoard.setCurrentPlayer(curr + 2);</b>
+<i>179</i>&nbsp;                else
+<b class="nc"><i>180</i>&nbsp;                    gameBoard.setCurrentPlayer(0);</b>
+<i>181</i>&nbsp;            }
+<i>182</i>&nbsp;            else
+<b class="nc"><i>183</i>&nbsp;                gameBoard.setCurrentPlayer(curr + 1);</b>
+<i>184</i>&nbsp;        }
+<i>185</i>&nbsp;        else {
+<b class="nc"><i>186</i>&nbsp;            if (gameBoard.getPlayers().get(0).getPlayerState().equals(&quot;LOSE&quot;))</b>
+<b class="nc"><i>187</i>&nbsp;                gameBoard.setCurrentPlayer(1);</b>
+<i>188</i>&nbsp;            else
+<b class="nc"><i>189</i>&nbsp;                gameBoard.setCurrentPlayer(0);</b>
+<i>190</i>&nbsp;        }
+<i>191</i>&nbsp;    }
+<i>192</i>&nbsp;
+<i>193</i>&nbsp;    /**
+<i>194</i>&nbsp;     * Update method to update the new game Phase.
+<i>195</i>&nbsp;     * It checks, after every phase, if the player has lost or has won.
+<i>196</i>&nbsp;     * In this cases the game Phase will be set at the END of turn.
+<i>197</i>&nbsp;     * If the player wins, the View&#39;s GameDone value will be set true.
+<i>198</i>&nbsp;     * @param s string that identify the next game Phase
+<i>199</i>&nbsp;     */
+<i>200</i>&nbsp;    public void controlNextState(String s) {
+<b class="nc"><i>201</i>&nbsp;        if (view.isUndoDone() &amp;&amp; (mainController.getGameState().equals(&quot;PREMOVE&quot;) || (mainController.getGameState().equals(&quot;PREBUILD&quot;))))</b>
+<b class="nc"><i>202</i>&nbsp;            mainController.setGameState(mainController.getGameState());</b>
+<b class="nc"><i>203</i>&nbsp;        else if (view.isUndoDone() &amp;&amp; view.isPowerApply() &amp;&amp; (mainController.getGameState().equals(&quot;MOVE&quot;) || mainController.getGameState().equals(&quot;BUILD&quot;))) {</b>
+<b class="nc"><i>204</i>&nbsp;            if (mainController.getGameState().equals(&quot;MOVE&quot;))</b>
+<b class="nc"><i>205</i>&nbsp;                mainController.setGameState(&quot;PREMOVE&quot;);</b>
+<b class="nc"><i>206</i>&nbsp;            if (mainController.getGameState().equals(&quot;BUILD&quot;))</b>
+<b class="nc"><i>207</i>&nbsp;                mainController.setGameState(&quot;PREBUILD&quot;);</b>
+<b class="nc"><i>208</i>&nbsp;            view.setPowerApply(false);</b>
+<i>209</i>&nbsp;        }
+<i>210</i>&nbsp;        else
+<b class="nc"><i>211</i>&nbsp;            mainController.setGameState(s);</b>
+<b class="nc"><i>212</i>&nbsp;        view.setUndoDone(false);</b>
+<b class="nc"><i>213</i>&nbsp;        view.setActionCorrect(false);</b>
+<b class="nc"><i>214</i>&nbsp;        if (gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getPlayerState().equals(&quot;LOSE&quot;)) {</b>
+<b class="nc"><i>215</i>&nbsp;            gameBoard.setGamePhase(&quot;END&quot;);</b>
+<b class="nc"><i>216</i>&nbsp;            mainController.setGameState(&quot;END&quot;);</b>
+<b class="nc"><i>217</i>&nbsp;            view.handleLoser(gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getNickname());</b>
+<b class="nc"><i>218</i>&nbsp;            GameBoard.getInstance().notifyObservers(FakeCell.getGameBoardCopy(), &quot;NOINIT&quot;);</b>
+<i>219</i>&nbsp;            return;
+<i>220</i>&nbsp;        }
+<b class="nc"><i>221</i>&nbsp;        if ((s.equals(&quot;MOVE&quot;) || s.equals(&quot;PREBUILD&quot;)) &amp;&amp; gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getPlayerState().equals(&quot;WIN&quot;)) {</b>
+<b class="nc"><i>222</i>&nbsp;            gameBoard.setGamePhase(&quot;END&quot;);</b>
+<b class="nc"><i>223</i>&nbsp;            mainController.setGameState(&quot;END&quot;);</b>
+<b class="nc"><i>224</i>&nbsp;            mainController.setTurnDone(true);</b>
+<b class="nc"><i>225</i>&nbsp;            mainController.setGameDone(true);</b>
+<i>226</i>&nbsp;            return;
+<i>227</i>&nbsp;        }
+<b class="nc"><i>228</i>&nbsp;        gameBoard.setGamePhase(s);</b>
+<i>229</i>&nbsp;    }
+<i>230</i>&nbsp;
+<i>231</i>&nbsp;    /**
+<i>232</i>&nbsp;     * Update method to obtain all the possible actions during a turn.
+<i>233</i>&nbsp;     * These actions are contained in every Card.
+<i>234</i>&nbsp;     * @return matrix of strings that contains all possible actions during the turn
+<i>235</i>&nbsp;     */
+<i>236</i>&nbsp;    public String[][] controlWhatToDo() {
+<b class="nc"><i>237</i>&nbsp;        int current = gameBoard.getCurrentPlayer();</b>
+<b class="nc"><i>238</i>&nbsp;        return gameBoard.getPlayers().get(current).checkWhatToDo();</b>
+<i>239</i>&nbsp;    }
+<i>240</i>&nbsp;
+<i>241</i>&nbsp;    /**
+<i>242</i>&nbsp;     * Update method to choose the right worker only if it is available during the starting phase of turn.
+<i>243</i>&nbsp;     * @param choice worker id choose by player
+<i>244</i>&nbsp;     */
+<i>245</i>&nbsp;    public void controlStart(Integer choice) {
+<b class="nc"><i>246</i>&nbsp;        Worker w = null;</b>
+<i>247</i>&nbsp;        Boolean check;
+<b class="nc"><i>248</i>&nbsp;        if(choice == null)</b>
+<i>249</i>&nbsp;            return;
+<b class="nc"><i>250</i>&nbsp;        else if (choice == 1)</b>
+<b class="nc"><i>251</i>&nbsp;            w = (gameBoard.getPlayers()).get(gameBoard.getCurrentPlayer()).getWorker1();</b>
+<b class="nc"><i>252</i>&nbsp;        else if (choice == 2)</b>
+<b class="nc"><i>253</i>&nbsp;            w = (gameBoard.getPlayers()).get(gameBoard.getCurrentPlayer()).getWorker2();</b>
+<b class="nc"><i>254</i>&nbsp;        check = w.getAvailable();</b>
+<b class="nc"><i>255</i>&nbsp;        if (check)</b>
+<b class="nc"><i>256</i>&nbsp;            view.setActionCorrect(true);</b>
+<i>257</i>&nbsp;        else
+<b class="nc"><i>258</i>&nbsp;            view.setActionCorrect(false);</b>
+<i>259</i>&nbsp;    }
+<i>260</i>&nbsp;
+<i>261</i>&nbsp;    /**
+<i>262</i>&nbsp;     * Update method used to communicate to View to Print an effect that was applied.
+<i>263</i>&nbsp;     */
+<i>264</i>&nbsp;    public void controlEffect() {
+<b class="nc"><i>265</i>&nbsp;        if (gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).effect()) {</b>
+<b class="nc"><i>266</i>&nbsp;            if(gameBoard.getGamePhase().equals(&quot;END&quot;))</b>
+<b class="nc"><i>267</i>&nbsp;                view.printEffect(&quot;ON&quot;, gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getCard().effectON());</b>
+<b class="nc"><i>268</i>&nbsp;            if(gameBoard.getGamePhase().equals(&quot;START&quot;))</b>
+<b class="nc"><i>269</i>&nbsp;                view.printEffect(&quot;OFF&quot;, gameBoard.getPlayers().get(gameBoard.getCurrentPlayer()).getCard().effectOFF());</b>
+<i>270</i>&nbsp;        }
+<b class="nc"><i>271</i>&nbsp;        view.setActionCorrect(true);</b>
+<i>272</i>&nbsp;    }
+<i>273</i>&nbsp;
+<i>274</i>&nbsp;    /**
+<i>275</i>&nbsp;     * Method to call all undoAction referred to previousPhase for the worker selected.
+<i>276</i>&nbsp;     * @param worker worker of the current turn
+<i>277</i>&nbsp;     * @param previousPhase previous game phase
+<i>278</i>&nbsp;     */
+<i>279</i>&nbsp;    public void controlUndoPower(Worker worker, String previousPhase) {
+<b class="nc"><i>280</i>&nbsp;        int current = gameBoard.getCurrentPlayer();</b>
+<b class="nc"><i>281</i>&nbsp;        Player currentPlayer = gameBoard.getPlayers().get(current);</b>
+<b class="nc"><i>282</i>&nbsp;        String[][] whatToDo = currentPlayer.getCard().getWhatToDo();</b>
+<b class="nc"><i>283</i>&nbsp;        switch (previousPhase) {</b>
+<i>284</i>&nbsp;            case &quot;PREMOVE&quot;:
+<b class="nc"><i>285</i>&nbsp;                manageUndoPower(whatToDo, 1, currentPlayer, worker);</b>
+<b class="nc"><i>286</i>&nbsp;                break;</b>
+<i>287</i>&nbsp;            case &quot;MOVE&quot;:
+<b class="nc"><i>288</i>&nbsp;                currentPlayer.doUndoMove(worker);</b>
+<b class="nc"><i>289</i>&nbsp;                break;</b>
+<i>290</i>&nbsp;            case &quot;PREBUILD&quot;:
+<b class="nc"><i>291</i>&nbsp;                manageUndoPower(whatToDo, 3, currentPlayer, worker);</b>
+<b class="nc"><i>292</i>&nbsp;                break;</b>
+<i>293</i>&nbsp;            case &quot;BUILD&quot;:
+<b class="nc"><i>294</i>&nbsp;                currentPlayer.doUndoBuild(worker);</b>
+<i>295</i>&nbsp;                break;
+<i>296</i>&nbsp;        }
+<i>297</i>&nbsp;    }
+<i>298</i>&nbsp;
+<i>299</i>&nbsp;    /**
+<i>300</i>&nbsp;     * Method to do the right Undo based on phase turn action.
+<i>301</i>&nbsp;     * @param whatToDo contains all possible actions during the turn
+<i>302</i>&nbsp;     * @param phaseInt 1 = PREMOVE, 3 = PREBUILD
+<i>303</i>&nbsp;     * @param worker Worker
+<i>304</i>&nbsp;     */
+<i>305</i>&nbsp;    private void manageUndoPower(String[][] whatToDo, int phaseInt, Player currentPlayer, Worker worker) {
+<b class="nc"><i>306</i>&nbsp;        if (!whatToDo[phaseInt][0].equals(&quot;EMPTY&quot;))</b>
+<b class="nc"><i>307</i>&nbsp;            for (int i = 0; i &lt; whatToDo[phaseInt].length; i++) {</b>
+<b class="nc"><i>308</i>&nbsp;                if (whatToDo[phaseInt][i].equals(&quot;MOVE&quot;))</b>
+<b class="nc"><i>309</i>&nbsp;                    currentPlayer.doUndoMove(worker);</b>
+<b class="nc"><i>310</i>&nbsp;                else if (whatToDo[phaseInt][i].equals(&quot;BUILD&quot;))</b>
+<b class="nc"><i>311</i>&nbsp;                    currentPlayer.doUndoBuild(worker);</b>
+<i>312</i>&nbsp;            }
+<i>313</i>&nbsp;    }
+<i>314</i>&nbsp;
+<i>315</i>&nbsp;    /**
+<i>316</i>&nbsp;     * Utility method to know which was the previous Phase turn.
+<i>317</i>&nbsp;     * @return previousPhase
+<i>318</i>&nbsp;     */
+<i>319</i>&nbsp;    public String getPreviousGamePhase() {
+<b class="nc"><i>320</i>&nbsp;        String previousPhase = null;</b>
+<b class="nc"><i>321</i>&nbsp;        String phase = gameBoard.getGamePhase();</b>
+<b class="nc"><i>322</i>&nbsp;        switch (phase) {</b>
+<i>323</i>&nbsp;            case &quot;START&quot;:
+<b class="nc"><i>324</i>&nbsp;                previousPhase = &quot;END&quot;;</b>
+<b class="nc"><i>325</i>&nbsp;                break;</b>
+<i>326</i>&nbsp;            case &quot;PREMOVE&quot;:
+<b class="nc"><i>327</i>&nbsp;                previousPhase = &quot;START&quot;;</b>
+<b class="nc"><i>328</i>&nbsp;                break;</b>
+<i>329</i>&nbsp;            case &quot;MOVE&quot;:
+<b class="nc"><i>330</i>&nbsp;                previousPhase = &quot;PREMOVE&quot;;</b>
+<b class="nc"><i>331</i>&nbsp;                break;</b>
+<i>332</i>&nbsp;            case &quot;PREBUILD&quot;:
+<b class="nc"><i>333</i>&nbsp;                previousPhase = &quot;MOVE&quot;;</b>
+<b class="nc"><i>334</i>&nbsp;                break;</b>
+<i>335</i>&nbsp;            case &quot;BUILD&quot;:
+<b class="nc"><i>336</i>&nbsp;                previousPhase = &quot;PREBUILD&quot;;</b>
+<b class="nc"><i>337</i>&nbsp;                break;</b>
+<i>338</i>&nbsp;            case &quot;END&quot;:
+<b class="nc"><i>339</i>&nbsp;                previousPhase = &quot;BUILD&quot;;</b>
+<i>340</i>&nbsp;                break;
+<i>341</i>&nbsp;        }
+<b class="nc"><i>342</i>&nbsp;        return previousPhase;</b>
+<i>343</i>&nbsp;    }
+<i>344</i>&nbsp;
+<i>345</i>&nbsp;    /**
+<i>346</i>&nbsp;     * Method to pick a random set of cards.
+<i>347</i>&nbsp;     * @param numPlayers number of players
+<i>348</i>&nbsp;     * @return randomPick which length is equal to numPlayers
+<i>349</i>&nbsp;     */
+<i>350</i>&nbsp;    public String[] pickCards(int numPlayers) {
+<b class="nc"><i>351</i>&nbsp;        Random random = new Random();</b>
+<b class="nc"><i>352</i>&nbsp;        String[] set = DeckOfGods.possibleGods();</b>
+<b class="nc"><i>353</i>&nbsp;        String[] randomPick = new String[numPlayers];</b>
+<b class="nc"><i>354</i>&nbsp;        ArrayList&lt;Integer&gt; pickedRand = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>355</i>&nbsp;        for (int i = 0; i &lt; numPlayers; i++) {</b>
+<b class="nc"><i>356</i>&nbsp;            int randomIndex = random.nextInt(set.length);</b>
+<b class="nc"><i>357</i>&nbsp;            if (!pickedRand.contains(randomIndex)) {</b>
+<b class="nc"><i>358</i>&nbsp;                pickedRand.add(randomIndex);</b>
+<b class="nc"><i>359</i>&nbsp;                randomPick[i] = set[randomIndex];</b>
+<i>360</i>&nbsp;            }
+<i>361</i>&nbsp;            else
+<b class="nc"><i>362</i>&nbsp;                i--;</b>
+<i>363</i>&nbsp;        }
+<b class="nc"><i>364</i>&nbsp;        return randomPick;</b>
+<i>365</i>&nbsp;    }
+<i>366</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-06-27 14:16</div>
+</div>
+</body>
+</html>

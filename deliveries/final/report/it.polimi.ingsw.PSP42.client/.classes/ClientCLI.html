@@ -1,0 +1,375 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: ClientCLI</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.PSP42.client</a> ]
+</div>
+
+<h1>Coverage Summary for Class: ClientCLI (it.polimi.ingsw.PSP42.client)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ClientCLI</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 120)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">ClientCLI$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 11)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">ClientCLI$2</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 23)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 13)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 154)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.PSP42.client;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.PSP42.client.clientView.Color;
+<i>4</i>&nbsp;import it.polimi.ingsw.PSP42.server.*;
+<i>5</i>&nbsp;import it.polimi.ingsw.PSP42.model.*;
+<i>6</i>&nbsp;import it.polimi.ingsw.PSP42.view.*;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;import java.io.*;
+<i>9</i>&nbsp;import java.net.*;
+<i>10</i>&nbsp;import java.util.*;
+<i>11</i>&nbsp;
+<b class="nc"><i>12</i>&nbsp;public class ClientCLI implements Runnable {</b>
+<i>13</i>&nbsp;
+<b class="nc"><i>14</i>&nbsp;    private boolean active = true;</b>
+<b class="nc"><i>15</i>&nbsp;    private boolean writeActive = true;</b>
+<b class="nc"><i>16</i>&nbsp;    private ArrayList&lt;UserData&gt; playersData = new ArrayList&lt;&gt;();</b>
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;    public synchronized boolean isActive(){
+<b class="nc"><i>19</i>&nbsp;        return active;</b>
+<i>20</i>&nbsp;    }
+<i>21</i>&nbsp;
+<i>22</i>&nbsp;    public synchronized void setActive(boolean active){
+<b class="nc"><i>23</i>&nbsp;        this.active = active;</b>
+<i>24</i>&nbsp;    }
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;    public void run() {
+<b class="nc"><i>27</i>&nbsp;        BufferedReader scanner= new BufferedReader(new InputStreamReader(System.in));</b>
+<b class="nc"><i>28</i>&nbsp;        System.out.println(&quot;IP address of server? or press Enter to skip this step&quot;);</b>
+<b class="nc"><i>29</i>&nbsp;        String ip = null;</b>
+<b class="nc"><i>30</i>&nbsp;        Socket server = null;</b>
+<b class="nc"><i>31</i>&nbsp;        Boolean correctHostIP = false;</b>
+<b class="nc"><i>32</i>&nbsp;        while(!correctHostIP) {</b>
+<i>33</i>&nbsp;            try {
+<b class="nc"><i>34</i>&nbsp;                ip = scanner.readLine();</b>
+<b class="nc"><i>35</i>&nbsp;                server = new Socket(ip, 4000);</b>
+<b class="nc"><i>36</i>&nbsp;                System.out.println(&quot;Connection established\n&quot;);</b>
+<b class="nc"><i>37</i>&nbsp;                correctHostIP = true;</b>
+<b class="nc"><i>38</i>&nbsp;            } catch (IOException e) {</b>
+<b class="nc"><i>39</i>&nbsp;                System.out.println(&quot;Server unreachable&quot;);</b>
+<b class="nc"><i>40</i>&nbsp;            }</b>
+<i>41</i>&nbsp;        }
+<b class="nc"><i>42</i>&nbsp;        ObjectInputStream socketIn = null;</b>
+<b class="nc"><i>43</i>&nbsp;        PrintWriter socketOut = null;</b>
+<i>44</i>&nbsp;        try {
+<b class="nc"><i>45</i>&nbsp;            socketIn = new ObjectInputStream(server.getInputStream());</b>
+<b class="nc"><i>46</i>&nbsp;            socketOut = new PrintWriter(server.getOutputStream());</b>
+<b class="nc"><i>47</i>&nbsp;        } catch (IOException e) {</b>
+<b class="nc"><i>48</i>&nbsp;            System.out.println(&quot;IOException in ClientCLI -&gt; run (creation of ObjectInputStream &amp; PrintWriter)&quot;);</b>
+<b class="nc"><i>49</i>&nbsp;        }</b>
+<i>50</i>&nbsp;        try {
+<b class="nc"><i>51</i>&nbsp;            Thread t0 = asyncReadFromSocket(socketIn);</b>
+<b class="nc"><i>52</i>&nbsp;            Thread t1 = asyncWriteToSocket(scanner, socketOut);</b>
+<b class="nc"><i>53</i>&nbsp;            t0.join();</b>
+<b class="nc"><i>54</i>&nbsp;            t1.join();</b>
+<b class="nc"><i>55</i>&nbsp;        } catch(InterruptedException | NoSuchElementException e) {</b>
+<b class="nc"><i>56</i>&nbsp;            System.out.println(&quot;Connection closed from the Client side&quot;);</b>
+<i>57</i>&nbsp;        } finally {
+<b class="nc"><i>58</i>&nbsp;            try {</b>
+<b class="nc"><i>59</i>&nbsp;                scanner.close();</b>
+<b class="nc"><i>60</i>&nbsp;                socketIn.close();</b>
+<b class="nc"><i>61</i>&nbsp;                socketOut.close();</b>
+<b class="nc"><i>62</i>&nbsp;                server.close();</b>
+<b class="nc"><i>63</i>&nbsp;            } catch (IOException e) {</b>
+<b class="nc"><i>64</i>&nbsp;                System.out.println(&quot;IOException in ClientCLI -&gt; run (finally branch)&quot;);</b>
+<b class="nc"><i>65</i>&nbsp;            }</b>
+<b class="nc"><i>66</i>&nbsp;        }</b>
+<i>67</i>&nbsp;    }
+<i>68</i>&nbsp;
+<i>69</i>&nbsp;    /**
+<i>70</i>&nbsp;     * Method to send an object to the server.
+<i>71</i>&nbsp;     * @param stdin input
+<i>72</i>&nbsp;     * @param socketOut output
+<i>73</i>&nbsp;     * @return t (the main thread will wait for the operation to be completed)
+<i>74</i>&nbsp;     */
+<i>75</i>&nbsp;    public Thread asyncWriteToSocket(final BufferedReader stdin, final PrintWriter socketOut) {
+<b class="nc"><i>76</i>&nbsp;        Thread t = new Thread(new Runnable() {</b>
+<i>77</i>&nbsp;            @Override
+<i>78</i>&nbsp;            public void run() {
+<i>79</i>&nbsp;                try {
+<b class="nc"><i>80</i>&nbsp;                    while (isActive()) {</b>
+<b class="nc"><i>81</i>&nbsp;                        String inputLine = stdin.readLine();</b>
+<b class="nc"><i>82</i>&nbsp;                        if (writeActive) {</b>
+<b class="nc"><i>83</i>&nbsp;                            socketOut.println(inputLine);</b>
+<b class="nc"><i>84</i>&nbsp;                            socketOut.flush();</b>
+<i>85</i>&nbsp;                        }
+<b class="nc"><i>86</i>&nbsp;                    }</b>
+<b class="nc"><i>87</i>&nbsp;                } catch (Exception e) {</b>
+<b class="nc"><i>88</i>&nbsp;                    System.out.println(&quot;You disconnected&quot;);</b>
+<b class="nc"><i>89</i>&nbsp;                    setActive(false);</b>
+<b class="nc"><i>90</i>&nbsp;                }</b>
+<i>91</i>&nbsp;            }
+<i>92</i>&nbsp;        });
+<b class="nc"><i>93</i>&nbsp;        t.start();</b>
+<b class="nc"><i>94</i>&nbsp;        return t;</b>
+<i>95</i>&nbsp;    }
+<i>96</i>&nbsp;
+<i>97</i>&nbsp;    /**
+<i>98</i>&nbsp;     * Method to receive an object from the server.
+<i>99</i>&nbsp;     * @param socketIn input
+<i>100</i>&nbsp;     * @return t (the main thread will wait for the operation to be completed)
+<i>101</i>&nbsp;     */
+<i>102</i>&nbsp;    public Thread asyncReadFromSocket(final ObjectInputStream socketIn) {
+<b class="nc"><i>103</i>&nbsp;        Thread t = new Thread(new Runnable() {</b>
+<i>104</i>&nbsp;            @Override
+<i>105</i>&nbsp;            public void run() {
+<i>106</i>&nbsp;                try {
+<b class="nc"><i>107</i>&nbsp;                    while (isActive()) {</b>
+<b class="nc"><i>108</i>&nbsp;                        Object inputObject = socketIn.readObject();</b>
+<b class="nc"><i>109</i>&nbsp;                        if (inputObject instanceof String) {</b>
+<b class="nc"><i>110</i>&nbsp;                            if (isCloseMessage(inputObject)) {</b>
+<b class="nc"><i>111</i>&nbsp;                                System.out.println(&quot;[FROM SERVER] : &quot; + inputObject);</b>
+<b class="nc"><i>112</i>&nbsp;                                socketIn.close();</b>
+<b class="nc"><i>113</i>&nbsp;                                setActive(false);</b>
+<b class="nc"><i>114</i>&nbsp;                                System.out.println(&quot;[FROM SERVER] : PRESS [ENTER] TO QUIT&quot;);</b>
+<i>115</i>&nbsp;                            }
+<i>116</i>&nbsp;                            else
+<b class="nc"><i>117</i>&nbsp;                                System.out.println(&quot;[FROM SERVER] : &quot; + inputObject);</b>
+<i>118</i>&nbsp;                        }
+<b class="nc"><i>119</i>&nbsp;                        else if (inputObject instanceof List)</b>
+<b class="nc"><i>120</i>&nbsp;                            showGods(inputObject);</b>
+<b class="nc"><i>121</i>&nbsp;                        else if (inputObject instanceof Boolean)</b>
+<b class="nc"><i>122</i>&nbsp;                            writeActive = (Boolean)inputObject;</b>
+<b class="nc"><i>123</i>&nbsp;                        else if (inputObject instanceof UserData)</b>
+<b class="nc"><i>124</i>&nbsp;                            playersData.add(((UserData) inputObject));</b>
+<i>125</i>&nbsp;                        else
+<b class="nc"><i>126</i>&nbsp;                            show(inputObject);</b>
+<b class="nc"><i>127</i>&nbsp;                    }</b>
+<b class="nc"><i>128</i>&nbsp;                } catch (Exception e) {</b>
+<b class="nc"><i>129</i>&nbsp;                    System.out.println(&quot;IOException | ClassNotFoundException in ClientCLI -&gt; asyncReadFromSocket&quot;);</b>
+<b class="nc"><i>130</i>&nbsp;                    System.out.println(&quot;Disconnected&quot;);</b>
+<b class="nc"><i>131</i>&nbsp;                    setActive(false);</b>
+<b class="nc"><i>132</i>&nbsp;                }</b>
+<i>133</i>&nbsp;            }
+<i>134</i>&nbsp;        });
+<b class="nc"><i>135</i>&nbsp;        t.start();</b>
+<b class="nc"><i>136</i>&nbsp;        return t;</b>
+<i>137</i>&nbsp;    }
+<i>138</i>&nbsp;
+<i>139</i>&nbsp;    /**
+<i>140</i>&nbsp;     * Method to check if a message invites to close or not.
+<i>141</i>&nbsp;     * @param object (message to check)
+<i>142</i>&nbsp;     * @return true if motivation involves closure, false otherwise
+<i>143</i>&nbsp;     */
+<i>144</i>&nbsp;    private boolean isCloseMessage(Object object) {
+<b class="nc"><i>145</i>&nbsp;        return object.equals(ServerMessage.gameEnd) ||</b>
+<b class="nc"><i>146</i>&nbsp;               object.equals(ServerMessage.inactivityEnd) ||</b>
+<b class="nc"><i>147</i>&nbsp;               object.equals(ServerMessage.disconnectionEnd) ||</b>
+<b class="nc"><i>148</i>&nbsp;               object.equals(ServerMessage.gameInProgress) ||</b>
+<b class="nc"><i>149</i>&nbsp;               object.equals(ServerMessage.extraClient) ||</b>
+<b class="nc"><i>150</i>&nbsp;               ((String) object).contains(ViewMessage.personalLoseMessage);</b>
+<i>151</i>&nbsp;    }
+<i>152</i>&nbsp;
+<i>153</i>&nbsp;    /**
+<i>154</i>&nbsp;     * Method to print the current GameBoard situation on the screen.
+<i>155</i>&nbsp;     * @param object from server containing an update GameBoard
+<i>156</i>&nbsp;     */
+<i>157</i>&nbsp;    public void show(Object object) {
+<b class="nc"><i>158</i>&nbsp;        FakeCell[][] gCopy = (FakeCell[][]) object;</b>
+<b class="nc"><i>159</i>&nbsp;        int rowIndex = 0;</b>
+<b class="nc"><i>160</i>&nbsp;        int colIndex = 0;</b>
+<b class="nc"><i>161</i>&nbsp;        int x = 0;</b>
+<b class="nc"><i>162</i>&nbsp;        int y = 0;</b>
+<b class="nc"><i>163</i>&nbsp;        System.out.println();</b>
+<b class="nc"><i>164</i>&nbsp;        for (int i = 0; i &lt; 16; i++) {</b>
+<b class="nc"><i>165</i>&nbsp;            boolean row1 = (i == 1 || i == 4 || i == 7 || i == 10 || i == 13);</b>
+<b class="nc"><i>166</i>&nbsp;            boolean row2 = (i == 2 || i == 5 || i == 8 || i == 11 || i == 14);</b>
+<b class="nc"><i>167</i>&nbsp;            boolean rowBoardIndex = (i == 3 || i == 6 || i == 9 || i == 12);</b>
+<b class="nc"><i>168</i>&nbsp;            for (int j = 0; j &lt; 41; j++) {</b>
+<b class="nc"><i>169</i>&nbsp;                boolean col1 = (j == 3 || j == 11 || j == 19 || j == 27 || j == 35);</b>
+<b class="nc"><i>170</i>&nbsp;                boolean col2 = (j == 5 || j == 13 || j == 21 || j == 29 || j == 37);</b>
+<b class="nc"><i>171</i>&nbsp;                boolean colBoardIndex = (j == 9 || j == 17 || j == 25 || j == 33);</b>
+<b class="nc"><i>172</i>&nbsp;                if (i % 3 == 0)</b>
+<b class="nc"><i>173</i>&nbsp;                    if (j % 8 == 0)</b>
+<b class="nc"><i>174</i>&nbsp;                        System.out.print(Color.ANSI_REVERSE + &quot;+&quot; + Color.RESET);</b>
+<i>175</i>&nbsp;                    else
+<b class="nc"><i>176</i>&nbsp;                        System.out.print(Color.ANSI_REVERSE + &quot;-&quot; + Color.RESET);</b>
+<b class="nc"><i>177</i>&nbsp;                else if (j % 8 == 0)</b>
+<b class="nc"><i>178</i>&nbsp;                    System.out.print(Color.ANSI_REVERSE + &quot;|&quot; + Color.RESET);</b>
+<b class="nc"><i>179</i>&nbsp;                else if (col1 &amp;&amp; row1)  // possible worker</b>
+<b class="nc"><i>180</i>&nbsp;                    if (gCopy[x][y].getPlayerName() != null)    // if a player has a worker set</b>
+<b class="nc"><i>181</i>&nbsp;                        switch (gCopy[x][y].getId()) {   // color (RGB) his &quot;W&quot; according to his id</b>
+<i>182</i>&nbsp;                            case 1:
+<b class="nc"><i>183</i>&nbsp;                                System.out.print(Color.ANSI_RED + &quot;W&quot; + Color.RESET);</b>
+<b class="nc"><i>184</i>&nbsp;                                break;</b>
+<i>185</i>&nbsp;                            case 2:
+<b class="nc"><i>186</i>&nbsp;                                System.out.print(Color.ANSI_GREEN + &quot;W&quot; + Color.RESET);</b>
+<b class="nc"><i>187</i>&nbsp;                                break;</b>
+<i>188</i>&nbsp;                            case 3:
+<b class="nc"><i>189</i>&nbsp;                                System.out.print(Color.ANSI_BLUE + &quot;W&quot; + Color.RESET);</b>
+<b class="nc"><i>190</i>&nbsp;                                break;</b>
+<i>191</i>&nbsp;                            default:
+<b class="nc"><i>192</i>&nbsp;                                System.out.print(&quot;W&quot;);</b>
+<b class="nc"><i>193</i>&nbsp;                                break;</b>
+<i>194</i>&nbsp;                        }
+<i>195</i>&nbsp;                    else
+<b class="nc"><i>196</i>&nbsp;                        System.out.print(&quot; &quot;);</b>
+<b class="nc"><i>197</i>&nbsp;                else if (col2 &amp;&amp; row1)  // worker&#39;s number</b>
+<b class="nc"><i>198</i>&nbsp;                    if (gCopy[x][y].getWorkerNum() == 1)</b>
+<b class="nc"><i>199</i>&nbsp;                        System.out.print(&quot;1&quot;);</b>
+<b class="nc"><i>200</i>&nbsp;                    else if (gCopy[x][y].getWorkerNum() == 2)</b>
+<b class="nc"><i>201</i>&nbsp;                        System.out.print(&quot;2&quot;);</b>
+<i>202</i>&nbsp;                    else
+<b class="nc"><i>203</i>&nbsp;                        System.out.print(&quot; &quot;);</b>
+<b class="nc"><i>204</i>&nbsp;                else if (col1 &amp;&amp; row2)  // level</b>
+<b class="nc"><i>205</i>&nbsp;                    System.out.print(&quot;L&quot;);</b>
+<b class="nc"><i>206</i>&nbsp;                else if (col2 &amp;&amp; row2)  // level&#39;s level</b>
+<b class="nc"><i>207</i>&nbsp;                    System.out.print(gCopy[x][y].getLevel());</b>
+<i>208</i>&nbsp;                else
+<b class="nc"><i>209</i>&nbsp;                    System.out.print(&quot; &quot;);</b>
+<b class="nc"><i>210</i>&nbsp;                if (j == 40 &amp;&amp; row1)</b>
+<b class="nc"><i>211</i>&nbsp;                    System.out.print(&quot; ROW&quot;);</b>
+<b class="nc"><i>212</i>&nbsp;                else if (j == 40 &amp;&amp; row2) {     // to print the row index out of the map</b>
+<b class="nc"><i>213</i>&nbsp;                    System.out.print(&quot; &quot; + rowIndex);</b>
+<b class="nc"><i>214</i>&nbsp;                    rowIndex++;</b>
+<i>215</i>&nbsp;                }
+<b class="nc"><i>216</i>&nbsp;                if (colBoardIndex &amp;&amp; (row1 || row2))  // increase column index for gCopy if you are in the worker or level row</b>
+<b class="nc"><i>217</i>&nbsp;                    y++;</b>
+<i>218</i>&nbsp;            }
+<b class="nc"><i>219</i>&nbsp;            if (row1)   y = 0;  // reset column index for gCopy if you are in the level row</b>
+<b class="nc"><i>220</i>&nbsp;            if (rowBoardIndex) {    // reset column index  and increase row index for gCopy if you are in the &quot;?&quot; line</b>
+<b class="nc"><i>221</i>&nbsp;                y = 0;</b>
+<b class="nc"><i>222</i>&nbsp;                x++;</b>
+<i>223</i>&nbsp;            }
+<b class="nc"><i>224</i>&nbsp;            System.out.println();</b>
+<i>225</i>&nbsp;        }
+<b class="nc"><i>226</i>&nbsp;        for (int j = 0; j &lt; 5; j++) {    // to print the column index off the map</b>
+<b class="nc"><i>227</i>&nbsp;            System.out.print(&quot;  COL &quot; + colIndex + &quot; &quot;);</b>
+<b class="nc"><i>228</i>&nbsp;            colIndex++;</b>
+<i>229</i>&nbsp;        }
+<b class="nc"><i>230</i>&nbsp;        System.out.println();</b>
+<b class="nc"><i>231</i>&nbsp;        System.out.println(&quot;Color matching to the letter &#39;W&#39;:&quot;);</b>
+<b class="nc"><i>232</i>&nbsp;        if (playersData.size() == 3)</b>
+<b class="nc"><i>233</i>&nbsp;            System.out.println(&quot;PLAYERS: &quot; + Color.ANSI_RED + &quot;Player 1: &quot; + playersData.get(0).getNickname() + &quot; with &quot; + playersData.get(0).getCardChosen().toUpperCase() + &quot; &quot; + Color.ANSI_GREEN + &quot;Player 2: &quot; + playersData.get(1).getNickname() + &quot; with &quot; + playersData.get(1).getCardChosen().toUpperCase() + &quot; &quot; + Color.ANSI_BLUE + &quot;Player 3: &quot; + playersData.get(2).getNickname() + &quot; with &quot; + playersData.get(2).getCardChosen().toUpperCase() + Color.RESET);</b>
+<b class="nc"><i>234</i>&nbsp;        if (playersData.size() == 2)</b>
+<b class="nc"><i>235</i>&nbsp;            System.out.println(&quot;PLAYERS: &quot; + Color.ANSI_RED + &quot;Player 1: &quot; + playersData.get(0).getNickname() + &quot; with &quot; + playersData.get(0).getCardChosen().toUpperCase() + &quot; &quot; + Color.ANSI_GREEN + &quot;Player 2: &quot; + playersData.get(1).getNickname() + &quot; with &quot; + playersData.get(1).getCardChosen().toUpperCase() + Color.RESET);</b>
+<b class="nc"><i>236</i>&nbsp;        System.out.println(&quot;\n&quot;);</b>
+<i>237</i>&nbsp;    }
+<i>238</i>&nbsp;
+<i>239</i>&nbsp;    /** Used to print listOfGods.
+<i>240</i>&nbsp;     * @param listOfGods list of strings containing name of gods sent from server
+<i>241</i>&nbsp;     */
+<i>242</i>&nbsp;    public void showGods(Object listOfGods) {
+<b class="nc"><i>243</i>&nbsp;        for (int i = 0; i &lt; ((List&lt;String&gt;)listOfGods).size(); i++) {</b>
+<b class="nc"><i>244</i>&nbsp;            System.out.println(((List&lt;String&gt;)listOfGods).get(i));</b>
+<i>245</i>&nbsp;        }
+<i>246</i>&nbsp;    }
+<i>247</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-06-27 14:16</div>
+</div>
+</body>
+</html>

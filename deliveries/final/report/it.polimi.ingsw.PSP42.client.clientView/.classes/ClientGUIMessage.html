@@ -1,0 +1,130 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: ClientGUIMessage</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.PSP42.client.clientView</a> ]
+</div>
+
+<h1>Coverage Summary for Class: ClientGUIMessage (it.polimi.ingsw.PSP42.client.clientView)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ClientGUIMessage</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 29)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.PSP42.client.clientView;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.PSP42.view.ViewMessage;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;/**
+<i>6</i>&nbsp; * Used to show the correct message on the GameBoard.
+<i>7</i>&nbsp; */
+<b class="nc"><i>8</i>&nbsp;public class ClientGUIMessage {</b>
+<i>9</i>&nbsp;
+<b class="nc"><i>10</i>&nbsp;    public static String workerGUIMessage = &quot;Choose your worker&quot;;</b>
+<b class="nc"><i>11</i>&nbsp;    public static String initialPositionGUIMessage = &quot;Click where to place your worker&quot;;</b>
+<b class="nc"><i>12</i>&nbsp;    public static String moveGUIMessage = &quot;Click where to move your worker&quot;;</b>
+<b class="nc"><i>13</i>&nbsp;    public static String buildGUIMessage = &quot;Click where to build with your worker&quot;;</b>
+<b class="nc"><i>14</i>&nbsp;    public static String levelGUIMessage = &quot;Click on Activate Button to build a specific level &quot;;</b>
+<b class="nc"><i>15</i>&nbsp;    public static String insertLevelGUIMessage = &quot;Click on the Dome to build it, otherwise click the standard building&quot;;</b>
+<b class="nc"><i>16</i>&nbsp;    public static String applyGUIPowerMessage = &quot;Click on Power Button to apply your God&#39;s power &quot;;</b>
+<b class="nc"><i>17</i>&nbsp;    public static String undoGUIMessage = &quot;Click on UNDO Button to change your choice within 5 seconds&quot;;</b>
+<b class="nc"><i>18</i>&nbsp;    public static String notUndoGUIMessage = &quot;UNDO wasn&#39;t done. Click on the board to continue&quot;;</b>
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;    /**
+<i>21</i>&nbsp;     * Used to change message received from Server for the GUI.
+<i>22</i>&nbsp;     * @param message String contains the Server&#39;s message
+<i>23</i>&nbsp;     * @return correct GUI message
+<i>24</i>&nbsp;     */
+<i>25</i>&nbsp;    public static String translateMessage(String message) {
+<b class="nc"><i>26</i>&nbsp;        if (message.contains(ViewMessage.workerMessage))</b>
+<b class="nc"><i>27</i>&nbsp;            return workerGUIMessage;</b>
+<b class="nc"><i>28</i>&nbsp;        else if (message.contains(ViewMessage.initialPositionMessage))</b>
+<b class="nc"><i>29</i>&nbsp;            return initialPositionGUIMessage;</b>
+<b class="nc"><i>30</i>&nbsp;        else if (message.contains(ViewMessage.moveMessage))</b>
+<b class="nc"><i>31</i>&nbsp;            return moveGUIMessage;</b>
+<b class="nc"><i>32</i>&nbsp;        else if (message.contains(ViewMessage.buildMessage))</b>
+<b class="nc"><i>33</i>&nbsp;            return buildGUIMessage;</b>
+<b class="nc"><i>34</i>&nbsp;        else if (message.contains(ViewMessage.levelMessage))</b>
+<b class="nc"><i>35</i>&nbsp;            return levelGUIMessage;</b>
+<b class="nc"><i>36</i>&nbsp;        else if (message.contains(ViewMessage.insertLevel))</b>
+<b class="nc"><i>37</i>&nbsp;            return insertLevelGUIMessage;</b>
+<b class="nc"><i>38</i>&nbsp;        else if (message.contains(ViewMessage.applyPowerMessage))</b>
+<b class="nc"><i>39</i>&nbsp;            return applyGUIPowerMessage;</b>
+<b class="nc"><i>40</i>&nbsp;        else if (message.contains(&quot;UNDO&quot;) &amp;&amp; !(message.contains(&quot;input nothing&quot;)))</b>
+<b class="nc"><i>41</i>&nbsp;            return undoGUIMessage;</b>
+<b class="nc"><i>42</i>&nbsp;        else if (message.contains(&quot;You input nothing&quot;))</b>
+<b class="nc"><i>43</i>&nbsp;            return notUndoGUIMessage;</b>
+<i>44</i>&nbsp;        else
+<b class="nc"><i>45</i>&nbsp;            return message;</b>
+<i>46</i>&nbsp;    }
+<i>47</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-06-27 14:16</div>
+</div>
+</body>
+</html>
