@@ -30,8 +30,8 @@ public class Pan extends SimpleGod {
      */
     @Override
     public boolean powerMove(int x, int y, Worker w) {
-        for (Player effectPlayer : effectPlayers) {
-            if (effectPlayer != null && !effectPlayer.getCard().powerMoveAvailable(x, y, w))
+        for (Player player : playersWithEffect) {
+            if (player != null && !player.getCard().powerMoveAvailable(x, y, w))
                 return false;
         }
         if (powerMoveAvailable(x, y, w)) {

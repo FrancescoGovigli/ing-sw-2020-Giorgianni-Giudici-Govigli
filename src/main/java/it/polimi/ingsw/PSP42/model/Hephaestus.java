@@ -50,7 +50,7 @@ public class Hephaestus extends SimpleGod {
      * @return true if worker moved, false otherwise
      */
     public boolean powerMove(int x, int y, Worker w) {
-        for (Player player: effectPlayers)
+        for (Player player : playersWithEffect)
             if (player != null && !player.getCard().powerMoveAvailable(x, y, w))
                 return false;
         if (powerMoveAvailable(x, y, w)) {

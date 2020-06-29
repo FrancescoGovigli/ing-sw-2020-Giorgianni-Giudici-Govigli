@@ -65,10 +65,9 @@ public class Athena extends SimpleGod {
      */
     @Override
     public boolean powerMove(int x, int y, Worker w) {
-        for (Player effectPlayer : effectPlayers) {
-            if (effectPlayer != null && !effectPlayer.getCard().powerMoveAvailable(x, y, w))
+        for (Player player : playersWithEffect)
+            if (player != null && !player.getCard().powerMoveAvailable(x, y, w))
                 return false;
-        }
         if (powerMoveAvailable(x, y, w)) {
             counterPhase = 1;
             if (workerStepUp(x, y, w))
@@ -117,7 +116,7 @@ public class Athena extends SimpleGod {
         if (counterPhase == 0) {
             if (powerEffectAvailable()) {
                 for (Player player : GameBoard.getInstance().getPlayers()) {
-                    player.getCard().effectPlayers.remove(this.w1.getPlayer());
+                    player.getCard().playersWithEffect.remove(this.w1.getPlayer());
                 }
                 blockOpponentsStepUp = 0;
                 return true;
@@ -128,7 +127,7 @@ public class Athena extends SimpleGod {
         if (counterPhase == 1) {
             if (powerEffectAvailable()) {
                 for (Player player : GameBoard.getInstance().getPlayers()) {
-                    player.getCard().effectPlayers.add(this.w1.getPlayer());
+                    player.getCard().playersWithEffect.add(this.w1.getPlayer());
                 }
                 counterPhase = 0;
                 return true;

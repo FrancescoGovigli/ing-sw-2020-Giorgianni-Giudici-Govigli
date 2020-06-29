@@ -277,8 +277,8 @@ public class GameBoard implements ModelObservable {
         int y = w.getCurrentY();
         Player influences = null;
         boolean oneMove = false;
-        if (w.getPlayer().getCard().effectPlayers.size() != 0)
-            influences = w.getPlayer().getCard().effectPlayers.get(0);
+        if (w.getPlayer().getCard().playersWithEffect.size() != 0)
+            influences = w.getPlayer().getCard().playersWithEffect.get(0);
         for (int i = 0; i < 3; i++)
             for (int j = 0; j < 3; j++) {
                 if ((y - 1 == - 1 && j == 0) || (y + 1 == 5 && j == 2) ||

@@ -4,7 +4,8 @@ import java.util.ArrayList;
 
 public abstract class SimpleGod {
 
-    protected ArrayList<Player> effectPlayers = new ArrayList<>();
+    // players that influence current Player
+    protected ArrayList<Player> playersWithEffect = new ArrayList<>();
     protected String[][] phase;
     protected Worker w1;
     protected Worker w2;
@@ -39,7 +40,7 @@ public abstract class SimpleGod {
      * @return true if the move was successful, false otherwise
      */
     public boolean powerMove(int x, int y, Worker w) {
-        for (Player player : effectPlayers)
+        for (Player player : playersWithEffect)
             if (player != null && !player.getCard().powerMoveAvailable(x, y, w))
                 return false;
         if (powerMoveAvailable(x, y, w)) {
