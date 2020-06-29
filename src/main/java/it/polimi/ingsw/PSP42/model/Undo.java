@@ -11,7 +11,7 @@ public class Undo {
     private int undoBuildX;      // the x value for the build_back
     private int undoBuildY;      // the y value for the build_back
     private int undoBuildLevel;  // the level to reset in cell (x,y)
-    private ArrayList <Integer> godValuesToRestore;  // used to contains possible specific SimpleGod's values
+    private ArrayList<Integer> godValuesToRestore;  // used to contains possible specific SimpleGod's values
 
     public Undo() {
         this.undoMove = false;

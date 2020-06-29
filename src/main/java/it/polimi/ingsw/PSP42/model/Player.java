@@ -67,7 +67,7 @@ public class Player {
      * @param w is the worker initialized in gameBoard
      * @return true if initial position is available, false otherwise
      */
-    public boolean initialPosition( int x, int y, Worker w) {
+    public boolean initialPosition(int x, int y, Worker w) {
         if (x >= 0 && x <= 4 && y >= 0 && y <= 4)
             return card.powerInitialPosition(x, y, w);
         return false;

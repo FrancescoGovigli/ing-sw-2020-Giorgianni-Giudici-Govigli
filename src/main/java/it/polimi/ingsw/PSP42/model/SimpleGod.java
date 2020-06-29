@@ -4,8 +4,7 @@ import java.util.ArrayList;
 
 public abstract class SimpleGod {
 
-    // players that influence current Player
-    protected ArrayList<Player> playersWithEffect = new ArrayList<>();
+    protected ArrayList<Player> playersWithEffect = new ArrayList<>();  // players that influence current Player
     protected String[][] phase;
     protected Worker w1;
     protected Worker w2;
@@ -131,7 +130,7 @@ public abstract class SimpleGod {
      * @return values.clone() (a clone of the ArrayList of Integer containing these variables)
      */
     public ArrayList<Integer> getCurrentValues() {
-        if(values != null)
+        if (values != null)
             return (ArrayList<Integer>) values.clone();
         return null;
     }
