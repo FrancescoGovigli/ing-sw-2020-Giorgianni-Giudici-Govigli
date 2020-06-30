@@ -1,4 +1,7 @@
 # Project exclude paths
 /target/
-/.idea/
 /santorini042.iml/
+out/
+src/main/resources/META-INF/
+src/main/resources/images/Background.ico
+/.idea/
