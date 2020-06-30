@@ -124,7 +124,7 @@
 <i>50</i>&nbsp;     * @return true if worker moved, false otherwise
 <i>51</i>&nbsp;     */
 <i>52</i>&nbsp;    public boolean powerMove(int x, int y, Worker w) {
-<b class="fc"><i>53</i>&nbsp;        for (Player player: effectPlayers)</b>
+<b class="fc"><i>53</i>&nbsp;        for (Player player : playersWithEffect)</b>
 <b class="nc"><i>54</i>&nbsp;            if (player != null &amp;&amp; !player.getCard().powerMoveAvailable(x, y, w))</b>
 <b class="nc"><i>55</i>&nbsp;                return false;</b>
 <b class="fc"><i>56</i>&nbsp;        if (powerMoveAvailable(x, y, w)) {</b>
@@ -196,7 +196,7 @@
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2020-06-27 14:16</div>
+    <div style="float:right;">generated on 2020-06-30 13:56</div>
 </div>
 </body>
 </html>

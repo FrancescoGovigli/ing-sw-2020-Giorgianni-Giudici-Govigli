@@ -351,8 +351,8 @@
 <b class="fc"><i>277</i>&nbsp;        int y = w.getCurrentY();</b>
 <b class="fc"><i>278</i>&nbsp;        Player influences = null;</b>
 <b class="fc"><i>279</i>&nbsp;        boolean oneMove = false;</b>
-<b class="fc"><i>280</i>&nbsp;        if (w.getPlayer().getCard().effectPlayers.size() != 0)</b>
-<b class="nc"><i>281</i>&nbsp;            influences = w.getPlayer().getCard().effectPlayers.get(0);</b>
+<b class="fc"><i>280</i>&nbsp;        if (w.getPlayer().getCard().playersWithEffect.size() != 0)</b>
+<b class="nc"><i>281</i>&nbsp;            influences = w.getPlayer().getCard().playersWithEffect.get(0);</b>
 <b class="fc"><i>282</i>&nbsp;        for (int i = 0; i &lt; 3; i++)</b>
 <b class="fc"><i>283</i>&nbsp;            for (int j = 0; j &lt; 3; j++) {</b>
 <b class="fc"><i>284</i>&nbsp;                if ((y - 1 == - 1 &amp;&amp; j == 0) || (y + 1 == 5 &amp;&amp; j == 2) ||</b>
@@ -445,7 +445,7 @@
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2020-06-27 14:16</div>
+    <div style="float:right;">generated on 2020-06-30 13:56</div>
 </div>
 </body>
 </html>

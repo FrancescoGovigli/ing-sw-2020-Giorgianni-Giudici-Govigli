@@ -58,10 +58,10 @@
 </td>
 <td class="coverageStat">
   <span class="percent">
-    81,5%
+    82,8%
   </span>
   <span class="absValue">
-    (53/ 65)
+    (53/ 64)
   </span>
 </td>
 </tr>
@@ -139,109 +139,108 @@
 <i>65</i>&nbsp;     */
 <i>66</i>&nbsp;    @Override
 <i>67</i>&nbsp;    public boolean powerMove(int x, int y, Worker w) {
-<b class="fc"><i>68</i>&nbsp;        for (Player effectPlayer : effectPlayers) {</b>
-<b class="nc"><i>69</i>&nbsp;            if (effectPlayer != null &amp;&amp; !effectPlayer.getCard().powerMoveAvailable(x, y, w))</b>
+<b class="fc"><i>68</i>&nbsp;        for (Player player : playersWithEffect)</b>
+<b class="nc"><i>69</i>&nbsp;            if (player != null &amp;&amp; !player.getCard().powerMoveAvailable(x, y, w))</b>
 <b class="nc"><i>70</i>&nbsp;                return false;</b>
-<b class="nc"><i>71</i>&nbsp;        }</b>
-<b class="fc"><i>72</i>&nbsp;        if (powerMoveAvailable(x, y, w)) {</b>
-<b class="fc"><i>73</i>&nbsp;            counterPhase = 1;</b>
-<b class="fc"><i>74</i>&nbsp;            if (workerStepUp(x, y, w))</b>
-<b class="fc"><i>75</i>&nbsp;                blockOpponentsStepUp = 1;</b>
-<b class="fc"><i>76</i>&nbsp;            w.setPosition(x, y);</b>
-<b class="fc"><i>77</i>&nbsp;            return true;</b>
-<i>78</i>&nbsp;        }
-<b class="nc"><i>79</i>&nbsp;        return false;</b>
-<i>80</i>&nbsp;    }
-<i>81</i>&nbsp;
-<i>82</i>&nbsp;    /**
-<i>83</i>&nbsp;     * Check if worker steps up during his movement.
-<i>84</i>&nbsp;     * @param x position on x-axis where worker is going
-<i>85</i>&nbsp;     * @param y position on y-axis where worker is going
-<i>86</i>&nbsp;     * @param w worker
-<i>87</i>&nbsp;     * @return true if worker step up, false otherwise
-<i>88</i>&nbsp;     */
-<i>89</i>&nbsp;    public boolean workerStepUp(int x, int y, Worker w) {
-<b class="fc"><i>90</i>&nbsp;        if (GameBoard.getInstance().getCell(w.getCurrentX(), w.getCurrentY()).getLevel() -</b>
-<b class="fc"><i>91</i>&nbsp;                GameBoard.getInstance().getCell(x, y).getLevel() == -1)</b>
-<b class="fc"><i>92</i>&nbsp;            return true;</b>
-<i>93</i>&nbsp;        else
-<b class="fc"><i>94</i>&nbsp;            return false;</b>
-<i>95</i>&nbsp;    }
-<i>96</i>&nbsp;
-<i>97</i>&nbsp;    /**
-<i>98</i>&nbsp;     * Check if power was activated.
-<i>99</i>&nbsp;     * @return true if other players were blocked, false otherwise
-<i>100</i>&nbsp;     */
-<i>101</i>&nbsp;    @Override
-<i>102</i>&nbsp;    public boolean powerEffectAvailable() {
-<b class="fc"><i>103</i>&nbsp;        if (blockOpponentsStepUp == 1)</b>
-<b class="fc"><i>104</i>&nbsp;            return true;</b>
-<b class="fc"><i>105</i>&nbsp;        return false;</b>
-<i>106</i>&nbsp;    }
-<i>107</i>&nbsp;
-<i>108</i>&nbsp;    /**
-<i>109</i>&nbsp;     * If, at first iteration (counter = 0 = START),
-<i>110</i>&nbsp;     * effect was applied in precedent turn set effectMove false and effectPlayer with this player for other players.
-<i>111</i>&nbsp;     * Else if, at second iteration (counter = 1 = END),
-<i>112</i>&nbsp;     * effect was applied in this turn set effectMove true and effectPlayer with this player for other players.
-<i>113</i>&nbsp;     * @return true if the method was been used, false otherwise
-<i>114</i>&nbsp;     */
-<i>115</i>&nbsp;    @Override
-<i>116</i>&nbsp;    public boolean powerEffect() {
-<b class="fc"><i>117</i>&nbsp;        if (counterPhase == 0) {</b>
-<b class="fc"><i>118</i>&nbsp;            if (powerEffectAvailable()) {</b>
-<b class="nc"><i>119</i>&nbsp;                for (Player player : GameBoard.getInstance().getPlayers()) {</b>
-<b class="nc"><i>120</i>&nbsp;                    player.getCard().effectPlayers.remove(this.w1.getPlayer());</b>
-<b class="nc"><i>121</i>&nbsp;                }</b>
-<b class="nc"><i>122</i>&nbsp;                blockOpponentsStepUp = 0;</b>
-<b class="nc"><i>123</i>&nbsp;                return true;</b>
-<i>124</i>&nbsp;            } else {
-<b class="fc"><i>125</i>&nbsp;                return false;</b>
-<i>126</i>&nbsp;            }
-<i>127</i>&nbsp;        }
-<b class="fc"><i>128</i>&nbsp;        if (counterPhase == 1) {</b>
-<b class="fc"><i>129</i>&nbsp;            if (powerEffectAvailable()) {</b>
-<b class="fc"><i>130</i>&nbsp;                for (Player player : GameBoard.getInstance().getPlayers()) {</b>
-<b class="fc"><i>131</i>&nbsp;                    player.getCard().effectPlayers.add(this.w1.getPlayer());</b>
-<b class="fc"><i>132</i>&nbsp;                }</b>
-<b class="fc"><i>133</i>&nbsp;                counterPhase = 0;</b>
-<b class="fc"><i>134</i>&nbsp;                return true;</b>
-<i>135</i>&nbsp;            } else {
-<b class="fc"><i>136</i>&nbsp;                counterPhase = 0;</b>
-<b class="fc"><i>137</i>&nbsp;                return false;</b>
-<i>138</i>&nbsp;            }
-<i>139</i>&nbsp;        }
-<b class="nc"><i>140</i>&nbsp;        return false;</b>
-<i>141</i>&nbsp;    }
-<i>142</i>&nbsp;
-<i>143</i>&nbsp;    public String effectON() {
-<b class="nc"><i>144</i>&nbsp;        return &quot;Until your next turn other players can&#39;t step up&quot;;</b>
-<i>145</i>&nbsp;    }
-<i>146</i>&nbsp;
-<i>147</i>&nbsp;    public String effectOFF() {
-<b class="nc"><i>148</i>&nbsp;        return &quot;Other players now can step up!\n&quot;;</b>
-<i>149</i>&nbsp;    }
-<i>150</i>&nbsp;
-<i>151</i>&nbsp;    @Override
-<i>152</i>&nbsp;    public ArrayList&lt;Integer&gt; getCurrentValues() {
-<b class="fc"><i>153</i>&nbsp;        ArrayList&lt;Integer&gt; values = new ArrayList&lt;Integer&gt;();</b>
-<b class="fc"><i>154</i>&nbsp;        values.add(blockOpponentsStepUp);</b>
-<b class="fc"><i>155</i>&nbsp;        values.add(counterPhase);</b>
-<b class="fc"><i>156</i>&nbsp;        return (ArrayList&lt;Integer&gt;) values.clone();</b>
-<i>157</i>&nbsp;    }
-<i>158</i>&nbsp;
-<i>159</i>&nbsp;    @Override
-<i>160</i>&nbsp;    public void reSetValues(ArrayList&lt;Integer&gt; valuesToRestore) {
-<b class="fc"><i>161</i>&nbsp;        this.blockOpponentsStepUp = valuesToRestore.get(0);</b>
-<b class="fc"><i>162</i>&nbsp;        this.counterPhase = valuesToRestore.get(1);</b>
-<b class="fc"><i>163</i>&nbsp;    }</b>
-<i>164</i>&nbsp;}
+<b class="fc"><i>71</i>&nbsp;        if (powerMoveAvailable(x, y, w)) {</b>
+<b class="fc"><i>72</i>&nbsp;            counterPhase = 1;</b>
+<b class="fc"><i>73</i>&nbsp;            if (workerStepUp(x, y, w))</b>
+<b class="fc"><i>74</i>&nbsp;                blockOpponentsStepUp = 1;</b>
+<b class="fc"><i>75</i>&nbsp;            w.setPosition(x, y);</b>
+<b class="fc"><i>76</i>&nbsp;            return true;</b>
+<i>77</i>&nbsp;        }
+<b class="nc"><i>78</i>&nbsp;        return false;</b>
+<i>79</i>&nbsp;    }
+<i>80</i>&nbsp;
+<i>81</i>&nbsp;    /**
+<i>82</i>&nbsp;     * Check if worker steps up during his movement.
+<i>83</i>&nbsp;     * @param x position on x-axis where worker is going
+<i>84</i>&nbsp;     * @param y position on y-axis where worker is going
+<i>85</i>&nbsp;     * @param w worker
+<i>86</i>&nbsp;     * @return true if worker step up, false otherwise
+<i>87</i>&nbsp;     */
+<i>88</i>&nbsp;    public boolean workerStepUp(int x, int y, Worker w) {
+<b class="fc"><i>89</i>&nbsp;        if (GameBoard.getInstance().getCell(w.getCurrentX(), w.getCurrentY()).getLevel() -</b>
+<b class="fc"><i>90</i>&nbsp;                GameBoard.getInstance().getCell(x, y).getLevel() == -1)</b>
+<b class="fc"><i>91</i>&nbsp;            return true;</b>
+<i>92</i>&nbsp;        else
+<b class="fc"><i>93</i>&nbsp;            return false;</b>
+<i>94</i>&nbsp;    }
+<i>95</i>&nbsp;
+<i>96</i>&nbsp;    /**
+<i>97</i>&nbsp;     * Check if power was activated.
+<i>98</i>&nbsp;     * @return true if other players were blocked, false otherwise
+<i>99</i>&nbsp;     */
+<i>100</i>&nbsp;    @Override
+<i>101</i>&nbsp;    public boolean powerEffectAvailable() {
+<b class="fc"><i>102</i>&nbsp;        if (blockOpponentsStepUp == 1)</b>
+<b class="fc"><i>103</i>&nbsp;            return true;</b>
+<b class="fc"><i>104</i>&nbsp;        return false;</b>
+<i>105</i>&nbsp;    }
+<i>106</i>&nbsp;
+<i>107</i>&nbsp;    /**
+<i>108</i>&nbsp;     * If, at first iteration (counter = 0 = START),
+<i>109</i>&nbsp;     * effect was applied in precedent turn set effectMove false and effectPlayer with this player for other players.
+<i>110</i>&nbsp;     * Else if, at second iteration (counter = 1 = END),
+<i>111</i>&nbsp;     * effect was applied in this turn set effectMove true and effectPlayer with this player for other players.
+<i>112</i>&nbsp;     * @return true if the method was been used, false otherwise
+<i>113</i>&nbsp;     */
+<i>114</i>&nbsp;    @Override
+<i>115</i>&nbsp;    public boolean powerEffect() {
+<b class="fc"><i>116</i>&nbsp;        if (counterPhase == 0) {</b>
+<b class="fc"><i>117</i>&nbsp;            if (powerEffectAvailable()) {</b>
+<b class="nc"><i>118</i>&nbsp;                for (Player player : GameBoard.getInstance().getPlayers()) {</b>
+<b class="nc"><i>119</i>&nbsp;                    player.getCard().playersWithEffect.remove(this.w1.getPlayer());</b>
+<b class="nc"><i>120</i>&nbsp;                }</b>
+<b class="nc"><i>121</i>&nbsp;                blockOpponentsStepUp = 0;</b>
+<b class="nc"><i>122</i>&nbsp;                return true;</b>
+<i>123</i>&nbsp;            } else {
+<b class="fc"><i>124</i>&nbsp;                return false;</b>
+<i>125</i>&nbsp;            }
+<i>126</i>&nbsp;        }
+<b class="fc"><i>127</i>&nbsp;        if (counterPhase == 1) {</b>
+<b class="fc"><i>128</i>&nbsp;            if (powerEffectAvailable()) {</b>
+<b class="fc"><i>129</i>&nbsp;                for (Player player : GameBoard.getInstance().getPlayers()) {</b>
+<b class="fc"><i>130</i>&nbsp;                    player.getCard().playersWithEffect.add(this.w1.getPlayer());</b>
+<b class="fc"><i>131</i>&nbsp;                }</b>
+<b class="fc"><i>132</i>&nbsp;                counterPhase = 0;</b>
+<b class="fc"><i>133</i>&nbsp;                return true;</b>
+<i>134</i>&nbsp;            } else {
+<b class="fc"><i>135</i>&nbsp;                counterPhase = 0;</b>
+<b class="fc"><i>136</i>&nbsp;                return false;</b>
+<i>137</i>&nbsp;            }
+<i>138</i>&nbsp;        }
+<b class="nc"><i>139</i>&nbsp;        return false;</b>
+<i>140</i>&nbsp;    }
+<i>141</i>&nbsp;
+<i>142</i>&nbsp;    public String effectON() {
+<b class="nc"><i>143</i>&nbsp;        return &quot;Until your next turn other players can&#39;t step up&quot;;</b>
+<i>144</i>&nbsp;    }
+<i>145</i>&nbsp;
+<i>146</i>&nbsp;    public String effectOFF() {
+<b class="nc"><i>147</i>&nbsp;        return &quot;Other players now can step up!\n&quot;;</b>
+<i>148</i>&nbsp;    }
+<i>149</i>&nbsp;
+<i>150</i>&nbsp;    @Override
+<i>151</i>&nbsp;    public ArrayList&lt;Integer&gt; getCurrentValues() {
+<b class="fc"><i>152</i>&nbsp;        ArrayList&lt;Integer&gt; values = new ArrayList&lt;Integer&gt;();</b>
+<b class="fc"><i>153</i>&nbsp;        values.add(blockOpponentsStepUp);</b>
+<b class="fc"><i>154</i>&nbsp;        values.add(counterPhase);</b>
+<b class="fc"><i>155</i>&nbsp;        return (ArrayList&lt;Integer&gt;) values.clone();</b>
+<i>156</i>&nbsp;    }
+<i>157</i>&nbsp;
+<i>158</i>&nbsp;    @Override
+<i>159</i>&nbsp;    public void reSetValues(ArrayList&lt;Integer&gt; valuesToRestore) {
+<b class="fc"><i>160</i>&nbsp;        this.blockOpponentsStepUp = valuesToRestore.get(0);</b>
+<b class="fc"><i>161</i>&nbsp;        this.counterPhase = valuesToRestore.get(1);</b>
+<b class="fc"><i>162</i>&nbsp;    }</b>
+<i>163</i>&nbsp;}
 </div>
 </div>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2020-06-27 14:16</div>
+    <div style="float:right;">generated on 2020-06-30 13:56</div>
 </div>
 </body>
 </html>

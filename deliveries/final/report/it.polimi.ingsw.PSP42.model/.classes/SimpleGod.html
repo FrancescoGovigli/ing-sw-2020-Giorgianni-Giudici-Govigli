@@ -78,7 +78,7 @@
 <i>4</i>&nbsp;
 <i>5</i>&nbsp;public abstract class SimpleGod {
 <i>6</i>&nbsp;
-<b class="fc"><i>7</i>&nbsp;    protected ArrayList&lt;Player&gt; effectPlayers = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>7</i>&nbsp;    protected ArrayList&lt;Player&gt; playersWithEffect = new ArrayList&lt;&gt;();  // players that influence current Player</b>
 <i>8</i>&nbsp;    protected String[][] phase;
 <i>9</i>&nbsp;    protected Worker w1;
 <i>10</i>&nbsp;    protected Worker w2;
@@ -113,7 +113,7 @@
 <i>39</i>&nbsp;     * @return true if the move was successful, false otherwise
 <i>40</i>&nbsp;     */
 <i>41</i>&nbsp;    public boolean powerMove(int x, int y, Worker w) {
-<b class="fc"><i>42</i>&nbsp;        for (Player player : effectPlayers)</b>
+<b class="fc"><i>42</i>&nbsp;        for (Player player : playersWithEffect)</b>
 <b class="fc"><i>43</i>&nbsp;            if (player != null &amp;&amp; !player.getCard().powerMoveAvailable(x, y, w))</b>
 <b class="fc"><i>44</i>&nbsp;                return false;</b>
 <b class="fc"><i>45</i>&nbsp;        if (powerMoveAvailable(x, y, w)) {</b>
@@ -204,7 +204,7 @@
 <i>130</i>&nbsp;     * @return values.clone() (a clone of the ArrayList of Integer containing these variables)
 <i>131</i>&nbsp;     */
 <i>132</i>&nbsp;    public ArrayList&lt;Integer&gt; getCurrentValues() {
-<b class="fc"><i>133</i>&nbsp;        if(values != null)</b>
+<b class="fc"><i>133</i>&nbsp;        if (values != null)</b>
 <b class="nc"><i>134</i>&nbsp;            return (ArrayList&lt;Integer&gt;) values.clone();</b>
 <b class="fc"><i>135</i>&nbsp;        return null;</b>
 <i>136</i>&nbsp;    }
@@ -225,7 +225,7 @@
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2020-06-27 14:16</div>
+    <div style="float:right;">generated on 2020-06-30 13:56</div>
 </div>
 </body>
 </html>

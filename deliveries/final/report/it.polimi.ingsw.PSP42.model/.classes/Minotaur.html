@@ -125,8 +125,8 @@
 <i>51</i>&nbsp;     */
 <i>52</i>&nbsp;    @Override
 <i>53</i>&nbsp;    public boolean powerMove(int x, int y, Worker w) {
-<b class="fc"><i>54</i>&nbsp;        for (Player effectPlayer : effectPlayers) {</b>
-<b class="nc"><i>55</i>&nbsp;            if (effectPlayer != null &amp;&amp; !effectPlayer.getCard().powerMoveAvailable(x, y, w))</b>
+<b class="fc"><i>54</i>&nbsp;        for (Player player : playersWithEffect) {</b>
+<b class="nc"><i>55</i>&nbsp;            if (player != null &amp;&amp; !player.getCard().powerMoveAvailable(x, y, w))</b>
 <b class="nc"><i>56</i>&nbsp;                return false;</b>
 <b class="nc"><i>57</i>&nbsp;        }</b>
 <b class="fc"><i>58</i>&nbsp;        if (powerMoveAvailable(x, y, w)) {</b>
@@ -249,7 +249,7 @@
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2020-06-27 14:16</div>
+    <div style="float:right;">generated on 2020-06-30 13:56</div>
 </div>
 </body>
 </html>
