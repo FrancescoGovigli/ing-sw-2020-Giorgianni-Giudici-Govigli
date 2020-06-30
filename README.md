@@ -64,7 +64,9 @@ sono riportate di seguito.
     In questa circostanza l'indirizzo del Server sarà quello di chi
     eseguirà il serverApp.jar.
 
-Nota: il Server non gode dell'interfaccia grafica
+Note:
+- Il Server non gode dell'interfaccia grafica. 
+- Il Server, se viene lanciato cliccando 2 volte sul corrispettivo file .jar, verrà eseguito in background.
 
 ### CLI
 -   **(1)** Una volta scaricato il JAR del client (vedi link sopra),
