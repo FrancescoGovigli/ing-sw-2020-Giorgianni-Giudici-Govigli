@@ -1,121 +1,86 @@
-Santorini42 - Prova Finale di Ingegneria del Software - a.a. 2019-2020
+Santorini42 - Final Test of Software Engineering - a.a. 2019-2020
 ======================================================================
 ![alt text](https://2.bp.blogspot.com/-YHuiYPBEHKs/WVKpXTzu5KI/AAAAAAAAYCs/pTVyng97P3EDoLq9PMqVv18ECzBD4K2CwCLcBGAs/s1600/copertina_santorini_2016.jpg)
 
-Il progetto richiedeva di implementare il gioco da tavola
-[*Santorini*](https://tabletopia.com/games/santorini).
+The project required to implement the board game [*Santorini*](https://tabletopia.com/games/santorini).
 
-Esso è stato sviluppato da: 
-- [**Daniele Giorgianni**](https://github.com/DanieleGiorgianni) 
+It was developed by:
+- [**Daniele Giorgianni**](https://github.com/DanieleGiorgianni)
 - [**Luca Giudici**](https://github.com/LucaGiudiciPoliMi)
 - [**Francesco Govigli**](https://github.com/FrancescoGovigli)
 
-Link Utili
+Useful links
 ----------
 ### UML
-I diagrammi UML sono reperibili presso la cartella [*UML*](https://github.com/FrancescoGovigli/ing-sw-2020-Giorgianni-Giudici-Govigli/tree/master/deliveries/final/uml).
+The UML diagrams are available from the folder: [*UML*](https://github.com/FrancescoGovigli/ing-sw-2020-Giorgianni-Giudici-Govigli/tree/master/deliveries/final/uml).
 
 ### JavaDoc
-I JavaDoc sono reperibili presso la cartella
-[*Javadoc*](https://github.com/FrancescoGovigli/ing-sw-2020-Giorgianni-Giudici-Govigli/tree/master/deliveries/final/javadoc).
+JavaDoc can be found in the folder: [*Javadoc*](https://github.com/FrancescoGovigli/ing-sw-2020-Giorgianni-Giudici-Govigli/tree/master/deliveries/final/javadoc).
 
 ### JAR
-I file JAR sono reperibili presso la cartella
-[*JAR*](https://github.com/FrancescoGovigli/ing-sw-2020-Giorgianni-Giudici-Govigli/tree/master/deliveries/final/jar).
+JAR files can be found in the folder: [*JAR*](https://github.com/FrancescoGovigli/ing-sw-2020-Giorgianni-Giudici-Govigli/tree/master/deliveries/final/jar).
 
-Funzionalità sviluppate
+Features developed
 -----------------------
-Il progetto sviluppato implementa le seguenti funzionalità facendo
-riferimento ai requisiti specificati dai docenti: 
-- Regole Complete 
-- Command Line Interface 
-- Graphic User Interface 
-- Socket 
-- 1 Funzionalità Avanzata (Undo)
+The developed project implements the following features by doing
+reference to the requirements specified by the teachers:
+- Complete rules
+- Command Line Interface
+- Graphic User Interface
+- Socket
+- 1 Advanced Functionality (Undo)
 
-Istruzioni su come eseguire i JAR
+Instructions on how to perform JARs
 ---------------------------------
-Il gioco può essere eseguito sia in locale che tramite rete. Nel primo
-caso sarà sufficiente seguire le istruzioni **(1)**, nel secondo caso
-le istruzioni **(2)**.
+The game can be run both locally and via the network. In the first case just follow the instructions **(1)**, in the second case the instructions **(2)**.
 
-Il gioco potrà essere avviato in due modalità,
-tramite linea di comando oppure con interfaccia grafica. Le istruzioni
-sono riportate di seguito.
+The game can be launched in two modes, via command line or with a graphical interface. The instructions are shown below.
 
 ### Server
--   **(1)** Una volta scaricato il JAR del server (vedi link sopra),
-    sarà sufficiente aprire il terminale da Windows o MacOs,
-    posizionarsi nella cartella dov'è stato scaricato il JAR e digitare
-    la seguente istruzione:
+- **(1)** Once you download the server JAR (see link above), just open the terminal from Windows or MacOs, go to the folder where the JAR was downloaded and type the following statement:
 
         java -jar serverApp.jar
 
-    In questa circostanza l'indirizzo del Server sarà quello del Local
-    Host.
+    In this circumstance the address of the Server will be that of the Local Host.
 
--   **(2)** Una volta scaricato il JAR del server (vedi link sopra),
-    sarà sufficiente aprire il terminale del dispositivo collegato alla
-    rete, posizionarsi nella cartella dov'è stato scaricato il JAR e
-    digitare la seguente istruzione:
+- **(2)** Once you download the server JAR (see link above), simply open the terminal of the device connected to the network, go to the folder where the JAR was downloaded and type the following statement:
 
         java -jar serverApp.jar
 
-    In questa circostanza l'indirizzo del Server sarà quello di chi
-    eseguirà il serverApp.jar.
+    In this circumstance the address of the Server will be that of whom will run the server App.jar.
 
-Note:
-- Il Server non gode dell'interfaccia grafica. 
-- Il Server, se viene lanciato cliccando 2 volte sul corrispettivo file .jar, verrà eseguito in background.
+Note: 
+- the Server does not have a graphical interface
+- The server could be also launched by clicking twice on the corresponding .jar file. It will run in the background.
 
 ### CLI
--   **(1)** Una volta scaricato il JAR del client (vedi link sopra),
-    sarà sufficiente aprire il terminale da Windows o MacOs,
-    posizionarsi nella cartella dov'è stato scaricato il JAR e digitare
-    la seguente istruzione:
+- **(1)** Once the client's JAR has been downloaded (see link above), just open the terminal from Windows or MacOs, go to the folder where the JAR was downloaded and type the following statement:
 
         java -jar clientApp.jar -cli
 
-    Quando viene richiesto l'inserimento dell'indirizzo IP, sarà
-    sufficiente premere *"Enter"* per usare in automatico l'indirizzo
-    del Local Host.
+    When asked to enter the IP address, it will be
+    just press *"Enter"* to automatically use the address
+    of the Local Host.
 
--   **(2)** Una volta scaricato il JAR del client (vedi link sopra),
-    sarà sufficiente aprire il terminale da Windows o MacOs,
-    posizionarsi nella cartella dov'è stato scaricato il JAR e digitare
-    la seguente istruzione:
+- **(2)** Once the client's JAR has been downloaded (see link above), just open the terminal from Windows or MacOs, go to the folder where the JAR was downloaded and type the following statement:
 
         java -jar clientApp.jar -cli
 
-    Quando viene richiesto l'inserimento dell'indirizzo IP, sarà
-    necessario inserire l'indirizzo IP del Server e successivamente
-    premere *"Enter"*.
+    When asked to enter the IP address, it will be it is necessary to insert the IP address of the Server and then press *"Enter"*.
 
 ### GUI
-Prerequisiti: è necessario avere installato sul computer il Java SE
-Development Kit 8 di Oracle (reperibile presso il link [*JDKDownload*](https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html))
+Prerequisites: Java SE must be installed on the computer
+Oracle Development Kit 8 (available at the link [*JDKDownload*](https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html))
 
--   **(1)** Una volta scaricato il JAR del client (vedi link sopra),
-    sarà sufficiente fare doppio click sul file clientApp.jar, sia su
-    Windows che su MacOs. Quando viene richiesto l'inserimento
-    dell'indirizzo IP, sarà sufficiente premere sul bottone *"Connect &
-    Play"*, lasciando vuota la casella di testo.
+- **(1)** Once the client's JAR has been downloaded (see link above), just double-click on the clientApp.jar file, both on Windows than on MacOs. When insertion is requested of the IP address, simply press the button *"Connect & Play"*, leaving the text box empty.
 
--   **(2)** Una volta scaricato il JAR del client (vedi link sopra),
-    sarà sufficiente fare doppio click sul file clientApp.jar, sia su
-    Windows che su MacOs. Quando viene richiesto l'inserimento
-    dell'indirizzo IP, bisognerà inserire nella casella di testo
-    l'indirizzo IP del Server e successivamente premere sul bottone
-    *"Connect & Play"*.
+- **(2)** Once the client's JAR has been downloaded (see link above), just double-click on the clientApp.jar file, both on Windows than on MacOs. When insertion is requested of the IP address, you will need to enter it in the text box the IP address of the Server and then press the button *"Connect & Play"*.
 
-### Consigli per Architettura Distribuita
-Nel caso si volesse utilizzare un Personal Computer come Server si
-consiglia di:
- - Scaricare l'applicativo gratuito [*LogMeInHamachi*](https://www.vpn.net/) 
-- Creare un account (seguendo le indicazioni fornite dall'applicazione)
-- Creare una stanza ("Rete" --> "Crea nuova rete...")
-- Farvi accedere i partecipanti ("Rete" --> "Partecipa a rete esistente...") 
-- Una volta dentro la stanza, uno dei partecipanti esegue il punto **(2)** per il Server. 
-- Chi vorrà partecipare come client eseguirà il punto **(2)** per CLI o GUI, a seconda dell'interfaccia che preferisce.
-
-L'indirizzo del Server sarà quello indicato su LogMeIn Hamachi del partecipante che ha eseguito il punto **(2)** per il Server.
+### Tips for Distributed Architecture
+If you want to use a Personal Computer as a Server it is recommend to:
+- Download the free application [*LogMeInHamachi*](https://www.vpn.net/)
+- Create an account (following the directions provided by the application)
+- Create a room ("Network" -> "Create a new network ...")
+- Access the participants ("Network" -> "Join an existing network ...")
+- Once inside the room, one of the participants performs the step **(2)** for the Server.
+- Who wants to participate as a client will perform the point **(2)** for CLI or GUI, depending on the interface
